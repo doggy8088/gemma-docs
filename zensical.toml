@@ -1,0 +1,193 @@
+# ============================================================================
+# Zensical Configuration for Google DeepMind Gemma Documentation
+# ============================================================================
+
+[project]
+
+site_name = "Gemma Documentation"
+site_description = "Gemma open model documentation by Google DeepMind"
+site_author = "Google DeepMind"
+site_url = "https://gemma.ai"
+
+copyright = """
+Copyright &copy; 2026 Google DeepMind
+"""
+
+# ============================================================================
+# NAVIGATION
+# ============================================================================
+nav = [
+  { "Home" = "index.md" },
+
+  { "Get Started" = [
+    "get-started/quickstart.md",
+    { "Capabilities" = [
+      "get-started/capabilities/text.md",
+      "get-started/capabilities/thinking.md",
+      "get-started/capabilities/function-calling.md",
+      "get-started/capabilities/image.md",
+      "get-started/capabilities/video.md",
+      "get-started/capabilities/audio.md",
+    ]},
+    "get-started/prompt-formatting.md",
+  ]},
+
+  { "Models" = [
+    { "Core" = [
+      "models/gemma-4.md",
+      "models/gemma-3n.md",
+      "models/gemma-3.md",
+      "models/gemma-2.md",
+      "models/gemma-1.md",
+    ]},
+    { "Variants" = [
+      "models/paligemma.md",
+      "models/codegemma.md",
+      "models/diffusiongemma.md",
+      "models/embeddinggemma.md",
+      "models/functiongemma.md",
+      "models/shieldgemma.md",
+    ]},
+    { "Research" = [
+      "models/recurrentgemma.md",
+      "models/datagemma.md",
+      "models/gemma-scope.md",
+    ]},
+    "models/releases.md",
+  ]},
+
+  { "Tutorials" = [
+    { "A Visual Guide to:" = [
+      "tutorials/visual-guides/gemma-4.md",
+      "tutorials/visual-guides/gemma-4-12b.md",
+      "tutorials/visual-guides/mtp.md",
+      "tutorials/visual-guides/diffusiongemma.md",
+    ]},
+  ]},
+
+  { "Deployment" = [
+    { "Run Locally" = [
+      "deployment/ollama.md",
+      "deployment/llamacpp.md",
+      "deployment/lmstudio.md",
+      "deployment/mlx.md",
+      "deployment/litert.md",
+      "deployment/mobile.md",
+      "deployment/web.md",
+    ]},
+    { "Cloud & Production" = [
+      "deployment/vllm.md",
+      "deployment/sglang.md",
+      "deployment/huggingface.md",
+      "deployment/google-cloud.md",
+    ]},
+    { "Frameworks" = [
+      "deployment/langchain.md",
+    ]},
+    "deployment/qat.md",
+  ]},
+
+  { "Tuning" = [
+    "tuning/overview.md",
+    "tuning/qlora.md",
+    "tuning/full-finetune.md",
+    "tuning/vision-qlora.md",
+    "tuning/keras-lora.md",
+    "tuning/distributed.md",
+  ]},
+
+  { "Demos" = [
+    "demos/concurrent.md",
+  ]},
+
+  { "Community" = [
+    "community/gemmaverse.md",
+    "community/discord.md",
+    "community/gemma-skills.md",
+  ]},
+
+  { "Tools" = [
+    "tools/vram-calculator.md",
+    "tools/model-selector.md",
+  ]},
+]
+
+# ============================================================================
+# THEME
+# ============================================================================
+[project.theme]
+
+language = "en"
+
+features = [
+    "announce.dismiss",
+    "content.code.annotate",
+    "content.code.copy",
+    "content.code.select",
+    "content.footnote.tooltips",
+    "content.tabs.link",
+    "content.tooltips",
+    "navigation.footer",
+    "navigation.instant",
+    "navigation.instant.prefetch",
+    "navigation.path",
+    "navigation.sections",
+    "navigation.tabs",
+    "navigation.tabs.sticky",
+    "navigation.top",
+    "navigation.tracking",
+    "search.highlight",
+]
+
+[project.theme.font]
+text = "Inter"
+code = "JetBrains Mono"
+
+[[project.theme.palette]]
+scheme = "default"
+toggle.icon = "lucide/sun"
+toggle.name = "Switch to dark mode"
+
+[[project.theme.palette]]
+scheme = "slate"
+toggle.icon = "lucide/moon"
+toggle.name = "Switch to light mode"
+
+# ============================================================================
+# MARKDOWN EXTENSIONS
+# ============================================================================
+[project.markdown_extensions.abbr]
+[project.markdown_extensions.admonition]
+[project.markdown_extensions.attr_list]
+[project.markdown_extensions.def_list]
+[project.markdown_extensions.footnotes]
+[project.markdown_extensions.md_in_html]
+[project.markdown_extensions.toc]
+permalink = true
+[project.markdown_extensions.pymdownx.arithmatex]
+generic = true
+[project.markdown_extensions.pymdownx.betterem]
+[project.markdown_extensions.pymdownx.caret]
+[project.markdown_extensions.pymdownx.details]
+[project.markdown_extensions.pymdownx.emoji]
+emoji_generator = "zensical.extensions.emoji.to_svg"
+emoji_index = "zensical.extensions.emoji.twemoji"
+[project.markdown_extensions.pymdownx.highlight]
+anchor_linenums = true
+line_spans = "__span"
+pygments_lang_class = true
+[project.markdown_extensions.pymdownx.inlinehilite]
+[project.markdown_extensions.pymdownx.keys]
+[project.markdown_extensions.pymdownx.magiclink]
+[project.markdown_extensions.pymdownx.mark]
+[project.markdown_extensions.pymdownx.smartsymbols]
+[project.markdown_extensions.pymdownx.superfences]
+custom_fences = [
+  { name = "mermaid", class = "mermaid", format = "pymdownx.superfences.fence_code_format" }
+]
+[project.markdown_extensions.pymdownx.tabbed]
+alternate_style = true
+combine_header_slug = true
+[project.markdown_extensions.pymdownx.tasklist]
+custom_checkbox = true
+[project.markdown_extensions.pymdownx.tilde]
