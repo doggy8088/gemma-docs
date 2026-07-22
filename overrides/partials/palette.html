@@ -1,4 +1,3 @@
-{% if not (page and (page.url == "" or page.url == ".")) %}
 <form class="md-header__option" data-md-component="palette">
   {% for option in config.theme.palette %}
     {% set scheme  = option.scheme  | d("default", true) %}
@@ -12,4 +11,3 @@
     {% endif %}
   {% endfor %}
 </form>
-{% endif %}

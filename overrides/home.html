@@ -77,6 +77,20 @@
     box-shadow: none !important;
   }
 
+  /* Hide palette toggle on homepage only (CSS hide, not DOM removal, so instant nav preserves it) */
+  html:has(.gemma-teaser) [data-md-component="palette"],
+  body:has(.gemma-teaser) [data-md-component="palette"] {
+    display: none !important;
+  }
+
+  /* Hide footer and bottom-right 'Next' button on homepage only */
+  html:has(.gemma-teaser) .md-footer,
+  body:has(.gemma-teaser) .md-footer,
+  html:has(.gemma-teaser) [data-md-component="footer"],
+  body:has(.gemma-teaser) [data-md-component="footer"] {
+    display: none !important;
+  }
+
   html:has(.gemma-teaser) [data-md-color-scheme] .md-header__title,
   html:has(.gemma-teaser) [data-md-color-scheme] .md-header__topic,
   html:has(.gemma-teaser) [data-md-color-scheme] .md-header__button,
@@ -173,9 +187,20 @@
     left: 0;
     width: 100%;
     height: 100vh;
-    background: radial-gradient(circle at 50% 35%, #0e244b 0%, #071328 55%, #040d1a 100%);
+    background: radial-gradient(circle at 50% 35%, #07152f 0%, #040c1e 55%, #020712 100%);
     z-index: 0;
+    overflow: hidden;
     pointer-events: none;
+  }
+
+  .gemma-wave-svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
   }
 
   /* ===================================================================
@@ -201,7 +226,7 @@
     align-items: baseline;
     width: 100%;
     margin: 0 auto -0.15em;
-    font-size: clamp(2.8rem, 5.5vw, 4.5rem);
+    font-size: clamp(2.4rem, 6.8vw, 6.2rem);
     font-weight: 800;
     letter-spacing: -0.03em;
     line-height: 1.15;
@@ -230,19 +255,19 @@
     white-space: pre;
   }
 
-  /* The cycling text spans inside prefix/suffix slots */
+  /* The cycling text spans inside prefix/suffix slots — pure white */
   .gemma-cycling {
     display: inline-block;
     will-change: transform, opacity;
-    background: linear-gradient(135deg, #90caf9 0%, #64b5f6 50%, #42a5f5 100%);
+    color: #ffffff;
+  }
+
+  /* Static "Gemma" — always visible, rich slightly darker Gemma blue gradient */
+  .gemma-static {
+    background: linear-gradient(135deg, #4FA0FF 0%, #3186FF 48%, #1A4BD6 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-  }
-
-  /* Static "Gemma" — always visible, pure white */
-  .gemma-static {
-    color: #ffffff;
     white-space: nowrap;
   }
 
@@ -250,11 +275,11 @@
      TAGLINE
      =================================================================== */
   .gemma-tagline {
-    color: rgba(255, 255, 255, 0.6);
-    font-size: clamp(1rem, 1.4vw, 1.2rem);
-    line-height: 1.6;
-    max-width: 520px;
-    margin: 0 auto 2.5rem;
+    color: rgba(255, 255, 255, 0.65);
+    font-size: clamp(1.2rem, 2.2vw, 1.65rem);
+    line-height: 1.5;
+    max-width: 700px;
+    margin: 0 auto 2.8rem;
     font-weight: 400;
     letter-spacing: 0.01em;
   }
@@ -271,39 +296,109 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 0.7rem 2rem;
-    font-size: 1rem;
-    font-weight: 600;
-    border-radius: 6px;
+    padding: 0.95rem 2.8rem;
+    font-size: 1.22rem;
+    font-weight: 700;
+    border-radius: 8px;
     text-decoration: none !important;
-    transition: background-color 0.2s ease, border-color 0.2s ease;
-    background-color: #3b82f6;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    background-color: #3186FF;
     color: #ffffff !important;
-    border: 1px solid #3b82f6;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 6px 24px rgba(49, 134, 255, 0.4);
   }
 
   .gemma-btn:hover {
     background-color: #2563eb;
-    border-color: #2563eb;
+    border-color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(49, 134, 255, 0.6);
   }
 
   /* ===================================================================
-     RESPONSIVE
+     RESPONSIVE (Prevents mobile cutoff for long names like DiffusionGemma)
      =================================================================== */
   @media (max-width: 768px) {
     .gemma-name {
-      font-size: clamp(2rem, 8vw, 2.8rem);
+      font-size: clamp(1.8rem, 6vw, 2.6rem);
     }
 
     .gemma-tagline {
-      font-size: 1rem;
+      font-size: 1.25rem;
+      margin-bottom: 2.2rem;
+    }
+
+    .gemma-btn {
+      padding: 0.85rem 2.4rem;
+      font-size: 1.12rem;
+    }
+  }
+
+  @media (max-width: 500px) {
+    .gemma-name {
+      font-size: clamp(1.35rem, 6.2vw, 1.75rem);
+    }
+
+    .gemma-tagline {
+      font-size: 1.05rem;
     }
   }
 </style>
 {% endblock %}
 
 {% block container %}
-<div class="gemma-bg"></div>
+<div class="gemma-bg">
+  <svg class="gemma-wave-svg" viewBox="0 0 1440 900" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+    <defs>
+      <linearGradient id="gemmaWaveGrad1" x1="0%" y1="0%" x2="100%" y2="50%">
+        <stop offset="0%" stop-color="#3186FF" stop-opacity="0.55" />
+        <stop offset="50%" stop-color="#4FA0FF" stop-opacity="0.75" />
+        <stop offset="100%" stop-color="#346BF1" stop-opacity="0.15" />
+      </linearGradient>
+      <linearGradient id="gemmaWaveGrad2" x1="100%" y1="100%" x2="0%" y2="0%">
+        <stop offset="0%" stop-color="#64B5F6" stop-opacity="0.5" />
+        <stop offset="50%" stop-color="#3186FF" stop-opacity="0.65" />
+        <stop offset="100%" stop-color="#0e244b" stop-opacity="0.2" />
+      </linearGradient>
+      <linearGradient id="gemmaCoreGlow" x1="0%" y1="50%" x2="100%" y2="50%">
+        <stop offset="0%" stop-color="#3186FF" stop-opacity="0.0" />
+        <stop offset="45%" stop-color="#4FA0FF" stop-opacity="0.45" />
+        <stop offset="55%" stop-color="#64B5F6" stop-opacity="0.6" />
+        <stop offset="100%" stop-color="#346BF1" stop-opacity="0.0" />
+      </linearGradient>
+      <filter id="waveBlurLow" x="-20%" y="-20%" width="140%" height="140%">
+        <feGaussianBlur stdDeviation="6" />
+      </filter>
+      <filter id="waveBlurHigh" x="-30%" y="-30%" width="160%" height="160%">
+        <feGaussianBlur stdDeviation="24" />
+      </filter>
+      <filter id="coreBloom" x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur stdDeviation="45" />
+      </filter>
+    </defs>
+
+    <!-- Deep luminous background bloom positioned lower beneath the text baseline -->
+    <ellipse cx="720" cy="650" rx="660" ry="150" fill="url(#gemmaCoreGlow)" filter="url(#coreBloom)" opacity="0.75" />
+    <ellipse cx="680" cy="670" rx="380" ry="85" fill="#1D53D4" filter="url(#coreBloom)" opacity="0.25" />
+
+    <!-- Layer 1: Wide diffuse underlying wave ribbon (High Blur, lowered Y coordinates) -->
+    <path d="M-100 690 C 300 500, 520 790, 850 580 C 1120 420, 1350 650, 1580 550 L 1580 950 L -100 950 Z" fill="url(#gemmaWaveGrad1)" filter="url(#waveBlurHigh)" opacity="0.45" />
+
+    <!-- Layer 2: Mid-layer flowing wave (Low Blur for ethereal softness) -->
+    <path d="M-100 660 C 250 460, 480 730, 780 570 C 1080 400, 1320 620, 1580 520 L 1580 950 L -100 950 Z" fill="url(#gemmaWaveGrad2)" filter="url(#waveBlurLow)" opacity="0.55" />
+
+    <!-- Layer 3: Sharp glowing crest arcs representing the flowing energy stream -->
+    <path d="M-100 660 C 250 460, 480 730, 780 570 C 1080 400, 1320 620, 1580 520" stroke="#64B5F6" stroke-width="3" stroke-linecap="round" fill="none" opacity="0.75" filter="url(#waveBlurLow)" />
+    <path d="M-100 660 C 250 460, 480 730, 780 570 C 1080 400, 1320 620, 1580 520" stroke="#FFFFFF" stroke-width="1.2" stroke-linecap="round" fill="none" opacity="0.65" />
+    
+    <!-- Secondary intersecting glowing strand -->
+    <path d="M-100 720 C 220 640, 490 500, 760 600 C 1030 700, 1280 490, 1580 590" stroke="#4FA0FF" stroke-width="2.5" fill="none" opacity="0.6" filter="url(#waveBlurLow)" />
+    <path d="M-100 720 C 220 640, 490 500, 760 600 C 1030 700, 1280 490, 1580 590" stroke="#90CAF9" stroke-width="1" fill="none" opacity="0.5" />
+
+    <!-- Third dynamic flowing arc -->
+    <path d="M-50 570 C 350 680, 600 470, 900 640 C 1180 800, 1380 560, 1600 660" stroke="#3186FF" stroke-width="2" fill="none" opacity="0.45" filter="url(#waveBlurLow)" />
+  </svg>
+</div>
 
 <div class="gemma-teaser">
   <div class="gemma-name" aria-label="Gemma model family">

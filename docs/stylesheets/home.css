@@ -275,58 +275,6 @@
   text-shadow: 0 0 15px rgba(0, 0, 0, 0.6);
 }
 
-/* Hero Action Buttons */
-.gemma-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  margin-top: 0.25rem;
-}
-
-.gemma-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.75rem 1.6rem;
-  border-radius: 0.75rem;
-  font-size: 0.95rem;
-  font-weight: 600;
-  text-decoration: none;
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  cursor: pointer;
-}
-
-.gemma-btn--primary {
-  background: linear-gradient(135deg, #3186FF 0%, #346BF1 100%);
-  color: #FFFFFF !important;
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  box-shadow: 0 8px 25px rgba(49, 134, 255, 0.6);
-}
-
-.gemma-btn--primary:hover,
-.gemma-btn--primary:focus {
-  background: linear-gradient(135deg, #4FA0FF 0%, #3186FF 100%);
-  border-color: #FFFFFF;
-  box-shadow: 0 12px 30px rgba(79, 160, 255, 0.8);
-  transform: translateY(-2px);
-  color: #FFFFFF !important;
-}
-
-.gemma-btn--secondary {
-  background: rgba(32, 33, 36, 0.55);
-  color: #FFFFFF !important;
-  border: 1px solid #4FA0FF;
-  backdrop-filter: blur(8px);
-}
-
-.gemma-btn--secondary:hover,
-.gemma-btn--secondary:focus {
-  background: rgba(49, 134, 255, 0.25);
-  border-color: #FFFFFF;
-  transform: translateY(-2px);
-  color: #FFFFFF !important;
-}
-
 /* Right Pane: 2x2 Compact Feature Grid (Guaranteed No-Scroll Fit on Desktop!) */
 .gemma-grid-pane {
   width: 100%;
@@ -415,4 +363,129 @@
   color: rgba(255, 255, 255, 0.6);
   font-size: 0.8rem;
   width: 100%;
+}
+
+/* ===================================================================
+   TYPOGRAPHY & LAYOUT REFINEMENT
+   =================================================================== */
+
+/* 1. Remove automatic 25% desktop optical zoom by anchoring root font size to 16px (100%) */
+@media screen and (min-width: 60em) {
+
+  html,
+  body {
+    font-size: 100% !important;
+    /* Locks base to 16px instead of Material's 125% (20px) scaling */
+  }
+}
+
+/* 2. Wider website layout (re-expands width after locking base font size) */
+.md-grid {
+  max-width: 85rem !important;
+  /* ~1360px (comfortably wider than original Material 1220px) */
+}
+
+/* 3. Balanced, readable body typography */
+.md-typeset {
+  font-size: 1.08rem !important;
+  /* ~17.3px (up slightly from ~16.5px) */
+  line-height: 1.7 !important;
+}
+
+.md-typeset p,
+.md-typeset ul,
+.md-typeset ol {
+  line-height: 1.7;
+  margin-bottom: 0.95em;
+}
+
+/* 4. Refined Headings */
+.md-typeset h1 {
+  font-size: 2.45rem !important;
+  /* ~39.2px */
+  line-height: 1.25;
+  margin-bottom: 0.6em;
+}
+
+.md-typeset h2 {
+  font-size: 1.75rem !important;
+  /* ~28.0px */
+  line-height: 1.35;
+  margin-top: 1.6em;
+  margin-bottom: 0.5em;
+}
+
+.md-typeset h3 {
+  font-size: 1.38rem !important;
+  /* ~22.1px */
+  line-height: 1.4;
+}
+
+/* 5. Clean developer code blocks & inline code */
+.md-typeset code,
+.md-typeset pre {
+  font-size: 0.95rem !important;
+  /* ~15.2px */
+}
+
+.md-typeset pre {
+  line-height: 1.55 !important;
+}
+
+/* Code snippet titles & filenames */
+.highlight span.filename,
+.md-typeset .filename,
+.md-typeset .code-title,
+.md-typeset figcaption {
+  font-size: 0.95rem !important;
+  /* ~15.2px */
+  font-weight: 700 !important;
+}
+
+/* 6. Admonition note / tip / example boxes & collapsible details */
+.md-typeset .admonition,
+.md-typeset details {
+  font-size: 0.98rem !important;
+  /* ~15.7px (up from Material's shrunk ~10.2px) */
+}
+
+.md-typeset .admonition-title,
+.md-typeset details summary {
+  font-size: 1.03rem !important;
+  /* ~16.5px */
+  font-weight: 700 !important;
+}
+
+/* 7. Tables & Data displays */
+.md-typeset table:not([class]),
+.md-typeset table,
+.md-typeset th,
+.md-typeset td {
+  font-size: 0.95rem !important;
+  /* ~15.2px (up from Material's shrunk ~10.2px) */
+}
+
+.md-typeset th,
+.md-typeset td {
+  padding: 0.75em 1.1em !important;
+}
+
+/* 8. Tabbed Content & Provider Switchers (e.g., Hugging Face, Ollama, MLX tabs) */
+.md-typeset .tabbed-labels>label,
+.md-typeset .tabbed-set>label,
+.md-typeset [class*="tabbed"]>label {
+  font-size: 0.98rem !important;
+  /* ~15.7px (up from Material's shrunk 0.7rem / ~11.2px) */
+  font-weight: 500 !important;
+}
+
+/* 9. Navigation, sidebar, footnotes & supporting text */
+.md-nav__link,
+.md-tabs__link,
+.md-sidebar__inner,
+.md-typeset .footnote,
+.md-typeset .md-tag,
+.md-path {
+  font-size: 0.95rem !important;
+  /* ~15.2px */
 }

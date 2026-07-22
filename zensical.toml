@@ -12,7 +12,8 @@ site_url = "https://gemma.ai"
 copyright = """
 Copyright &copy; 2026 Google DeepMind
 """
-extra_css = ["stylesheets/home.css"]
+extra_css = ["stylesheets/home.css", "stylesheets/cookbook.css"]
+plugins = { macros = { enabled = true } }
 
 # ============================================================================
 # NAVIGATION
@@ -101,6 +102,8 @@ nav = [
     "demos/concurrent.md",
   ]},
 
+  { "Cookbook" = "cookbook.md" },
+
   { "Community" = [
     "community/gemmaverse.md",
     "community/discord.md",
@@ -118,6 +121,8 @@ nav = [
 # ============================================================================
 [project.theme]
 
+logo = "assets/icon.png"
+favicon = "assets/icon.png"
 custom_dir = "overrides"
 language = "en"
 

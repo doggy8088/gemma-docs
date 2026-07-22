@@ -48,6 +48,14 @@ You can download Gemma models from:
         --prompt "Explain quantum computing simply:"
     ```
 
+!!! example "Using a coding agent?"
+
+    Install the gemma-dev skill so your agent stays current with the latest models:
+
+    ```bash
+    npx skills add google-gemma/gemma-skills --skill gemma-dev --global
+    ```
+
 ## Next steps
 
 Explore Gemma 4's core capabilities:
