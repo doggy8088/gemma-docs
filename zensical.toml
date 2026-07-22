@@ -12,6 +12,7 @@ site_url = "https://gemma.ai"
 copyright = """
 Copyright &copy; 2026 Google DeepMind
 """
+extra_css = ["stylesheets/home.css"]
 
 # ============================================================================
 # NAVIGATION
@@ -117,6 +118,7 @@ nav = [
 # ============================================================================
 [project.theme]
 
+custom_dir = "overrides"
 language = "en"
 
 features = [
