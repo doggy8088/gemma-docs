@@ -1,0 +1,413 @@
+{% extends "main.html" %}
+
+{% block styles %}
+{{ super() }}
+<style>
+  /* ===================================================================
+     VIEWPORT & SCROLL LOCK  (scoped via :has(.gemma-teaser))
+     =================================================================== */
+  html:has(.gemma-teaser),
+  body:has(.gemma-teaser),
+  html:has(.gemma-teaser) .md-container,
+  body:has(.gemma-teaser) .md-container,
+  html:has(.gemma-teaser) .md-main,
+  body:has(.gemma-teaser) .md-main {
+    height: 100% !important;
+    max-height: 100vh !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+    background-color: #040d1a !important;
+    scrollbar-width: none !important;
+  }
+
+  html:has(.gemma-teaser) *,
+  body:has(.gemma-teaser) * {
+    scrollbar-width: none !important;
+  }
+
+  html:has(.gemma-teaser) *::-webkit-scrollbar,
+  body:has(.gemma-teaser) *::-webkit-scrollbar,
+  html:has(.gemma-teaser)::-webkit-scrollbar,
+  body:has(.gemma-teaser)::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+  }
+
+  /* ===================================================================
+     HEADER & TABS — transparent + white text on homepage
+     =================================================================== */
+  html:has(.gemma-teaser) [data-md-color-scheme] .md-header,
+  html:has(.gemma-teaser) [data-md-color-scheme] .md-tabs,
+  body:has(.gemma-teaser) .md-header,
+  body:has(.gemma-teaser) .md-tabs {
+    background-color: transparent !important;
+    box-shadow: none !important;
+    color: #ffffff !important;
+    --md-default-fg-color: hsla(230, 15%, 90%, 0.82) !important;
+    --md-default-fg-color--light: hsla(230, 15%, 90%, 0.56) !important;
+    --md-default-fg-color--lighter: hsla(230, 15%, 90%, 0.32) !important;
+    --md-default-fg-color--lightest: hsla(230, 15%, 90%, 0.12) !important;
+    --md-default-bg-color: hsla(230, 15%, 14%, 1) !important;
+    --md-default-bg-color--light: hsla(230, 15%, 14%, 0.54) !important;
+    --md-default-bg-color--lighter: hsla(230, 15%, 14%, 0.26) !important;
+    --md-default-bg-color--lightest: hsla(230, 15%, 14%, 0.07) !important;
+    --md-typeset-color: #ffffff !important;
+    --md-typeset-a-color: #5488e8 !important;
+    --md-primary-fg-color: #4051b5 !important;
+    --md-primary-bg-color: #ffffff !important;
+    --md-accent-fg-color: #4287ff !important;
+    --md-search-bg-color: rgba(255, 255, 255, 0.15) !important;
+    --md-search-form-bg-color: rgba(255, 255, 255, 0.15) !important;
+    --md-search-form-icon-color: rgba(255, 255, 255, 0.85) !important;
+    --md-search-form-input-color: #ffffff !important;
+  }
+
+  html:has(.gemma-teaser) [data-md-color-scheme] .md-header,
+  body:has(.gemma-teaser) .md-header {
+    border-bottom: none !important;
+  }
+
+  html:has(.gemma-teaser) [data-md-color-scheme] .md-tabs,
+  body:has(.gemma-teaser) .md-tabs {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+  }
+
+  body:has(.gemma-teaser) .md-header--shadow {
+    box-shadow: none !important;
+  }
+
+  html:has(.gemma-teaser) [data-md-color-scheme] .md-header__title,
+  html:has(.gemma-teaser) [data-md-color-scheme] .md-header__topic,
+  html:has(.gemma-teaser) [data-md-color-scheme] .md-header__button,
+  html:has(.gemma-teaser) [data-md-color-scheme] .md-header__source,
+  html:has(.gemma-teaser) [data-md-color-scheme] .md-tabs__link,
+  body:has(.gemma-teaser) .md-header__title,
+  body:has(.gemma-teaser) .md-header__topic,
+  body:has(.gemma-teaser) .md-header__button,
+  body:has(.gemma-teaser) .md-header__source,
+  body:has(.gemma-teaser) .md-tabs__link {
+    color: rgba(255, 255, 255, 0.85) !important;
+  }
+
+  html:has(.gemma-teaser) [data-md-color-scheme] .md-header__title,
+  html:has(.gemma-teaser) [data-md-color-scheme] .md-tabs__link--active,
+  html:has(.gemma-teaser) [data-md-color-scheme] .md-tabs__link:hover,
+  html:has(.gemma-teaser) [data-md-color-scheme] .md-header__button:hover,
+  body:has(.gemma-teaser) .md-header__title,
+  body:has(.gemma-teaser) .md-tabs__link--active,
+  body:has(.gemma-teaser) .md-tabs__link:hover,
+  body:has(.gemma-teaser) .md-header__button:hover {
+    color: #ffffff !important;
+    opacity: 1 !important;
+  }
+
+  html:has(.gemma-teaser) [data-md-color-scheme] .md-header__button svg,
+  html:has(.gemma-teaser) [data-md-color-scheme] .md-header__button .md-icon,
+  html:has(.gemma-teaser) [data-md-color-scheme] .md-tabs__link svg,
+  html:has(.gemma-teaser) [data-md-color-scheme] .md-tabs__link .md-icon,
+  body:has(.gemma-teaser) .md-header__button svg,
+  body:has(.gemma-teaser) .md-header__button .md-icon,
+  body:has(.gemma-teaser) .md-tabs__link svg,
+  body:has(.gemma-teaser) .md-tabs__link .md-icon {
+    color: #ffffff !important;
+    fill: none !important;
+    stroke: currentColor !important;
+  }
+
+  /* ===================================================================
+     SEARCH BAR — styled for dark homepage
+     =================================================================== */
+  html:has(.gemma-teaser) [data-md-color-scheme] .md-header .md-search__button,
+  html:has(.gemma-teaser) [data-md-color-scheme] .md-header .md-search__form,
+  body:has(.gemma-teaser) .md-header .md-search__button,
+  body:has(.gemma-teaser) .md-header .md-search__form {
+    background-color: rgba(255, 255, 255, 0.15) !important;
+    color: rgba(255, 255, 255, 0.85) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  }
+
+  html:has(.gemma-teaser) [data-md-color-scheme] .md-header .md-search__button:hover,
+  html:has(.gemma-teaser) [data-md-color-scheme] .md-header .md-search__form:hover,
+  body:has(.gemma-teaser) .md-header .md-search__button:hover,
+  body:has(.gemma-teaser) .md-header .md-search__form:hover {
+    background-color: rgba(255, 255, 255, 0.25) !important;
+    color: #ffffff !important;
+    border-color: rgba(255, 255, 255, 0.35) !important;
+  }
+
+  html:has(.gemma-teaser) [data-md-color-scheme] .md-header .md-search__input,
+  body:has(.gemma-teaser) .md-header .md-search__input {
+    background-color: transparent !important;
+    color: #ffffff !important;
+  }
+
+  html:has(.gemma-teaser) [data-md-color-scheme] .md-header .md-search__input::placeholder,
+  body:has(.gemma-teaser) .md-header .md-search__input::placeholder {
+    color: rgba(255, 255, 255, 0.7) !important;
+  }
+
+  html:has(.gemma-teaser) [data-md-color-scheme] .md-header .md-search__button svg,
+  html:has(.gemma-teaser) [data-md-color-scheme] .md-header .md-search__button .md-icon,
+  html:has(.gemma-teaser) [data-md-color-scheme] .md-header .md-search__icon,
+  html:has(.gemma-teaser) [data-md-color-scheme] .md-header .md-search__icon svg,
+  html:has(.gemma-teaser) [data-md-color-scheme] .md-header .md-search__options,
+  html:has(.gemma-teaser) [data-md-color-scheme] .md-header .md-search__options svg,
+  body:has(.gemma-teaser) .md-header .md-search__button svg,
+  body:has(.gemma-teaser) .md-header .md-search__button .md-icon,
+  body:has(.gemma-teaser) .md-header .md-search__icon,
+  body:has(.gemma-teaser) .md-header .md-search__icon svg,
+  body:has(.gemma-teaser) .md-header .md-search__options,
+  body:has(.gemma-teaser) .md-header .md-search__options svg {
+    color: #ffffff !important;
+    fill: none !important;
+    stroke: currentColor !important;
+  }
+
+  /* ===================================================================
+     BACKGROUND — subtle centered radial gradient
+     =================================================================== */
+  .gemma-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: radial-gradient(circle at 50% 35%, #0e244b 0%, #071328 55%, #040d1a 100%);
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  /* ===================================================================
+     TEASER — centered content container
+     =================================================================== */
+  .gemma-teaser {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90%;
+    max-width: 960px;
+    z-index: 2;
+    text-align: center;
+  }
+
+  /* ===================================================================
+     ANIMATED NAME — 3-column grid keeps "Gemma" pinned center
+     =================================================================== */
+  .gemma-name {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: baseline;
+    width: 100%;
+    margin: 0 auto -0.15em;
+    font-size: clamp(2.8rem, 5.5vw, 4.5rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.15;
+    color: #fff;
+    user-select: none;
+  }
+
+  /* Prefix slot — right-aligned so it butts up against "Gemma" */
+  .gemma-prefix-slot {
+    justify-self: end;
+    overflow: hidden;
+    height: 1.15em;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+  }
+
+  /* Suffix slot — left-aligned so it extends away from "Gemma" */
+  .gemma-suffix-slot {
+    justify-self: start;
+    overflow: hidden;
+    height: 1.15em;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    white-space: pre;
+  }
+
+  /* The cycling text spans inside prefix/suffix slots */
+  .gemma-cycling {
+    display: inline-block;
+    will-change: transform, opacity;
+    background: linear-gradient(135deg, #90caf9 0%, #64b5f6 50%, #42a5f5 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Static "Gemma" — always visible, pure white */
+  .gemma-static {
+    color: #ffffff;
+    white-space: nowrap;
+  }
+
+  /* ===================================================================
+     TAGLINE
+     =================================================================== */
+  .gemma-tagline {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: clamp(1rem, 1.4vw, 1.2rem);
+    line-height: 1.6;
+    max-width: 520px;
+    margin: 0 auto 2.5rem;
+    font-weight: 400;
+    letter-spacing: 0.01em;
+  }
+
+  /* ===================================================================
+     CTA BUTTON
+     =================================================================== */
+  .gemma-actions {
+    display: flex;
+    justify-content: center;
+  }
+
+  .gemma-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.7rem 2rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 6px;
+    text-decoration: none !important;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+    background-color: #3b82f6;
+    color: #ffffff !important;
+    border: 1px solid #3b82f6;
+  }
+
+  .gemma-btn:hover {
+    background-color: #2563eb;
+    border-color: #2563eb;
+  }
+
+  /* ===================================================================
+     RESPONSIVE
+     =================================================================== */
+  @media (max-width: 768px) {
+    .gemma-name {
+      font-size: clamp(2rem, 8vw, 2.8rem);
+    }
+
+    .gemma-tagline {
+      font-size: 1rem;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block container %}
+<div class="gemma-bg"></div>
+
+<div class="gemma-teaser">
+  <div class="gemma-name" aria-label="Gemma model family">
+    <div class="gemma-prefix-slot">
+      <span class="gemma-cycling" id="gemma-prefix"></span>
+    </div>
+    <span class="gemma-static">Gemma</span>
+    <div class="gemma-suffix-slot">
+      <span class="gemma-cycling" id="gemma-suffix"></span>
+    </div>
+  </div>
+
+  <p class="gemma-tagline">
+    Our most capable open models
+  </p>
+
+  <div class="gemma-actions">
+    <a class="gemma-btn" href="get-started/quickstart/">
+      Get Started
+    </a>
+  </div>
+</div>
+
+<script>
+  (function () {
+    var variants = [
+      { prefix: '', suffix: '\u00a04' },
+      { prefix: 'Pali', suffix: '' },
+      { prefix: '', suffix: '\u00a03n' },
+      { prefix: 'Diffusion', suffix: '' },
+      { prefix: '', suffix: '\u00a03' },
+      { prefix: 'Code', suffix: '' },
+      { prefix: 'Shield', suffix: '' },
+      { prefix: 'Embedding', suffix: '' },
+      { prefix: '', suffix: '\u00a02' },
+      { prefix: 'Function', suffix: '' },
+      { prefix: 'Data', suffix: '' },
+      { prefix: 'Recurrent', suffix: '' },
+    ];
+
+    var index = 0;
+    var prefixEl = document.getElementById('gemma-prefix');
+    var suffixEl = document.getElementById('gemma-suffix');
+
+    if (!prefixEl || !suffixEl) return;
+
+    // Show first variant immediately
+    prefixEl.textContent = variants[0].prefix;
+    suffixEl.textContent = variants[0].suffix;
+    prefixEl.style.transform = 'translateY(0)';
+    prefixEl.style.opacity = '1';
+    suffixEl.style.transform = 'translateY(0)';
+    suffixEl.style.opacity = '1';
+
+    var DURATION = 3000;      // ms between cycles
+    var ANIM = 400;       // ms for slide transition
+    var EASE = 'cubic-bezier(0.4, 0, 0.2, 1)';
+
+    var intervalId = setInterval(function () {
+      // Bail out if we've navigated away (instant navigation)
+      if (!document.body.contains(prefixEl)) {
+        clearInterval(intervalId);
+        return;
+      }
+
+      // --- EXIT: slide current text up and fade out ---
+      prefixEl.style.transition = 'transform ' + ANIM + 'ms ' + EASE + ', opacity ' + ANIM + 'ms ease';
+      suffixEl.style.transition = 'transform ' + ANIM + 'ms ' + EASE + ', opacity ' + ANIM + 'ms ease';
+      prefixEl.style.transform = 'translateY(-120%)';
+      prefixEl.style.opacity = '0';
+      suffixEl.style.transform = 'translateY(-120%)';
+      suffixEl.style.opacity = '0';
+
+      setTimeout(function () {
+        // Advance to next variant
+        index = (index + 1) % variants.length;
+        var v = variants[index];
+
+        // Swap text content
+        prefixEl.textContent = v.prefix;
+        suffixEl.textContent = v.suffix;
+
+        // --- PRE-ENTER: position below, no transition ---
+        prefixEl.style.transition = 'none';
+        suffixEl.style.transition = 'none';
+        prefixEl.style.transform = 'translateY(120%)';
+        prefixEl.style.opacity = '0';
+        suffixEl.style.transform = 'translateY(120%)';
+        suffixEl.style.opacity = '0';
+
+        // Force reflow so the browser registers the position reset
+        void prefixEl.offsetHeight;
+
+        // --- ENTER: slide up into view ---
+        requestAnimationFrame(function () {
+          prefixEl.style.transition = 'transform ' + ANIM + 'ms ' + EASE + ', opacity ' + ANIM + 'ms ease';
+          suffixEl.style.transition = 'transform ' + ANIM + 'ms ' + EASE + ', opacity ' + ANIM + 'ms ease';
+          prefixEl.style.transform = 'translateY(0)';
+          prefixEl.style.opacity = '1';
+          suffixEl.style.transform = 'translateY(0)';
+          suffixEl.style.opacity = '1';
+        });
+      }, ANIM + 30);
+    }, DURATION);
+  })();
+</script>
+{% endblock %}

@@ -1,0 +1,418 @@
+/* ==========================================================================
+   Gemma Custom Landing Page Styling
+   Colors: #3186FF, #346BF1, #4FA0FF, #FFFFFF, #202124
+   ========================================================================== */
+
+/* 1. Hide Dark/Light Mode Palette Toggle on Homepage */
+.gemma-home-header-wrapper .md-header__option,
+.gemma-home-header-wrapper form[data-md-component="palette"] {
+  display: none !important;
+}
+
+/* 2. Transparent Navbar Styling on Homepage (Scoped to wrapper so other pages never get affected!) */
+.gemma-home-header-wrapper .md-header {
+  background-color: transparent !important;
+  box-shadow: none !important;
+  color: #FFFFFF !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15) !important;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.gemma-home-header-wrapper .md-header__button,
+.gemma-home-header-wrapper .md-header__topic,
+.gemma-home-header-wrapper .md-header__title,
+.gemma-home-header-wrapper .md-header__title *,
+.gemma-home-header-wrapper .md-logo {
+  color: #FFFFFF !important;
+}
+
+/* Top Tabs Navigation on Homepage */
+.gemma-home-header-wrapper .md-tabs {
+  background-color: transparent !important;
+  box-shadow: none !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.gemma-home-header-wrapper .md-tabs__item,
+.gemma-home-header-wrapper .md-tabs__link {
+  color: rgba(255, 255, 255, 0.8) !important;
+  font-weight: 500;
+  transition: color 0.2s ease, opacity 0.2s ease;
+}
+
+.gemma-home-header-wrapper .md-tabs__link:hover,
+.gemma-home-header-wrapper .md-tabs__link:focus,
+.gemma-home-header-wrapper .md-tabs__item--active .md-tabs__link {
+  color: #FFFFFF !important;
+  opacity: 1 !important;
+}
+
+.gemma-home-header-wrapper .md-tabs__item--active {
+  border-bottom: 2px solid #4FA0FF !important;
+}
+
+/* 3. Search Bar Styling on Homepage */
+.gemma-home-header-wrapper .md-search__button {
+  color: #FFFFFF !important;
+  background: rgba(255, 255, 255, 0.12) !important;
+  border-radius: 9999px !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  transition: all 0.2s ease;
+}
+
+.gemma-home-header-wrapper .md-search__button:hover {
+  background: rgba(255, 255, 255, 0.2) !important;
+  border-color: rgba(255, 255, 255, 0.4) !important;
+}
+
+/* Search Modal / Dropdown when clicked on homepage */
+.gemma-home-header-wrapper .md-search__inner {
+  background-color: #202124 !important;
+  color: #FFFFFF !important;
+  border: 1px solid rgba(79, 160, 255, 0.4) !important;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8) !important;
+}
+
+.gemma-home-header-wrapper .md-search__form {
+  background-color: #152238 !important;
+}
+
+.gemma-home-header-wrapper .md-search__input {
+  color: #FFFFFF !important;
+  background-color: transparent !important;
+}
+
+.gemma-home-header-wrapper .md-search__input::placeholder {
+  color: rgba(255, 255, 255, 0.55) !important;
+}
+
+.gemma-home-header-wrapper .md-search__icon {
+  color: #4FA0FF !important;
+}
+
+.gemma-home-header-wrapper .md-search__output {
+  background-color: #202124 !important;
+}
+
+.gemma-home-header-wrapper .md-search-result__title,
+.gemma-home-header-wrapper .md-search-result__article,
+.gemma-home-header-wrapper .md-search-result__link {
+  color: #FFFFFF !important;
+}
+
+.gemma-home-header-wrapper .md-search-result__link:hover,
+.gemma-home-header-wrapper .md-search-result__link--active {
+  background-color: rgba(49, 134, 255, 0.25) !important;
+}
+
+.gemma-home-header-wrapper .md-search-result__teaser {
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+.gemma-home-header-wrapper mark {
+  background-color: rgba(79, 160, 255, 0.35) !important;
+  color: #4FA0FF !important;
+}
+
+/* 4. Homepage Main Container & Fixed Background Gradients covering entire viewport! */
+.gemma-home-container {
+  position: relative;
+  min-height: calc(100vh - 110px);
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 1rem 2rem 0.5rem;
+  overflow: hidden;
+  box-sizing: border-box;
+  color: #FFFFFF;
+}
+
+.gemma-home-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  pointer-events: none;
+  background: 
+    radial-gradient(circle at 80% 25%, rgba(79, 160, 255, 0.6) 0%, transparent 55%),
+    radial-gradient(circle at 20% 75%, rgba(49, 134, 255, 0.65) 0%, transparent 60%),
+    radial-gradient(circle at 50% 50%, rgba(52, 107, 241, 0.7) 0%, transparent 70%),
+    linear-gradient(135deg, #102a5c 0%, #16366e 45%, #0e2042 75%, #202124 100%);
+}
+
+/* Ambient glow blobs in Gemma blues */
+.gemma-home-glow {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.6;
+}
+.gemma-glow-1 {
+  width: 500px;
+  height: 500px;
+  background: #3186FF;
+  top: -100px;
+  left: 10%;
+}
+.gemma-glow-2 {
+  width: 600px;
+  height: 600px;
+  background: #346BF1;
+  top: 20%;
+  right: -100px;
+}
+.gemma-glow-3 {
+  width: 450px;
+  height: 450px;
+  background: #4FA0FF;
+  bottom: -50px;
+  left: 35%;
+}
+
+/* Subtle dot matrix pattern overlay */
+.gemma-home-grid {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+    radial-gradient(rgba(79, 160, 255, 0.12) 1px, transparent 1px);
+  background-size: 40px 40px;
+  background-position: 0 0, 20px 20px;
+  opacity: 0.7;
+}
+
+/* 5. Homepage Content Layout (2-Column on Desktop for No-Scroll Viewport Fit) */
+.gemma-home-content {
+  position: relative;
+  z-index: 1;
+  max-width: 1280px;
+  width: 100%;
+  margin: auto 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+@media (min-width: 1024px) {
+  .gemma-home-content {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 2rem;
+    align-items: center;
+  }
+}
+
+/* Left Pane: Hero Text & CTA */
+.gemma-hero-pane {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  gap: 1.25rem;
+}
+
+@media (max-width: 1023px) {
+  .gemma-hero-pane {
+    align-items: center;
+    text-align: center;
+  }
+}
+
+.gemma-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 1.1rem;
+  border-radius: 9999px;
+  background: rgba(49, 134, 255, 0.2);
+  border: 1px solid rgba(79, 160, 255, 0.4);
+  color: #FFFFFF;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  backdrop-filter: blur(8px);
+}
+
+.gemma-badge-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #4FA0FF;
+  box-shadow: 0 0 10px #4FA0FF;
+}
+
+.gemma-title {
+  font-size: clamp(2.25rem, 4.5vw, 3.5rem);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  color: #FFFFFF;
+  margin: 0;
+  text-shadow: 0 0 30px rgba(0, 0, 0, 0.6);
+}
+
+.gemma-title-gradient {
+  background: linear-gradient(135deg, #FFFFFF 0%, #4FA0FF 45%, #3186FF 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gemma-subtitle {
+  font-size: clamp(0.95rem, 1.4vw, 1.15rem);
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.9);
+  max-width: 580px;
+  margin: 0;
+  font-weight: 400;
+  text-shadow: 0 0 15px rgba(0, 0, 0, 0.6);
+}
+
+/* Hero Action Buttons */
+.gemma-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 0.25rem;
+}
+
+.gemma-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.6rem;
+  border-radius: 0.75rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+}
+
+.gemma-btn--primary {
+  background: linear-gradient(135deg, #3186FF 0%, #346BF1 100%);
+  color: #FFFFFF !important;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 25px rgba(49, 134, 255, 0.6);
+}
+
+.gemma-btn--primary:hover,
+.gemma-btn--primary:focus {
+  background: linear-gradient(135deg, #4FA0FF 0%, #3186FF 100%);
+  border-color: #FFFFFF;
+  box-shadow: 0 12px 30px rgba(79, 160, 255, 0.8);
+  transform: translateY(-2px);
+  color: #FFFFFF !important;
+}
+
+.gemma-btn--secondary {
+  background: rgba(32, 33, 36, 0.55);
+  color: #FFFFFF !important;
+  border: 1px solid #4FA0FF;
+  backdrop-filter: blur(8px);
+}
+
+.gemma-btn--secondary:hover,
+.gemma-btn--secondary:focus {
+  background: rgba(49, 134, 255, 0.25);
+  border-color: #FFFFFF;
+  transform: translateY(-2px);
+  color: #FFFFFF !important;
+}
+
+/* Right Pane: 2x2 Compact Feature Grid (Guaranteed No-Scroll Fit on Desktop!) */
+.gemma-grid-pane {
+  width: 100%;
+}
+
+.gemma-compact-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+  width: 100%;
+}
+
+@media (min-width: 1024px) {
+  .gemma-compact-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.gemma-card {
+  background: rgba(32, 33, 36, 0.65);
+  border: 1px solid rgba(79, 160, 255, 0.35);
+  border-radius: 0.85rem;
+  padding: 1.1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  text-decoration: none !important;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
+}
+
+.gemma-card:hover,
+.gemma-card:focus {
+  background: rgba(49, 134, 255, 0.28);
+  border-color: #FFFFFF;
+  box-shadow: 0 15px 35px rgba(49, 134, 255, 0.45);
+  transform: translateY(-3px);
+}
+
+.gemma-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.4rem;
+}
+
+.gemma-card-icon {
+  font-size: 1.5rem;
+}
+
+.gemma-card-arrow {
+  color: #4FA0FF;
+  font-size: 1.15rem;
+  font-weight: 700;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.gemma-card:hover .gemma-card-arrow {
+  transform: translate(3px, -3px);
+  color: #FFFFFF;
+}
+
+.gemma-card-title {
+  color: #FFFFFF;
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin: 0 0 0.35rem 0;
+  letter-spacing: -0.01em;
+}
+
+.gemma-card-desc {
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 0.82rem;
+  line-height: 1.4;
+  margin: 0;
+}
+
+/* 6. Homepage Footer */
+.gemma-footer {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  padding-top: 1rem;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.8rem;
+  width: 100%;
+}
