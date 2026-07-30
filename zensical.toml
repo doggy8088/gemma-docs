@@ -12,7 +12,7 @@ site_url = "https://gemma.ai"
 copyright = """
 Copyright &copy; 2026 Google DeepMind
 """
-extra_css = ["stylesheets/home.css", "stylesheets/cookbook.css"]
+extra_css = ["stylesheets/home.css", "stylesheets/layout.css", "stylesheets/cookbook.css", "stylesheets/code.css", "stylesheets/tokens.css"]
 plugins = { macros = { enabled = true } }
 
 # ============================================================================
@@ -23,10 +23,12 @@ nav = [
 
   { "Get Started" = [
     "get-started/quickstart.md",
-    { "Capabilities" = [
+    { "Text" = [
       "get-started/capabilities/text.md",
       "get-started/capabilities/thinking.md",
       "get-started/capabilities/function-calling.md",
+    ]},
+    { "Multimodal" = [
       "get-started/capabilities/image.md",
       "get-started/capabilities/video.md",
       "get-started/capabilities/audio.md",

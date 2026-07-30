@@ -1,0 +1,135 @@
+/* ==========================================================================
+   Zensical Custom CSS - Gemma 4 Token Highlighting & Color Coding
+   
+   Installation:
+   1. Place this file in your docs directory (e.g., `docs/stylesheets/tokens.css`).
+   2. Reference it in your `zensical.yml` or `mkdocs.yml`:
+      
+      extra_css:
+        - stylesheets/tokens.css
+   ========================================================================== */
+
+:root {
+  /* Turn Control Tokens (Blue) */
+  --token-turn-bg: #dbeafe;
+  --token-turn-color: #1e40af;
+  --token-turn-border: #93c5fd;
+
+  /* Role Tokens: user / assistant / system / model / tool (Red) */
+  --token-role-bg: #fee2e2;
+  --token-role-color: #991b1b;
+  --token-role-border: #fca5a5;
+
+  /* Multimodal Tokens (Purple) */
+  --token-multi-bg: #f3e8ff;
+  --token-multi-color: #6b21a8;
+  --token-multi-border: #d8b4fe;
+
+  /* Tool & Function Tokens (Green) */
+  --token-tool-bg: #d1fae5;
+  --token-tool-color: #065f46;
+  --token-tool-border: #6ee7b7;
+
+  /* Thinking Mode Tokens (Amber) */
+  --token-think-bg: #fef3c7;
+  --token-think-color: #92400e;
+  --token-think-border: #fde68a;
+}
+
+/* Dark Mode Support for Zensical & MkDocs Dark Themes */
+[data-md-color-scheme="slate"],
+.dark,
+@media (prefers-color-scheme: dark) {
+  :root {
+    --token-turn-bg: #1e3a8a;
+    --token-turn-color: #bfdbfe;
+    --token-turn-border: #3b82f6;
+
+    --token-role-bg: #7f1d1d;
+    --token-role-color: #fecaca;
+    --token-role-border: #ef4444;
+
+    --token-multi-bg: #581c87;
+    --token-multi-color: #f3e8ff;
+    --token-multi-border: #a855f7;
+
+    --token-tool-bg: #064e3b;
+    --token-tool-color: #a7f3d0;
+    --token-tool-border: #10b981;
+
+    --token-think-bg: #78350f;
+    --token-think-color: #fef3c7;
+    --token-think-border: #f59e0b;
+  }
+}
+
+/* ==========================================================================
+   High Specificity Badge Styles (Overrides default .md-typeset code)
+   ========================================================================== */
+
+.md-typeset .token-turn,
+.md-typeset .token-role,
+.md-typeset .token-multi,
+.md-typeset .token-tool,
+.md-typeset .token-think,
+.md-typeset code.token-turn,
+.md-typeset code.token-role,
+.md-typeset code.token-multi,
+.md-typeset code.token-tool,
+.md-typeset code.token-think,
+.token-turn,
+.token-role,
+.token-multi,
+.token-tool,
+.token-think {
+  display: inline-block !important;
+  padding: 1px 6px !important;
+  border-radius: 4px !important;
+  font-family: var(--md-code-font-family, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace) !important;
+  font-size: 0.875em !important;
+  font-weight: 600 !important;
+  line-height: 1.4 !important;
+  vertical-align: baseline;
+  white-space: nowrap;
+}
+
+/* Category Specific Color Rules */
+.md-typeset .token-turn,
+.md-typeset code.token-turn,
+.token-turn {
+  background-color: var(--token-turn-bg) !important;
+  color: var(--token-turn-color) !important;
+  border: 1px solid var(--token-turn-border) !important;
+}
+
+.md-typeset .token-role,
+.md-typeset code.token-role,
+.token-role {
+  background-color: var(--token-role-bg) !important;
+  color: var(--token-role-color) !important;
+  border: 1px solid var(--token-role-border) !important;
+}
+
+.md-typeset .token-multi,
+.md-typeset code.token-multi,
+.token-multi {
+  background-color: var(--token-multi-bg) !important;
+  color: var(--token-multi-color) !important;
+  border: 1px solid var(--token-multi-border);
+}
+
+.md-typeset .token-tool,
+.md-typeset code.token-tool,
+.token-tool {
+  background-color: var(--token-tool-bg) !important;
+  color: var(--token-tool-color) !important;
+  border: 1px solid var(--token-tool-border) !important;
+}
+
+.md-typeset .token-think,
+.md-typeset code.token-think,
+.token-think {
+  background-color: var(--token-think-bg) !important;
+  color: var(--token-think-color) !important;
+  border: 1px solid var(--token-think-border) !important;
+}
