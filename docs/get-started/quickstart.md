@@ -71,13 +71,3 @@ You can download Gemma models from:
     npx skills add google-gemma/gemma-skills --skill gemma-dev --global
     ```
 
-## Next steps
-
-Explore Gemma 4's core capabilities:
-
-- [Basic Text Generation](capabilities/text.md)
-- [Thinking & Reasoning](capabilities/thinking.md)
-- [Function Calling](capabilities/function-calling.md)
-- [Image Understanding](capabilities/image.md)
-- [Video Understanding](capabilities/video.md)
-- [Audio Understanding](capabilities/audio.md)
