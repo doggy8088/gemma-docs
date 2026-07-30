@@ -238,8 +238,9 @@ output = paligemma.generate(
 print(output)
 ```
 
-> [!NOTE]
-> **Note:** Prompts that use PaliGemma prompt command syntax must end with an "`\n`" character.
+!!! Note
+    Prompts that use PaliGemma prompt command syntax must end with an "`\n`" character.
+
 
 ### Use `detect` prompt
 
@@ -340,8 +341,9 @@ display_segment_output(cat, bboxes, seg_masks, target_size)
 
 You can provide more than one prompt command within a single prompt as a batch of instructions. The following example demonstrates how to structure your prompt text to provide multiple instructions.
 
-> [!IMPORTANT]
-> **Important:** Each prompt command must end with an "\\n" character, as shown.
+!!! Important
+    Each prompt command must end with an "\\n" character, as shown.
+
 
 ```python
 prompts = [

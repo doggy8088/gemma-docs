@@ -17,11 +17,21 @@ EmbeddingGemma includes the following key features:
 - **Low latency**: Generative embeddings in less than 22ms on EdgeTPU for fast and fluid applications.
 - **Offline and secure**: Generate embeddings of documents directly on your hardware, works without internet connection to keep sensitive data secure.
 
-> [!TIP]
-> **Tip:** Deploy EmbeddingGemma with Gemma 3n to build contextually relevant mobile-first Retrieval Augmented Generation (RAG) pipelines and chatbots. See our [quickstart RAG notebook](https://github.com/google-gemma/cookbook/blob/main/tutorials/RAG_with_EmbeddingGemma.ipynb) to get started.
+!!! Tip
+    Deploy EmbeddingGemma with Gemma 3n to build contextually relevant mobile-first Retrieval Augmented Generation (RAG) pipelines and chatbots. See our [quickstart RAG notebook](https://github.com/google-gemma/cookbook/blob/main/tutorials/RAG_with_EmbeddingGemma.ipynb) to get started.
 
-[Get it on Hugging Face](https://huggingface.co/collections/google/embeddinggemma-68b9ae3a72a82f0562a80dc4)
-[Get it on Kaggle](https://www.kaggle.com/models/google/embeddinggemma)
+
+<div class="cookbook-grid">
+<a class="cookbook-card" href="https://huggingface.co/collections/google/embeddinggemma-68b9ae3a72a82f0562a80dc4" target="_blank" rel="noopener">
+  <div class="cookbook-card-title">Hugging Face <span class="cookbook-card-ext">↗</span></div>
+  <p class="cookbook-card-desc">Get it on Hugging Face</p>
+</a>
+<a class="cookbook-card" href="https://www.kaggle.com/models/google/embeddinggemma" target="_blank" rel="noopener">
+  <div class="cookbook-card-title">Kaggle <span class="cookbook-card-ext">↗</span></div>
+  <p class="cookbook-card-desc">Get it on Kaggle</p>
+</a>
+</div>
+
 [Access it on Vertex](https://console.cloud.google.com/vertex-ai/publishers/google/model-garden/embeddinggemma)
 
 As with other Gemma models, EmbeddingGemma is provided with open weights and

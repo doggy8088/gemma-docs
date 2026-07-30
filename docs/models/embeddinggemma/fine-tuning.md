@@ -101,9 +101,10 @@ A search for "tax-free investment" might have given the following results, with 
 2. Document: Opening a Regular Saving Account (Score: 0.50) \<- *Similar score, potentially confusing*
 3. Document: Home Loan Application Guide (Score: 0.44)
 
-> > [!NOTE]
-> > **Note:** To generate optimal embeddings with EmbeddingGemma, you should add an "instructional prompt" or "task" to the beginning of your input text. You will use `STS` for sentence similarity. For details on all available EmbeddingGemma prompts, see the [model card](http://ai.google.dev/gemma/docs/embeddinggemma/model_card#prompt_instructions).
->
+!!! Note
+    To generate optimal embeddings with EmbeddingGemma, you should add an "instructional prompt" or "task" to the beginning of your input text. You will use `STS` for sentence similarity. For details on all available EmbeddingGemma prompts, see the [model card](http://ai.google.dev/gemma/docs/embeddinggemma/model_card#prompt_instructions).
+    
+
 ```python
 task_name = "STS"
 

@@ -27,8 +27,8 @@ You can view and download PaliGemma models from the follow sites:
 - Download from [Hugging Face](https://huggingface.co/models?search=google/paligemma).
 
 
-> [!IMPORTANT]
-> **Important:** **Pretrained** PaliGemma models *require* tuning in order to produce useful results. Make sure you perform fine-tuning on these PaliGemma models and test the output *before* deploying them to end users.
+!!! Important
+    **Pretrained** PaliGemma models *require* tuning in order to produce useful results. Make sure you perform fine-tuning on these PaliGemma models and test the output *before* deploying them to end users.
 
 
 There are three categories of PaliGemma models:

@@ -13,8 +13,9 @@ they are based on. However, PaliGemma models also support a special
 more information on Gemma prompt formatting, see
 [Gemma prompt and system instructions](https://ai.google.dev/gemma/docs/core/prompt-structure).
 
-> [!NOTE]
-> **Note:** although the pre-trained checkpoints support this prompt structure, they require fine-tuning to your specific use cases.
+!!! Note
+    although the pre-trained checkpoints support this prompt structure, they require fine-tuning to your specific use cases.
+
 
 ### Image and text data order
 
@@ -39,16 +40,18 @@ follows:
 - **`"detect {object} ; {object}\n"`:** Locate listed objects in an image and return the bounding boxes for those objects
 - **`"segment {object} ; {object}\n"`:** Locate the area occupied by the listed objects in an image to create an image segmentation for that object
 
-> [!NOTE]
-> **Note:** the "object" for detection and segmentation can also be an expression, such as "the penguin on the left".
+!!! Note
+    the "object" for detection and segmentation can also be an expression, such as "the penguin on the left".
+
 
 The `{lang}` options are for language codes. PaliGemma supports language
 recognition for 34 different languages for task prompts with this option. You
 can find the list of supported languages on
 [GitHub](https://github.com/google/crossmodal-3600/blob/main/web-data/README.md).
 
-> [!IMPORTANT]
-> **Important:** The [PaliGemma FT](https://ai.google.dev/gemma/docs/paligemma#categories) category of models are trained for specific tasks and *only* support the syntax for the target task.
+!!! Important
+    The [PaliGemma FT](https://ai.google.dev/gemma/docs/paligemma#categories) category of models are trained for specific tasks and *only* support the syntax for the target task.
+
 
 For a detailed code examples showing how to use this syntax, see the
 [Generate PaliGemma output with Keras](https://ai.google.dev/gemma/docs/paligemma/inference-with-keras)

@@ -98,6 +98,7 @@ Output: <start_function_call>call:get_current_temperature{location:<escape>Londo
 ```
 !!! Note
     To ensure FunctionGemma correctly interprets the available tools and generates a structured call instead of plain text, the **developer** message is essential. This specific system prompt instructs the model that it has permission and capability to perform function calling.
+    
 
 ```python
 message = [

@@ -116,6 +116,7 @@ Output: <start_function_call>call:get_current_weather{location:<escape>Tokyo, Ja
 ```
 !!! Note
     To ensure FunctionGemma correctly interprets the available tools and generates a structured call instead of plain text, the **developer** message is essential. This specific system prompt instructs the model that it has permission and capability to perform function calling.
+    
 
 ```python
 message = [
@@ -131,6 +132,7 @@ message = [
 Your application should parse the model's response to extract function name and argments, and append function call result with the `tool` role.
 !!! Note
     Always validate function names and arguments before execution.
+    
 
 ```python
 import re
@@ -184,6 +186,7 @@ if calls:
 ```
 !!! Note
     For optimal results, append the tool execution result to your message history using the specific format below. This ensures the chat template correctly generates the required token structure (e.g., `response:get_current_weather{temperature:15,weather:<escape>sunny<escape>}`).
+    
 
 ```python
 message.append({

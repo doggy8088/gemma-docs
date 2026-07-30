@@ -2,8 +2,9 @@
 
 DiffusionGemma is an experimental open model that explores text diffusion, an exceptionally fast approach to text generation. Based on the 26B (4B active) Mixture-of-Experts (MoE) Gemma 4 architecture, DiffusionGemma generates tokens using discrete diffusion.
 
-> [!NOTE]
-> **Note:** This notebook requires a GPU which has more than 60GB of memory such as NVIDIA G4 or NVIDIA H100.
+!!! Note
+    This notebook requires a GPU which has more than 60GB of memory such as NVIDIA G4 or NVIDIA H100.
+
 
 ## Install Python packages
 
@@ -161,7 +162,7 @@ While sunlight looks white to us, it is actually made up of all the colors of th
 *   Blue and and violet**** have much, choppy choppy choppy
 
 
- 22. atmosphere atmosphere atmosphere a a
+    22. atmosphere atmosphere atmosphere a a
 
 
 EarthEarth is is by by by primarily primarily primarily oxygen... the the the the the the the,,, the it the................ the the the the the the the the, the the the the through the the the the the the the..,,,,,,, waves waves waves waves and the the the the molecules the molecules molecules molecules molecules in in in in in in in...........

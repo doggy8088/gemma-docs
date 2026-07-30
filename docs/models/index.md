@@ -26,5 +26,12 @@ Gemma 4 spans four distinct architectures:
 - [EmbeddingGemma](embeddinggemma/index.md) — Text embedding models
 - [ShieldGemma](shieldgemma/index.md) — Safety classification models
 
+## Research Models
+
+- [RecurrentGemma](recurrentgemma/index.md) — Recurrent architecture models based on Griffin
+- [DataGemma](datagemma/index.md) — Models for grounding generation in real-world data
+- [Gemma Scope](gemma-scope/index.md) — Interpretability tools for understanding Gemma model internals
+
 For full technical details, see the individual model pages linked above or the [Gemma 4 model card](gemma-4/model-card.md).
+
 

@@ -110,13 +110,13 @@ Use the following standardized sampling configuration across all use cases:
 
 - **Method:** Diffusion sampling with Entropy-Bounded Denoising and Adaptive Stopping.
 - **Sampling Configuration:**
-  - Maximum number of Denoising Steps = 48
-  - Temperature schedule (for logit shaping): Linear decay from 0.8 → 0.4
-  - Token Selection: At each step, the sampler selects the lowest-entropy tokens such that their mutual information bound stays below entropy bound = 0.1
-  - Token Renoising: The sampler fully renoises the non-selected tokens
+    - Maximum number of Denoising Steps = 48
+    - Temperature schedule (for logit shaping): Linear decay from 0.8 → 0.4
+    - Token Selection: At each step, the sampler selects the lowest-entropy tokens such that their mutual information bound stays below entropy bound = 0.1
+    - Token Renoising: The sampler fully renoises the non-selected tokens
 - **Adaptive Stopping:** Sampling terminates early if and only if both of the following conditions are met simultaneously:
-  - Confident predictions: The average model entropy over the canvas is below the entropy threshold = 0.005
-  - Stable predictions: The highest-probability token predictions remain identical across two consecutive denoising steps
+    - Confident predictions: The average model entropy over the canvas is below the entropy threshold = 0.005
+    - Stable predictions: The highest-probability token predictions remain identical across two consecutive denoising steps
 
 ### 2. Thinking Mode Configuration
 
@@ -148,8 +148,8 @@ visual detail at the cost of additional compute, while a lower budget enables
 faster inference for tasks that don't require fine-grained understanding.
 
 - The supported token budgets are: **70** , **140** , **280** , **560** , and **1120** .
-  - Use *lower budgets* for classification, captioning, or video understanding, where faster inference and processing many frames outweigh fine-grained detail.
-  - Use *higher budgets* for tasks like OCR, document parsing, or reading small text.
+    - Use *lower budgets* for classification, captioning, or video understanding, where faster inference and processing many frames outweigh fine-grained detail.
+    - Use *higher budgets* for tasks like OCR, document parsing, or reading small text.
 
 ### 6. Video Length
 
@@ -232,29 +232,29 @@ provide contextual information about the possible use-cases that the model
 creators considered as part of model training and development.
 
 - **Content Creation and Communication**
-  - **Text Generation:** Generates creative text formats such as poems, scripts, code, marketing copy, and email drafts.
-  - **Chatbots and Conversational AI:** Powers conversational interfaces for customer service, virtual assistants, or interactive applications.
-  - **Text Summarization:** Generates concise summaries of a text corpus, research papers, or reports.
-  - **Image Data Extraction:** Extracts, interprets and summarizes visual data for text communications.
+    - **Text Generation:** Generates creative text formats such as poems, scripts, code, marketing copy, and email drafts.
+    - **Chatbots and Conversational AI:** Powers conversational interfaces for customer service, virtual assistants, or interactive applications.
+    - **Text Summarization:** Generates concise summaries of a text corpus, research papers, or reports.
+    - **Image Data Extraction:** Extracts, interprets and summarizes visual data for text communications.
 - **Research and Education**
-  - **Natural Language Processing (NLP) and VLM Research:** Serves as a foundation for researchers to experiment with VLM and NLP techniques, develop algorithms, and contribute to the advancement of the field.
-  - **Language Learning Tools:** Supports interactive language learning experiences, aiding in grammar correction or providing writing practice.
-  - **Knowledge Exploration:** Assists researchers in exploring large bodies of text by generating summaries or answering questions about specific topics.
+    - **Natural Language Processing (NLP) and VLM Research:** Serves as a foundation for researchers to experiment with VLM and NLP techniques, develop algorithms, and contribute to the advancement of the field.
+    - **Language Learning Tools:** Supports interactive language learning experiences, aiding in grammar correction or providing writing practice.
+    - **Knowledge Exploration:** Assists researchers in exploring large bodies of text by generating summaries or answering questions about specific topics.
 
 ### **Limitations**
 
 - **Training Data**
-  - The quality and diversity of the training data significantly influence the model's capabilities. Biases or gaps in the training data can lead to limitations in the model's responses.
-  - The scope of the training dataset determines the subject areas the model can handle effectively.
+    - The quality and diversity of the training data significantly influence the model's capabilities. Biases or gaps in the training data can lead to limitations in the model's responses.
+    - The scope of the training dataset determines the subject areas the model can handle effectively.
 - **Context and Task Complexity**
-  - The model performs well on tasks that can be framed with clear prompts and instructions. Open-ended or highly complex tasks might be challenging.
-  - The model's performance can be influenced by the amount of context provided (longer context generally leads to better outputs, up to a certain point).
+    - The model performs well on tasks that can be framed with clear prompts and instructions. Open-ended or highly complex tasks might be challenging.
+    - The model's performance can be influenced by the amount of context provided (longer context generally leads to better outputs, up to a certain point).
 - **Language Ambiguity and Nuance**
-  - Natural language is inherently complex. The model might struggle to grasp subtle nuances, sarcasm, or figurative language.
+    - Natural language is inherently complex. The model might struggle to grasp subtle nuances, sarcasm, or figurative language.
 - **Factual Accuracy**
-  - The model generates responses based on information it learned from their training datasets, but they are not knowledge bases. It may generate incorrect or outdated factual statements.
+    - The model generates responses based on information it learned from their training datasets, but they are not knowledge bases. It may generate incorrect or outdated factual statements.
 - **Common Sense**
-  - The model relies on statistical patterns in language. It might lack the ability to apply common sense reasoning in certain situations.
+    - The model relies on statistical patterns in language. It might lack the ability to apply common sense reasoning in certain situations.
 
 ### **Ethical Considerations and Risks**
 
@@ -262,13 +262,13 @@ In creating an open, vision-language model, we have carefully considered the
 following:
 
 - **Bias and Fairness**
-  - VLMs trained on large-scale, real-world text and image data can reflect socio-cultural biases embedded in the training material. DiffusionGemma underwent careful scrutiny, input data pre-processing, and post-training evaluations as reported in this card to help mitigate the risk of these biases.
+    - VLMs trained on large-scale, real-world text and image data can reflect socio-cultural biases embedded in the training material. DiffusionGemma underwent careful scrutiny, input data pre-processing, and post-training evaluations as reported in this card to help mitigate the risk of these biases.
 - **Misinformation and Misuse**
-  - VLMs can be misused to generate text that is false, misleading, or harmful.
-  - Guidelines are provided for responsible use with the model, see the [Responsible Generative AI Toolkit](https://ai.google.dev/responsible).
+    - VLMs can be misused to generate text that is false, misleading, or harmful.
+    - Guidelines are provided for responsible use with the model, see the [Responsible Generative AI Toolkit](https://ai.google.dev/responsible).
 - **Transparency and Accountability**
-  - This model card summarizes details on the model's architecture, capabilities, limitations, and evaluation processes.
-  - A responsibly developed open model offers the opportunity to share innovation by making VLM technology accessible to developers and researchers across the AI ecosystem.
+    - This model card summarizes details on the model's architecture, capabilities, limitations, and evaluation processes.
+    - A responsibly developed open model offers the opportunity to share innovation by making VLM technology accessible to developers and researchers across the AI ecosystem.
 
 **Risks identified and mitigations**:
 

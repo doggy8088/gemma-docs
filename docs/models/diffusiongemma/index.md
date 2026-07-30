@@ -42,8 +42,17 @@ default parameters for the Diffusion Sampling Settings:
 | Adaptive Early Stopping | Entropy threshold: 0.005 | Halts execution early if A) the average model entropy over the canvas is below the threshold, and B) if two consecutive denoiser predictions remain identical. | Simpler prompts and structured tasks like code require fewer denoising steps, enabling dynamic tokens-per-second speeds based on task complexity. |
 | Token selection | Entropy bound: 0.1 | At each step, the sampler selects the lowest-entropy tokens such that their mutual information bound stays below entropy bound. The sampler fully renoises the non-selected tokens. | Ensures only tokens that the model is relatively certain about are selected to refine the canvas, leaving other tokens to be refined in later denoising steps. |
 
-[Get it on Hugging Face](https://huggingface.co/collections/google/diffusiongemma)
-[Get it on Kaggle](https://www.kaggle.com/models/google/diffusiongemma)
+<div class="cookbook-grid">
+<a class="cookbook-card" href="https://huggingface.co/collections/google/diffusiongemma" target="_blank" rel="noopener">
+  <div class="cookbook-card-title">Hugging Face <span class="cookbook-card-ext">↗</span></div>
+  <p class="cookbook-card-desc">Get it on Hugging Face</p>
+</a>
+<a class="cookbook-card" href="https://www.kaggle.com/models/google/diffusiongemma" target="_blank" rel="noopener">
+  <div class="cookbook-card-title">Kaggle <span class="cookbook-card-ext">↗</span></div>
+  <p class="cookbook-card-desc">Get it on Kaggle</p>
+</a>
+</div>
+
 [Access it on Vertex](https://console.cloud.google.com/vertex-ai/publishers/google/model-garden/diffusiongemma)
 
 Access the experimental model weights (released under the Apache 2.0 license),

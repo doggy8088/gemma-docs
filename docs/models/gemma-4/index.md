@@ -26,8 +26,17 @@ For more technical details on Gemma 4, see the
 Earlier versions of Gemma core models are also available for download. For more
 information, see [Previous Gemma models](https://ai.google.dev/gemma/docs/core#previous-models).
 
-[Get it on Kaggle](https://www.kaggle.com/models?query=gemma-4&publisher=google)
-[Get it on Hugging Face](https://huggingface.co/collections/google/gemma-4)
+<div class="cookbook-grid">
+<a class="cookbook-card" href="https://www.kaggle.com/models?query=gemma-4&publisher=google" target="_blank" rel="noopener">
+  <div class="cookbook-card-title">Kaggle <span class="cookbook-card-ext">↗</span></div>
+  <p class="cookbook-card-desc">Get it on Kaggle</p>
+</a>
+<a class="cookbook-card" href="https://huggingface.co/collections/google/gemma-4" target="_blank" rel="noopener">
+  <div class="cookbook-card-title">Hugging Face <span class="cookbook-card-ext">↗</span></div>
+  <p class="cookbook-card-desc">Get it on Hugging Face</p>
+</a>
+</div>
+
 
 ## Capabilities
 
@@ -56,8 +65,9 @@ but may be sufficient for your AI task.
 The following table details the approximate GPU or TPU memory requirements for
 running inference with each size of the Gemma 4 model versions.
 
-> [!NOTE]
-> **Note:** These numbers may change based on your specific inference tool and environment.
+!!! Note
+    These numbers may change based on your specific inference tool and environment.
+
 
 | Parameters | BF16 (16-bit) | SFP8 (8-bit) | Q4_0 (4-bit) | Mobile | Mobile (Text-only) |
 |---|---|---|---|---|---|
@@ -103,17 +113,17 @@ nearly identically to their high-precision baselines.
 Official QAT collections on Hugging Face
 
 - **[collections/google/gemma-4-qat-q4-0](https://huggingface.co/collections/google/gemma-4-qat-q4-0)**
-  - **Unquantized QAT Checkpoints (`-unquantized` / `-assistant`):** Half-precision weights extracted directly from the QAT pipeline. These are ideal for custom downstream compilation, research, or running speculative decoding using the assistant draft models. *Available for
+    - **Unquantized QAT Checkpoints (`-unquantized` / `-assistant`):** Half-precision weights extracted directly from the QAT pipeline. These are ideal for custom downstream compilation, research, or running speculative decoding using the assistant draft models. *Available for
 ```python
 Gemma 4 E2B, E4B, 12B, 26B A4B, and 31B.*
 ```
-  - **GGUF (`-gguf`):** Checkpoints available for immediate drop-in compatibility across the local LLM ecosystem. *Available for Gemma 4
+    - **GGUF (`-gguf`):** Checkpoints available for immediate drop-in compatibility across the local LLM ecosystem. *Available for Gemma 4
 ```python
 E2B, E4B, 12B, 26B A4B, and 31B.*
 ```
-  - **Compressed Tensors (`-w4a16-ct`):** Serialized natively in the `compressed-tensors` standard for optimized, high-concurrency cloud serving. *Available for Gemma 4 E2B, E4B, 12B, and 31B.*
+    - **Compressed Tensors (`-w4a16-ct`):** Serialized natively in the `compressed-tensors` standard for optimized, high-concurrency cloud serving. *Available for Gemma 4 E2B, E4B, 12B, and 31B.*
 - **[collections/google/gemma-4-qat-mobile](https://huggingface.co/collections/google/gemma-4-qat-mobile)**
-  - **Mobile-Optimized (`-mobile-transformers` / `-mobile-ct`):** Built on a custom `wNa8o8` schema engineered specifically for mobile hardware limits. It utilizes targeted 2-bit decoding layers, optimized KV caches, and static activations to maximize on-device RAM savings without choking edge processors. *Available for Gemma 4 E2B and E4B.*
+    - **Mobile-Optimized (`-mobile-transformers` / `-mobile-ct`):** Built on a custom `wNa8o8` schema engineered specifically for mobile hardware limits. It utilizes targeted 2-bit decoding layers, optimized KV caches, and static activations to maximize on-device RAM savings without choking edge processors. *Available for Gemma 4 E2B and E4B.*
 
 All official Gemma 4 QAT checkpoints can also be accessed directly from
 [Kaggle](https://www.kaggle.com/models/google/gemma-4/transformers).

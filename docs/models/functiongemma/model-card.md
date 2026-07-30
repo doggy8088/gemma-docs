@@ -63,11 +63,11 @@ the
 ### Inputs and outputs
 
 - **Input:**
-  - Text string, such as a question, a prompt, or a document to be summarized
-  - Total input context of 32K tokens
+    - Text string, such as a question, a prompt, or a document to be summarized
+    - Total input context of 32K tokens
 - **Output:**
-  - Generated text in response to the input, such as an answer to a question, or a summary of a document
-  - Total output context up to 32K tokens per request, subtracting the request input tokens
+    - Generated text in response to the input, such as an answer to a question, or a summary of a document
+    - Total output context up to 32K tokens per request, subtracting the request input tokens
 
 ## Model Data
 
@@ -219,28 +219,28 @@ about the possible use-cases that the model creators considered as part of model
 training and development.
 
 - Content Creation and Communication
-  - Text Generation: These models can be used to generate creative text formats such as poems, scripts, code, marketing copy, and email drafts.
-  - Chatbots and Conversational AI: Power conversational interfaces for customer service, virtual assistants, or interactive applications.
-  - Text Summarization: Generate concise summaries of a text corpus, research papers, or reports.
+    - Text Generation: These models can be used to generate creative text formats such as poems, scripts, code, marketing copy, and email drafts.
+    - Chatbots and Conversational AI: Power conversational interfaces for customer service, virtual assistants, or interactive applications.
+    - Text Summarization: Generate concise summaries of a text corpus, research papers, or reports.
 - Research and Education
-  - Natural Language Processing (NLP) Research: These models can serve as a foundation for researchers to experiment with NLP techniques, develop algorithms, and contribute to the advancement of the field.
-  - Language Learning Tools: Support interactive language learning experiences, aiding in grammar correction or providing writing practice.
-  - Knowledge Exploration: Assist researchers in exploring large bodies of text by generating summaries or answering questions about specific topics.
+    - Natural Language Processing (NLP) Research: These models can serve as a foundation for researchers to experiment with NLP techniques, develop algorithms, and contribute to the advancement of the field.
+    - Language Learning Tools: Support interactive language learning experiences, aiding in grammar correction or providing writing practice.
+    - Knowledge Exploration: Assist researchers in exploring large bodies of text by generating summaries or answering questions about specific topics.
 
 ### Limitations
 
 - Training Data
-  - The quality and diversity of the training data significantly influence the model's capabilities. Biases or gaps in the training data can lead to limitations in the model's responses.
-  - The scope of the training dataset determines the subject areas the model can handle effectively.
+    - The quality and diversity of the training data significantly influence the model's capabilities. Biases or gaps in the training data can lead to limitations in the model's responses.
+    - The scope of the training dataset determines the subject areas the model can handle effectively.
 - Context and Task Complexity
-  - Models are better at tasks that can be framed with clear prompts and instructions. Open-ended or highly complex tasks might be challenging.
-  - A model's performance can be influenced by the amount of context provided (longer context generally leads to better outputs, up to a certain point).
+    - Models are better at tasks that can be framed with clear prompts and instructions. Open-ended or highly complex tasks might be challenging.
+    - A model's performance can be influenced by the amount of context provided (longer context generally leads to better outputs, up to a certain point).
 - Language Ambiguity and Nuance
-  - Natural language is inherently complex. Models might struggle to grasp subtle nuances, sarcasm, or figurative language.
+    - Natural language is inherently complex. Models might struggle to grasp subtle nuances, sarcasm, or figurative language.
 - Factual Accuracy
-  - Models generate responses based on information they learned from their training datasets, but they are not knowledge bases. They may generate incorrect or outdated factual statements.
+    - Models generate responses based on information they learned from their training datasets, but they are not knowledge bases. They may generate incorrect or outdated factual statements.
 - Common Sense
-  - Models rely on statistical patterns in language. They might lack the ability to apply common sense reasoning in certain situations.
+    - Models rely on statistical patterns in language. They might lack the ability to apply common sense reasoning in certain situations.
 
 ### Ethical Considerations and Risks
 
@@ -249,13 +249,13 @@ concerns. In creating an open model, we have carefully considered the
 following:
 
 - Bias and Fairness
-  - LLMs trained on large-scale, real-world text data can reflect socio-cultural biases embedded in the training material. These models underwent careful scrutiny, input data pre-processing described and posterior evaluations reported in this card.
+    - LLMs trained on large-scale, real-world text data can reflect socio-cultural biases embedded in the training material. These models underwent careful scrutiny, input data pre-processing described and posterior evaluations reported in this card.
 - Misinformation and Misuse
-  - LLMs can be misused to generate text that is false, misleading, or harmful.
-  - Guidelines are provided for responsible use with the model, see the [Responsible Generative AI Toolkit](https://ai.google.dev/responsible).
+    - LLMs can be misused to generate text that is false, misleading, or harmful.
+    - Guidelines are provided for responsible use with the model, see the [Responsible Generative AI Toolkit](https://ai.google.dev/responsible).
 - Transparency and Accountability:
-  - This model card summarizes details on the models' architecture, capabilities, limitations, and evaluation processes.
-  - A responsibly developed open model offers the opportunity to share innovation by making LLM technology accessible to developers and researchers across the AI ecosystem.
+    - This model card summarizes details on the models' architecture, capabilities, limitations, and evaluation processes.
+    - A responsibly developed open model offers the opportunity to share innovation by making LLM technology accessible to developers and researchers across the AI ecosystem.
 
 Risks identified and mitigations:
 

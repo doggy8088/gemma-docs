@@ -414,7 +414,7 @@ def postprocess_tokens(tokens):
 Create two iterators:
 
 - A **training iterator** to allow the training process to go through the data in chunks rather than processing it all at once
-  - This allows you to do some data pre-processing before use
+    - This allows you to do some data pre-processing before use
 - A **validation iterator** that allows the training process to iterate over the validation dataset to see how well the tuned model aligned with the provided results
 
 ```python
@@ -474,8 +474,9 @@ def validation_data_iterator():
 
 In this notebook, the training data contains 90 images that are paired with long descriptions of what's depicted in the image.
 
-> [!NOTE]
-> **Note:** Normal training data sets that are meant to be used for practical use cases should contain more images, but this notebook limits the number of data points so that you can train the model in a reasonable amount of time for an example.
+!!! Note
+    Normal training data sets that are meant to be used for practical use cases should contain more images, but this notebook limits the number of data points so that you can train the model in a reasonable amount of time for an example.
+
 
 The code below prints a random selection of images with their descriptions from the training data set so that you can see what the images and descriptions your model is trained on looks like. Each image is displayed in as a 128x128 pixel JPEG, with the description printed next to the image to the right.
 

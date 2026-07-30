@@ -38,12 +38,12 @@ For more technical details, refer to our paper:
 
 - **Input:**
 
-  - Text string, such as a question, a prompt, or a document to be embedded
-  - Maximum input context length of 2K
+    - Text string, such as a question, a prompt, or a document to be embedded
+    - Maximum input context length of 2K
 - **Output:**
 
-  - Numerical vector representations of input text data
-  - Output embedding dimension size of 768, with smaller options available (512, 256, or 128) via Matryoshka Representation Learning (MRL). MRL allows users to truncate the output embedding of size 768 to their desired size and then re-normalize for efficient and accurate representation.
+    - Numerical vector representations of input text data
+    - Output embedding dimension size of 768, with smaller options available (512, 256, or 128) via Matryoshka Representation Learning (MRL). MRL allows users to truncate the output embedding of size 768 to their desired size and then re-normalize for efficient and accurate representation.
 
 ### Citation
 
@@ -150,8 +150,9 @@ metrics to cover different aspects of text understanding.
 | Q8_0 (768d) | 68.70 | 68.70 |
 | Q4_0 (768d) | 67.99 | 67.99 |
 
-> [!NOTE]
-> **Note:** QAT models are evaluated after quantization
+!!! Note
+    QAT models are evaluated after quantization
+
 
 \* Mixed Precision refers to per-channel quantization with int4 for embeddings,
 feedforward, and projection layers, and int8 for attention (e4_a8_f4_p4).
@@ -203,9 +204,9 @@ training and development.
 - **Clustering**: Embeddings optimized to cluster texts based on their similarities, such as document organization, market research, and anomaly detection
 - **Retrieval**
 
-  - **Document**: Embeddings optimized for document search, such as indexing articles, books, or web pages for search
-  - **Query**: Embeddings optimized for general search queries, such as custom search
-  - **Code Query**: Embeddings optimized for retrieval of code blocks based on natural language queries, such as code suggestions and search
+    - **Document**: Embeddings optimized for document search, such as indexing articles, books, or web pages for search
+    - **Query**: Embeddings optimized for general search queries, such as custom search
+    - **Code Query**: Embeddings optimized for retrieval of code blocks based on natural language queries, such as code suggestions and search
 - **Question Answering**: Embeddings for questions in a question-answering
   system, optimized for finding documents that answer the question, such as
   chatbox.
@@ -218,11 +219,11 @@ training and development.
 
 - Training Data
 
-  - The quality and diversity of the training data significantly influence the model's capabilities. Biases or gaps in the training data can lead to limitations in the model's responses.
-  - The scope of the training dataset determines the subject areas the model can handle effectively.
+    - The quality and diversity of the training data significantly influence the model's capabilities. Biases or gaps in the training data can lead to limitations in the model's responses.
+    - The scope of the training dataset determines the subject areas the model can handle effectively.
 - Language Ambiguity and Nuance
 
-  - Natural language is inherently complex. Models might struggle to grasp subtle nuances, sarcasm, or figurative language.
+    - Natural language is inherently complex. Models might struggle to grasp subtle nuances, sarcasm, or figurative language.
 
 ### Ethical Considerations and Risks
 

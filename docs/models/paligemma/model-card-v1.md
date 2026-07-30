@@ -223,13 +223,13 @@ The development of vision-language models (VLMs) raises several ethical
 concerns. In creating an open model, we have carefully considered the following:
 
 - Bias and Fairness
-  - VLMs trained on large-scale, real-world image-text data can reflect socio-cultural biases embedded in the training material. These models underwent careful scrutiny, input data pre-processing described and posterior evaluations reported in this card.
+    - VLMs trained on large-scale, real-world image-text data can reflect socio-cultural biases embedded in the training material. These models underwent careful scrutiny, input data pre-processing described and posterior evaluations reported in this card.
 - Misinformation and Misuse
-  - VLMs can be misused to generate text that is false, misleading, or harmful.
-  - Guidelines are provided for responsible use with the model, see the [Responsible Generative AI Toolkit](https://ai.google.dev/responsible).
+    - VLMs can be misused to generate text that is false, misleading, or harmful.
+    - Guidelines are provided for responsible use with the model, see the [Responsible Generative AI Toolkit](https://ai.google.dev/responsible).
 - Transparency and Accountability
-  - This model card summarizes details on the models' architecture, capabilities, limitations, and evaluation processes.
-  - A responsibly developed open model offers the opportunity to share innovation by making VLM technology accessible to developers and researchers across the AI ecosystem.
+    - This model card summarizes details on the models' architecture, capabilities, limitations, and evaluation processes.
+    - A responsibly developed open model offers the opportunity to share innovation by making VLM technology accessible to developers and researchers across the AI ecosystem.
 
 Risks identified and mitigations:
 
@@ -241,9 +241,9 @@ Risks identified and mitigations:
 ### Limitations
 
 - Most limitations inherited from the underlying Gemma model still apply:
-  - VLMs are better at tasks that can be framed with clear prompts and instructions. Open-ended or highly complex tasks might be challenging.
-  - Natural language is inherently complex. VLMs might struggle to grasp subtle nuances, sarcasm, or figurative language.
-  - VLMs generate responses based on information they learned from their training datasets, but they are not knowledge bases. They may generate incorrect or outdated factual statements.
-  - VLMs rely on statistical patterns in language and images. They might lack the ability to apply common sense reasoning in certain situations.
+    - VLMs are better at tasks that can be framed with clear prompts and instructions. Open-ended or highly complex tasks might be challenging.
+    - Natural language is inherently complex. VLMs might struggle to grasp subtle nuances, sarcasm, or figurative language.
+    - VLMs generate responses based on information they learned from their training datasets, but they are not knowledge bases. They may generate incorrect or outdated factual statements.
+    - VLMs rely on statistical patterns in language and images. They might lack the ability to apply common sense reasoning in certain situations.
 - PaliGemma was designed first and foremost to serve as a general pre-trained model for fine-tuning to specialized tasks. Hence, its "out of the box" or "zero-shot" performance might lag behind models designed specifically for general purpose use.
 - PaliGemma is not a multi-turn chatbot. It is designed for a single round of image and text input.

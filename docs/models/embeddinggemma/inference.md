@@ -98,19 +98,19 @@ In this section, we use embeddings to determine how sementically similar differe
 
 - High Similarity:
 
-  - Sentence A: "The chef prepared a delicious meal for the guests."
-  - Sentence B: "A tasty dinner was cooked by the chef for the visitors."
-  - Reasoning: Both sentences describe the same event using different words and grammatical structures (active vs. passive voice). They convey the same core meaning.
+    - Sentence A: "The chef prepared a delicious meal for the guests."
+    - Sentence B: "A tasty dinner was cooked by the chef for the visitors."
+    - Reasoning: Both sentences describe the same event using different words and grammatical structures (active vs. passive voice). They convey the same core meaning.
 - Medium Similarity:
 
-  - Sentence A: "She is an expert in machine learning."
-  - Sentence B: "He has a deep interest in artificial intelligence."
-  - Reasoning: The sentences are related as machine learning is a subfield of artificial intelligence. However, they talk about different people with different levels of engagement (expert vs. interest).
+    - Sentence A: "She is an expert in machine learning."
+    - Sentence B: "He has a deep interest in artificial intelligence."
+    - Reasoning: The sentences are related as machine learning is a subfield of artificial intelligence. However, they talk about different people with different levels of engagement (expert vs. interest).
 - Low Similarity:
 
-  - Sentence A: "The weather in Tokyo is sunny today."
-  - Sentence B: "I need to buy groceries for the week."
-  - Reasoning: The two sentences are on completely unrelated topics and share no semantic overlap.
+    - Sentence A: "The weather in Tokyo is sunny today."
+    - Sentence B: "I need to buy groceries for the week."
+    - Reasoning: The two sentences are on completely unrelated topics and share no semantic overlap.
 
 ```python
 # The sentences to encode
@@ -237,7 +237,7 @@ For RAG systems, use the following `prompt_name` values to create specialized em
 
 - **For Documents:** Use `prompt_name="Retrieval-document"`. To further improve document embeddings, you can also include a title by using the `prompt` argument directly:  
 
-  - **With a title:**   
+    - **With a title:**   
 
 ```python
   doc_embedding = model.encode(
@@ -246,7 +246,7 @@ For RAG systems, use the following `prompt_name` values to create specialized em
   )
 ```
 
-  - **Without a title:**   
+    - **Without a title:**   
 
 ```python
   doc_embedding = model.encode(

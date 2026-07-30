@@ -73,8 +73,8 @@ The model has **not** been explicitly trained on **Multi-Turn** or
 - **Multi-Step (Chaining):** Scenarios where the output of one tool is
   required as the argument for a subsequent tool.
 
-  - **Example:** "Roll a die with 20 sides and check if the number is prime."
-  - **Complexity:** This requires rolling a die first (Tool A), and *then* using the result to check if the number is prime (Tool B). FunctionGemma is not trained to reason through this dependency chain automatically.
+    - **Example:** "Roll a die with 20 sides and check if the number is prime."
+    - **Complexity:** This requires rolling a die first (Tool A), and *then* using the result to check if the number is prime (Tool B). FunctionGemma is not trained to reason through this dependency chain automatically.
 - **Multi-Turn:** Scenarios requiring the model to maintain state or context
   over a long back-and-forth conversation to determine tool parameters.
 
@@ -110,9 +110,9 @@ immediately trigger a specific tool named `get_current_temperature` if the model
 does not make the semantic connection in that specific context.
 
 - **Mitigation Strategies:**
-  - **Enriched Tool Definition:** This is often the most effective fix. Expanding the function's description to include semantic keywords helps the model bridge the gap. For example, adding "This function can be used to determine if the weather is hot or cold in a given location" to the docstring allows FunctionGemma to correctly map those qualitative descriptors to the tool.
-  - **Prompt Engineering:** Making the user query more detailed or explicit can help the model trigger the correct tool, though this relies on user behavior.
-  - **Fine-tuning:** For production environments where users frequently use highly indirect language (e.g., "is it nice out?" versus "get weather"), we recommend [fine-tuning](https://ai.google.dev/gemma/docs/functiongemma/finetuning-with-functiongemma) the model on a dataset that explicitly maps these semantic nuances to the correct tool definitions.
+    - **Enriched Tool Definition:** This is often the most effective fix. Expanding the function's description to include semantic keywords helps the model bridge the gap. For example, adding "This function can be used to determine if the weather is hot or cold in a given location" to the docstring allows FunctionGemma to correctly map those qualitative descriptors to the tool.
+    - **Prompt Engineering:** Making the user query more detailed or explicit can help the model trigger the correct tool, though this relies on user behavior.
+    - **Fine-tuning:** For production environments where users frequently use highly indirect language (e.g., "is it nice out?" versus "get weather"), we recommend [fine-tuning](https://ai.google.dev/gemma/docs/functiongemma/finetuning-with-functiongemma) the model on a dataset that explicitly maps these semantic nuances to the correct tool definitions.
 
 **Example: Make Semantic Connection**
 > **User:** "Hey, is it cold in Paris right now?"

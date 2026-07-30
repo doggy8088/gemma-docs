@@ -205,8 +205,8 @@ at the cost of additional compute, while a lower budget enables faster inference
 for tasks that don't require fine-grained understanding.
 
 - The supported token budgets are: **70** , **140** , **280** , **560** , and **1120** .
-  - Use *lower budgets* for classification, captioning, or video understanding, where faster inference and processing many frames outweigh fine-grained detail.
-  - Use *higher budgets* for tasks like OCR, document parsing, or reading small text.
+    - Use *lower budgets* for classification, captioning, or video understanding, where faster inference and processing many frames outweigh fine-grained detail.
+    - Use *higher budgets* for tasks like OCR, document parsing, or reading small text.
 
 ### 6. Audio
 
@@ -311,30 +311,30 @@ provide contextual information about the possible use-cases that the model
 creators considered as part of model training and development.
 
 - **Content Creation and Communication**
-  - **Text Generation**: These models can be used to generate creative text formats such as poems, scripts, code, marketing copy, and email drafts.
-  - **Chatbots and Conversational AI**: Power conversational interfaces for customer service, virtual assistants, or interactive applications.
-  - **Text Summarization**: Generate concise summaries of a text corpus, research papers, or reports.
-  - **Image Data Extraction**: These models can be used to extract, interpret, and summarize visual data for text communications.
-  - **Audio Processing and Interaction**: The E2B, E4B, and 12B models can analyze and interpret audio inputs, enabling voice-driven interactions and transcriptions.
+    - **Text Generation**: These models can be used to generate creative text formats such as poems, scripts, code, marketing copy, and email drafts.
+    - **Chatbots and Conversational AI**: Power conversational interfaces for customer service, virtual assistants, or interactive applications.
+    - **Text Summarization**: Generate concise summaries of a text corpus, research papers, or reports.
+    - **Image Data Extraction**: These models can be used to extract, interpret, and summarize visual data for text communications.
+    - **Audio Processing and Interaction**: The E2B, E4B, and 12B models can analyze and interpret audio inputs, enabling voice-driven interactions and transcriptions.
 - **Research and Education**
-  - **Natural Language Processing (NLP) and VLM Research**: These models can serve as a foundation for researchers to experiment with VLM and NLP techniques, develop algorithms, and contribute to the advancement of the field.
-  - **Language Learning Tools**: Support interactive language learning experiences, aiding in grammar correction or providing writing practice.
-  - **Knowledge Exploration**: Assist researchers in exploring large bodies of text by generating summaries or answering questions about specific topics.
+    - **Natural Language Processing (NLP) and VLM Research**: These models can serve as a foundation for researchers to experiment with VLM and NLP techniques, develop algorithms, and contribute to the advancement of the field.
+    - **Language Learning Tools**: Support interactive language learning experiences, aiding in grammar correction or providing writing practice.
+    - **Knowledge Exploration**: Assist researchers in exploring large bodies of text by generating summaries or answering questions about specific topics.
 
 ### **Limitations**
 
 - **Training Data**
-  - The quality and diversity of the training data significantly influence the model's capabilities. Biases or gaps in the training data can lead to limitations in the model's responses.
-  - The scope of the training dataset determines the subject areas the model can handle effectively.
+    - The quality and diversity of the training data significantly influence the model's capabilities. Biases or gaps in the training data can lead to limitations in the model's responses.
+    - The scope of the training dataset determines the subject areas the model can handle effectively.
 - **Context and Task Complexity**
-  - Models perform well on tasks that can be framed with clear prompts and instructions. Open-ended or highly complex tasks might be challenging.
-  - A model's performance can be influenced by the amount of context provided (longer context generally leads to better outputs, up to a certain point).
+    - Models perform well on tasks that can be framed with clear prompts and instructions. Open-ended or highly complex tasks might be challenging.
+    - A model's performance can be influenced by the amount of context provided (longer context generally leads to better outputs, up to a certain point).
 - **Language Ambiguity and Nuance**
-  - Natural language is inherently complex. Models might struggle to grasp subtle nuances, sarcasm, or figurative language.
+    - Natural language is inherently complex. Models might struggle to grasp subtle nuances, sarcasm, or figurative language.
 - **Factual Accuracy**
-  - Models generate responses based on information they learned from their training datasets, but they are not knowledge bases. They may generate incorrect or outdated factual statements.
+    - Models generate responses based on information they learned from their training datasets, but they are not knowledge bases. They may generate incorrect or outdated factual statements.
 - **Common Sense**
-  - Models rely on statistical patterns in language. They might lack the ability to apply common sense reasoning in certain situations.
+    - Models rely on statistical patterns in language. They might lack the ability to apply common sense reasoning in certain situations.
 
 ### **Ethical Considerations and Risks**
 
@@ -342,13 +342,13 @@ The development of vision-language models (VLMs) raises several ethical
 concerns. In creating an open model, we have carefully considered the following:
 
 - **Bias and Fairness**
-  - VLMs trained on large-scale, real-world text and image data can reflect socio-cultural biases embedded in the training material. Gemma 4 models underwent careful scrutiny, input data pre-processing, and post-training evaluations as reported in this card to help mitigate the risk of these biases.
+    - VLMs trained on large-scale, real-world text and image data can reflect socio-cultural biases embedded in the training material. Gemma 4 models underwent careful scrutiny, input data pre-processing, and post-training evaluations as reported in this card to help mitigate the risk of these biases.
 - **Misinformation and Misuse**
-  - VLMs can be misused to generate text that is false, misleading, or harmful.
-  - Guidelines are provided for responsible use with the model, see the [Responsible Generative AI Toolkit](https://ai.google.dev/responsible).
+    - VLMs can be misused to generate text that is false, misleading, or harmful.
+    - Guidelines are provided for responsible use with the model, see the [Responsible Generative AI Toolkit](https://ai.google.dev/responsible).
 - **Transparency and Accountability**
-  - This model card summarizes details on the models' architecture, capabilities, limitations, and evaluation processes.
-  - A responsibly developed open model offers the opportunity to share innovation by making VLM technology accessible to developers and researchers across the AI ecosystem.
+    - This model card summarizes details on the models' architecture, capabilities, limitations, and evaluation processes.
+    - A responsibly developed open model offers the opportunity to share innovation by making VLM technology accessible to developers and researchers across the AI ecosystem.
 
 **Risks identified and mitigations**:
 

@@ -20,15 +20,25 @@ Gemma 3n includes the following key features:
 - **Wide language support**: Wide linguistic capabilities, trained in over 140 languages.
 - **32K token context**: Substantial input context for analyzing data and handling processing tasks.
 
-[Get it on Kaggle](https://www.kaggle.com/models/google/gemma-3n)
-[Get it on Hugging Face](https://huggingface.co/collections/google/gemma-3n-685065323f5984ef315c93f4)
+<div class="cookbook-grid">
+<a class="cookbook-card" href="https://www.kaggle.com/models/google/gemma-3n" target="_blank" rel="noopener">
+  <div class="cookbook-card-title">Kaggle <span class="cookbook-card-ext">↗</span></div>
+  <p class="cookbook-card-desc">Get it on Kaggle</p>
+</a>
+<a class="cookbook-card" href="https://huggingface.co/collections/google/gemma-3n-685065323f5984ef315c93f4" target="_blank" rel="noopener">
+  <div class="cookbook-card-title">Hugging Face <span class="cookbook-card-ext">↗</span></div>
+  <p class="cookbook-card-desc">Get it on Hugging Face</p>
+</a>
+</div>
+
 
 As with other Gemma models, Gemma 3n is provided with open weights and
 licensed for responsible [commercial use](https://ai.google.dev/gemma/terms), allowing you to tune
 and deploy it in your own projects and applications.
 
-> [!TIP]
-> **Tip:** If you are interested in building generative AI solutions for Android mobile applications, check out Gemini Nano. For more information, see the Android [Gemini Nano](https://developer.android.com/ai/gemini-nano) developer docs.
+!!! Tip
+    If you are interested in building generative AI solutions for Android mobile applications, check out Gemini Nano. For more information, see the Android [Gemini Nano](https://developer.android.com/ai/gemini-nano) developer docs.
+
 
 ## Model parameters and effective parameters
 

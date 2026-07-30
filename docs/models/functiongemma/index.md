@@ -17,8 +17,17 @@ is the right tool if:
 - **You prioritize local-first deployment:** Your application requires near-instant latency and total data privacy, running efficiently within the compute and battery limits of edge devices.
 - **You are building compound systems:** You need a lightweight edge model to handle local actions, allowing your system to process common commands on-device and only query larger models (like Gemma 3 27B) for more complex tasks.
 
-[Get it on Hugging Face](https://huggingface.co/google/functiongemma-270m-it)
-[Get it on Kaggle](https://www.kaggle.com/models/google/functiongemma)
+<div class="cookbook-grid">
+<a class="cookbook-card" href="https://huggingface.co/google/functiongemma-270m-it" target="_blank" rel="noopener">
+  <div class="cookbook-card-title">Hugging Face <span class="cookbook-card-ext">↗</span></div>
+  <p class="cookbook-card-desc">Get it on Hugging Face</p>
+</a>
+<a class="cookbook-card" href="https://www.kaggle.com/models/google/functiongemma" target="_blank" rel="noopener">
+  <div class="cookbook-card-title">Kaggle <span class="cookbook-card-ext">↗</span></div>
+  <p class="cookbook-card-desc">Get it on Kaggle</p>
+</a>
+</div>
+
 [Access it on Vertex](https://console.cloud.google.com/vertex-ai/publishers/google/model-garden/functiongemma)
 
 As with other Gemma models, FunctionGemma is provided with open weights and
