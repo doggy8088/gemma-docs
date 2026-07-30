@@ -1,0 +1,28 @@
+/* custom.css - Full-width modern layout similar to https://ai.google.dev/gemma/docs */
+
+.md-grid {
+  max-width: 96% !important;
+}
+
+.md-main__inner {
+  max-width: 100% !important;
+}
+
+.md-content {
+  max-width: 100% !important;
+}
+
+/* Ensure nice spacing across the wide grid */
+.md-sidebar--primary,
+.md-sidebar--secondary {
+  width: 16rem;
+}
+
+@media screen and (min-width: 76.25em) {
+  .md-sidebar--primary {
+    left: 1.5rem;
+  }
+  .md-sidebar--secondary {
+    right: 1.5rem;
+  }
+}

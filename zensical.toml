@@ -38,19 +38,53 @@ nav = [
 
   { "Models" = [
     { "Core" = [
-      "models/gemma-4.md",
-      "models/gemma-3n.md",
-      "models/gemma-3.md",
-      "models/gemma-2.md",
-      "models/gemma-1.md",
+      { "Gemma 4" = [
+        { "Overview" = "models/gemma-4/index.md" },
+        { "Model Card" = "models/gemma-4/model-card.md" },
+      ]},
+      { "Gemma 3" = "models/gemma-3/index.md" },
+      { "Gemma 2" = "models/gemma-2/index.md" },
+      { "Gemma" = "models/gemma-1/index.md" },
     ]},
     { "Variants" = [
-      "models/paligemma.md",
+      { "Gemma3n" = [
+        { "Overview" = "models/gemma-3n/index.md" },
+        { "Model Card" = "models/gemma-3n/model-card.md" },
+      ]},
+      { "DiffusionGemma" = [
+        { "Overview" = "models/diffusiongemma/index.md" },
+        { "Model Card" = "models/diffusiongemma/model-card.md" },
+        { "Diffusion Explained" = "models/diffusiongemma/explained.md" },
+        { "Generate Output" = "models/diffusiongemma/inference.md" },
+      ]},
+      { "FunctionGemma" = [
+        { "Overview" = "models/functiongemma/index.md" },
+        { "Model Card" = "models/functiongemma/model-card.md" },
+        { "Formatting and Best Practices" = "models/functiongemma/formatting.md" },
+        { "Function Calling with HF" = "models/functiongemma/inference.md" },
+        { "Full Sequence" = "models/functiongemma/full-sequence.md" },
+        { "Fine-tuning" = "models/functiongemma/fine-tuning.md" },
+      ]},
+      { "EmbeddingGemma" = [
+        { "Overview" = "models/embeddinggemma/index.md" },
+        { "Model Card" = "models/embeddinggemma/model-card.md" },
+        { "Generate Embeddings" = "models/embeddinggemma/inference.md" },
+        { "Fine-tuning" = "models/embeddinggemma/fine-tuning.md" },
+      ]},
+      { "PaliGemma" = [
+        { "Overview" = "models/paligemma/index.md" },
+        { "PaliGemma 1 Model Card" = "models/paligemma/model-card-v1.md" },
+        { "PaliGemma 2 Model Card" = "models/paligemma/model-card-v2.md" },
+        { "Prompting & System Instructions" = "models/paligemma/prompting.md" },
+        { "Generate Output with Keras" = "models/paligemma/inference.md" },
+        { "Fine-tuning with JAX" = "models/paligemma/fine-tuning.md" },
+      ]},
+      { "ShieldGemma" = [
+        { "Overview" = "models/shieldgemma/index.md" },
+        { "ShieldGemma Model Card" = "models/shieldgemma/model-card-v1.md" },
+        { "ShieldGemma 2 Model Card" = "models/shieldgemma/model-card-v2.md" },
+      ]},
       "models/codegemma.md",
-      "models/diffusiongemma.md",
-      "models/embeddinggemma.md",
-      "models/functiongemma.md",
-      "models/shieldgemma.md",
     ]},
     { "Research" = [
       "models/recurrentgemma.md",
