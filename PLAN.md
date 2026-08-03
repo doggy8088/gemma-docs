@@ -335,6 +335,29 @@ uv run python scripts/check_fidelity.py --manifest --cache-dir .sources
 uv run python scripts/vendor_images.py --dry-run
 ```
 
+### Step 0.4b — CI hardening (zizmor / org policy) ✅
+
+The org runs [zizmor](https://docs.zizmor.sh/) on workflows and **fails on any Medium/High
+finding**, not just the mandatory-check list. Both workflows now pass clean.
+
+- [x] All 6 action references pinned to commit SHAs in `lint.yml` and `deploy.yml`
+      (`unpinned-uses`, High — this is what broke the build).
+- [x] `lint.yml` given an explicit `permissions: contents: read` block.
+- [x] `deploy.yml` permissions narrowed: `contents: read` at workflow level, with
+      `pages: write` / `id-token: write` scoped to the `deploy` job alone. At workflow level they
+      were also being handed to the `build` job, which only needs to read (`excessive-permissions`, High).
+- [x] `persist-credentials: false` on both checkouts (`artipacked`).
+- **Verify:** `uvx zizmor --persona=regular .github/workflows/` → "No findings to report."
+
+!!! note "Updating a pin"
+    Pins carry a `# v4` comment so the intended version stays readable. To move one:
+
+    ```bash
+    gh api repos/actions/checkout/git/ref/tags/v4 --jq '.object.sha'
+    ```
+
+    For annotated tags, dereference: `gh api repos/<repo>/git/tags/<sha> --jq '.object.sha'`.
+
 ### Step 0.5 — Rewrite internal links
 - [ ] Map all 122 `ai.google.dev/gemma/docs/*` links to local paths.
 - [ ] For pages not yet ported, point at the eventual local path and let the linter flag it as
@@ -716,3 +739,17 @@ port_docs.py  ->  vendor_images.py  ->  lint_docs.py --baseline
 - The site's `404.html` uses root-absolute `/assets/` paths. That is correct (a 404 can be served
   from any depth) and will look like a broken link to any checker resolving paths relative to the
   file. Don't "fix" it.
+- ⚠️ **Any new workflow must be zizmor-clean before it is pushed.** Pin every action to a SHA,
+  set an explicit `permissions:` block, and scope write permissions to the job that needs them.
+  Check locally with `uvx zizmor --persona=regular .github/workflows/` — it catches everything
+  CI does and takes seconds. The org fails on Medium/High, which is broader than the published
+  mandatory-check list.
+- **Why zizmor appeared only now, on this branch.** The scanner is "GitHub Actions Scan"
+  (`.github/workflows/github_actions_scan.yml`), injected org-wide by `google-gemma` — it is not
+  in this repo. It triggers on **`pull_request_target`**, and every commit before this branch went
+  *straight to main via push*, so it had never run. `foundation` is the repo's first pull request.
+  The pre-existing `docs.yml` and `deploy.yml` did not pass the policy; they were never scanned.
+- **The scan is diff-scoped.** It flagged only `lint.yml` while `deploy.yml` sat unmodified on the
+  same branch with four unpinned actions. Pre-existing workflow debt therefore stays invisible
+  until a PR touches that file — worth auditing a workflow *before* you need to edit it under
+  time pressure.
