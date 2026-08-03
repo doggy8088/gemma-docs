@@ -254,5 +254,5 @@ Now you understand function calling with FunctionGemma. Key takeaways from this 
 
 Check out the following docs next:
 
-- [Full function calling sequence with FunctionGemma](https://ai.google.dev/gemma/docs/functiongemma/full-function-calling-sequence-with-functiongemma)
-- [Fine-tuning with FunctionGemma](https://ai.google.dev/gemma/docs/functiongemma/finetuning-with-functiongemma)
+- [Full function calling sequence with FunctionGemma](full-sequence.md)
+- [Fine-tuning with FunctionGemma](fine-tuning.md)

@@ -11,7 +11,7 @@ results.
 
 ## Base Prompt Structure
 
-FunctionGemma builds on the [Gemma prompt structure](https://ai.google.dev/gemma/docs/core/prompt-structure), using
+FunctionGemma builds on the [Gemma prompt structure](../../get-started/prompt-structure.md), using
 `<start_of_turn>role` and `<end_of_turn>` to describe conversational turns.
 The `role` is typically `user` or `model` (and sometimes `developer` for
 providing initial context, as seen below).
@@ -112,7 +112,7 @@ does not make the semantic connection in that specific context.
 - **Mitigation Strategies:**
     - **Enriched Tool Definition:** This is often the most effective fix. Expanding the function's description to include semantic keywords helps the model bridge the gap. For example, adding "This function can be used to determine if the weather is hot or cold in a given location" to the docstring allows FunctionGemma to correctly map those qualitative descriptors to the tool.
     - **Prompt Engineering:** Making the user query more detailed or explicit can help the model trigger the correct tool, though this relies on user behavior.
-    - **Fine-tuning:** For production environments where users frequently use highly indirect language (e.g., "is it nice out?" versus "get weather"), we recommend [fine-tuning](https://ai.google.dev/gemma/docs/functiongemma/finetuning-with-functiongemma) the model on a dataset that explicitly maps these semantic nuances to the correct tool definitions.
+    - **Fine-tuning:** For production environments where users frequently use highly indirect language (e.g., "is it nice out?" versus "get weather"), we recommend [fine-tuning](fine-tuning.md) the model on a dataset that explicitly maps these semantic nuances to the correct tool definitions.
 
 **Example: Make Semantic Connection**
 > **User:** "Hey, is it cold in Paris right now?"
@@ -193,4 +193,4 @@ The current weather in Tokyo is sunny with a temperature of 15 degrees Celsius.<
 ```
 
 You can see more complete version of this example in the
-[Full function calling sequence with FunctionGemma](https://ai.google.dev/gemma/docs/functiongemma/full-function-calling-sequence-with-functiongemma)
+[Full function calling sequence with FunctionGemma](full-sequence.md)

@@ -19,10 +19,10 @@ You can download Gemma 4 models from
 [Kaggle](https://www.kaggle.com/models?query=gemma-4&publisher=google) and
 [Hugging Face](https://huggingface.co/collections/google/gemma-4).
 For more technical details on Gemma 4, see the
-[Model Card](https://ai.google.dev/gemma/docs/core/model_card_4) and
+[Model Card](model-card.md) and
 [Technical Report](https://goo.gle/Gemma4Report).
 Earlier versions of Gemma core models are also available for download. For more
-information, see [Previous Gemma models](https://ai.google.dev/gemma/docs/core#previous-models).
+information, see [Previous Gemma models](index.md#previous-gemma-models).
 
 <div class="cookbook-grid">
 <a class="cookbook-card" href="https://www.kaggle.com/models?query=gemma-4&publisher=google" target="_blank" rel="noopener">
@@ -39,13 +39,13 @@ information, see [Previous Gemma models](https://ai.google.dev/gemma/docs/core#p
 ## Capabilities
 
 - **Reasoning:** All models in the family are designed as highly capable reasoners, with configurable [thinking
-  modes](https://ai.google.dev/gemma/docs/capabilities/thinking).
-- **Extended Multimodalities:** Processes Text, [Image](https://ai.google.dev/gemma/docs/capabilities/vision/image) with variable aspect ratio and resolution support (all models), [Video](https://ai.google.dev/gemma/docs/capabilities/vision/video), and [Audio](https://ai.google.dev/gemma/docs/capabilities/audio) (featured natively on the E2B, E4B and 12B models).
+  modes](../../get-started/capabilities/thinking.md).
+- **Extended Multimodalities:** Processes Text, [Image](../../get-started/capabilities/image.md) with variable aspect ratio and resolution support (all models), [Video](../../get-started/capabilities/video.md), and [Audio](../../get-started/capabilities/audio.md) (featured natively on the E2B, E4B and 12B models).
 - **Increased Context Window:** Small models feature a 128K context window, while the medium models support 256K.
 - **Enhanced Coding \& Agentic Capabilities:** Achieves notable improvements in coding benchmarks alongside built-in [function-calling
-  support](https://ai.google.dev/gemma/docs/capabilities/text/function-calling-gemma4), powering highly capable autonomous agents.
+  support](../../get-started/capabilities/function-calling.md), powering highly capable autonomous agents.
 - **Native System Prompt Support:** Gemma 4 introduces built-in support for the system role, enabling more structured and controllable conversations.
-- **[Multi-Token Prediction](https://ai.google.dev/gemma/docs/mtp/overview):** All Gemma 4 models (E2B, E4B, 12B, 31B, and 26B A4B) include a dedicated draft model for speculative decoding, enabling significantly faster inference with no quality loss.
+- **[Multi-Token Prediction](../../get-started/capabilities/mtp.md):** All Gemma 4 models (E2B, E4B, 12B, 31B, and 26B A4B) include a dedicated draft model for speculative decoding, enabling significantly faster inference with no quality loss.
 
 ## Parameter sizes and quantization
 
@@ -128,10 +128,10 @@ available from [Kaggle](https://www.kaggle.com/models?query=gemma) and
 For more technical details about previous Gemma models, see the following
 model card pages:
 
-- Gemma 3 [Model Card](https://ai.google.dev/gemma/docs/core/model_card_3)
-- Gemma 2 [Model Card](https://ai.google.dev/gemma/docs/core/model_card_2)
-- Gemma 1 [Model Card](https://ai.google.dev/gemma/docs/core/model_card)
+- Gemma 3 [Model Card](../gemma-3/index.md)
+- Gemma 2 [Model Card](../gemma-2/index.md)
+- Gemma 1 [Model Card](../gemma-1/index.md)
 
 Ready to start building?
-[Get started](https://ai.google.dev/gemma/docs/get_started)
+[Get started](../../get-started/quickstart.md)
 with Gemma models!

@@ -6,7 +6,7 @@ hide:
 # Prompt Formatting
 
 Starting with Gemma 4, we introduce new control tokens. For Gemma 3 and lower,
-see the [previous document](https://ai.google.dev/gemma/docs/core/prompt-structure).
+see the [previous document](prompt-structure.md).
 
 The following sections specify the control tokens used by Gemma 4 and their use
 cases. Note that the control tokens are reserved in and specific to our

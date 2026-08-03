@@ -11,7 +11,59 @@
 #
 # `assets` is the subdirectory under docs/assets/ that inline base64 images are extracted to.
 
+# --- Get started ------------------------------------------------------------------------------
+# Ported in Step 0.6 to resolve links that Step 0.5 pointed at planned paths. These pages are
+# not in the nav yet -- Step 2.1 places them.
+
+[[page]]
+path = "get-started/setup.md"
+source = "https://ai.google.dev/gemma/docs/setup.md.txt"
+
+[[page]]
+path = "get-started/prompt-structure.md"
+source = "https://ai.google.dev/gemma/docs/core/prompt-structure.md.txt"
+
+[[page]]
+path = "get-started/capabilities/mtp.md"
+source = "https://ai.google.dev/gemma/docs/mtp/overview.md.txt"
+
+# --- Run --------------------------------------------------------------------------------------
+
+[[page]]
+path = "deployment/index.md"
+source = "https://ai.google.dev/gemma/docs/run.md.txt"
+
+[[page]]
+path = "deployment/huggingface.md"
+source = "https://ai.google.dev/gemma/docs/core/huggingface_inference.md.txt"
+assets = "huggingface"
+
+[[page]]
+path = "deployment/mobile-actions.md"
+source = "https://ai.google.dev/gemma/docs/mobile-actions.md.txt"
+
+# --- Tuning / Learn ---------------------------------------------------------------------------
+
+[[page]]
+path = "tuning/spoken-language.md"
+source = "https://ai.google.dev/gemma/docs/spoken-language/task-specific-tuning.md.txt"
+assets = "tuning"
+
+[[page]]
+path = "learn/business-email-assistant.md"
+source = "https://ai.google.dev/gemma/docs/business-email-assistant.md.txt"
+assets = "learn"
+
+[[page]]
+path = "learn/personal-code-assistant.md"
+source = "https://ai.google.dev/gemma/docs/personal-code-assistant.md.txt"
+assets = "learn"
+
 # --- Core -------------------------------------------------------------------------------------
+
+[[page]]
+path = "models/gemma-aps/index.md"
+source = "https://ai.google.dev/gemma/docs/gemma-aps.md.txt"
 
 [[page]]
 path = "models/gemma-4/index.md"

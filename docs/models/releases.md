@@ -2,15 +2,15 @@ This page documents releases for the Gemma family of models.
 
 ## June 3, 2026
 
-- Release of [Gemma 4 12B Unified](https://ai.google.dev/gemma/docs/core).
+- Release of [Gemma 4 12B Unified](gemma-4/index.md).
 
 ## April 16, 2026
 
-- Release of [Gemma 4 - MTP](https://ai.google.dev/gemma/docs/mtp/overview) for E2B, E4B, 31B, and 26B A4B.
+- Release of [Gemma 4 - MTP](../get-started/capabilities/mtp.md) for E2B, E4B, 31B, and 26B A4B.
 
 ## March 31, 2026
 
-- Release of [Gemma 4](https://ai.google.dev/gemma/docs/core) in E2B, E4B, 31B and 26B A4B sizes.
+- Release of [Gemma 4](gemma-4/index.md) in E2B, E4B, 31B and 26B A4B sizes.
 
 ## January 15, 2026
 
@@ -22,11 +22,11 @@ This page documents releases for the Gemma family of models.
 
 ## December 19, 2025
 
-- Release of [Gemma Scope 2](https://ai.google.dev/gemma/docs/gemma_scope), an interpretability suite for Gemma 3 models.
+- Release of [Gemma Scope 2](gemma-scope/index.md), an interpretability suite for Gemma 3 models.
 
 ## December 18, 2025
 
-- Release of [FunctionGemma](https://ai.google.dev/gemma/docs/functiongemma) in 270M parameter size.
+- Release of [FunctionGemma](functiongemma/index.md) in 270M parameter size.
 - Release of [T5Gemma v2](https://blog.google/technology/developers/t5gemma-2/) in 270M-270M, 1B-1B, and 4B-4B parameter sizes.
 
 ## September 13, 2025
@@ -35,11 +35,11 @@ This page documents releases for the Gemma family of models.
 
 ## September 4, 2025
 
-- Release of [EmbeddingGemma](https://ai.google.dev/gemma/docs/embeddinggemma) in 308M parameter size.
+- Release of [EmbeddingGemma](embeddinggemma/index.md) in 308M parameter size.
 
 ## August 14, 2025
 
-- Release of [Gemma 3](https://ai.google.dev/gemma/docs/core/model_card_3) in 270M size.
+- Release of [Gemma 3](gemma-3/index.md) in 270M size.
 
 ## July 9, 2025
 
@@ -48,7 +48,7 @@ This page documents releases for the Gemma family of models.
 
 ## June 26, 2025
 
-- Release of [Gemma 3n](https://ai.google.dev/gemma/docs/3n) in E2B and E4B sizes.
+- Release of [Gemma 3n](gemma-3n/index.md) in E2B and E4B sizes.
 
 ## May 20, 2025
 
@@ -56,69 +56,69 @@ This page documents releases for the Gemma family of models.
 
 ## March 10, 2025
 
-- Release of [Gemma 3](https://ai.google.dev/gemma/docs/core/model_card_3) in 1B, 4B, 12B and 27B sizes.
-- Release of [ShieldGemma 2](https://ai.google.dev/gemma/docs/shieldgemma).
+- Release of [Gemma 3](gemma-3/index.md) in 1B, 4B, 12B and 27B sizes.
+- Release of [ShieldGemma 2](shieldgemma/index.md).
 
 ## February 19, 2025
 
-- Release of [PaliGemma 2 mix](https://ai.google.dev/gemma/docs/paligemma/model-card-2) in 3B, 10B, and 28B parameter sizes.
+- Release of [PaliGemma 2 mix](paligemma/model-card-v2.md) in 3B, 10B, and 28B parameter sizes.
 
 ## December 5, 2024
 
-- Release of [PaliGemma 2](https://ai.google.dev/gemma/docs/paligemma) in 3B, 10B, and 28B parameter sizes.
+- Release of [PaliGemma 2](paligemma/index.md) in 3B, 10B, and 28B parameter sizes.
 
 ## October 16, 2024
 
-- Release of [Personal AI code assistant](https://ai.google.dev/gemma/docs/personal-code-assistant) developer guide.
+- Release of [Personal AI code assistant](../learn/personal-code-assistant.md) developer guide.
 
 ## October 15, 2024
 
-- Release of [Gemma-APS](https://ai.google.dev/gemma/docs/gemma-aps) in 2B and 7B sizes.
+- Release of [Gemma-APS](gemma-aps/index.md) in 2B and 7B sizes.
 
 ## October 8, 2024
 
-- Release of [Business email assistant](https://ai.google.dev/gemma/docs/business-email-assistant) developer guide.
+- Release of [Business email assistant](../learn/business-email-assistant.md) developer guide.
 
 ## October 3, 2024
 
 - Release of [Gemma 2 JPN](https://www.kaggle.com/models/google/gemma-2-2b-jpn-it) in 2B size.
-- Release of [Spoken language tasks](https://ai.google.dev/gemma/docs/spoken-language/task-specific-tuning) developer guide.
+- Release of [Spoken language tasks](../tuning/spoken-language.md) developer guide.
 
 ## September 12, 2024
 
-- Release of [DataGemma](https://ai.google.dev/gemma/docs/datagemma) in 2B size.
+- Release of [DataGemma](datagemma/index.md) in 2B size.
 
 ## July 31, 2024
 
-- Release of [Gemma 2](https://ai.google.dev/gemma/docs/core/model_card_2) in 2B size.
-- Initial release of [ShieldGemma](https://ai.google.dev/gemma/docs/shieldgemma).
-- Initial release of [Gemma Scope](https://ai.google.dev/gemma/docs/gemma_scope).
+- Release of [Gemma 2](gemma-2/index.md) in 2B size.
+- Initial release of [ShieldGemma](shieldgemma/index.md).
+- Initial release of [Gemma Scope](gemma-scope/index.md).
 
 ## June 27, 2024
 
-- Initial release of [Gemma 2](https://ai.google.dev/gemma/docs/core/model_card_2) in 9B and 27B sizes.
+- Initial release of [Gemma 2](gemma-2/index.md) in 9B and 27B sizes.
 
 ## June 11, 2024
 
-- Release of [RecurrentGemma](https://ai.google.dev/gemma/docs/recurrentgemma) 9B variant.
+- Release of [RecurrentGemma](recurrentgemma/index.md) 9B variant.
 
 ## May 14, 2024
 
-- Initial release of [PaliGemma](https://ai.google.dev/gemma/docs/paligemma).
+- Initial release of [PaliGemma](paligemma/index.md).
 
 ## May 3, 2024
 
-- Release of [CodeGemma](https://ai.google.dev/gemma/docs/codegemma) v1.1.
+- Release of CodeGemma v1.1.
 
 ## April 9, 2024
 
-- Initial release of [CodeGemma](https://ai.google.dev/gemma/docs/codegemma).
-- Initial release of [RecurrentGemma](https://ai.google.dev/gemma/docs/recurrentgemma).
+- Initial release of CodeGemma.
+- Initial release of [RecurrentGemma](recurrentgemma/index.md).
 
 ## April 5, 2024
 
-- Release of [Gemma](https://ai.google.dev/gemma/docs/core/model_card) 1.1.
+- Release of [Gemma](gemma-1/index.md) 1.1.
 
 ## February 21, 2024
 
-- Initial release of [Gemma](https://ai.google.dev/gemma/docs/core/model_card) in 2B and 7B sizes.
+- Initial release of [Gemma](gemma-1/index.md) in 2B and 7B sizes.

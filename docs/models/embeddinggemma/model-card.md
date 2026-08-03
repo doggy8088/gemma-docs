@@ -1,6 +1,6 @@
 # EmbeddingGemma model card
 
-**Model Page** : [EmbeddingGemma](https://ai.google.dev/gemma/docs/embeddinggemma)
+**Model Page** : [EmbeddingGemma](index.md)
 
 **Resources and Technical Documentation**:
 
@@ -87,12 +87,12 @@ data:
 
 EmbeddingGemma was trained using the latest generation of
 [Tensor Processing Unit (TPU)](https://cloud.google.com/tpu/docs/intro-to-tpu) hardware (TPUv5e), for more details refer to
-the [Gemma 3 model card](https://ai.google.dev/gemma/docs/core/model_card_3).
+the [Gemma 3 model card](../gemma-3/index.md).
 
 ### Software
 
 Training was done using [JAX](https://github.com/jax-ml/jax) and [ML Pathways](https://blog.google/technology/ai/introducing-pathways-next-generation-ai-architecture/). For more details refer
-to the [Gemma 3 model card](https://ai.google.dev/gemma/docs/core/model_card_3).
+to the [Gemma 3 model card](../gemma-3/index.md).
 
 ## Evaluation
 

@@ -45,6 +45,18 @@ NOTEBOOK_PREAMBLE = re.compile(r"^This notebook will run on\b", re.IGNORECASE)
 MD_IMAGE_TARGET = re.compile(r"(!\[[^\]]*\]\()[^)]*(\))")
 HTML_IMAGE_TARGET = re.compile(r"(<img[^>]+src=[\"'])[^\"']*([\"'])")
 
+# Link targets that Step 0.5 rewrites on purpose: an upstream docs URL in the source becomes a
+# local .md path in the output. Both forms are blanked so the retargeting doesn't read as loss.
+# Deliberately narrow -- other external links (Hugging Face, Kaggle, GitHub) stay in the
+# comparison, so silently losing one of those is still caught.
+REWRITTEN_LINK_TARGET = re.compile(
+    r"(\]\()"
+    r"(?:https?://ai\.google\.dev/gemma/docs[^)\s]*"
+    r"|[^)\s]*\.md(?:#[^)\s]*)?"
+    r")"
+    r"(\))"
+)
+
 
 def strip_designed_drops(source_text: str) -> str:
     """Remove the lines convert_notebook is *designed* to discard.
@@ -73,12 +85,25 @@ def strip_designed_drops(source_text: str) -> str:
     return "\n".join(kept)
 
 
+def normalise(token: str) -> str:
+    """Trim edge punctuation so a word doesn't change identity by moving in a sentence.
+
+    WORD keeps `.`/`-`/`+`/`_` so tokens like `ai.google.dev` and `v1.1` survive intact, but that
+    also glues on trailing punctuation: `[CodeGemma](url).` tokenises as `CodeGemma` (the `]`
+    stops it) while the delinked `CodeGemma.` tokenises with the period. Same word, different
+    token, reported as loss.
+    """
+    return token.strip("._-+")
+
+
 def words(text: str) -> Counter:
     """Word multiset, ignoring image targets and base64 payloads (see the regexes above)."""
     text = BASE64_PAYLOAD.sub(" ", text)
     text = MD_IMAGE_TARGET.sub(r"\1\2", text)
     text = HTML_IMAGE_TARGET.sub(r"\1\2", text)
-    return Counter(WORD.findall(text))
+    text = REWRITTEN_LINK_TARGET.sub(r"\1\2", text)
+    tokens = (normalise(t) for t in WORD.findall(text))
+    return Counter(t for t in tokens if len(t) >= 2)
 
 
 def compare(source_text: str, converted_text: str) -> tuple[Counter, Counter]:

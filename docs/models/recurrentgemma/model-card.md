@@ -1,6 +1,6 @@
 # RecurrentGemma model card
 
-**Model page:** [RecurrentGemma](https://ai.google.dev/gemma/docs/recurrentgemma)
+**Model page:** [RecurrentGemma](index.md)
 
 **Resources and technical documentation:**
 
@@ -50,14 +50,14 @@ Gemma and achieves faster inference when generating long sequences.
 
 RecurrentGemma uses the same training data and data processing as used by the
 Gemma model family. A full description can be found on the [Gemma model
-card](https://ai.google.dev/gemma/docs/core/model_card#model_data).
+card](../gemma-1/index.md#model-data).
 
 ## Implementation information
 
 ### Hardware and frameworks used during training
 
 Like
-[Gemma](https://ai.google.dev/gemma/docs/core/model_card#implementation_information),
+[Gemma](../gemma-1/index.md#implementation-information),
 RecurrentGemma was trained on
 [TPUv5e](https://cloud.google.com/tpu/docs/intro-to-tpu?_gl=1*18wi411*_ga*MzE3NDU5OTY1LjE2MzQwNDA4NDY.*_ga_WH2QY8WWF5*MTcxMTA0MjUxMy4xNy4wLjE3MTEwNDI1MTkuMC4wLjA.&_ga=2.239449409.-317459965.1634040846),
 using [JAX](https://github.com/jax-ml/jax) and [ML

@@ -1,6 +1,6 @@
 # Gemma model card
 
-**Model Page** : [Gemma](https://ai.google.dev/gemma/docs/core)
+**Model Page** : [Gemma](../gemma-4/index.md)
 
 **Resources and Technical Documentation**:
 

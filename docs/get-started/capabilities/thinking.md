@@ -501,6 +501,6 @@ In this guide, you learned how to use the thinking capabilities of Gemma 4 model
 
 Explore more capabilities of Gemma 4:
 
-- [Prompt and system instructions](https://ai.google.dev/gemma/docs/core/prompt-formatting-gemma4)
-- [Function calling](https://ai.google.dev/gemma/docs/capabilities/text/function-calling-gemma4)
-- [Run Gemma overview](https://ai.google.dev/gemma/docs/run) -->
+- [Prompt and system instructions](../prompt-formatting.md)
+- [Function calling](function-calling.md)
+- [Run Gemma overview](../../deployment/index.md) -->

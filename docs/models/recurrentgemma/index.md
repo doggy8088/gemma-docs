@@ -31,7 +31,7 @@ advantages:
 
 ## More resources
 
-### [View the model card](http://ai.google.dev/gemma/docs/recurrentgemma/model_card)
+### [View the model card](model-card.md)
 
 RecurrentGemma's model card contains detailed information about the model, implementation information, evaluation information, model usage and limitations, and more.
 

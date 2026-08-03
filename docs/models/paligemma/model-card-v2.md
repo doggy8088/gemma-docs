@@ -1,6 +1,6 @@
 # PaliGemma 2 model card
 
-**Model page:** [PaliGemma](https://ai.google.dev/gemma/docs/paligemma)
+**Model page:** [PaliGemma](index.md)
 
 **Resources and technical documentation:**
 
@@ -32,7 +32,7 @@ PaliGemma 2 is the composition of a
 [Transformer decoder](https://arxiv.org/abs/1706.03762) and a
 [Vision Transformer image encoder](https://arxiv.org/abs/2010.11929).
 The text decoder is initialized from
-[Gemma 2](https://ai.google.dev/gemma/docs/core) in the 2B, 9B, and 27B
+[Gemma 2](../gemma-4/index.md) in the 2B, 9B, and 27B
 parameter sizes. The image encoder is initialized from
 [SigLIP-So400m/14](https://colab.research.google.com/github/google-research/big_vision/blob/main/big_vision/configs/proj/image_text/SigLIP_demo.ipynb).
 Similar to the original PaliGemma model, PaliGemma 2 is trained following the
@@ -68,7 +68,7 @@ PaliGemma 2 is pre-trained on the following mixture of datasets:
 
 PaliGemma 2 is based on Gemma 2, and you can find information on the
 pre-training datasets for Gemma 2 in the
-[Gemma 2 model card](https://ai.google.dev/gemma/docs/core/model_card_2).
+[Gemma 2 model card](../gemma-2/index.md).
 
 #### Data responsibility filtering
 
@@ -238,7 +238,7 @@ Our evaluation methods include structured ethics and safety evaluations across
 relevant content policies, including:
 
 - Human evaluation on prompts covering child safety, content safety and representational harms. See the [Gemma model
-  card](https://ai.google.dev/gemma/docs/core/model_card#evaluation_approach) for more details on evaluation approach, but with image captioning and visual question answering setups.
+  card](../gemma-1/index.md#evaluation-approach) for more details on evaluation approach, but with image captioning and visual question answering setups.
 - Image-to-Text benchmark evaluation: Benchmark against relevant academic datasets such as FairFace Dataset ([Karkkainen et al.,
   2021](https://arxiv.org/abs/1908.04913)).
 

@@ -566,6 +566,6 @@ In this guide, you learned how to use Gemma 4 models for image understanding tas
 <!-- TODO: Port over 
 ### Next Steps
 
-- [Prompt and system instructions](https://ai.google.dev/gemma/docs/core/prompt-formatting-gemma4)
-- [Function calling](https://ai.google.dev/gemma/docs/capabilities/text/function-calling-gemma4)
-- [Run Gemma overview](https://ai.google.dev/gemma/docs/run) -->
+- [Prompt and system instructions](../prompt-formatting.md)
+- [Function calling](function-calling.md)
+- [Run Gemma overview](../../deployment/index.md) -->

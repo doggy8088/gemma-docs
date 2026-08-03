@@ -1,6 +1,6 @@
 # Gemma 3n model card
 
-**Model Page** : [Gemma 3n](https://ai.google.dev/gemma/docs/gemma-3n)
+**Model Page** : [Gemma 3n](index.md)
 
 **Resources and Technical Documentation**:
 
@@ -32,7 +32,7 @@ requirements. This technique allows the models to operate at an effective size
 of 2B and 4B parameters, which is lower than the total number of parameters they
 contain. For more information on Gemma 3n's efficient parameter management
 technology, see the
-[Gemma 3n](https://ai.google.dev/gemma/docs/gemma-3n#parameters)
+[Gemma 3n](index.md#model-parameters-and-effective-parameters)
 page.
 
 ### Inputs and outputs

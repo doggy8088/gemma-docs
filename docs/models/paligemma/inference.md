@@ -206,7 +206,7 @@ def display_segment_output(image, bounding_box, segment_mask, target_image_size)
 
 ## Generate output
 
-After loading the model and creating utility methods, you can prompt the model with image and text data to generate a responses. PaliGemma models are trained with specific prompt syntax for specific tasks, such as `answer`, `caption`, and `detect`. For more information about PaliGemma prompt task syntax, see [PaliGemma prompt and system instructions](https://ai.google.dev/gemma/docs/paligemma/prompt-system-instructions##prompt_task_syntax).
+After loading the model and creating utility methods, you can prompt the model with image and text data to generate a responses. PaliGemma models are trained with specific prompt syntax for specific tasks, such as `answer`, `caption`, and `detect`. For more information about PaliGemma prompt task syntax, see [PaliGemma prompt and system instructions](prompting.md#prompt-task-syntax).
 
 Prepare an image for use in a generation prompt by using the following code to load a test image into an object:
 

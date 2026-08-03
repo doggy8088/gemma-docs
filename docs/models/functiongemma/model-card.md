@@ -1,6 +1,6 @@
 # FunctionGemma model card
 
-**Model Page** : [FunctionGemma](https://ai.google.dev/gemma/docs/functiongemma)
+**Model Page** : [FunctionGemma](index.md)
 
 **Resources and Technical Documentation**:
 

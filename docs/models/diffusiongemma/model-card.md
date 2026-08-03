@@ -3,7 +3,7 @@
 [Hugging Face](https://huggingface.co/google/diffusiongemma-26B-A4B-it) \|
 [GitHub](https://github.com/google-gemma) \|
 [Launch Blog](https://blog.google/innovation-and-ai/technology/developers-tools/diffusion-gemma-faster-text-generation/) \|
-[Documentation](https://ai.google.dev/gemma/docs/diffusiongemma)
+[Documentation](index.md)
 
 
 **License** : [Apache 2.0](https://ai.google.dev/gemma/apache_2) \| **Authors** : [Google DeepMind](https://deepmind.google/models/gemma/)

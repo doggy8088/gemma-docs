@@ -1,0 +1,161 @@
+# Upstream documentation path -> local page.
+#
+# Keys are the path after "https://ai.google.dev/gemma/docs" (http/https and #fragments are
+# handled by the rewriter). Values are paths under docs/. Consumed by scripts/rewrite_links.py.
+#
+# Not listed here on purpose:
+#   - URLs inside code blocks (sample data, BibTeX citations) stay external; see check_links.
+#   - Media assets (.wav/.png/.jpg) referenced from snippets stay external so copy-paste works.
+
+# ------------------------------------------------------------------------------------------
+# [ported] Target page exists today.
+# ------------------------------------------------------------------------------------------
+[ported]
+"/core" = "models/gemma-4/index.md"
+"/core/model_card_4" = "models/gemma-4/model-card.md"
+"/core/model_card_3" = "models/gemma-3/index.md"
+"/core/model_card_2" = "models/gemma-2/index.md"
+"/core/model_card" = "models/gemma-1/index.md"
+"/core/prompt-formatting-gemma4" = "get-started/prompt-formatting.md"
+"/core/huggingface_inference" = "deployment/huggingface.md"
+"/releases" = "models/releases.md"
+
+"/get_started" = "get-started/quickstart.md"
+"/capabilities/audio" = "get-started/capabilities/audio.md"
+"/capabilities/thinking" = "get-started/capabilities/thinking.md"
+"/capabilities/vision" = "get-started/capabilities/vision.md"
+"/capabilities/vision/image" = "get-started/capabilities/image.md"
+"/capabilities/vision/video" = "get-started/capabilities/video.md"
+"/capabilities/text/function-calling-gemma4" = "get-started/capabilities/function-calling.md"
+"/capabilities/text/basic" = "get-started/capabilities/text.md"
+
+"/gemma-3n" = "models/gemma-3n/index.md"
+"/3n" = "models/gemma-3n/index.md"                       # shorthand used in a few pages
+"/gemma-3n/model_card" = "models/gemma-3n/model-card.md"
+
+"/diffusiongemma" = "models/diffusiongemma/index.md"
+"/diffusiongemma/model_card" = "models/diffusiongemma/model-card.md"
+"/diffusiongemma/explained" = "models/diffusiongemma/explained.md"
+"/diffusiongemma/inference-diffusiongemma-with-hf" = "models/diffusiongemma/inference.md"
+
+"/functiongemma" = "models/functiongemma/index.md"
+"/functiongemma/model_card" = "models/functiongemma/model-card.md"
+"/functiongemma/formatting-and-best-practices" = "models/functiongemma/formatting.md"
+"/functiongemma/function-calling-with-hf" = "models/functiongemma/inference.md"
+"/functiongemma/full-function-calling-sequence-with-functiongemma" = "models/functiongemma/full-sequence.md"
+"/functiongemma/finetuning-with-functiongemma" = "models/functiongemma/fine-tuning.md"
+
+"/embeddinggemma" = "models/embeddinggemma/index.md"
+"/embeddinggemma/model_card" = "models/embeddinggemma/model-card.md"
+"/embeddinggemma/inference-embeddinggemma-with-sentence-transformers" = "models/embeddinggemma/inference.md"
+"/embeddinggemma/fine-tuning-embeddinggemma-with-sentence-transformers" = "models/embeddinggemma/fine-tuning.md"
+
+"/paligemma" = "models/paligemma/index.md"
+"/paligemma/model-card" = "models/paligemma/model-card-v1.md"
+"/paligemma/model-card-2" = "models/paligemma/model-card-v2.md"
+"/paligemma/prompt-system-instructions" = "models/paligemma/prompting.md"
+"/paligemma/inference-with-keras" = "models/paligemma/inference.md"
+"/paligemma/fine-tuning-paligemma" = "models/paligemma/fine-tuning.md"
+
+"/shieldgemma" = "models/shieldgemma/index.md"
+"/shieldgemma/model_card" = "models/shieldgemma/model-card-v1.md"
+"/shieldgemma/model_card_2" = "models/shieldgemma/model-card-v2.md"
+
+"/recurrentgemma" = "models/recurrentgemma/index.md"
+"/recurrentgemma/model_card" = "models/recurrentgemma/model-card.md"
+"/recurrentgemma/recurrentgemma_jax_inference" = "models/recurrentgemma/inference.md"
+"/recurrentgemma/recurrentgemma_jax_finetune" = "models/recurrentgemma/fine-tuning.md"
+
+"/datagemma" = "models/datagemma/index.md"
+"/gemma_scope" = "models/gemma-scope/index.md"
+"/gemma-4" = "models/gemma-4/index.md"                   # alias for /core used on some pages
+"/gemma-aps" = "models/gemma-aps/index.md"
+
+# Run / deployment. Targets are existing stubs; Steps 2.2-2.3 fill them in.
+"/run" = "deployment/index.md"
+"/integrations/ollama" = "deployment/ollama.md"
+"/integrations/llamacpp" = "deployment/llamacpp.md"
+"/integrations/lmstudio" = "deployment/lmstudio.md"
+"/integrations/mlx" = "deployment/mlx.md"
+"/integrations/web" = "deployment/web.md"
+"/integrations/mobile" = "deployment/mobile.md"
+"/integrations/langchain" = "deployment/langchain.md"
+"/integrations/google-cloud" = "deployment/google-cloud.md"
+"/core/gke" = "deployment/google-cloud.md"               # GKE folded into the Google Cloud page
+"/mobile-actions" = "deployment/mobile-actions.md"
+
+# Fine-tuning. Targets are existing stubs; Step 2.3 fills them in.
+"/tune" = "tuning/overview.md"
+"/core/huggingface_text_finetune_qlora" = "tuning/qlora.md"
+"/core/huggingface_vision_finetune_qlora" = "tuning/vision-qlora.md"
+"/core/huggingface_text_full_finetune" = "tuning/full-finetune.md"
+"/core/distributed_tuning" = "tuning/distributed.md"
+"/core/lora_tuning" = "tuning/keras-lora.md"
+"/spoken-language/task-specific-tuning" = "tuning/spoken-language.md"
+
+# Learn
+"/business-email-assistant" = "learn/business-email-assistant.md"
+"/personal-code-assistant" = "learn/personal-code-assistant.md"
+
+# Now ported (were [planned] in Step 0.5)
+"/setup" = "get-started/setup.md"
+"/core/prompt-structure" = "get-started/prompt-structure.md"
+"/mtp/overview" = "get-started/capabilities/mtp.md"
+"/mtp/mtp" = "get-started/capabilities/mtp.md"
+
+# No such upstream page. Referenced from tuning docs about `start_of_turn`/`end_of_turn` tags
+# for core Gemma, so the core formatting page is the right target -- not paligemma/prompting.md,
+# which covers PaliGemma's task-specific syntax.
+"/core/prompt-system-instructions" = "get-started/prompt-structure.md"
+
+# ------------------------------------------------------------------------------------------
+# [planned] Page does not exist yet. Links point at the eventual path so the linter's
+# `internal` check tracks them as known-pending, rather than leaving live links to the site
+# we are replacing. Paths use the TARGET navigation from PLAN.md, not today's directories.
+# ------------------------------------------------------------------------------------------
+[planned]
+# Keras inference is documented upstream but absent from the target nav in PLAN.md.
+# Decide in Step 2.1 whether "Run > Local" gains a Keras page; the link is local either way.
+"/core/keras_inference" = "deployment/keras.md"
+
+# ------------------------------------------------------------------------------------------
+# [anchors] Fragments whose section exists but under a different slug than devsite used.
+# `--fix-anchors` handles the common underscore -> hyphen case automatically; these are the
+# ones where the heading text itself differs, so a heuristic would risk linking to the wrong
+# section. Key is "<target page>#<upstream fragment>", value is the correct slug.
+#
+# NOT listed here (deliberately): anchors that are broken upstream too. `#harm-types` on
+# shieldgemma/model-card-v2.md and `#categories` on paligemma/index.md point at sections that
+# do not exist on ai.google.dev either. Inventing a target would be an editorial guess; see
+# PLAN.md Notes.
+# ------------------------------------------------------------------------------------------
+[anchors]
+"models/gemma-4/index.md#previous-models" = "previous-gemma-models"
+# devsite used short custom anchors; our headings come from the source's own section titles.
+"deployment/huggingface.md#audio" = "generate-text-from-audio-data"
+"deployment/huggingface.md#vision" = "generate-text-from-image-data"
+"deployment/index.md#select-a-variant" = "select-a-gemma-variant"
+"deployment/index.md#run-generation" = "run-generation-and-inference-requests"
+"get-started/setup.md#get-access" = "get-access-to-gemma"
+"learn/business-email-assistant.md#compute_requirements" = "hardware-requirements"
+"learn/personal-code-assistant.md#compute_requirements" = "hardware-requirements"
+"learn/personal-code-assistant.md#extension" = "vs-code-extension-project"
+"learn/personal-code-assistant.md#web-service" = "gemma-web-service-project"
+"tuning/spoken-language.md#compute_requirements" = "hardware-requirements"
+"models/gemma-3n/index.md#matformer" = "matformer-architecture"
+"models/gemma-3n/index.md#conditional-parameter" = "conditional-parameter-loading"
+"models/gemma-3n/index.md#parameters" = "model-parameters-and-effective-parameters"
+
+# ------------------------------------------------------------------------------------------
+# [delink] Out of scope for these docs. The link is removed but the text is kept, so the
+# sentence still reads correctly and no prose is lost.
+# ------------------------------------------------------------------------------------------
+[delink]
+paths = [
+  "/codegemma",              # CodeGemma is not being ported (decision: 2026-08-03)
+  "/codegemma/model_card",
+  "/codegemma/prompt-structure",
+  "/codegemma/keras_quickstart",
+  "/codegemma/code_assist_keras",
+  "/codegemma/codegemma_flax_inference",
+]

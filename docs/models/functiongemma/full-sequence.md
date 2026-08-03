@@ -271,4 +271,4 @@ You have established how to build an application that can calls functions with F
 
 Check out the following documentation for further reading.
 
-- [Fine-tuning with FunctionGemma](https://ai.google.dev/gemma/docs/functiongemma/finetuning-with-functiongemma)
+- [Fine-tuning with FunctionGemma](fine-tuning.md)

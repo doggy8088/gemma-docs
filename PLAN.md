@@ -92,7 +92,7 @@ Get started    Quickstart · Install & setup · Choose your model
                              Multi-Token Prediction · Long context
 Models         Gemma 4 (overview, model card, benchmarks)
                Variants: Gemma 3n · DiffusionGemma · FunctionGemma
-                         EmbeddingGemma · PaliGemma · ShieldGemma · CodeGemma
+                         EmbeddingGemma · PaliGemma · ShieldGemma
                Previous generations: Gemma 3 · 2 · 1
                Research: RecurrentGemma · DataGemma · Gemma Scope
                Releases
@@ -358,12 +358,107 @@ finding**, not just the mandatory-check list. Both workflows now pass clean.
 
     For annotated tags, dereference: `gh api repos/<repo>/git/tags/<sha> --jq '.object.sha'`.
 
-### Step 0.5 — Rewrite internal links
+### Step 0.5 — Rewrite internal links ✅
+
+- [x] `scripts/link_map.toml` — reviewable data, not logic buried in a script. Three sections:
+      `[ported]` (target exists), `[planned]` (eventual path; tracked as known-pending),
+      `[delink]` (drop the link, keep the text).
+- [x] `scripts/rewrite_links.py` — applies the map, computing each relative path per page.
+      An unmapped target is **reported and left alone**; silently dropping a link is worse than
+      leaving one to fix.
+- [x] **144 prose links rewritten**: 122 ported, 20 planned, 2 delinked. Zero unmapped.
+- [x] **CodeGemma delinked** (decision: not being ported). Both references in `releases.md`
+      keep their text — "Release of CodeGemma v1.1." still reads correctly.
+- [x] `--fix-anchors` pass: 12 fragments repaired. devsite used `#model_data`, Zensical emits
+      `#model-data`; 8 were the mechanical underscore→hyphen case, 4 needed the explicit
+      `[anchors]` override table because the heading text itself changed.
+- **Verify:** `uv run python scripts/lint_docs.py --check links` → zero. Both passes idempotent.
+- **Done when:** ✅ zero outbound links to the site we're replacing.
+
+**Left external on purpose** — 5 URLs inside code blocks: four are sample data the reader
+fetches (`img_url = "https://.../cat.png"`) and one is a BibTeX citation. Rewriting those would
+break copy-paste and misattribute the citation. `check_links` now skips code blocks for this reason.
+
+**5 anchors remain unresolved**, none of them actionable now:
+
+| Anchor | Why |
+|---|---|
+| `huggingface.md#audio`, `#vision` | target is a stub; resolves in Step 2.2 |
+| `quickstart.md#models-list` | section removed during hand-editing |
+| `paligemma/index.md#categories` | **broken upstream too** — no such section on ai.google.dev |
+| `shieldgemma/model-card-v2.md#harm-types` | **broken upstream too** |
+
+The last two were dead links on the original site; the port reproduced them faithfully.
+Inventing a target would be an editorial guess, so they are left alone pending a content decision.
+
+```bash
+uv run python scripts/rewrite_links.py --report
+```
+
+### Phase 0 progress: 300 → 137
+
+| Check | Start | Now | |
+|---|---|---|---|
+| `links` | 122 | **0** | ✅ cleared |
+| `images` | 52 | **0** | ✅ cleared |
+| `fences` | 7 | **0** | ✅ cleared |
+| `size` | 1 | **0** | ✅ cleared |
+| `admonitions` | 0 | **0** | ✅ |
+| `internal` | 0 | 20 | known-pending: links to planned pages |
+| `stubs` | 33 | 32 | → Steps 2.2–2.4 |
+| `orphans` | 4 | 4 | → Step 2.1 |
+| `frontmatter` | 81 | 81 | → Step 3.1 |
+
+
 - [ ] Map all 122 `ai.google.dev/gemma/docs/*` links to local paths.
 - [ ] For pages not yet ported, point at the eventual local path and let the linter flag it as
       a known-pending target (don't leave live external links).
 - **Verify:** `uv run python scripts/lint_docs.py --check links`
 - **Done when:** zero outbound links to the site we're replacing.
+
+### Step 0.5b — Port the pages Step 0.5 pointed at ✅
+
+Step 0.5 left 19 build warnings by design (links aimed at eventual paths). Every one of those
+targets turned out to exist upstream, so porting them was cheaper than leaving the warnings —
+and it advanced Step 2.4 at the same time.
+
+- [x] **10 pages ported**, all fidelity-clean:
+
+| Page | Source | Size |
+|---|---|---|
+| `get-started/setup.md` | `/setup` | 2.5 KB |
+| `get-started/prompt-structure.md` | `/core/prompt-structure` | 2.2 KB |
+| `get-started/capabilities/mtp.md` | `/mtp/overview` | 2.8 KB |
+| `deployment/index.md` | `/run` | 10.7 KB |
+| `deployment/huggingface.md` | `/core/huggingface_inference` | 11.9 KB (**replaced a stub**) |
+| `deployment/mobile-actions.md` | `/mobile-actions` | 4.2 KB |
+| `tuning/spoken-language.md` | `/spoken-language/task-specific-tuning` | 22.9 KB |
+| `learn/business-email-assistant.md` | `/business-email-assistant` | 20.5 KB |
+| `learn/personal-code-assistant.md` | `/personal-code-assistant` | 22.6 KB |
+| `models/gemma-aps/index.md` | `/gemma-aps` | 1.8 KB |
+
+- [x] **The MTP gap is closed.** It was the flagship Gemma 4 feature with zero documentation.
+- [x] Link map grew to 75 `[ported]` entries; 23 more anchor overrides applied.
+- [x] Fixed a mis-targeted mapping: `/core/prompt-system-instructions` (no such upstream page)
+      was sent to `paligemma/prompting.md`, but the referring context is core Gemma
+      `start_of_turn`/`end_of_turn` tags, so it now points at `get-started/prompt-structure.md`.
+- **Verify:** build warnings **19 → 5**; all four pipeline stages idempotent.
+
+**5 warnings remain, all deliberate:**
+
+| Warning | Status |
+|---|---|
+| `deployment/keras.md` ×2 | planned page — Step 2.1 decides whether "Run > Local" gains Keras |
+| `quickstart.md#models-list` | section removed during your hand-editing |
+| `paligemma/index.md#categories` | **broken upstream too** |
+| `shieldgemma/model-card-v2.md#harm-types` | **broken upstream too** |
+
+The last three are left alone on purpose: picking a target is an editorial decision, and the
+dangling anchor is a useful signal that a section is genuinely missing. **Needs a content call.**
+
+!!! warning "The 9 new pages are not in the nav"
+    `orphans` rose 4 → 13. That is expected — Step 2.1 places them. Do not "fix" it by
+    deleting pages.
 
 ### Step 0.6 — Model capability matrix as single source of truth
 - [ ] Create `data/models.yml`: every Gemma 4 size with parameters, modalities in/out, context
@@ -467,7 +562,8 @@ actual model support) → context/KV-cache flags → troubleshooting → measure
 - **Verify:** `uv run python scripts/lint_docs.py --check stubs` → zero.
 
 ### Step 2.4 — Port remaining upstream pages
-- [ ] CodeGemma (5 pages, currently absent from nav entirely).
+- [x] ~~CodeGemma~~ — **not being ported** (decision: 2026-08-03). Existing references are
+      delinked, keeping the text. Do not add it back without a new decision.
 - [ ] `setup`, `run`, `gemma_chat`, `gemma_library`, `keras_inference`, `pytorch_gemma`,
       `huggingface_inference`, `lora_tuning`, `prompt-structure`.
 - [ ] Application tutorials → Learn: `business-email-assistant`, `personal-code-assistant`,

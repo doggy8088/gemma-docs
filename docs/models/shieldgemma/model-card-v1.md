@@ -1,6 +1,6 @@
 # ShieldGemma model card
 
-**Model Page** : [ShieldGemma](https://ai.google.dev/gemma/docs/shieldgemma)
+**Model Page** : [ShieldGemma](index.md)
 
 **Resources and Technical Documentation**:
 
@@ -118,12 +118,12 @@ and publicly available datasets. More details can be found in the
 
 ShieldGemma was trained using the latest generation of
 [Tensor Processing Unit (TPU)](https://cloud.google.com/tpu/docs/intro-to-tpu) hardware (TPUv5e), for more details refer to
-the [Gemma 2 model card](https://ai.google.dev/gemma/docs/core/model_card_2).
+the [Gemma 2 model card](../gemma-2/index.md).
 
 ### Software
 
 Training was done using [JAX](https://github.com/jax-ml/jax) and [ML Pathways](https://blog.google/technology/ai/introducing-pathways-next-generation-ai-architecture/). For more
-details refer to the [Gemma 2 model card](https://ai.google.dev/gemma/docs/core/model_card_2).
+details refer to the [Gemma 2 model card](../gemma-2/index.md).
 
 ## Evaluation
 
@@ -174,7 +174,7 @@ applications as part of the Gemma ecosystem.
 ### Limitations
 
 All the usual limitations for large language models apply, see the
-[Gemma 2 model card](https://ai.google.dev/gemma/docs/core/model_card_2) for more details. Additionally,
+[Gemma 2 model card](../gemma-2/index.md) for more details. Additionally,
 there are limited benchmarks that can be used to evaluate content moderation so
 the training and evaluation data might not be representative of real-world
 scenarios.
@@ -192,7 +192,7 @@ The development of large language models (LLMs) raises several ethical concerns.
 We have carefully considered multiple aspects in the development of these
 models.
 
-Refer to the [Gemma model card](https://ai.google.dev/gemma/docs/core/model_card_2) for more details.
+Refer to the [Gemma model card](../gemma-2/index.md) for more details.
 
 ### Benefits
 

@@ -9,9 +9,9 @@ tasks.
 
 PaliGemma models use the same prompt formatting as the Gemma foundation models
 they are based on. However, PaliGemma models also support a special
-[task syntax](https://ai.google.dev/gemma/docs/paligemma/prompt-system-instructions#prompt_task_syntax), which is described in the next section. For
+[task syntax](prompting.md#prompt-task-syntax), which is described in the next section. For
 more information on Gemma prompt formatting, see
-[Gemma prompt and system instructions](https://ai.google.dev/gemma/docs/core/prompt-structure).
+[Gemma prompt and system instructions](../../get-started/prompt-structure.md).
 
 !!! Note
     although the pre-trained checkpoints support this prompt structure, they require fine-tuning to your specific use cases.
@@ -50,11 +50,11 @@ can find the list of supported languages on
 [GitHub](https://github.com/google/crossmodal-3600/blob/main/web-data/README.md).
 
 !!! Important
-    The [PaliGemma FT](https://ai.google.dev/gemma/docs/paligemma#categories) category of models are trained for specific tasks and *only* support the syntax for the target task.
+    The [PaliGemma FT](index.md#categories) category of models are trained for specific tasks and *only* support the syntax for the target task.
 
 
 For a detailed code examples showing how to use this syntax, see the
-[Generate PaliGemma output with Keras](https://ai.google.dev/gemma/docs/paligemma/inference-with-keras)
+[Generate PaliGemma output with Keras](inference.md)
 tutorial.
 
 ### Prompting with natural language
@@ -93,5 +93,5 @@ for output in outputs:
 ## System instructions
 
 The PaliGemma models don't support any additional system instructions beyond
-the [Gemma system instructions](https://ai.google.dev/gemma/docs/core/prompt-structure#system-instructions)
+the [Gemma system instructions](../../get-started/prompt-structure.md#system-instructions)
 from the foundation models they are based on.

@@ -6,7 +6,7 @@
 DataGemma is a research tool that lets users ask questions in plain language and receive
 answers based on publicly available statistical data in the
 [Data Commons](https://datacommons.org/) repository. The tool uses
-specially built versions of [Gemma](https://ai.google.dev/gemma/docs/core),
+specially built versions of [Gemma](../gemma-4/index.md),
 the [Gemini API](https://ai.google.dev/gemini-api) with Gemini 1.5 Pro, and a set of libraries
 specifically designed to work with Data Commons.
 

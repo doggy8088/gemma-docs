@@ -257,7 +257,7 @@ For RAG systems, use the following `prompt_name` values to create specialized em
 
 #### Further Reading
 
-- For details on all available EmbeddingGemma prompts, see the [model card](http://ai.google.dev/gemma/docs/embeddinggemma/model_card#prompt_instructions).
+- For details on all available EmbeddingGemma prompts, see the [model card](model-card.md#prompt-instructions).
 - For general information on prompt templates, see the [Sentence Transformer documentation](https://sbert.net/examples/sentence_transformer/applications/computing-embeddings/README.html#prompt-templates).
 - For a demo of RAG, see the [Simple RAG example](https://github.com/google-gemma/cookbook/blob/main/Gemma/%5BGemma_3%5DRAG_with_EmbeddingGemma.ipynb) in the Gemma Cookbook.
 
@@ -382,5 +382,5 @@ You are now equipped to generate high-quality text embeddings using EmbeddingGem
 
 Check out the following docs next:
 
-- [Fine-tune EmbeddingGemma](https://ai.google.dev/gemma/docs/embeddinggemma/fine-tuning-embeddinggemma-with-sentence-transformers)
+- [Fine-tune EmbeddingGemma](fine-tuning.md)
 - [Simple RAG example](https://github.com/google-gemma/cookbook/blob/main/Gemma/%5BGemma_3%5DRAG_with_EmbeddingGemma.ipynb) in the Gemma Cookbook

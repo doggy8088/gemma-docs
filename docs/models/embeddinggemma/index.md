@@ -38,5 +38,5 @@ As with other Gemma models, EmbeddingGemma is provided with open weights and
 licensed for responsible [commercial use](https://ai.google.dev/gemma/terms), allowing you to
 fine tune and deploy it in your own projects and applications.
 
-[Try EmbeddingGemma](https://ai.google.dev/gemma/docs/embeddinggemma/inference-embeddinggemma-with-sentence-transformers)
-[Fine-tune EmbeddingGemma](https://ai.google.dev/gemma/docs/embeddinggemma/fine-tuning-embeddinggemma-with-sentence-transformers)
+[Try EmbeddingGemma](inference.md)
+[Fine-tune EmbeddingGemma](fine-tuning.md)

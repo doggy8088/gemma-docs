@@ -10,7 +10,7 @@ Models, especially smaller ones, have fewer parameters available to retain compl
 Common use cases for fine-tuning tool calling include:
 
 - **Model Distillation**: Generating synthetic training data with a larger model and fine-tuning a smaller model to replicate the specific workflow efficiently.
-- **Handling Non-Standard Schemas** : Overcoming base model struggles with legacy, highly complex data structures or proprietary format not found in public data, such as handling [domain-specific mobile actions](https://ai.google.dev/gemma/docs/mobile-actions).
+- **Handling Non-Standard Schemas** : Overcoming base model struggles with legacy, highly complex data structures or proprietary format not found in public data, such as handling [domain-specific mobile actions](../../deployment/mobile-actions.md).
 - **Optimizing Context Usage**: "Baking" tool definitions into the model's weights. This allows you to use shorthand descriptions in your prompts, freeing up the context window for the actual conversation.
 - **Resolving Selection Ambiguity**: Biasing the model toward specific enterprise policies, such as prioritizing an internal knowledge base over an external search engine.
 
@@ -605,5 +605,5 @@ Now that you have a fine-tuned model, consider the following steps to move towar
 
 Check out the following docs next:
 
-- [Full function calling sequence with FunctionGemma](https://ai.google.dev/gemma/docs/functiongemma/full-function-calling-sequence-with-functiongemma)
+- [Full function calling sequence with FunctionGemma](full-sequence.md)
 - [Fine-tune FunctionGemma for Mobile Actions](https://github.com/google-gemma/cookbook/blob/main/FunctionGemma/%5BFunctionGemma%5DFinetune_FunctionGemma_270M_for_Mobile_Actions_with_Hugging_Face.ipynb) in the Gemma Cookbook

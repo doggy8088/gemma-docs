@@ -1,6 +1,6 @@
 # ShieldGemma model card
 
-**Model Page** : [ShieldGemma](https://ai.google.dev/gemma/docs/shieldgemma)
+**Model Page** : [ShieldGemma](index.md)
 
 **Resources and Technical Documentation**:
 
@@ -25,7 +25,7 @@ the safety of both synthetic and natural images against key categories to help
 you build robust datasets and models. With this addition to the Gemma family of
 models, researchers and developers can now minimize the risk of harmful content
 affecting their Generative-AI powered applications across key
-[harm types](https://ai.google.dev/gemma/docs/shieldgemma/model_card_2#harm-types).
+[harm types](model-card-v2.md#harm-types).
 
 We recommend using ShieldGemma 2 as an input filter to vision language models,
 or as an output filter of image generation systems. To train a robust image
@@ -106,12 +106,12 @@ in the data preparation process to ensure the exclusion of illegal content.
 
 ShieldGemma 2 was trained using the latest generation of
 [Tensor Processing Unit (TPU)](https://cloud.google.com/tpu/docs/intro-to-tpu) hardware (TPUv5e), for more details refer to
-the [Gemma 3 model card](https://ai.google.dev/gemma/docs/core/model_card_3).
+the [Gemma 3 model card](../gemma-3/index.md).
 
 ### Software
 
 Training was done using [JAX](https://github.com/jax-ml/jax) and [ML Pathways](https://blog.google/technology/ai/introducing-pathways-next-generation-ai-architecture/). For more
-details refer to the [Gemma 3 model card](https://ai.google.dev/gemma/docs/core/model_card_3).
+details refer to the [Gemma 3 model card](../gemma-3/index.md).
 
 ## Evaluation
 
@@ -167,7 +167,7 @@ applications as part of the Gemma ecosystem.
 ### Limitations
 
 All the usual limitations for large language models apply, see the
-[Gemma 3 model card](https://ai.google.dev/gemma/docs/core/model_card_3) for more details. Additionally,
+[Gemma 3 model card](../gemma-3/index.md) for more details. Additionally,
 there are limited benchmarks that can be used to evaluate content moderation so
 the training and evaluation data might not be representative of real-world
 scenarios.
@@ -185,7 +185,7 @@ The development of large language models (LLMs) raises several ethical concerns.
 We have carefully considered multiple aspects in the development of these
 models.
 
-Refer to the [Gemma 3 model card](https://ai.google.dev/gemma/docs/core/model_card_3) for more details.
+Refer to the [Gemma 3 model card](../gemma-3/index.md) for more details.
 
 ### Benefits
 

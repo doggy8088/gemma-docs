@@ -16,7 +16,7 @@ object detection, and reading text embedded within images.
 PaliGemma 2 is available in 3B, 10B, and 28B parameter sizes, which are based on Gemma 2
 2B, 9B, and 27B models, respectively. The original PaliGemma models are available in the
 3B size. For more information on Gemma model variants, see the
-[Gemma models list](https://ai.google.dev/gemma/docs/get_started#models-list).
+[Gemma models list](../../get-started/quickstart.md#models-list).
 PaliGemma model variants support different pixel resolutions for image inputs, including
 224 x 224, 448 x 448, and 896 x 896 pixels.
 
@@ -58,11 +58,11 @@ Key benefits include:
 
 ## Learn more
 
-### [Run in Colab](http://ai.google.dev/gemma/docs/paligemma/inference-with-keras)
+### [Run in Colab](inference.md)
 
 Try detection and content generation capabilities with PaliGemma in Colab.
 
-### [Tune in Colab](http://ai.google.dev/gemma/docs/paligemma/fine-tuning-paligemma)
+### [Tune in Colab](fine-tuning.md)
 
 Fine-tune a PaliGemma model with image data using JAX in Colab.
 

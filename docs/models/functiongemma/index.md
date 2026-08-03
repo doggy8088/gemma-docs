@@ -34,8 +34,8 @@ As with other Gemma models, FunctionGemma is provided with open weights and
 licensed for responsible [commercial use](https://ai.google.dev/gemma/terms), allowing you to
 fine tune and deploy it in your own projects and applications.
 
-[Formatting and best practices](https://ai.google.dev/gemma/docs/functiongemma/formatting-and-best-practices)
-[Try FunctionGemma](https://ai.google.dev/gemma/docs/functiongemma/function-calling-with-hf)
+[Formatting and best practices](formatting.md)
+[Try FunctionGemma](inference.md)
 
-[Fine-tune FunctionGemma](https://ai.google.dev/gemma/docs/functiongemma/finetuning-with-functiongemma)
-[Fine-tune the Mobile Actions demo](https://ai.google.dev/gemma/docs/mobile-actions)
+[Fine-tune FunctionGemma](fine-tuning.md)
+[Fine-tune the Mobile Actions demo](../../deployment/mobile-actions.md)

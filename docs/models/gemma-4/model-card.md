@@ -4,7 +4,7 @@
 [Hugging Face](https://huggingface.co/collections/google/gemma-4) \|
 [GitHub](https://github.com/google-gemma) \|
 [Launch Blog](https://blog.google/innovation-and-ai/technology/developers-tools/gemma-4/) \|
-[Documentation](https://ai.google.dev/gemma/docs/core) \|
+[Documentation](index.md) \|
 [Technical Report](https://arxiv.org/abs/2607.02770)
 
 

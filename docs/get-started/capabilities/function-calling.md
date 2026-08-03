@@ -626,7 +626,7 @@ You have established how to build an application that can call functions with Ge
 ### Next Steps
 Check out the following documentation for further reading.
 
-- [Run Gemma overview](https://ai.google.dev/gemma/docs/run)
-- [Vision understanding](https://ai.google.dev/gemma/docs/capabilities/vision)
-- [Audio understanding](https://ai.google.dev/gemma/docs/capabilities/audio)
-- [Thinking mode](https://ai.google.dev/gemma/docs/capabilities/thinking) -->
+- [Run Gemma overview](../../deployment/index.md)
+- [Vision understanding](vision.md)
+- [Audio understanding](audio.md)
+- [Thinking mode](thinking.md) -->

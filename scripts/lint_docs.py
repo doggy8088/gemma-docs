@@ -248,9 +248,15 @@ HTML_SRC = re.compile(r"<img[^>]+src=[\"']([^\"']+)[\"']")
 
 
 def check_links(ctx: Context) -> Iterable[Finding]:
-    """No links back to the documentation site we're replacing."""
+    """No prose links back to the documentation site we're replacing.
+
+    Code blocks are exempt, and deliberately so. Every upstream URL inside a snippet here is
+    either sample data the reader is meant to fetch (`img_url = "https://.../cat.png"`) or a
+    BibTeX citation, which must keep pointing at the canonical public URL. Rewriting those to
+    local paths would break copy-paste and misattribute citations.
+    """
     for page in ctx.pages:
-        for lineno, line in page.body_lines():
+        for lineno, line in outside_code(page):
             if UPSTREAM_DOCS in line:
                 for match in re.finditer(rf"https?://{re.escape(UPSTREAM_DOCS)}[^\s)\"'>]*", line):
                     yield Finding(

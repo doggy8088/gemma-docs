@@ -580,4 +580,4 @@ print(text[0])
 
 ## Summary and next steps
 
-In this guide, you learned how to use DiffusionGemma for various tasks. Check out [Diffusion in Text Generation Explained](https://ai.google.dev/gemma/docs/diffusiongemma/explained) to understand how model works in detail.
+In this guide, you learned how to use DiffusionGemma for various tasks. Check out [Diffusion in Text Generation Explained](explained.md) to understand how model works in detail.

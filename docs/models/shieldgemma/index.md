@@ -12,7 +12,7 @@ for your specific use case.
 
 
 ShieldGemma 2 is a 4B parameter model built to label images for safety.
-ShieldGemma 1 is built on [Gemma 2](https://ai.google.dev/gemma/docs/core) in 2B, 9B, and 27B parameter sizes.
+ShieldGemma 1 is built on [Gemma 2](../gemma-4/index.md) in 2B, 9B, and 27B parameter sizes.
 
 
 -
@@ -28,7 +28,7 @@ ShieldGemma 1 is built on [Gemma 2](https://ai.google.dev/gemma/docs/core) in 2B
 
 ## ShieldGemma 2
 
-### [View the model card](http://ai.google.dev/gemma/docs/shieldgemma/model_card_2)
+### [View the model card](model-card-v2.md)
 
 ShieldGemma's 2 model card contains detailed information about the model implementation, evaluations, model usage and limitations, and more.
 
@@ -42,7 +42,7 @@ Run a working example for using ShieldGemma to evaluate images.
 
 ## ShieldGemma 1
 
-### [View the model card](http://ai.google.dev/gemma/docs/shieldgemma/model_card)
+### [View the model card](model-card-v1.md)
 
 ShieldGemma's model card contains detailed information about the model implementation, evaluations, model usage and limitations, and more.
 

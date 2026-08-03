@@ -1,10 +1,10 @@
 
 # Audio Understanding
 
-Starting with [Gemma 3n](https://ai.google.dev/gemma/docs/gemma-3n), you can use audio directly into your prompts and workflows. Audio and spoken language are rich sources of data for capturing user intents, recording information about the world around us, and understanding
+Starting with [Gemma 3n](../../models/gemma-3n/index.md), you can use audio directly into your prompts and workflows. Audio and spoken language are rich sources of data for capturing user intents, recording information about the world around us, and understanding
 specific problems to be solved.
 
-This guide provides an overview of the audio processing capabilities of [Gemma 4](https://ai.google.dev/gemma/docs/core), including automatic speech recognition (ASR), translation, and general speech understanding.
+This guide provides an overview of the audio processing capabilities of [Gemma 4](../../models/gemma-4/index.md), including automatic speech recognition (ASR), translation, and general speech understanding.
 
 
 ## Install Python packages
@@ -316,6 +316,6 @@ In this guide, you learned how to process audio using Gemma 4 models. The exampl
 <!-- TODO: Port over
 ### Next steps
 
-- [Run Gemma overview](https://ai.google.dev/gemma/docs/run)
-- [Vision understanding](https://ai.google.dev/gemma/docs/capabilities/vision)
-- [Thinking mode](https://ai.google.dev/gemma/docs/capabilities/thinking) -->
+- [Run Gemma overview](../../deployment/index.md)
+- [Vision understanding](vision.md)
+- [Thinking mode](thinking.md) -->

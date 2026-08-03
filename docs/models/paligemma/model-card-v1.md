@@ -1,6 +1,6 @@
 # PaliGemma 1 model card
 
-**Model page:** [PaliGemma](https://ai.google.dev/gemma/docs/paligemma)
+**Model page:** [PaliGemma](index.md)
 
 **Resources and technical documentation:**
 
@@ -177,7 +177,7 @@ models were evaluated against a number of different categories relevant to
 ethics and safety, including:
 
 - Human evaluation on prompts covering child safety, content safety and representational harms. See the [Gemma model
-  card](https://ai.google.dev/gemma/docs/core/model_card#evaluation_approach) for more details on evaluation approach, but with image captioning and visual question answering setups.
+  card](../gemma-1/index.md#evaluation-approach) for more details on evaluation approach, but with image captioning and visual question answering setups.
 - Image-to-Text benchmark evaluation: Benchmark against relevant academic datasets such as FairFace Dataset ([Karkkainen et al.,
   2021](https://arxiv.org/abs/1908.04913)).
 

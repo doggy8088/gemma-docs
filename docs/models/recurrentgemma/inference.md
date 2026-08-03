@@ -1,7 +1,7 @@
 # Inference with RecurrentGemma using JAX and Flax
 
 
-This tutorial demonstrates how to perform basic sampling/inference with the [RecurrentGemma](https://ai.google.dev/gemma/docs/recurrentgemma) 2B Instruct model using [Google DeepMind's `recurrentgemma` library](https://github.com/google-deepmind/recurrentgemma) that was written with [JAX](https://jax.readthedocs.io) (a high-performance numerical computing library), [Flax](https://flax.readthedocs.io) (the JAX-based neural network library), [Orbax](https://orbax.readthedocs.io/) (a JAX-based library for training utilities like checkpointing), and [SentencePiece](https://github.com/google/sentencepiece) (a tokenizer/detokenizer library). Although Flax is not used directly in this notebook, Flax was used to create Gemma and RecurrentGemma (the Griffin model).
+This tutorial demonstrates how to perform basic sampling/inference with the [RecurrentGemma](index.md) 2B Instruct model using [Google DeepMind's `recurrentgemma` library](https://github.com/google-deepmind/recurrentgemma) that was written with [JAX](https://jax.readthedocs.io) (a high-performance numerical computing library), [Flax](https://flax.readthedocs.io) (the JAX-based neural network library), [Orbax](https://orbax.readthedocs.io/) (a JAX-based library for training utilities like checkpointing), and [SentencePiece](https://github.com/google/sentencepiece) (a tokenizer/detokenizer library). Although Flax is not used directly in this notebook, Flax was used to create Gemma and RecurrentGemma (the Griffin model).
 
 This notebook can run on Google Colab with the T4 GPU (go to **Edit** \> **Notebook settings** \> Under **Hardware accelerator** select **T4 GPU**).
 
@@ -11,7 +11,7 @@ The following sections explain the steps for preparing a notebook to use a Recur
 
 ### Set up Kaggle access for Gemma
 
-To complete this tutorial, you first need to follow the setup instructions *similar* to [Gemma setup](https://ai.google.dev/gemma/docs/setup) with a few exceptions:
+To complete this tutorial, you first need to follow the setup instructions *similar* to [Gemma setup](../../get-started/setup.md) with a few exceptions:
 
 - Get access to RecurrentGemma (instead of Gemma) on [kaggle.com](https://www.kaggle.com/models/google/recurrentgemma).
 - Select a Colab runtime with sufficient resources to run the RecurrentGemma model.
