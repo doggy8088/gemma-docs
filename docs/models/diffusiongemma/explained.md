@@ -5,7 +5,7 @@ standard language models and how text-based diffusion differs.
 
 ## The Problem with Autoregressive Models
 
-![autoregressive versus diffusion](https://ai.google.dev/static/gemma/docs/diffusiongemma/images/ar_vs_diffusion.png)
+![autoregressive versus diffusion](../../assets/diffusiongemma/ar_vs_diffusion.png)
 
 Many Large Language Models (LLMs) are **autoregressive**, meaning they generate
 text one single token at a time. While this approach works well for serving many
@@ -22,7 +22,7 @@ amount of time for 1 user as it does for 256 users grouped together.
 Consequently, an individual user sees no latency advantage; the hardware's
 computational capacity sits idle while waiting on memory transfers.
 
-![DiffusionGemma overview](https://ai.google.dev/static/gemma/docs/diffusiongemma/images/cond_overview-1.png)
+![DiffusionGemma overview](../../assets/diffusiongemma/cond_overview-1.png)
 
 **DiffusionGemma** utilizes this idle compute time for the individual user.
 Instead of generating 1 token for 256 separate users, it generates **256 tokens
@@ -56,7 +56,7 @@ specialized methodologies:
 
 ### 1. Masked Diffusion
 
-![Masked Diffusion](https://ai.google.dev/static/gemma/docs/diffusiongemma/images/md_forward_reverse_diffusion.png)
+![Masked Diffusion](../../assets/diffusiongemma/md_forward_reverse_diffusion.png)
 
 Early text diffusion relied on masking, similar to BERT training. Random tokens
 in a sequence are replaced with a `[MASK]` token (representing noise). During
@@ -69,7 +69,7 @@ the surrounding context changes.
 
 ### 2. Uniform State Diffusion
 
-![Uniform State Diffusion](https://ai.google.dev/static/gemma/docs/diffusiongemma/images/usd_forward_reverse_diffusion.png)
+![Uniform State Diffusion](../../assets/diffusiongemma/usd_forward_reverse_diffusion.png)
 
 To resolve the limitations of masking, DiffusionGemma uses **Uniform State
 Diffusion** . Instead of an explicit `[MASK]` token, noise is introduced by
@@ -84,7 +84,7 @@ refinement.
 
 ## Architecture: The incremental prefill and denoising
 
-![Block Autoregressive Denoising](https://ai.google.dev/static/gemma/docs/diffusiongemma/images/patch_encoder.png)
+![Block Autoregressive Denoising](../../assets/diffusiongemma/patch_encoder.png)
 
 DiffusionGemma implements Uniform State Diffusion efficiently by alternating
 between **Incremental Prefill** and **Denoising**. Gemma 4 26B A4B model isn't

@@ -111,6 +111,13 @@ def main() -> int:
             failures.append(entry["path"])
 
     print(f"\n{len(selected) - len(failures)} ok, {len(failures)} failed")
+
+    if not args.dry_run and len(selected) > len(failures):
+        # Conversion restores the upstream image URLs, undoing any previous vendoring.
+        # The linter's `images` check is at zero, so a missed run fails CI -- but say it here
+        # rather than making someone discover it from a red build.
+        print("\nNext: re-vendor images, which this run reverted to upstream URLs:")
+        print("  uv run python scripts/vendor_images.py")
     if failures:
         print("\nFidelity failures (not written):")
         for path in failures:

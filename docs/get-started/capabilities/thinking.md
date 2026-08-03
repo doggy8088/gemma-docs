@@ -434,7 +434,7 @@ for key, value in result.items():
 === Downloaded image ===
 ```
 
-![png](https://ai.google.dev/static/gemma/docs/capabilities/thinking_files/output_0f334997_1.png)
+![png](../../assets/capabilities/output_0f334997_1.png)
 
 ``` { .no-copy .output }
 Role: assistant

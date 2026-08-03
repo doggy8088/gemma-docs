@@ -56,7 +56,7 @@ However, using parameter skipping and PLE caching techniques, this model can be
 operated with an effective memory load of just under 2 billion (1.91B)
 parameters, as illustrated in Figure 1.
 
-![Gemma 3n diagram of parameter usage](https://ai.google.dev/static/gemma/docs/images/gemma-3n-parameters.png)
+![Gemma 3n diagram of parameter usage](../../assets/gemma-3n/gemma-3n-parameters.png)
 
 **Figure 1.** Gemma 3n E2B model parameters running in standard execution
 versus an effectively lower parameter load using PLE caching and parameter

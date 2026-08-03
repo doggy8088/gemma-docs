@@ -1,4 +1,4 @@
-![Gemma 4 Banner](https://ai.google.dev/static/gemma/images/gemma4_banner.png)
+![Gemma 4 Banner](../../assets/gemma-4/gemma4_banner.png)
 
 
 [Hugging Face](https://huggingface.co/collections/google/gemma-4) \|

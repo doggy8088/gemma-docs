@@ -134,7 +134,7 @@ successfully makes the connection:
 Here is a complete, step-by-step formatted example demonstrating the flow for
 using the `get_current_weather` tool.
 
-![A diagram of Weather Tool Flow](https://ai.google.dev/gemma/docs/images/functiongemma_flow.png)
+![A diagram of Weather Tool Flow](../../assets/functiongemma/functiongemma_flow.png)
 
 ### Turn 1: Tool Definition (Developer)
 

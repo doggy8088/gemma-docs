@@ -38,6 +38,13 @@ WORD = re.compile(r"[A-Za-z0-9_.+-]{2,}")
 BASE64_PAYLOAD = re.compile(r"data:image/[A-Za-z0-9.+-]+;base64,[A-Za-z0-9+/=\s]+")
 NOTEBOOK_PREAMBLE = re.compile(r"^This notebook will run on\b", re.IGNORECASE)
 
+# Image *locations* legitimately change during the port -- base64 payloads become files
+# (port_docs.py) and hotlinks become local paths (vendor_images.py). Only the alt text is prose,
+# so the target is blanked on both sides before comparing. Without this, vendoring an image
+# reads as six dropped words and would block the page from ever being re-ported.
+MD_IMAGE_TARGET = re.compile(r"(!\[[^\]]*\]\()[^)]*(\))")
+HTML_IMAGE_TARGET = re.compile(r"(<img[^>]+src=[\"'])[^\"']*([\"'])")
+
 
 def strip_designed_drops(source_text: str) -> str:
     """Remove the lines convert_notebook is *designed* to discard.
@@ -67,8 +74,11 @@ def strip_designed_drops(source_text: str) -> str:
 
 
 def words(text: str) -> Counter:
-    """Word multiset, with base64 payloads removed so extraction isn't reported as loss."""
-    return Counter(WORD.findall(BASE64_PAYLOAD.sub(" ", text)))
+    """Word multiset, ignoring image targets and base64 payloads (see the regexes above)."""
+    text = BASE64_PAYLOAD.sub(" ", text)
+    text = MD_IMAGE_TARGET.sub(r"\1\2", text)
+    text = HTML_IMAGE_TARGET.sub(r"\1\2", text)
+    return Counter(WORD.findall(text))
 
 
 def compare(source_text: str, converted_text: str) -> tuple[Counter, Counter]:

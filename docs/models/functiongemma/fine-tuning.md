@@ -515,7 +515,7 @@ plt.grid(True)
 plt.show()
 ```
 
-![png](https://ai.google.dev/static/gemma/docs/functiongemma/finetuning-with-functiongemma_files/output_6JBty2rq05Jz_0.png)
+![png](../../assets/functiongemma/output_6JBty2rq05Jz_0.png)
 
 ## Test Model Inference
 

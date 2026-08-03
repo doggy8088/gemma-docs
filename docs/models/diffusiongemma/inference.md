@@ -568,7 +568,7 @@ text = processor.decode(output[0], skip_special_tokens=False)
 print(text[0])
 ```
 
-![png](https://ai.google.dev/static/gemma/docs/diffusiongemma/inference-diffusiongemma-with-hf_files/output_Gsxfo7TuN0Vu_0.png)
+![png](../../assets/diffusiongemma/output_Gsxfo7TuN0Vu_0.png)
 
 ``` { .no-copy .output }
 <bos><|turn>user

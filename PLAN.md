@@ -310,12 +310,30 @@ uv run python scripts/port_docs.py --filter models/ --dry-run
 uv run python scripts/check_fidelity.py --manifest --cache-dir .sources
 ```
 
-### Step 0.4 — Vendor all images
-- [ ] Download the 18 hotlinked images into `docs/assets/` organized by section.
-- [ ] Rewrite all image references to local paths.
-- [ ] Add dark-mode variants for diagrams where the source is light-only.
-- **Verify:** `uv run zensical build` then grep the `site/` output for `ai.google.dev/static` — zero hits.
-- **Done when:** the site renders fully with no network access to Google.
+### Step 0.4 — Vendor all images ✅
+- [x] `scripts/vendor_images.py` — downloads remote images into `docs/assets/<section>/` and
+      rewrites the references. Section = the page's parent directory, matching the layout
+      `port_docs.py` already uses. Original filenames are kept so any asset traces back to its
+      upstream URL. A failed download leaves the reference untouched (a broken local path is
+      worse than a working remote one) and the script is idempotent, so re-running retries.
+- [x] All **18** hotlinked images vendored, 18/18 succeeded. `docs/assets/` is now 8.2 MB.
+- [x] Fidelity checker taught to ignore image *targets* on both sides — only alt text is prose.
+      Without this, vendoring read as 6 pages losing prose and would have **blocked those pages
+      from ever being re-ported**, since `port_docs.py` is fidelity-gated.
+- [ ] ~~Dark-mode variants~~ — **deferred to Phase 1** with the rest of the design system.
+- **Verify:** ✅ zero `ai.google.dev/static` references in the built `site/`; all 214 local
+      `<img>` sources resolve on disk.
+- **Done when:** ✅ the site renders fully with no network access to Google.
+
+!!! warning "Ordering: port, then vendor"
+    Conversion restores the upstream image URLs, so **re-porting a page undoes its vendoring**
+    (confirmed: re-porting `models/gemma-4/model-card.md` would revert one image, +21 bytes).
+    Always run `vendor_images.py` after `port_docs.py`. `port_docs.py` prints this reminder, and
+    since the `images` check now sits at zero, a missed run fails CI.
+
+```bash
+uv run python scripts/vendor_images.py --dry-run
+```
 
 ### Step 0.5 — Rewrite internal links
 - [ ] Map all 122 `ai.google.dev/gemma/docs/*` links to local paths.
@@ -619,6 +637,16 @@ Must cover:
 
 ---
 
+## Pipeline order
+
+Steps that rewrite pages must run in this order, because each stage can undo the previous one:
+
+```
+port_docs.py  ->  vendor_images.py  ->  lint_docs.py --baseline
+```
+
+`check_fidelity.py --manifest` can run at any point; it ignores image targets by design.
+
 ## Notes
 
 *Agents: record surprises, deviations, and anything that changes the plan here.*
@@ -675,3 +703,16 @@ Must cover:
   `docs/assets/` while claiming to change nothing.
 - Two blank lines mid-cell is common in notebook exports — worth checking for whenever a new
   converter bug is suspected.
+
+**2026-08-03 (Step 0.4)**
+
+- **Conversion and vendoring fight each other.** Converting restores upstream image URLs;
+  vendoring replaces them with local paths. Always port first, then vendor. See *Pipeline order*.
+- Any check that gates writes (as `port_docs.py` does on fidelity) must be **precise about what
+  is allowed to change**, or it locks pages out of future edits. Vendoring tripped the fidelity
+  check on 6 pages until image targets were excluded from the word comparison.
+- `docs/assets/` is 8.2 MB, most of it `capabilities/` (7 notebook-output PNGs, 5.5 MB). If repo
+  size becomes a concern, those are the candidates for recompression — not the diagrams.
+- The site's `404.html` uses root-absolute `/assets/` paths. That is correct (a 404 can be served
+  from any depth) and will look like a broken link to any checker resolving paths relative to the
+  file. Don't "fix" it.

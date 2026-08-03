@@ -76,7 +76,7 @@ output = vqa_pipe(messages, return_full_text=False, generate_kwargs=gen_kwargs)
 print(output[0]['generated_text'])
 ```
 
-![png](https://ai.google.dev/static/gemma/docs/capabilities/vision/image_files/output_a6927bd0_0.png)
+![png](../../assets/capabilities/output_a6927bd0_0.png)
 
 ``` { .no-copy .output }
 This image shows the **Golden Gate Bridge** in San Francisco, California.
@@ -127,9 +127,9 @@ output = vqa_pipe(messages, return_full_text=False, generate_kwargs=gen_kwargs)
 print(output[0]['generated_text'])
 ```
 
-![png](https://ai.google.dev/static/gemma/docs/capabilities/vision/image_files/output_6b3b62e7_0.png)
+![png](../../assets/capabilities/output_6b3b62e7_0.png)
 
-![png](https://ai.google.dev/static/gemma/docs/capabilities/vision/image_files/output_6b3b62e7_1.png)
+![png](../../assets/capabilities/output_6b3b62e7_1.png)
 
 ``` { .no-copy .output }
 Here are captions for the two images you provided:
@@ -217,7 +217,7 @@ output = vqa_pipe(messages, return_full_text=False, generate_kwargs=gen_kwargs)
 print(output[0]['generated_text'])
 ```
 
-![png](https://ai.google.dev/static/gemma/docs/capabilities/vision/image_files/output_ebb5fd08_0.png)
+![png](../../assets/capabilities/output_ebb5fd08_0.png)
 
 ``` { .no-copy .output }
 The sign in the image says:
@@ -335,7 +335,7 @@ draw_results(output[0]['generated_text'])
 ```<turn|>
 ````
 
-![png](https://ai.google.dev/static/gemma/docs/capabilities/vision/image_files/output_b041486b_1.png)
+![png](../../assets/capabilities/output_b041486b_1.png)
 
 ## Variable Resolution (Token Budget)
 
@@ -422,7 +422,7 @@ draw_results(output[0]['generated_text'])
 ```<turn|>
 ````
 
-![png](https://ai.google.dev/static/gemma/docs/capabilities/vision/image_files/output_bc2920e6_1.png)
+![png](../../assets/capabilities/output_bc2920e6_1.png)
 
 It does alright but it is clear that the image is being compressed quite a bit as it does not detect all cars and persons. A higher token budget should resolve this!
 
@@ -557,7 +557,7 @@ Budget Size: 560
 ```<turn|>
 ````
 
-![png](https://ai.google.dev/static/gemma/docs/capabilities/vision/image_files/output_76f17518_3.png)
+![png](../../assets/capabilities/output_76f17518_3.png)
 
 ## Summary
 
