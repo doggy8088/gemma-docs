@@ -426,6 +426,58 @@ def check_size(ctx: Context) -> Iterable[Finding]:
             )
 
 
+def check_modeldata(ctx: Context) -> Iterable[Finding]:
+    """Keep data/models.yml in step with the ported memory table it was copied from.
+
+    models/gemma-4/index.md is a straight port, so its table can't be generated from the data
+    file -- re-porting would overwrite the template. Instead the two are compared here, so
+    upstream revising a figure shows up as a finding rather than a silent contradiction.
+    """
+    data_file = REPO_ROOT / "data" / "models.yml"
+    page_path = DOCS_DIR / "models" / "gemma-4" / "index.md"
+    if not data_file.exists() or not page_path.exists():
+        return
+
+    # Minimal parse: `bf16: 11.4` style keys under each size's `memory:` block, in file order.
+    text = data_file.read_text(encoding="utf-8")
+    declared: list[tuple[str, dict[str, str]]] = []
+    current: str | None = None
+    for line in text.splitlines():
+        name = re.match(r"^\s*name:\s*(\S.*?)\s*$", line)
+        if name:
+            current = name.group(1)
+            declared.append((current, {}))
+            continue
+        figure = re.match(r"^\s*(bf16|sfp8|q4_0):\s*([\d.]+)\s*$", line)
+        if figure and declared:
+            declared[-1][1][figure.group(1)] = figure.group(2)
+
+    # Table rows look like: | Gemma 4 E2B | 11.4 GB | 5.7 GB | 2.9 GB | ...
+    rows = {}
+    for line in page_path.read_text(encoding="utf-8").splitlines():
+        cells = [c.strip() for c in line.split("|")[1:-1]]
+        if len(cells) >= 4 and cells[0].startswith("Gemma 4 "):
+            rows[cells[0].removeprefix("Gemma 4 ")] = [
+                c.removesuffix(" GB").strip() for c in cells[1:4]
+            ]
+
+    for name, figures in declared:
+        row = rows.get(name)
+        if row is None:
+            yield Finding(
+                "modeldata", "data/models.yml", 0,
+                f"'{name}' has no row in models/gemma-4/index.md",
+            )
+            continue
+        for key, expected in zip(("bf16", "sfp8", "q4_0"), row):
+            actual = figures.get(key)
+            if actual and actual != expected:
+                yield Finding(
+                    "modeldata", "data/models.yml", 0,
+                    f"{name} {key}: data says {actual}, ported table says {expected}",
+                )
+
+
 CHECKS: dict[str, Callable[[Context], Iterable[Finding]]] = {
     "links": check_links,
     "images": check_images,
@@ -436,6 +488,7 @@ CHECKS: dict[str, Callable[[Context], Iterable[Finding]]] = {
     "fences": check_fences,
     "admonitions": check_admonitions,
     "size": check_size,
+    "modeldata": check_modeldata,
 }
 
 CHECK_HELP = {
@@ -448,6 +501,7 @@ CHECK_HELP = {
     "fences": "prose or prompts captured as python code blocks",
     "admonitions": "unconverted devsite Note:/Caution: callouts",
     "size": "files large enough to indicate inlined assets",
+    "modeldata": "data/models.yml vs the ported memory table",
 }
 
 

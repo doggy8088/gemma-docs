@@ -9,7 +9,8 @@
     "orphans",
     "fences",
     "admonitions",
-    "size"
+    "size",
+    "modeldata"
   ],
   "count": 136,
   "known": [

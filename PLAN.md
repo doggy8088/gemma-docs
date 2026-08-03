@@ -460,7 +460,72 @@ dangling anchor is a useful signal that a section is genuinely missing. **Needs 
     `orphans` rose 4 → 13. That is expected — Step 2.1 places them. Do not "fix" it by
     deleting pages.
 
-### Step 0.6 — Model capability matrix as single source of truth
+### Step 0.6 — Model capability matrix as single source of truth ✅
+
+- [x] `data/models.yml` — every Gemma 4 size with parameters, architecture, modalities in/out,
+      context window, memory at each quantization, and target platform.
+- [x] Wired into `zensical.toml` via the macros plugin's `include_yaml`, exposed as `models.*`.
+- [x] `quickstart.md` and `models/index.md` tables **generated** from it.
+- [x] New `modeldata` lint check guarding the one table that can't be generated (below).
+- **Verify:** ✅ changed `context: 128K` → `TESTVALUE`, rebuilt, both tables updated; reverted,
+      both reverted. Drift check verified by injecting a wrong figure — caught it.
+
+**The modality contradiction is resolved.** Confirmed by Maarten (2026-08-03):
+
+| Model | Input | Note |
+|---|---|---|
+| E2B, E4B, 12B | Text, Image, Audio, Video | full multimodal |
+| 26B A4B, 31B | Text, Image, Video | **no audio**; video is processed as individual frames |
+
+This matches `models/gemma-4/index.md:45` ("Audio... featured natively on the E2B, E4B and 12B
+models"). The stale source was the `quickstart.md` table, which omitted video entirely and is
+now generated.
+
+!!! warning "One table is deliberately *not* generated"
+    `models/gemma-4/index.md` is a straight port (`scripts/sources.toml`), so a template there
+    would be wiped by the next `port_docs.py` run. Its memory figures were copied into
+    `data/models.yml` instead, and the new **`modeldata`** check compares the two — so if
+    upstream revises a number, it surfaces as a finding rather than a silent contradiction.
+
+```bash
+uv run python scripts/lint_docs.py --check modeldata
+```
+
+---
+
+## Phase 0 complete — 300 → 136
+
+| Check | Start | Now | |
+|---|---|---|---|
+| `links` | 122 | **0** | ✅ |
+| `images` | 52 | **0** | ✅ |
+| `fences` | 7 | **0** | ✅ |
+| `size` | 1 | **0** | ✅ |
+| `admonitions` | 0 | **0** | ✅ |
+| `modeldata` | — | **0** | ✅ new check |
+| `internal` | 0 | 2 | `deployment/keras.md` — Step 2.1 decision |
+| `stubs` | 33 | 31 | → Steps 2.2–2.4 |
+| `orphans` | 4 | 13 | → Step 2.1 (9 newly ported pages await nav) |
+| `frontmatter` | 81 | 90 | → Step 3.1 |
+
+**Everything remaining is scheduled work, not defects.** The three checks that still have
+findings are all waiting on Phase 2 (nav, content) or Phase 3 (frontmatter schema).
+
+### Open decision for Step 2.1
+
+Whether `docs/models/` should mirror the `get-started/capabilities/` pattern with
+`core/`, `variants/`, `research/` subdirectories.
+
+**Recommendation: no.** Two of the four nav groups are time-dependent — when Gemma 5 ships,
+Gemma 4 moves from *Gemma 4* to *Previous generations*, and every Gemma 4 URL would break at
+the worst possible moment. Classification is a presentation concern; identity is `gemma-4`.
+The nav already groups them (`zensical.toml` lines 40, 49, 88) at zero URL cost, and
+`models/index.md` is the grouped hub — it just needs wiring up in Step 2.1.
+
+If done anyway: land it *during* Step 2.1 (nav is being rewritten regardless) and *before*
+Step 3.1 adds `source_url` frontmatter, as one reviewable pure-move commit with redirects.
+Cost is ~195 path updates (39 files, 90 outbound links, 61 inbound, 44 asset refs).
+
 - [ ] Create `data/models.yml`: every Gemma 4 size with parameters, modalities in/out, context
       window, memory at each quantization, MTP support, target platform.
 - [ ] Resolve the modality contradiction (`quickstart.md` vs `models/index.md:14` vs
@@ -598,7 +663,7 @@ actual model support) → context/KV-cache flags → troubleshooting → measure
 
 ### Step 3.4 — Copy-for-agent affordances
 - [ ] "Copy page as Markdown" button in the page header.
-- [ ] "Open in Claude / ChatGPT" links.
+- [ ] "Open in Gemini / Claude / ChatGPT" links.
 - **Verify:** click the button, paste, confirm clean markdown with frontmatter.
 
 ### Step 3.5 — Docs as a skill

@@ -1,0 +1,107 @@
+# Gemma model facts -- the single source of truth.
+#
+# Consumed by:
+#   - Generated tables in quickstart.md and models/index.md (macros plugin, `models.*`)
+#   - The VRAM calculator          (PLAN.md Step 4.1)
+#   - Global model/engine switcher (PLAN.md Step 4.2) -- `modalities` drives capability gating,
+#     so an audio example can never offer a model that cannot hear
+#
+# Hand-editing a model table in a page is a bug. Change it here instead.
+#
+# NOT generated from this file: the memory table in models/gemma-4/index.md. That page is a
+# straight port (scripts/sources.toml) and re-porting would overwrite any template. The figures
+# below are copied from it; keep them in sync if upstream revises them.
+
+gemma4:
+  context_windows:
+    small: 128K      # E2B, E4B
+    medium: 256K     # 12B, 26B A4B, 31B
+
+  # Every Gemma 4 model ships a dedicated draft model for speculative decoding.
+  multi_token_prediction: true
+
+  sizes:
+    - id: e2b
+      name: E2B
+      full_name: Gemma 4 E2B
+      parameters: 2B effective
+      architecture: efficient          # Per-Layer Embeddings (PLE)
+      context: 128K
+      platform: Mobile devices
+      platform_short: Mobile devices
+      modalities:
+        input: [text, image, audio, video]
+        output: [text]
+      memory:                          # GB, static weights + ~20% overhead
+        bf16: 11.4
+        sfp8: 5.7
+        q4_0: 2.9
+        mobile: 1.1
+        mobile_text_only: 0.84
+
+    - id: e4b
+      name: E4B
+      full_name: Gemma 4 E4B
+      parameters: 4B effective
+      architecture: efficient
+      context: 128K
+      platform: Mobile devices and laptops
+      platform_short: Mobile and laptops
+      modalities:
+        input: [text, image, audio, video]
+        output: [text]
+      memory:
+        bf16: 17.9
+        sfp8: 8.9
+        q4_0: 4.5
+        mobile: 2.5
+        mobile_text_only: 2.2
+
+    - id: 12b
+      name: 12B
+      full_name: Gemma 4 12B
+      parameters: 12B
+      architecture: unified            # encoder-free; linear projections of the input
+      context: 256K
+      platform: Laptops, desktop computers and small servers
+      platform_short: Laptops and desktops
+      modalities:
+        input: [text, image, audio, video]
+        output: [text]
+      memory:
+        bf16: 26.7
+        sfp8: 13.4
+        q4_0: 6.7
+
+    - id: 26b-a4b
+      name: 26B A4B
+      full_name: Gemma 4 26B A4B
+      parameters: 26B (4B active)
+      architecture: moe                # all 26B must be resident; 4B active per token
+      context: 256K
+      platform: Desktop computers and small servers
+      platform_short: Desktops and servers
+      modalities:
+        # No audio. Video is supported as individual frames, i.e. as images.
+        input: [text, image, video]
+        output: [text]
+      memory:
+        bf16: 57.7
+        sfp8: 28.8
+        q4_0: 14.4
+
+    - id: 31b
+      name: 31B
+      full_name: Gemma 4 31B
+      parameters: 31B
+      architecture: dense
+      context: 256K
+      platform: Large servers or server clusters
+      platform_short: Servers
+      modalities:
+        input: [text, image, video]
+        output: [text]
+      memory:
+        bf16: 69.9
+        sfp8: 34.9
+        q4_0: 17.5

@@ -9,13 +9,13 @@ The Gemma family of open models includes a range of model sizes, capabilities, a
 
 *The latest generation featuring multimodal (text, image, audio) inputs.*
 
-| Size | Variant | Input ➔ Output | Intended Platform |
-|---|---|---|---|
-| **E2B** | [Gemma 4 (core)](../models/gemma-4/index.md) | Text, images, audio ➔ Text | Mobile devices |
-| **E4B** | [Gemma 4 (core)](../models/gemma-4/index.md) | Text, images, audio ➔ Text | Mobile devices and laptops |
-| **12B** | [Gemma 4 (core)](../models/gemma-4/index.md) | Text, images, audio ➔ Text | Laptops, desktop computers and small servers |
-| **A4B** | [Gemma 4 (core)](../models/gemma-4/index.md) | Text, images ➔ Text | Desktop computers and small servers |
-| **31B** | [Gemma 4 (core)](../models/gemma-4/index.md) | Text, images ➔ Text | Large servers or server clusters |
+<!-- Generated from data/models.yml -- edit that file, not this table. -->
+
+| Size | Variant | Input ➔ Output | Context | Intended Platform |
+|---|---|---|---|---|
+{% for size in models.gemma4.sizes -%}
+| **{{ size.name }}** | [Gemma 4 (core)](../models/gemma-4/index.md) | {{ size.modalities.input | map('capitalize') | join(', ') }} ➔ {{ size.modalities.output | map('capitalize') | join(', ') }} | {{ size.context }} | {{ size.platform }} |
+{% endfor %}
 
 !!! tip "New to Gemma?"
     A good place to start is the Gemma 4 12B model, which can be used for many tasks and runs on laptop hardware.

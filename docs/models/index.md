@@ -6,13 +6,16 @@ The Gemma family of open models spans multiple generations and specialized varia
 
 Gemma 4 spans four distinct architectures:
 
-| Variant | Parameters | Input | Intended Platform |
-|---|---|---|---|
-| **E2B** | 2B effective | Text, Image, Audio | Mobile devices |
-| **E4B** | 4B effective | Text, Image, Audio | Mobile and laptops |
-| **12B** | 12B | Text, Image, Audio | Laptops and desktops |
-| **26B A4B** | 26B (4B active) | Text, Image, Audio | Desktops and servers |
-| **31B** | 31B | Text, Image | Servers |
+<!-- Generated from data/models.yml -- edit that file, not this table. -->
+
+| Variant | Parameters | Input | Context | Intended Platform |
+|---|---|---|---|---|
+{% for size in models.gemma4.sizes -%}
+| **{{ size.name }}** | {{ size.parameters }} | {{ size.modalities.input | map('capitalize') | join(', ') }} | {{ size.context }} | {{ size.platform_short }} |
+{% endfor %}
+!!! note "Audio and video support"
+    Audio input is native to **E2B, E4B and 12B**. The **26B A4B** and **31B** models accept
+    video as individual frames — that is, as images — but do not process audio.
 
 ## Previous Generations
 
