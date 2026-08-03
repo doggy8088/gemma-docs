@@ -253,13 +253,43 @@ Two different strategies, because the two sections have different histories:
 - [x] `models/releases.md`: 58-byte stub → full port (+4.2 KB).
 - **Verify:** `uv run python scripts/port_docs.py --filter models/ --dry-run` → 37 ok, 0 failed.
 
-#### 0.3c — Get Started targeted repair (remaining)
-- [ ] `capabilities/audio.md:90` and `:173` — ASR prompt templates tagged `python`, should be
-      `text`. Change the fence language only.
-- [ ] `capabilities/image.md:315`, `:402`, `:484` — three split code blocks. Rejoin them; the
-      converter now handles this correctly, so its output is the reference.
-- **Verify:** `uv run python scripts/lint_docs.py --check fences` → zero.
-- **Done when:** zero fence findings anywhere.
+#### 0.3c — Get Started targeted repair ✅
+
+Diffing each page against a fresh conversion first confirmed both carry real hand-edits, so
+repair-in-place was the correct call:
+
+| Page | Hand-edits preserved |
+|---|---|
+| `capabilities/image.md` | title recased, `## Summary` edit, `<!-- TODO: Port over -->` block |
+| `capabilities/audio.md` | hand-added `# Audio Understanding`, `## Summary` edit, TODO block |
+
+- [x] `capabilities/audio.md` — two ASR prompt templates `python` → `text`.
+- [x] `capabilities/audio.md:81` — unconverted `> > [!NOTE]` callout → `!!! Note`.
+- [x] `capabilities/image.md` — three split blocks rejoined. Diff is exactly 6 lines
+      (the fence pairs); no content touched.
+- [x] New linter coverage: GitHub-style `> [!NOTE]` callouts. The `admonitions` check only
+      knew about devsite `Note:` prefixes, so this defect was invisible.
+- **Verify:** `uv run python scripts/lint_docs.py --check fences,admonitions` → zero.
+- **Done when:** ✅ zero fence and admonition findings site-wide; remaining diff vs. a fresh
+      conversion is hand-edits only.
+
+**Technique worth reusing:** diffing a page against a fresh conversion cleanly separates
+*bugs* from *hand-edits*. Do this before touching any page whose history is unclear — it is the
+manual form of the `--divergence` check and it is what proved re-porting would have been wrong here.
+
+### Phase 0 progress: 300 → 285
+
+| Check | Start | Now | |
+|---|---|---|---|
+| `fences` | 7 | **0** | ✅ cleared |
+| `size` | 1 | **0** | ✅ cleared |
+| `admonitions` | 0 | **0** | ✅ 1 found and fixed |
+| `internal` | 0 | **0** | ✅ |
+| `images` | 52 | **18** | base64 done; 18 hotlinked remain → Step 0.4 |
+| `stubs` | 33 | **32** | → Steps 2.2–2.4 |
+| `orphans` | 4 | **4** | → Step 2.1 |
+| `frontmatter` | 81 | **81** | → Step 3.1 |
+| `links` | 122 | **150** | +28 from `releases.md` gaining content → Step 0.5 |
 
 **Backlog after the Models port — 300 → 290:**
 

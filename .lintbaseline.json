@@ -11,11 +11,8 @@
     "admonitions",
     "size"
   ],
-  "count": 290,
+  "count": 285,
   "known": [
-    "fences|docs/get-started/capabilities/audio.md|prompt template tagged as python: 'Transcribe the following speech segment in {LANGUAGE} into {...'",
-    "fences|docs/get-started/capabilities/audio.md|prompt template tagged as python: 'Transcribe the following speech segment in {SOURCE_LANGUAGE}...'",
-    "fences|docs/get-started/capabilities/image.md|`python` block split in two -- likely blank lines inside one block",
     "frontmatter|docs/community/discord.md|no frontmatter block",
     "frontmatter|docs/community/gemma-skills.md|no frontmatter block",
     "frontmatter|docs/community/gemmaverse.md|no frontmatter block",

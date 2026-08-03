@@ -309,10 +309,8 @@ def draw_results(text_content):
     return output_image
   else:
     print("No JSON code block found.")
-```
 
 
-```python
 messages = [
     {
         "role": "user", "content": [
@@ -396,10 +394,8 @@ def draw_results(text_content):
         output_img = draw_bounding_box(output_img, item["box_2d"], item["label"], label_colors, w, h)
 
     return Image.fromarray(output_img)
-```
 
 
-```python
 # Detect person, card, and traffic light
 messages = [
     {
@@ -478,10 +474,8 @@ messages = [
         ]
      }
 ]
-```
 
 
-```python
 # Run for different budget sizes
 budget_sizes = [70, 140, 280, 560]
 # 1120 won't fit on T4, but works on L4 or highger

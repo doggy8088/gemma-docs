@@ -62,6 +62,10 @@ UPSTREAM_DOCS = "ai.google.dev/gemma/docs"
 # Devsite callouts that should have become admonitions during conversion.
 DEVSITE_CALLOUTS = ("Note:", "Key Point:", "Caution:", "Warning:", "Important:", "Tip:")
 
+# GitHub-style callouts, which devsite also emits: `> [!NOTE]`, sometimes double-quoted as
+# `> > [!NOTE]`. These must become `!!! note` too.
+GITHUB_CALLOUT = re.compile(r"^\s*(?:>\s*)+\[!(NOTE|IMPORTANT|WARNING|TIP|CAUTION)\]", re.IGNORECASE)
+
 # Signals that a code block really is Python. Absence of all of these in a block tagged
 # `python` means prose or a prompt template got captured by the converter.
 PY_SIGNALS = re.compile(
@@ -385,9 +389,16 @@ def check_fences(ctx: Context) -> Iterable[Finding]:
 
 
 def check_admonitions(ctx: Context) -> Iterable[Finding]:
-    """Devsite callouts should be Zensical admonitions."""
+    """Devsite and GitHub callouts should both be Zensical admonitions."""
     for page in ctx.pages:
         for lineno, line in outside_code(page):
+            github = GITHUB_CALLOUT.match(line)
+            if github:
+                yield Finding(
+                    "admonitions", page.repo_rel, lineno,
+                    f"unconverted callout: '[!{github.group(1).upper()}]' -- use !!! admonition",
+                )
+                continue
             stripped = line.lstrip("> ").lstrip()
             for callout in DEVSITE_CALLOUTS:
                 if stripped.startswith(callout):

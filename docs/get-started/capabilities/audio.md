@@ -78,16 +78,16 @@ signed 16-bit PCM integer WAV files at 44.1 kHz, follow these steps:
 - Downmix from stereo to mono by averaging the 2 channels
 - Convert from int16 to float32, and divide by 32768.0 to scale to the range \[-1, 1\]
 
-> > [!NOTE]
-> > **Note:** When resampling audio to 16 kHz, you should use a Fourier method for best results, such as `scipy.signal.resample` or `librosa.sample(res_type ='scipy')`.
->
+!!! Note
+    When resampling audio to 16 kHz, you should use a Fourier method for best results, such as `scipy.signal.resample` or `librosa.sample(res_type ='scipy')`.
+
 ## Speech to text
 
 Gemma 4 E2B, E4B, and 12B Unified are trained for multilingual speech recognition, allowing you to transcribe audio input in various languages into text.
 
 Use the following prompt structure for **Audio Speech Recognition (ASR)**.
 
-```python
+```text
 Transcribe the following speech segment in {LANGUAGE} into {LANGUAGE} text.
 
 Follow these specific instructions for formatting the answer:
@@ -170,7 +170,7 @@ Gemma 4 E2B, E4B and 12B Unified are trained for multilingual speech translation
 
 Use the following prompt structure for **Automatic Speech Translation (AST)**.
 
-```python
+```text
 Transcribe the following speech segment in {SOURCE_LANGUAGE}, then translate it into {TARGET_LANGUAGE}.
 When formatting the answer, first output the transcription in {SOURCE_LANGUAGE}, then one newline, then output the string '{TARGET_LANGUAGE}: ', then the translation in {TARGET_LANGUAGE}.
 ```
