@@ -12,7 +12,7 @@ site_url = "https://gemma.ai"
 copyright = """
 Copyright &copy; 2026 Google DeepMind
 """
-extra_css = ["stylesheets/home.css", "stylesheets/layout.css", "stylesheets/cookbook.css", "stylesheets/code.css", "stylesheets/tokens.css"]
+extra_css = ["stylesheets/home.css", "stylesheets/layout.css", "stylesheets/components.css", "stylesheets/cookbook.css", "stylesheets/code.css", "stylesheets/tokens.css"]
 # `include_yaml` exposes data/models.yml as `models.*` in page templates -- see data/models.yml
 # for what reads it. Hand-editing a model table in a page is a bug; change the data file.
 plugins = { macros = { enabled = true, include_yaml = { models = "data/models.yml" } } }

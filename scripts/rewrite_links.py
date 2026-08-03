@@ -129,12 +129,13 @@ def fix_anchors(dry_run: bool) -> int:
     return 0
 
 
-def load_map() -> tuple[dict[str, str], dict[str, str], set[str]]:
+def load_map() -> tuple[dict[str, str], dict[str, str], set[str], dict[str, dict[str, str]]]:
     data = tomllib.loads(LINK_MAP.read_text(encoding="utf-8"))
     return (
         data.get("ported", {}),
         data.get("planned", {}),
         set(data.get("delink", {}).get("paths", [])),
+        data.get("page_overrides", {}),
     )
 
 
@@ -162,7 +163,7 @@ def main() -> int:
     if args.fix_anchors:
         return fix_anchors(args.dry_run)
 
-    ported, planned, delink = load_map()
+    ported, planned, delink, page_overrides = load_map()
     mapping = {**ported, **planned}
 
     unmapped: Counter = Counter()
@@ -184,6 +185,8 @@ def main() -> int:
                 mask[position : position + len(line)] = b"\x01" * len(line)
             position += len(line)
 
+        # A page-specific mapping wins over the global one; see [page_overrides].
+        overrides = page_overrides.get(page.rel, {})
         modified = False
 
         def replace(match: re.Match) -> str:
@@ -200,6 +203,10 @@ def main() -> int:
                 stats["delinked"] += 1
                 modified = True
                 return text
+            if path in overrides:
+                stats["page override"] += 1
+                modified = True
+                return f"[{text}]({relative(overrides[path], page.path)}{fragment})"
             if path in mapping:
                 stats["planned" if path in planned else "ported"] += 1
                 modified = True

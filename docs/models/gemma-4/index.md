@@ -1,4 +1,9 @@
-[Video](https://www.youtube.com/watch?v=jZVBoFOJK-Q)
+<div class="video-embed">
+  <iframe src="https://www.youtube-nocookie.com/embed/jZVBoFOJK-Q"
+          title="Video" loading="lazy" allowfullscreen
+          allow="accelerometer; encrypted-media; gyroscope; picture-in-picture"
+          referrerpolicy="strict-origin-when-cross-origin"></iframe>
+</div>
 
 Gemma is a family of generative artificial intelligence models and you can
 use them in a wide variety of generation tasks, including question answering,

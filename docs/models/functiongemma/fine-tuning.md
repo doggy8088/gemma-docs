@@ -31,7 +31,9 @@ The first step is to install Hugging Face Libraries, including TRL, and datasets
 #% pip install flash-attn
 ```
 
-> *Note: If you are using a GPU with Ampere architecture (such as NVIDIA L4) or newer, you can use Flash attention. Flash Attention is a method that significantly speeds computations up and reduces memory usage from quadratic to linear in sequence length, leading to accelerating training up to 3x. Learn more at [FlashAttention](https://github.com/Dao-AILab/flash-attention/tree/main).*
+!!! Note
+    If you are using a GPU with Ampere architecture (such as NVIDIA L4) or newer, you can use Flash attention. Flash Attention is a method that significantly speeds computations up and reduces memory usage from quadratic to linear in sequence length, leading to accelerating training up to 3x. Learn more at [FlashAttention](https://github.com/Dao-AILab/flash-attention/tree/main).*
+
 
 Before you can start training, you have to make sure that you accepted the terms of use for Gemma. You can accept the license on [Hugging Face](http://huggingface.co/google/functiongemma-270m-it) by clicking on the **Agree** and access repository button on the model page at: <http://huggingface.co/google/functiongemma-270m-it>
 

@@ -18,7 +18,9 @@ Summary description and brief definition of inputs and outputs.
 
 ### Description
 
-> NOTE: FunctionGemma is intended to be fine-tuned for your specific function-calling task, including multi-turn use cases.
+!!! Note
+    FunctionGemma is intended to be fine-tuned for your specific function-calling task, including multi-turn use cases.
+
 
 FunctionGemma is a lightweight, open model from Google, built as a foundation
 for creating your own specialized function calling models. FunctionGemma is not

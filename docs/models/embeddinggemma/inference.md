@@ -97,43 +97,40 @@ The key isn't the individual numbers themselves, but **the distance between the 
 In this section, we use embeddings to determine how sementically similar different sentences are. Here we show examples with high, medieum, and low similarity scores.
 
 - High Similarity:
-
     - Sentence A: "The chef prepared a delicious meal for the guests."
     - Sentence B: "A tasty dinner was cooked by the chef for the visitors."
     - Reasoning: Both sentences describe the same event using different words and grammatical structures (active vs. passive voice). They convey the same core meaning.
 - Medium Similarity:
-
     - Sentence A: "She is an expert in machine learning."
     - Sentence B: "He has a deep interest in artificial intelligence."
     - Reasoning: The sentences are related as machine learning is a subfield of artificial intelligence. However, they talk about different people with different levels of engagement (expert vs. interest).
 - Low Similarity:
-
     - Sentence A: "The weather in Tokyo is sunny today."
     - Sentence B: "I need to buy groceries for the week."
     - Reasoning: The two sentences are on completely unrelated topics and share no semantic overlap.
 
-```python
-# The sentences to encode
-sentence_high = [
-    "The chef prepared a delicious meal for the guests.",
-    "A tasty dinner was cooked by the chef for the visitors."
-]
-sentence_medium = [
-    "She is an expert in machine learning.",
-    "He has a deep interest in artificial intelligence."
-]
-sentence_low = [
-    "The weather in Tokyo is sunny today.",
-    "I need to buy groceries for the week."
-]
+      ```python
+      # The sentences to encode
+      sentence_high = [
+          "The chef prepared a delicious meal for the guests.",
+          "A tasty dinner was cooked by the chef for the visitors."
+      ]
+      sentence_medium = [
+          "She is an expert in machine learning.",
+          "He has a deep interest in artificial intelligence."
+      ]
+      sentence_low = [
+          "The weather in Tokyo is sunny today.",
+          "I need to buy groceries for the week."
+      ]
 
-for sentence in [sentence_high, sentence_medium, sentence_low]:
-  print("🙋‍♂️")
-  print(sentence)
-  embeddings = model.encode(sentence)
-  similarities = model.similarity(embeddings[0], embeddings[1])
-  print("`-> 🤖 score: ", similarities.numpy()[0][0])
-```
+      for sentence in [sentence_high, sentence_medium, sentence_low]:
+        print("🙋‍♂️")
+        print(sentence)
+        embeddings = model.encode(sentence)
+        similarities = model.similarity(embeddings[0], embeddings[1])
+        print("`-> 🤖 score: ", similarities.numpy()[0][0])
+      ```
 
 ``` { .no-copy .output }
 🙋‍♂️
@@ -159,68 +156,68 @@ You can apply a prompt during inference in three ways.
 
    Pass the full prompt string directly to the `encode` method. This gives you precise control.
 
-```python
+   ```python
    embeddings = model.encode(
        sentence,
        prompt="task: sentence similarity | query: "
    )
-```
+   ```
 
 2. **Using the `prompt_name` argument**   
 
    Select a predefined prompt by its name. These prompts are loaded from the model's configuration or during its initialization.
 
-```python
+   ```python
    embeddings = model.encode(sentence, prompt_name="STS")
-```
+   ```
 
 3. **Using the Default Prompt**   
 
    If you don't specify either `prompt` or `prompt_name`, the system will automatically use the prompt set as `default_prompt_name`, if no default is set, then no prompt is applied.
 
-```python
-   embeddings = model.encode(sentence)
+   ```python
+      embeddings = model.encode(sentence)
 
-print("Available tasks:")
-for name, prefix in model.prompts.items():
-  print(f" {name}: \"{prefix}\"")
-print("-"*80)
+   print("Available tasks:")
+   for name, prefix in model.prompts.items():
+     print(f" {name}: \"{prefix}\"")
+   print("-"*80)
 
-for sentence in [sentence_high, sentence_medium, sentence_low]:
-  print("🙋‍♂️")
-  print(sentence)
-  embeddings = model.encode(sentence, prompt_name="STS")
-  similarities = model.similarity(embeddings[0], embeddings[1])
-  print("`-> 🤖 score: ", similarities.numpy()[0][0])
-```
+   for sentence in [sentence_high, sentence_medium, sentence_low]:
+     print("🙋‍♂️")
+     print(sentence)
+     embeddings = model.encode(sentence, prompt_name="STS")
+     similarities = model.similarity(embeddings[0], embeddings[1])
+     print("`-> 🤖 score: ", similarities.numpy()[0][0])
+   ```
 
-``` { .no-copy .output }
-Available tasks:
- query: "task: search result | query: "
- document: "title: none | text: "
- BitextMining: "task: search result | query: "
- Clustering: "task: clustering | query: "
- Classification: "task: classification | query: "
- InstructionRetrieval: "task: code retrieval | query: "
- MultilabelClassification: "task: classification | query: "
- PairClassification: "task: sentence similarity | query: "
- Reranking: "task: search result | query: "
- Retrieval: "task: search result | query: "
- Retrieval-query: "task: search result | query: "
- Retrieval-document: "title: none | text: "
- STS: "task: sentence similarity | query: "
- Summarization: "task: summarization | query: "
----
-🙋‍♂️
-['The chef prepared a delicious meal for the guests.', 'A tasty dinner was cooked by the chef for the visitors.']
-`-> 🤖 score:  0.9363755
-🙋‍♂️
-['She is an expert in machine learning.', 'He has a deep interest in artificial intelligence.']
-`-> 🤖 score:  0.6425841
-🙋‍♂️
-['The weather in Tokyo is sunny today.', 'I need to buy groceries for the week.']
-`-> 🤖 score:  0.38587403
-```
+   ``` { .no-copy .output }
+   Available tasks:
+    query: "task: search result | query: "
+    document: "title: none | text: "
+    BitextMining: "task: search result | query: "
+    Clustering: "task: clustering | query: "
+    Classification: "task: classification | query: "
+    InstructionRetrieval: "task: code retrieval | query: "
+    MultilabelClassification: "task: classification | query: "
+    PairClassification: "task: sentence similarity | query: "
+    Reranking: "task: search result | query: "
+    Retrieval: "task: search result | query: "
+    Retrieval-query: "task: search result | query: "
+    Retrieval-document: "title: none | text: "
+    STS: "task: sentence similarity | query: "
+    Summarization: "task: summarization | query: "
+   ---
+   🙋‍♂️
+   ['The chef prepared a delicious meal for the guests.', 'A tasty dinner was cooked by the chef for the visitors.']
+   `-> 🤖 score:  0.9363755
+   🙋‍♂️
+   ['She is an expert in machine learning.', 'He has a deep interest in artificial intelligence.']
+   `-> 🤖 score:  0.6425841
+   🙋‍♂️
+   ['The weather in Tokyo is sunny today.', 'I need to buy groceries for the week.']
+   `-> 🤖 score:  0.38587403
+   ```
 
 #### Use Case: Retrieval-Augmented Generation (RAG)
 
@@ -228,32 +225,31 @@ For RAG systems, use the following `prompt_name` values to create specialized em
 
 - **For Queries:** Use `prompt_name="Retrieval-query"`.  
 
-```python
+  ```python
   query_embedding = model.encode(
       "How do I use prompts with this model?",
       prompt_name="Retrieval-query"
   )
-```
+  ```
 
 - **For Documents:** Use `prompt_name="Retrieval-document"`. To further improve document embeddings, you can also include a title by using the `prompt` argument directly:  
-
     - **With a title:**   
 
-```python
-  doc_embedding = model.encode(
-      "The document text...",
-      prompt="title: Using Prompts in RAG | text: "
-  )
-```
+      ```python
+      doc_embedding = model.encode(
+          "The document text...",
+          prompt="title: Using Prompts in RAG | text: "
+      )
+      ```
 
     - **Without a title:**   
 
-```python
-  doc_embedding = model.encode(
-      "The document text...",
-      prompt="title: none | text: "
-  )
-```
+      ```python
+      doc_embedding = model.encode(
+          "The document text...",
+          prompt="title: none | text: "
+      )
+      ```
 
 #### Further Reading
 

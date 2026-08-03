@@ -21,16 +21,8 @@ Commons statistical data:
 For more research and technical details on DataGemma, see the
 [DataGemma technical paper](http://datacommons.org/link/DataGemmaPaper).
 
--
-
-  #### Generate answers with real data
-
-  Apply generative artificial intelligence (AI) to a vast repository of public statistical data to explore and uncover new insights.
--
-
-  #### Evaluate AI data grounding techniques
-
-  Investigate ways to guide generative AI model output with retrieval-augmented and data-interleaved techniques.
+- **Generate answers with real data** — Apply generative artificial intelligence (AI) to a vast repository of public statistical data to explore and uncover new insights.
+- **Evaluate AI data grounding techniques** — Investigate ways to guide generative AI model output with retrieval-augmented and data-interleaved techniques.
 
 ## Learn more
 

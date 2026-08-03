@@ -129,6 +129,22 @@
 # do not exist on ai.google.dev either. Inventing a target would be an editorial guess; see
 # PLAN.md Notes.
 # ------------------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------------------
+# [page_overrides] Per-page mapping that beats [ported] for that page only.
+#
+# The Gemma 1/2/3 cards open with "**Model Page** : [Gemma](/gemma/docs/core)". Upstream that
+# meant "the current Gemma page", but here /core resolves to Gemma 4 -- so the Gemma 2 card
+# would advertise Gemma 4 as its model page. Each card points at itself instead.
+# ------------------------------------------------------------------------------------------
+[page_overrides."models/gemma-1/index.md"]
+"/core" = "models/gemma-1/index.md"
+
+[page_overrides."models/gemma-2/index.md"]
+"/core" = "models/gemma-2/index.md"
+
+[page_overrides."models/gemma-3/index.md"]
+"/core" = "models/gemma-3/index.md"
+
 [anchors]
 "models/gemma-4/index.md#previous-models" = "previous-gemma-models"
 # devsite used short custom anchors; our headings come from the source's own section titles.
@@ -142,6 +158,8 @@
 "learn/personal-code-assistant.md#extension" = "vs-code-extension-project"
 "learn/personal-code-assistant.md#web-service" = "gemma-web-service-project"
 "tuning/spoken-language.md#compute_requirements" = "hardware-requirements"
+# The formatting guidance lives under this page's H1, not a section of its own.
+"get-started/prompt-structure.md#formatting-instruction" = "gemma-formatting-and-system-instructions"
 "models/gemma-3n/index.md#matformer" = "matformer-architecture"
 "models/gemma-3n/index.md#conditional-parameter" = "conditional-parameter-loading"
 "models/gemma-3n/index.md#parameters" = "model-parameters-and-effective-parameters"

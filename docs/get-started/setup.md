@@ -39,9 +39,9 @@ generate and configure these values, follow these steps:
 2. Open `kaggle.json` in a text editor. The contents should look something like
    this:
 
-```text
+   ```text
    {"username":"your_username","key":"012345678abcdef012345678abcdef1a"}
-```
+   ```
 
 3. In Colab, select **Secrets** (🔑) and add your Kaggle username and Kaggle
    API key. Store your username under the name `KAGGLE_USERNAME` and your API

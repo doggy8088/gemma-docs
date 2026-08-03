@@ -224,15 +224,15 @@ The same search now yields much clearer results:
 2. Document: Opening a Regular Saving Account (Score: 0.34) \<- *Clearly less relevant*
 3. Document: Home Loan Application Guide (Score: 0.47)
 
-```python
-get_scores(query, documents)
-```
+   ```python
+   get_scores(query, documents)
+   ```
 
-``` { .no-copy .output }
-Document:  Opening a NISA Account -> 🤖 Score:  0.73378766
-Document:  Opening a Regular Savings Account -> 🤖 Score:  0.34055778
-Document:  Home Loan Application Guide -> 🤖 Score:  0.47503752
-```
+   ``` { .no-copy .output }
+   Document:  Opening a NISA Account -> 🤖 Score:  0.73378766
+   Document:  Opening a Regular Savings Account -> 🤖 Score:  0.34055778
+   Document:  Home Loan Application Guide -> 🤖 Score:  0.47503752
+   ```
 
 To upload your model to the Hugging Face Hub, you can use the `push_to_hub` method from the Sentence Transformers library.
 

@@ -17,16 +17,8 @@ where it is useful to divide up individual factual data so that they can be veri
 independently. For more information, check out the
 [research paper](https://arxiv.org/pdf/2406.19803).
 
--
-
-  #### Analyze content for component parts
-
-  Apply generative artificial intelligence (AI) to break down content into discrete statements for analysis or further processing.
--
-
-  #### Combine with larger content analysis
-
-  Use generated content segments in larger content analysis projects such as grounding, retrieval, fact-checking, evaluation of generation tasks, and duplicate content detection.
+- **Analyze content for component parts** — Apply generative artificial intelligence (AI) to break down content into discrete statements for analysis or further processing.
+- **Combine with larger content analysis** — Use generated content segments in larger content analysis projects such as grounding, retrieval, fact-checking, evaluation of generation tasks, and duplicate content detection.
 
 ## Learn more
 

@@ -30,8 +30,10 @@ lifecycle.
 | `<start_function_call>` `<end_function_call>` | Indicates a model's request to use a tool. |
 | `<start_function_response>` `<end_function_response>` | Provides a tool's result back to the model. |
 
-> NOTE: `<start_function_response>` is an additional stop sequence for the
-> inference engine.
+!!! Note
+    `<start_function_response>` is an additional stop sequence for the
+    inference engine.
+
 
 ### Delimiter for String Values: `<escape>`
 
@@ -66,9 +68,11 @@ each other.
 
 The model has **not** been explicitly trained on **Multi-Turn** or
 **Multi-Step** workflows.
-> **Note:** We expect the model to be able to generalize a bit to these
-> scenarios, especially if fine-tuned on specific use cases, but it has not been
-> trained to perform these tasks out of the box.
+!!! Note
+    We expect the model to be able to generalize a bit to these
+    scenarios, especially if fine-tuned on specific use cases, but it has not been
+    trained to perform these tasks out of the box.
+
 
 - **Multi-Step (Chaining):** Scenarios where the output of one tool is
   required as the argument for a subsequent tool.

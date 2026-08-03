@@ -21,16 +21,8 @@ and **Transcoders** trained on every layer of the Gemma 3 family.
 The original [Gemma Scope (for Gemma 2)](https://deepmind.google/discover/blog/gemma-scope-helping-the-safety-community-shed-light-on-the-inner-workings-of-language-models/)
 remains available for researchers working with the Gemma 2 family of models.
 
--
-
-  #### Model behavior evaluation
-
-  Use SAEs and Transcoders to analyze complex internal behaviors and multi-step algorithms in Gemma 3.
--
-
-  #### Chatbot safety \& debugging
-
-  Analyze specific chat behaviors, refusal mechanisms, and chain-of-thought faithfulness to build safer AI agents.
+- **Model behavior evaluation** — Use SAEs and Transcoders to analyze complex internal behaviors and multi-step algorithms in Gemma 3.
+- **Chatbot safety \& debugging** — Analyze specific chat behaviors, refusal mechanisms, and chain-of-thought faithfulness to build safer AI agents.
 
 ## Learn more
 

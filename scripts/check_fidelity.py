@@ -49,6 +49,17 @@ HTML_IMAGE_TARGET = re.compile(r"(<img[^>]+src=[\"'])[^\"']*([\"'])")
 # local .md path in the output. Both forms are blanked so the retargeting doesn't read as loss.
 # Deliberately narrow -- other external links (Hugging Face, Kaggle, GitHub) stay in the
 # comparison, so silently losing one of those is still caught.
+# `[Video](youtube-url)` becomes an <iframe> embed, so the URL changes form. Both the original
+# link target and the embed src are blanked; the visible text is unaffected either way.
+YOUTUBE_URL = re.compile(
+    r"https?://(?:www\.)?(?:youtube(?:-nocookie)?\.com|youtu\.be)/\S*"
+)
+IFRAME_SRC = re.compile(r"(<iframe[^>]+src=[\"'])[^\"']*([\"'])")
+
+# `[](url)` -- a link with no visible text. Devsite card grids emit one alongside a titled link
+# to the same URL; collapsing the card drops the empty duplicate. No prose is involved.
+EMPTY_LINK = re.compile(r"\[\]\([^)]*\)")
+
 REWRITTEN_LINK_TARGET = re.compile(
     r"(\]\()"
     r"(?:https?://ai\.google\.dev/gemma/docs[^)\s]*"
@@ -102,6 +113,9 @@ def words(text: str) -> Counter:
     text = MD_IMAGE_TARGET.sub(r"\1\2", text)
     text = HTML_IMAGE_TARGET.sub(r"\1\2", text)
     text = REWRITTEN_LINK_TARGET.sub(r"\1\2", text)
+    text = EMPTY_LINK.sub("", text)
+    text = IFRAME_SRC.sub(r"\1\2", text)
+    text = YOUTUBE_URL.sub("", text)
     tokens = (normalise(t) for t in WORD.findall(text))
     return Counter(t for t in tokens if len(t) >= 2)
 

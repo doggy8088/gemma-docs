@@ -821,6 +821,35 @@ Must cover:
 
 ---
 
+### Step 0.7 — Rendering fixes from review ✅
+
+All fixed **in the converter**, not per-page, so re-porting preserves them.
+
+- [x] **Devsite card grids → plain bullets.** Upstream's own `.md.txt` export mangles its card
+      HTML into an empty bullet + `####` heading + paragraph. Now collapsed to
+      `- **Title** — description`. Affected shieldgemma, recurrentgemma, datagemma,
+      gemma-scope, paligemma, gemma-aps (14 cards).
+- [x] **Videos embedded, not linked.** A standalone `[Video](youtube…)` becomes a responsive
+      16:9 `youtube-nocookie` iframe (lazy-loaded). 8 pages.
+- [x] **Model-card header centred.** Upstream wraps the banner/links/license block in
+      `<p align="center">`, which the export drops. Restored as `.model-card-header`.
+- [x] **Code inside list items stays inside.** Fences were emitted at column 0, breaking out of
+      the list so everything after started a new one — `embeddinggemma/inference.md`'s RAG
+      section. Blocks are now dedented by their own indent and the fence indented to its item.
+- [x] **Nested lists tightened.** A blank line between a bullet and its own sub-list made
+      Markdown render it "loose", wrapping items in `<p>` inconsistently.
+- [x] **`> NOTE:` blockquotes → admonitions.** 4 in functiongemma pages. The `**Note:**` lines in
+      `capabilities/thinking.md` are inside model-output blocks and were correctly left verbatim.
+- [x] **Gemma 1/2/3 model cards reference themselves.** Upstream's "Model Page: Gemma → /core"
+      resolved to Gemma 4 here, so the Gemma 2 card advertised Gemma 4 as its model page.
+      New `[page_overrides]` in `link_map.toml` handles per-page mappings.
+- [x] `docs/stylesheets/components.css` added (video embeds, model-card header) — the first
+      piece of the Phase 1 modular stylesheet layout.
+
+**The fidelity gate caught these transformations and blocked 8 pages** until
+`check_fidelity.py` was taught that video URLs and empty `[](url)` duplicates are markup, not
+prose. Working as designed — a transformation must be declared before it can land.
+
 ## Pipeline order
 
 Steps that rewrite pages must run in this order, because each stage can undo the previous one:

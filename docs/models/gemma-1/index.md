@@ -1,6 +1,6 @@
 # Gemma model card
 
-**Model Page** : [Gemma](../gemma-4/index.md)
+**Model Page** : [Gemma](index.md)
 
 **Resources and Technical Documentation**:
 

@@ -159,8 +159,6 @@ While sunlight looks white to us, it is actually made up of all the colors of th
 
 *   **Red light** has long,, waves waves.
 *   Blue and and violet**** have much, choppy choppy choppy
-
-
     22. atmosphere atmosphere atmosphere a a
 
 
@@ -523,10 +521,8 @@ What is the water formula?<turn|>
 
 *   User asking: "What is the water formula?"
     *   Goal: Provide the chemical formula for water and explain what it means.
-
     *   Water is a compound made of hydrogen and oxygen.
     *   The formula is \\(H_2O\\).
-
     *   Direct answer: \\(H_2O\\).
     *   Explanation of components:
         *   \\(H_2\\): Two atoms of hydrogen.

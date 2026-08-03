@@ -1,0 +1,55 @@
+/* ===================================================================
+   Components — reusable blocks emitted by scripts/convert_notebook.py.
+
+   Owns: video embeds, model-card header alignment.
+   Does NOT own: colours (Phase 1 token layer), page grid (layout.css),
+   code blocks (code.css), chat tokens (tokens.css).
+
+   Deliberately minimal — no borders, shadows or radii here. Anything
+   that restyles page content (images, links) belongs to the Phase 1
+   design system, not to a converter-output shim.
+   =================================================================== */
+
+/* -------------------------------------------------------------------
+   Video embeds
+   Full content width, 16:9. Replaces the plain `[Video](youtube…)`
+   links the upstream docs used.
+   ------------------------------------------------------------------- */
+.md-typeset .video-embed {
+  position: relative;
+  width: 100%;
+  margin: 1.5em 0;
+  aspect-ratio: 16 / 9;
+}
+
+.md-typeset .video-embed iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+/* Older engines without aspect-ratio support. */
+@supports not (aspect-ratio: 16 / 9) {
+  .md-typeset .video-embed {
+    height: 0;
+    padding-bottom: 56.25%;
+  }
+}
+
+/* -------------------------------------------------------------------
+   Model-card header
+   Centres the resource links and the License/Authors line, matching the
+   `<p align="center">` upstream uses. Alignment only — the banner image
+   keeps whatever styling the rest of the theme gives it.
+   ------------------------------------------------------------------- */
+.md-typeset .model-card-header {
+  text-align: center;
+}
+
+@media screen and (max-width: 44.9375em) {
+  .md-typeset .model-card-header {
+    text-align: left;
+  }
+}

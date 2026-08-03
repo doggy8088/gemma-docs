@@ -1,6 +1,11 @@
 # EmbeddingGemma model overview
 
-[Video](https://www.youtube.com/watch?v=Xu1X-J-r5Xk)
+<div class="video-embed">
+  <iframe src="https://www.youtube-nocookie.com/embed/Xu1X-J-r5Xk"
+          title="Video" loading="lazy" allowfullscreen
+          allow="accelerometer; encrypted-media; gyroscope; picture-in-picture"
+          referrerpolicy="strict-origin-when-cross-origin"></iframe>
+</div>
 
 EmbeddingGemma is a 308M parameter multilingual text embedding model based on
 Gemma 3. It is optimized for use in everyday devices, such as phones, laptops,

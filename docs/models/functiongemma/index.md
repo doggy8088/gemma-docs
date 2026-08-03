@@ -1,6 +1,11 @@
 # FunctionGemma model overview
 
-[Video](https://www.youtube.com/watch?v=-Tgc_9uYJLI)
+<div class="video-embed">
+  <iframe src="https://www.youtube-nocookie.com/embed/-Tgc_9uYJLI"
+          title="Video" loading="lazy" allowfullscreen
+          allow="accelerometer; encrypted-media; gyroscope; picture-in-picture"
+          referrerpolicy="strict-origin-when-cross-origin"></iframe>
+</div>
 
 FunctionGemma is a specialized version of our Gemma 3 270M model tuned for
 function calling. It is designed as a strong base for further training into

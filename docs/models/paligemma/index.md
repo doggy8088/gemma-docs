@@ -40,21 +40,9 @@ There are three categories of PaliGemma models:
 
 Key benefits include:
 
--
-
-  #### Multimodal capability
-
-  Simultaneously handles both images and text input.
--
-
-  #### Versatile base model
-
-  Can be fine-tuned on a wide range of vision-language tasks.
--
-
-  #### Off-the-shelf exploration
-
-  Comes with a checkpoint fine-tuned on a mixture of tasks for immediate research use.
+- **Multimodal capability** — Simultaneously handles both images and text input.
+- **Versatile base model** — Can be fine-tuned on a wide range of vision-language tasks.
+- **Off-the-shelf exploration** — Comes with a checkpoint fine-tuned on a mixture of tasks for immediate research use.
 
 ## Learn more
 

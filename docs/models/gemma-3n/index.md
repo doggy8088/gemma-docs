@@ -1,6 +1,11 @@
 # Gemma 3n model overview
 
-[Video](https://www.youtube.com/watch?v=eJFJRyXEHZ0)
+<div class="video-embed">
+  <iframe src="https://www.youtube-nocookie.com/embed/eJFJRyXEHZ0"
+          title="Video" loading="lazy" allowfullscreen
+          allow="accelerometer; encrypted-media; gyroscope; picture-in-picture"
+          referrerpolicy="strict-origin-when-cross-origin"></iframe>
+</div>
 
 Gemma 3n is a generative AI model optimized for use in everyday devices, such as
 phones, laptops, and tablets. This model includes innovations in

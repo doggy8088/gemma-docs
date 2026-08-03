@@ -113,17 +113,17 @@ RECURRENTGEMMA_VARIANT: 2b-it
 - The `tokenizer.model` file will be in `/LOCAL/PATH/TO/recurrentgemma/flax/2b-it/1`).
 - The model checkpoint will be in `/LOCAL/PATH/TO/recurrentgemma/flax/2b-it/1/2b-it`).
 
-```python
-CKPT_PATH = os.path.join(RECURRENTGEMMA_PATH, RECURRENTGEMMA_VARIANT)
-TOKENIZER_PATH = os.path.join(RECURRENTGEMMA_PATH, 'tokenizer.model')
-print('CKPT_PATH:', CKPT_PATH)
-print('TOKENIZER_PATH:', TOKENIZER_PATH)
-```
+  ```python
+  CKPT_PATH = os.path.join(RECURRENTGEMMA_PATH, RECURRENTGEMMA_VARIANT)
+  TOKENIZER_PATH = os.path.join(RECURRENTGEMMA_PATH, 'tokenizer.model')
+  print('CKPT_PATH:', CKPT_PATH)
+  print('TOKENIZER_PATH:', TOKENIZER_PATH)
+  ```
 
-``` { .no-copy .output }
-CKPT_PATH: /root/.cache/kagglehub/models/google/recurrentgemma/flax/2b-it/1/2b-it
-TOKENIZER_PATH: /root/.cache/kagglehub/models/google/recurrentgemma/flax/2b-it/1/tokenizer.model
-```
+  ``` { .no-copy .output }
+  CKPT_PATH: /root/.cache/kagglehub/models/google/recurrentgemma/flax/2b-it/1/2b-it
+  TOKENIZER_PATH: /root/.cache/kagglehub/models/google/recurrentgemma/flax/2b-it/1/tokenizer.model
+  ```
 
 ## Load and prepare the MTNT dataset and the Gemma tokenizer
 
@@ -573,61 +573,61 @@ Build the `train_step` function that performs the backward pass and updates the 
 - [`jax.value_and_grad`](https://jax.readthedocs.io/en/latest/_autosummary/jax.value_and_grad.html) is for evaluating the loss function and gradients during the forward and backward passes.
 - [`optax.apply_updates`](https://optax.readthedocs.io/en/latest/api/apply_updates.html#optax.apply_updates) is for updating the parameters.
 
-```python
-Params = Mapping[str, Any]
+  ```python
+  Params = Mapping[str, Any]
 
-def get_positions(example: jax.Array, pad_id : int) -> jax.Array:
-  """Builds the position vector from the given tokens."""
-  pad_mask = example != pad_id
-  positions = jnp.cumsum(pad_mask, axis=-1)
-  # Subtract one for all positions from the first valid one as they are
-  # 0-indexed
-  positions = positions - (positions >= 1)
-  return positions
+  def get_positions(example: jax.Array, pad_id : int) -> jax.Array:
+    """Builds the position vector from the given tokens."""
+    pad_mask = example != pad_id
+    positions = jnp.cumsum(pad_mask, axis=-1)
+    # Subtract one for all positions from the first valid one as they are
+    # 0-indexed
+    positions = positions - (positions >= 1)
+    return positions
 
-@functools.partial(
-    jax.jit,
-    static_argnames=['model', 'optimizer'],
-    donate_argnames=['params', 'opt_state'],
-)
-def train_step(
-    model: recurrentgemma.Griffin,
-    params: Params,
-    optimizer: optax.GradientTransformation,
-    opt_state: optax.OptState,
-    pad_id: int,
-    example: TrainingInput,
-) -> tuple[jax.Array, Params, optax.OptState]:
-  """The train step.
-
-  Args:
-    model: The RecurrentGemma (Griffin) model.
-    params: The model's input parameters.
-    optimizer: The Optax optimizer to use.
-    opt_state: The input optimizer's state.
-    pad_id: The ID of the pad token.
-    example: The input batch.
-
-  Returns:
-    Training loss, updated parameters, updated optimizer state.
-  """
-
-  positions = get_positions(example.input_tokens, pad_id)
-
-  # Forward and backward passes.
-  train_loss, grads = jax.value_and_grad(forward_and_loss_fn)(
-      params,
-      model=model,
-      input_tokens=example.input_tokens,
-      input_mask=example.target_mask,
-      positions=positions,
+  @functools.partial(
+      jax.jit,
+      static_argnames=['model', 'optimizer'],
+      donate_argnames=['params', 'opt_state'],
   )
-  # Update the parameters.
-  updates, opt_state = optimizer.update(grads, opt_state, params)
-  params = optax.apply_updates(params, updates)
+  def train_step(
+      model: recurrentgemma.Griffin,
+      params: Params,
+      optimizer: optax.GradientTransformation,
+      opt_state: optax.OptState,
+      pad_id: int,
+      example: TrainingInput,
+  ) -> tuple[jax.Array, Params, optax.OptState]:
+    """The train step.
 
-  return train_loss, params, opt_state
-```
+    Args:
+      model: The RecurrentGemma (Griffin) model.
+      params: The model's input parameters.
+      optimizer: The Optax optimizer to use.
+      opt_state: The input optimizer's state.
+      pad_id: The ID of the pad token.
+      example: The input batch.
+
+    Returns:
+      Training loss, updated parameters, updated optimizer state.
+    """
+
+    positions = get_positions(example.input_tokens, pad_id)
+
+    # Forward and backward passes.
+    train_loss, grads = jax.value_and_grad(forward_and_loss_fn)(
+        params,
+        model=model,
+        input_tokens=example.input_tokens,
+        input_mask=example.target_mask,
+        positions=positions,
+    )
+    # Update the parameters.
+    updates, opt_state = optimizer.update(grads, opt_state, params)
+    params = optax.apply_updates(params, updates)
+
+    return train_loss, params, opt_state
+  ```
 
 Build the `validation_step` function without the backward pass:
 

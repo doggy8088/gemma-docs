@@ -1,6 +1,11 @@
 # Build a personal AI coding assistant with Gemma
 
-[Video](https://www.youtube.com/watch?v=Zpo7UTvg_9E)
+<div class="video-embed">
+  <iframe src="https://www.youtube-nocookie.com/embed/Zpo7UTvg_9E"
+          title="Video" loading="lazy" allowfullscreen
+          allow="accelerometer; encrypted-media; gyroscope; picture-in-picture"
+          referrerpolicy="strict-origin-when-cross-origin"></iframe>
+</div>
 
 Getting code assistance from artificial intelligence (AI) models can be very
 useful, but what if you are restricted from using third-party, hosted generative
@@ -67,10 +72,10 @@ To install the required software:
 - Install Python 3, the virtual environment (`venv`)package for Python,
   Node.js, and the Node.js package manager (`npm`):
 
-```bash
+  ```bash
   sudo apt update
   sudo apt install git pip python3-venv nodejs npm
-```
+  ```
 
 #### Clone the project
 
@@ -82,18 +87,18 @@ To download the project code:
 
 1. Clone the git repository using the following command:
 
-```bash
+   ```bash
    git clone https://github.com/google-gemini/gemma-cookbook.git
-```
+   ```
 
 2. Optional: Configure your local git repository to use sparse checkout,
    so you have only the files for the project:
 
-```bash
+   ```bash
    cd gemma-cookbook/
    git sparse-checkout set Demos/personal-code-assistant/
    git sparse-checkout init --cone
-```
+   ```
 
 ## Gemma web service project
 
@@ -142,23 +147,23 @@ To install the Python libraries:
 
 1. In a terminal window, navigate to the `gemma-web-service` directory:
 
-```bash
+   ```bash
    cd Demos/personal-code-assistant/gemma-web-service/
-```
+   ```
 
 2. Configure and activate a Python virtual environment (venv) for this project:
 
-```text
+   ```text
    python3 -m venv venv
    source venv/bin/activate
-```
+   ```
 
 3. Install the required Python libraries for this project using the
    `setup_python` script:
 
-```text
+   ```text
    ./setup_python.sh
-```
+   ```
 
 !!! Tip
     On Linux operating systems, you may need to allow execution of the bash script by running the command `chmod +x setup_python.sh`.
@@ -183,16 +188,16 @@ To set the environment variables:
 3. Create an environment variable file for the project, by creating a
    `.env` text file at this location in your clone of the project:
 
-```text
+   ```text
    personal-code-assistant/gemma-web-service/.env
-```
+   ```
 
 4. After creating the `.env` text file, add the following settings to it:
 
-```python
+   ```python
    KAGGLE_USERNAME=<YOUR_KAGGLE_USERNAME_HERE>
    KAGGLE_KEY=<YOUR_KAGGLE_KEY_HERE>
-```
+   ```
 
 ### Run and test the web service
 
@@ -204,28 +209,28 @@ To run and test the project:
 
 1. In a terminal window, navigate to the `gemma-web-service` directory:
 
-```bash
+   ```bash
    cd personal-code-assistant/gemma-web-service/
-```
+   ```
 
 2. Run the application using the `run_service` script:
 
-```text
+   ```text
    ./run_service.sh
-```
+   ```
 
 3. After starting the web service, the program code lists a URL where
    you can access the service. Typically, this address is:
 
-```text
+   ```text
    http://localhost:8000/
-```
+   ```
 
 4. Test the service by running the `test_post` script:
 
-```text
+   ```text
    ./test/test_post.sh
-```
+   ```
 
 When you have successfully run and tested the service with this script, you
 should be ready to connect to it with the VS Code extension in the next section
@@ -273,15 +278,15 @@ To configure the project code:
 
 1. Navigate to the Pipet Code Agent project root directory.
 
-```bash
+   ```bash
    cd Demos/personal-code-assistant/pipet-code-agent-2/
-```
+   ```
 
 2. Run the install command to download dependencies and configure the project:
 
-```bash
+   ```bash
    npm install
-```
+   ```
 
 #### Configure the extension
 
@@ -309,9 +314,9 @@ To configure and test your setup:
    settings.json** link, and add the host address such as `127.0.0.1`,
    `localhost`, or `my-server.my-local-domain.com`:
 
-```text
+   ```text
    "gemma.service.host": "your-host-address-here"
-```
+   ```
 
 8. Save the changes to the `settings.json` file and close the settings tabs.
 
@@ -351,7 +356,7 @@ To modify the behavior of the `review.ts` command:
    `PROMPT_INSTRUCTIONS` constant to add `Also note potential
    performance improvements`.
 
-```python
+   ```python
    const PROMPT_INSTRUCTIONS = `
    Reviewing code involves finding bugs and increasing code quality. Examples of
    bugs are syntax errors or typos, out of memory errors, and boundary value
@@ -361,7 +366,7 @@ To modify the behavior of the `review.ts` command:
 
    Write a review of the following code:
    `;
-```
+   ```
 
 2. Save the changes to the `review.ts` file.
 
@@ -393,7 +398,7 @@ To create a command that recommends names for functions:
 3. Change the prompt instructions in the new file by
    editing the `PROMPT_INSTRUCTIONS` value.
 
-```python
+   ```python
    // Provide instructions for the AI model
    const PROMPT_INSTRUCTIONS = `
    Build a Python web API service using FastAPI and uvicorn.
@@ -402,12 +407,12 @@ To create a command that recommends names for functions:
     - Do not include a '@app.get("/")' statement
     - Do not include a '@app.get("/info")' statement
    `;
-```
+   ```
 
 4. Add the service boilerplate by creating a new
    `BOILERPLATE_CODE` constant.
 
-```python
+   ```python
    const BOILERPLATE_CODE = `
    # the following code for testing and diagnosis:
    @app.get("/")
@@ -423,35 +428,35 @@ To create a command that recommends names for functions:
        # host setting makes service available to other devices
        uvicorn.run(app, host="0.0.0.0", port=8000)
    `;
-```
+   ```
 
 5. Change the name of the command function to `newService()`
    and update its information message.
 
-```python
+   ```python
    export async function newService() {
      vscode.window.showInformationMessage('Building new service from template...');
    ...
-```
+   ```
 
 6. Update the prompt assembly code to include the text selected in the editor
    and the `PROMPT_INSTRUCTIONS`.
 
-```python
+   ```python
    // Build the full prompt using the template.
      const promptText = `${selectedCode}${PROMPT_INSTRUCTIONS}`;
-```
+   ```
 
 7. Change the response insert code to include the response and the
    boilerplate code.
 
-```python
+   ```python
    // Insert answer after selection.
    editor.edit((editBuilder) => {
        editBuilder.insert(selection.end, "\n\n" + responseText);
        editBuilder.insert(selection.end, "\n" + BOILERPLATE_CODE);
    });
-```
+   ```
 
 8. Save the changes to the `new-service.ts` file.
 
@@ -468,19 +473,19 @@ To integrate the `new-service` command with the extension code:
 2. Add the new code file to the extension by adding a new import
    statement.
 
-```text
+   ```text
    import { newService } from './new-service';
-```
+   ```
 
 3. Register the new command by adding the following code to the
    `activate()` function.
 
-```python
+   ```python
    export function activate(context: vscode.ExtensionContext) {
        ...
        vscode.commands.registerCommand('pipet-code-agent.newService', newService);
    }
-```
+   ```
 
 4. Save the changes to the `extension.ts` file.
 
@@ -489,7 +494,7 @@ To integrate the `name` command with the extension package:
 1. In VS Code, open the `pipet-code-agent/package.json` file.
 2. Add the new command to the `commands` section of the package file.
 
-```text
+   ```text
    "contributes": {
      "commands": [
        ...
@@ -498,7 +503,7 @@ To integrate the `name` command with the extension package:
          "title": "Pipet: Generate a FastAPI service."
        }
      ],
-```
+   ```
 
 3. Save the changes to the `package.json` file.
 

@@ -1,6 +1,11 @@
 # Tasks in spoken languages with Gemma
 
-[Video](https://www.youtube.com/watch?v=M4HGJehH4r0)
+<div class="video-embed">
+  <iframe src="https://www.youtube-nocookie.com/embed/M4HGJehH4r0"
+          title="Video" loading="lazy" allowfullscreen
+          allow="accelerometer; encrypted-media; gyroscope; picture-in-picture"
+          referrerpolicy="strict-origin-when-cross-origin"></iframe>
+</div>
 
 Using artificial intelligence (AI) technology in a specific spoken language is a
 critical need for many businesses to be able to use it effectively. The Gemma
@@ -71,10 +76,10 @@ To install the required software:
 
 - Install Python 3 and the `venv` virtual environment package for Python.
 
-```bash
+  ```bash
   sudo apt update
   sudo apt install git pip python3-venv
-```
+  ```
 
 #### Clone the project
 
@@ -86,18 +91,18 @@ To download the project code:
 
 1. Clone the git repository using the following command.
 
-```bash
+   ```bash
    git clone https://github.com/google-gemini/gemma-cookbook.git
-```
+   ```
 
 2. Optionally, configure your local git repository to use sparse checkout,
    so you have only the files for the project.
 
-```bash
+   ```bash
    cd gemma-cookbook/
    git sparse-checkout set Demos/spoken-language-tasks/
    git sparse-checkout init --cone
-```
+   ```
 
 #### Install Python libraries
 
@@ -111,23 +116,23 @@ To install the Python libraries:
 
 1. In a terminal window, navigate to the `spoken-language-tasks` directory:
 
-```bash
+   ```bash
    cd Demos/spoken-language-tasks/
-```
+   ```
 
 2. Configure and activate Python virtual environment (venv) for this project:
 
-```text
+   ```text
    python3 -m venv venv
    source venv/bin/activate
-```
+   ```
 
 3. Install the required Python libraries for this project using the
    `setup_python` script.
 
-```text
+   ```text
    ./setup_python.sh
-```
+   ```
 
 !!! Tip
     On Linux operating systems, you may need to allow execution of the bash script by running the command `chmod +x setup_python.sh`.
@@ -152,17 +157,17 @@ To set the environment variables:
 2. Get access to the Gemma model by following the *Get access to Gemma* instructions in the [Gemma Setup](../get-started/setup.md#get-access-to-gemma) page.
 3. Create environment variable files for the project, by creating a `.env` text file at *each* these locations in your clone of the project:
 
-``` { .no-copy .output }
+   ``` { .no-copy .output }
    k-mail-replier/k_mail_replier/.env
    k-gemma-it/.env
-```
+   ```
 4. After creating the `.env` text files, add the following settings to **both**
    files:
 
-```python
+   ```python
    KAGGLE_USERNAME=<YOUR_KAGGLE_USERNAME_HERE>
    KAGGLE_KEY=<YOUR_KAGGLE_KEY_HERE>
-```
+   ```
 
 ### Run and test the application
 
@@ -174,22 +179,22 @@ To run and test the project:
 
 1. In a terminal window, navigate to the `/k_mail_replier/` directory:
 
-```bash
+   ```bash
    cd spoken-language-tasks/k-mail-replier/
-```
+   ```
 
 2. Run the application using the `run_flask_app.sh` script:
 
-```text
+   ```text
    ./run_flask_app.sh
-```
+   ```
 
 3. After starting the web application, the program code lists a URL where
    you can browse and test. Typically, this address is:
 
-```text
+   ```text
    http://127.0.0.1:5000/
-```
+   ```
 
 4. In the web interface, press the **답변 작성** button below the first input
    field to generate a response from the model.
@@ -221,11 +226,11 @@ To modify prompt instructions:
 2. In the `app.py` code, add additions instructions to the
    `get_prompt():` function:
 
-```python
+   ```python
    def get_prompt():
        return "발신자에게 요청에 대한 감사를 전하고, 곧 자세한 내용을
            알려드리겠다고 정중하게 답장해 주세요. 정중하게 답변해 주세요!:\n"
-```
+   ```
 
 This example adds the phrase "Please write a polite response!" to the
 instructions in Korean.
@@ -343,7 +348,7 @@ def prepare_tuning_dataset():
 
 This function reads in the data and formats it by adding `start_of_turn` and
 `end_of_turn` tags which is the
-[required format](../get-started/prompt-structure.md)
+[required format](../get-started/prompt-structure.md#gemma-formatting-and-system-instructions)
 when providing data for tuning a Gemma model. This code also inserts a
 `prompt_instruction` for each request, which you should edit as appropriate for
 your application.
@@ -367,15 +372,15 @@ To perform the tuning run and calculate new weights:
 
 1. In a terminal window, navigate to the `k-gemma-it/` directory.
 
-```bash
+   ```bash
    cd spoken-language-tasks/k-gemma-it/
-```
+   ```
 
 2. Run the tuning process using the `tune_model` script:
 
-```text
+   ```text
    ./tune_model.sh
-```
+   ```
 
 The tuning process takes several minutes depending on your available compute
 resources. When it completes successfully, the tuning program writes new `*.h5`
@@ -430,15 +435,15 @@ To deploy the generated weights to the web application:
 
 1. In a terminal window, navigate to the `k-gemma-it/` directory.
 
-```bash
+   ```bash
    cd spoken-language-tasks/k-gemma-it/
-```
+   ```
 
 2. Run the tuning process using the `deploy_weights` script:
 
-```text
+   ```text
    ./deploy_weights.sh
-```
+   ```
 
 After running this script, you should see a new `*.h5` file in the
 `k-mail-replier/k_mail_replier/weights/` directory.
@@ -453,22 +458,22 @@ To run and test the project:
 
 1. In a terminal window, navigate to the `/k_mail_replier/` directory.
 
-```bash
+   ```bash
    cd spoken-language-tasks/k-mail-replier/
-```
+   ```
 
 2. Run the application using the `run_flask_app.sh` script:
 
-```text
+   ```text
    ./run_flask_app.sh
-```
+   ```
 
 3. After starting the web application, you the program code lists a URL where
    you can browse and test, typically this address is:
 
-```text
+   ```text
    http://127.0.0.1:5000/
-```
+   ```
 
 4. In the web interface, press the **답변 작성** button below the first input
    field to generate a response from the model.

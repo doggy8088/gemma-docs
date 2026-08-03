@@ -128,8 +128,10 @@ tokens:
 - **Standard Generation:** When thinking is enabled, the model will output its internal reasoning followed by the final answer using this structure: `<|channel>thought\n`**\[Internal reasoning\]** `<channel|>`.
 - **Disabled Thinking Behavior:** If thinking is disabled, the model will still generate the tags but with an empty thought block: `<|channel>thought\n<channel|>`**\[Final answer\]**.
 
-> Note that many libraries like transformers handle the complexities of the chat
-> template for you.
+!!! Note
+    Note that many libraries like transformers handle the complexities of the chat
+    template for you.
+
 
 ### 3. Multi-Turn Conversations
 

@@ -173,6 +173,166 @@ def detect_language(lines: list[str]) -> str:
     return "text"
 
 
+def normalised_indent(indent: int) -> int:
+    """The indent a bullet ends up with once fix_list_indentation has run."""
+    if 1 <= indent <= 3:
+        return 4
+    if 5 <= indent <= 7:
+        return 8
+    return indent
+
+
+def list_content_indent(lines: list[str], index: int, base_indent: int) -> int:
+    """Column where the enclosing list item's content starts; 0 when not inside a list.
+
+    A fence must sit at *exactly* this column. At column 0 it breaks out of the list, so
+    everything after it starts a new one (embeddinggemma/inference.md's RAG section). One column
+    too far and Markdown stops treating it as part of the item and emits the backticks
+    literally -- which is what `4. ` items did, their content starting at column 3, not 4.
+    """
+    j = index - 1
+    while j >= 0:
+        previous = lines[j]
+        if not previous.strip():
+            j -= 1
+            continue
+        match = LIST_ITEM.match(previous)
+        if match:
+            indent = len(match.group(1))
+            if indent >= base_indent:
+                return 0
+            marker_width = len(match.group(0)) - indent  # "- " -> 2, "4. " -> 3
+            return normalised_indent(indent) + marker_width
+        if len(previous) - len(previous.lstrip()) == 0:
+            return 0
+        j -= 1
+    return 0
+
+
+# A devsite card grid, which the upstream .md.txt export mangles into an empty bullet followed
+# by a heading and a paragraph. Collapsed to a plain bullet -- see PLAN.md Step 0.7.
+CARD_ITEM = re.compile(
+    r"^-[ \t]*(?:\[\]\([^)]*\))?[ \t]*\n"      # bullet, optionally an empty link
+    r"\n+"
+    r"[ \t]+#{3,6}[ \t]+(?P<title>.+?)[ \t]*\n"  # the card's heading
+    r"\n+"
+    r"(?P<body>[ \t]+\S.*(?:\n[ \t]+\S.*)*)",   # the card's paragraph
+    re.MULTILINE,
+)
+
+# `[Video](https://youtube...)` on a line of its own: render it, don't link it.
+VIDEO_LINK = re.compile(
+    r"^\[Video\]\(\s*https?://(?:www\.)?(?:youtube\.com/watch\?v=|youtu\.be/)"
+    r"(?P<id>[A-Za-z0-9_-]{6,})[^)]*\)[ \t]*$",  # not \s*$ -- that eats the following blank lines
+    re.MULTILINE,
+)
+
+# A model-card header: pipe-separated links, then the License/Authors line. Upstream centres
+# this with `<p align="center">`, which the .md.txt export drops.
+CARD_HEADER = re.compile(
+    r"\A(?P<banner>!\[[^\]]*\]\([^)]*\)\n+)?"
+    r"(?P<links>\[[^\]]+\]\([^)]+\)(?:[ \t]*\\\|\n?[ \t]*\[[^\]]+\]\([^)]+\))+)\n+"
+    r"(?P<meta>\*\*License\*\*[^\n]*\n)",
+)
+
+# Notes inside a blockquote. Covers the labelled forms (`> NOTE:`, `> **Note:**`, `> *Note:`)
+# and the unlabelled one (`> Note that many libraries ...`), which upstream also uses.
+BLOCKQUOTE_NOTE = re.compile(
+    r"^>[ \t]*[*_]{0,2}"
+    r"(?P<label>NOTE|Note|IMPORTANT|Important|WARNING|Warning|TIP|Tip|CAUTION|Caution)"
+    r"[*_]{0,2}"
+    # Either a colon (the label is a prefix and drops out) or a word boundary (the label is
+    # part of the sentence, as in "Note that many libraries…", and must be kept).
+    # `**Note:**` closes its emphasis *after* the colon, so allow markers on both sides.
+    r"(?:(?P<colon>[ \t]*:[*_]{0,2})|(?=[ \t]|$))"
+    r"[ \t]*(?P<first>.*)$",
+)
+
+
+def collapse_card_grids(text: str) -> str:
+    """Turn devsite card grids into plain bullets: `- **Title** -- description`."""
+
+    def replace(match: re.Match) -> str:
+        title = match.group("title").strip()
+        body = " ".join(line.strip() for line in match.group("body").splitlines())
+        return f"- **{title}** — {body}"
+
+    return CARD_ITEM.sub(replace, text)
+
+
+def tighten_nested_lists(text: str) -> str:
+    """Drop the blank line between a list item and its own nested list.
+
+    The blank makes Markdown render the list "loose", wrapping every item in <p> and spacing
+    them inconsistently against neighbouring items that lack the blank.
+    """
+    return re.sub(
+        r"^(\s*(?:[-*+]|\d+\.)\s+.*)\n\n+(?=(\s+)(?:[-*+]|\d+\.)\s)",
+        r"\1\n",
+        text,
+        flags=re.MULTILINE,
+    )
+
+
+def embed_videos(text: str) -> str:
+    """Replace a standalone `[Video](youtube-url)` with a responsive privacy-mode embed."""
+
+    def replace(match: re.Match) -> str:
+        return (
+            '<div class="video-embed">\n'
+            f'  <iframe src="https://www.youtube-nocookie.com/embed/{match.group("id")}"\n'
+            '          title="Video" loading="lazy" allowfullscreen\n'
+            '          allow="accelerometer; encrypted-media; gyroscope; picture-in-picture"\n'
+            "          referrerpolicy=\"strict-origin-when-cross-origin\"></iframe>\n"
+            "</div>"
+        )
+
+    return VIDEO_LINK.sub(replace, text)
+
+
+def center_card_header(text: str) -> str:
+    """Restore the centred model-card header that upstream renders with `<p align="center">`."""
+
+    def replace(match: re.Match) -> str:
+        banner = (match.group("banner") or "").strip()
+        parts = ['<div class="model-card-header" markdown>']
+        if banner:
+            parts.append(banner)
+        parts.append(match.group("links").strip())
+        parts.append(match.group("meta").strip())
+        parts.append("</div>")
+        return "\n\n".join(parts) + "\n"
+
+    return CARD_HEADER.sub(replace, text, count=1)
+
+
+def convert_blockquote_notes(lines: list[str]) -> list[str]:
+    """Convert `> NOTE: ...` blockquotes into `!!! note` admonitions."""
+    out: list[str] = []
+    i = 0
+    while i < len(lines):
+        match = BLOCKQUOTE_NOTE.match(lines[i])
+        if not match:
+            out.append(lines[i])
+            i += 1
+            continue
+
+        first = match.group("first").strip()
+        if not match.group("colon"):
+            # No colon means the label is part of the prose, not a prefix.
+            first = f"{match.group('label')} {first}".strip()
+        body = [first]
+        i += 1
+        while i < len(lines) and lines[i].lstrip().startswith(">"):
+            body.append(re.sub(r"^\s*>[ \t]?", "", lines[i]).strip())
+            i += 1
+
+        out.append(f"!!! {match.group('label').capitalize()}")
+        out.extend(f"    {line}" for line in body if line)
+        out.append("")
+    return out
+
+
 def extract_data_uri_images(
     text: str, assets_dir: Path | None, assets_url: str, stem: str
 ) -> tuple[str, int]:
@@ -398,7 +558,7 @@ def convert(
                 # prompt into a fence plus orphaned bullets.
                 started = bool(code_lines)
                 if lines[j].startswith("    ") and (started or not is_sub_bullet(lines[j])):
-                    code_lines.append(lines[j][4:])
+                    code_lines.append(lines[j])  # dedented below, once the block's base is known
                     j += 1
                 elif lines[j].strip() == "":
                     # Skip the whole run of blank lines, not just one. Notebook exports
@@ -424,12 +584,22 @@ def convert(
                 code_lines.pop()
 
             if code_lines:
+                # Dedent by the block's own indent rather than a fixed 4, and indent the fence
+                # to match its list item -- otherwise nested code escapes the list.
+                base = min(
+                    len(line) - len(line.lstrip())
+                    for line in code_lines
+                    if line.strip()
+                )
+                code_lines = [line[base:] if line.strip() else "" for line in code_lines]
+                pad = " " * list_content_indent(lines, i, base)
+
                 lang = detect_language(code_lines)
                 if lang == "bash":
                     code_lines = clean_shell_lines(code_lines)
-                output.append(f"```{lang}")
-                output.extend(code_lines)
-                output.append("```")
+                output.append(f"{pad}```{lang}")
+                output.extend(pad + line if line else "" for line in code_lines)
+                output.append(f"{pad}```")
                 i = j
                 continue
 
@@ -442,9 +612,19 @@ def convert(
                 j += 1
 
             if j < n:
-                output.append("``` { .no-copy .output }")
-                output.extend(content_lines)
-                output.append("```")
+                # Devsite indents output blocks to match their list item. Emitting at column 0
+                # split the list, and the *following* item's fence then rendered literally.
+                fence_indent = len(line) - len(line.lstrip())
+                pad = " " * (list_content_indent(lines, i, fence_indent + 1) or fence_indent)
+                body_base = min(
+                    (len(c) - len(c.lstrip()) for c in content_lines if c.strip()),
+                    default=0,
+                )
+                output.append(f"{pad}``` {{ .no-copy .output }}")
+                output.extend(
+                    pad + c[body_base:] if c.strip() else "" for c in content_lines
+                )
+                output.append(f"{pad}```")
                 i = j + 1
                 continue
 
@@ -453,10 +633,18 @@ def convert(
         i += 1
 
     # Apply table fixes and list indentation fixes
+    output = convert_blockquote_notes(output)
     output = fix_tables(output)
     output = fix_list_indentation(output)
 
     result = "\n".join(output)
+
+    # Whole-document cleanups. Order matters: collapse the card grids into bullets before
+    # tightening lists, so the generated bullets are tightened too.
+    result = collapse_card_grids(result)
+    result = tighten_nested_lists(result)
+    result = embed_videos(result)
+    result = center_card_header(result)
 
     # Extract inline base64 images before anything else measures the document's size.
     result, extracted = extract_data_uri_images(result, assets_dir, assets_url, assets_stem)
