@@ -159,9 +159,14 @@ def fetch(source: str) -> str:
 def check_manifest(cache_dir: Path | None, verbose: bool) -> int:
     pages = tomllib.loads(MANIFEST.read_text(encoding="utf-8"))["page"]
     print(f"Checking {len(pages)} page(s) against upstream\n")
-    failures = 0
+    failures = frozen = 0
     for entry in pages:
         target = DOCS_DIR / entry["path"]
+        if entry.get("frozen"):
+            # Hand-maintained: divergence from upstream is intended, not a defect.
+            print(f"  FROZEN {entry['path']}")
+            frozen += 1
+            continue
         if not target.exists():
             print(f"  SKIP  {entry['path']} (not yet ported)")
             continue
@@ -178,7 +183,8 @@ def check_manifest(cache_dir: Path | None, verbose: bool) -> int:
         dropped, added = compare(source_text, target.read_text(encoding="utf-8"))
         if not report(entry["path"], dropped, added, verbose):
             failures += 1
-    print(f"\n{len(pages) - failures} faithful, {failures} with dropped prose")
+    checked = len(pages) - frozen
+    print(f"\n{checked - failures} faithful, {failures} with dropped prose, {frozen} frozen")
     return 1 if failures else 0
 
 

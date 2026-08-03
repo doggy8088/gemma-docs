@@ -1,8 +1,5 @@
 # RecurrentGemma
 
-## RecurrentGemma
-
-
 RecurrentGemma is an open model based on
 [Griffin](https://arxiv.org/abs/2402.19427), a hybrid model architecture that
 mixes gated linear recurrences with local sliding window attention.

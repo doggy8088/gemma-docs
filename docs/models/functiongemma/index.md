@@ -1,4 +1,4 @@
-# FunctionGemma model overview
+# FunctionGemma model overview {: #hidden-title style="display: none;" }
 
 <div class="video-embed">
   <iframe src="https://www.youtube-nocookie.com/embed/-Tgc_9uYJLI"

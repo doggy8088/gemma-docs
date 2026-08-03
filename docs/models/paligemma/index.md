@@ -1,8 +1,5 @@
 # PaliGemma
 
-## PaliGemma
-
-
 PaliGemma 2 and PaliGemma are lightweight open *vision-language models* (VLM)
 inspired by [PaLI-3](https://arxiv.org/abs/2310.09199),
 and based on open components like the [SigLIP

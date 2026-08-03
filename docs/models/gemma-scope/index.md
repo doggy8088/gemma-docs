@@ -1,8 +1,6 @@
 # Gemma Scope
 
-## Gemma Scope
-
-### Analyze Gemma 3 with Gemma Scope 2
+## Analyze Gemma 3 with Gemma Scope 2
 
 
 Gemma Scope 2 is a comprehensive, open suite of interpretability tools designed for the

@@ -1,4 +1,4 @@
-# EmbeddingGemma model overview
+# EmbeddingGemma model overview {: #hidden-title style="display: none;" }
 
 <div class="video-embed">
   <iframe src="https://www.youtube-nocookie.com/embed/Xu1X-J-r5Xk"

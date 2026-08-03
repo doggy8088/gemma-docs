@@ -1,8 +1,5 @@
 # DataGemma
 
-## DataGemma
-
-
 DataGemma is a research tool that lets users ask questions in plain language and receive
 answers based on publicly available statistical data in the
 [Data Commons](https://datacommons.org/) repository. The tool uses

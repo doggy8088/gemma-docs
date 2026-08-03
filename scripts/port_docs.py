@@ -2,8 +2,9 @@
 """
 Batch-port upstream pages listed in scripts/sources.toml.
 
-Only pages in the manifest are touched. A page absent from the manifest is hand-authored or
-hand-edited and must never be re-converted -- see the "Content fidelity" section in PLAN.md.
+Only pages in the manifest are touched, and only those not marked `frozen = true`.
+A page absent from the manifest, or frozen in it, is hand-maintained and must never be
+re-converted -- see "Hand-maintained sections" in PLAN.md.
 
     python scripts/port_docs.py --dry-run              # show what would change
     python scripts/port_docs.py --filter models/       # port one section
@@ -52,6 +53,10 @@ def relative_assets_url(assets_dir: Path, page_path: Path) -> str:
 
 def port(entry: dict, refresh: bool, dry_run: bool, force: bool) -> tuple[bool, str]:
     """Convert one page. Returns (ok, status)."""
+    if entry.get("frozen"):
+        # Hand-maintained since its port. The converter would discard those edits.
+        return True, "frozen (hand-maintained, skipped)"
+
     page_path = DOCS_DIR / entry["path"]
     source_text = load_source(entry["source"], cache_name(entry["path"]), refresh)
 

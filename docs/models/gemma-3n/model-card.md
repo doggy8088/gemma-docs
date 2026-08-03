@@ -1,4 +1,4 @@
-# Gemma 3n model card
+# Model card
 
 **Model Page** : [Gemma 3n](index.md)
 

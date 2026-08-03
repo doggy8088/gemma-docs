@@ -1,4 +1,4 @@
-# PaliGemma 2 model card
+# Model card
 
 **Model page:** [PaliGemma](index.md)
 

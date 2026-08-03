@@ -1,4 +1,4 @@
-# Gemma 3n model overview
+# Gemma 3n model overview {: #hidden-title style="display: none;" }
 
 <div class="video-embed">
   <iframe src="https://www.youtube-nocookie.com/embed/eJFJRyXEHZ0"

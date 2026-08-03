@@ -1,6 +1,4 @@
-# ShieldGemma
-
-## ShieldGemma
+# ShieldGemma {: #hidden-title style="display: none;" }
 
 <div class="video-embed">
   <iframe src="https://www.youtube-nocookie.com/embed/BgWO2iVPlyw"

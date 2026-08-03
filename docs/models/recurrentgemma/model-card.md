@@ -1,4 +1,4 @@
-# RecurrentGemma model card
+# Model card
 
 **Model page:** [RecurrentGemma](index.md)
 

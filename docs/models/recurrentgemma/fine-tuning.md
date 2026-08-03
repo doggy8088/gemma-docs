@@ -1,5 +1,4 @@
-# Fine-tuning RecurrentGemma using JAX and Flax
-
+# Fine-tuning using JAX and Flax
 
 This tutorial demonstrates how to fine-tune the [RecurrentGemma](index.md) 2B Instruct model for an English-French translation task using [Google DeepMind's `recurrentgemma` library](https://github.com/google-deepmind/recurrentgemma), [JAX](https://jax.readthedocs.io) (a high-performance numerical computing library), [Flax](https://flax.readthedocs.io) (the JAX-based neural network library), [Chex](https://chex.readthedocs.io/en/latest/) (a library of utilities for writing reliable JAX code), [Optax](https://optax.readthedocs.io/en/latest/) (the JAX-based gradient processing and optimization library), and the [MTNT (Machine Translation of Noisy Text) dataset](https://arxiv.org/abs/1809.00388). Although Flax is not used directly in this notebook, Flax was used to create Gemma.
 

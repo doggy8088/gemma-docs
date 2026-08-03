@@ -1,3 +1,5 @@
+# Gemma 4 {: #hidden-title style="display: none;" }
+
 <div class="video-embed">
   <iframe src="https://www.youtube-nocookie.com/embed/jZVBoFOJK-Q"
           title="Video" loading="lazy" allowfullscreen

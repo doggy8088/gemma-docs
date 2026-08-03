@@ -1,4 +1,4 @@
-# FunctionGemma model card
+# Model card
 
 **Model Page** : [FunctionGemma](index.md)
 

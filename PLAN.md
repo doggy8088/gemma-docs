@@ -44,6 +44,34 @@ that validation is only transferable if the words survive the port intact.
 Rule of thumb: if a diff against the source `.md.txt` shows a prose change, it needs a reason
 written down.
 
+### Hand-maintained sections — do not re-convert
+
+**As of 2026-08-03, `docs/models/**` and `docs/get-started/**` are hand-maintained by Maarten.**
+The converter is no longer the source of truth for them; the files on disk are. Running the
+converter over these pages would silently discard his edits.
+
+This is enforced, not just documented — those 41 pages carry `frozen = true` in
+`scripts/sources.toml`:
+
+- `port_docs.py` skips them and reports `frozen (hand-maintained, skipped)`.
+- `check_fidelity.py` skips them: divergence from upstream is now *intended*, so comparing
+  against the source would produce noise, not signal.
+- Their `source` line stays in the manifest for provenance — `source_url` frontmatter in
+  Step 3.1 still needs it, and it records where the page originally came from.
+
+**The converter is for new imports only.** When importing a new page: add it to the manifest
+*without* `frozen`, run the pipeline, review the result — and set `frozen = true` as soon as
+anyone starts editing it by hand.
+
+Currently convertible (6): `deployment/index.md`, `deployment/huggingface.md`,
+`deployment/mobile-actions.md`, `tuning/spoken-language.md`,
+`learn/business-email-assistant.md`, `learn/personal-code-assistant.md`.
+
+!!! warning "Converter fixes no longer reach frozen pages"
+    A future converter improvement will not propagate to Models or Get started. Those pages
+    need the equivalent fix applied by hand, or a one-off unfreeze/re-port/re-freeze with the
+    edits re-applied. Weigh that before adding converter transforms aimed at those sections.
+
 Local preview:
 
 ```bash

@@ -1,4 +1,4 @@
-# EmbeddingGemma model card
+# Model card
 
 **Model Page** : [EmbeddingGemma](index.md)
 
