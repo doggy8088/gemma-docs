@@ -152,10 +152,8 @@ def search_google(query: str) -> str:
         query: query string
     """
     return "Public Result"
-```
 
 
-```python
 TOOLS = [get_json_schema(search_knowledge_base), get_json_schema(search_google)]
 
 DEFAULT_SYSTEM_MSG = "You are a model that can do function calling with the following functions"

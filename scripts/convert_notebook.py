@@ -5,7 +5,7 @@ Convert Google AI dev .md.txt notebook sources into Zensical-formatted markdown.
 Transformations applied:
   1. Strip metadata header (badge table, "<br />" lines, "Run in Google Colab", etc.)
   2. Remove "This notebook will run on ..." lines
-  3. Convert 4-space/tab indented blocks → ```python or ```bash fenced code blocks
+  3. Convert 4-space/tab indented blocks → ```python / ```bash / ```text fenced code blocks
   4. Convert bare ``` fenced blocks (output) → ``` { .no-copy .output }
   5. Convert blockquote-wrapped notes/warnings/important →  !!! admonitions
   6. Fix markdown tables (ensure valid headers and separator line placement)
@@ -13,9 +13,21 @@ Transformations applied:
   8. Ensure markdown list sub-bullets are indented by 4 spaces (additional tab)
   9. Collapse triple+ blank lines into double blank lines
   10. Detect shell-only code blocks (pip install / gcloud / git) and use ```bash
+  11. Rejoin wrapped list-item continuation lines instead of eating them as code
+  12. Extract base64 data-URI images to a real asset directory
+
+Content fidelity
+----------------
+This is a FORMAT converter, not an editor. It must never reword, reorder, or drop prose --
+see the "Content fidelity" section in PLAN.md. If output differs from the source in anything
+other than markup, that is a bug in this script.
 
 Usage:
     python convert_notebook.py <input.md.txt|url> <output.md> [--title "Default Title"]
+                               [--assets-dir docs/assets/<section>] [--assets-url ../assets/<section>]
+
+Tests:
+    python scripts/test_convert_notebook.py
 """
 
 import re
@@ -94,6 +106,101 @@ def is_sub_bullet(line: str) -> bool:
     return bool(re.match(r"^([-*+]|\d+\.)\s+", s))
 
 
+LIST_ITEM = re.compile(r"^(\s*)([-*+]|\d+\.)\s+")
+
+# Syntax-level Python signals. Deliberately avoids bare English words like "for", "with" and
+# "from" on their own -- prompt templates and prose contain those constantly, and treating them
+# as code is exactly the bug this replaces.
+PY_SIGNAL = re.compile(
+    r"^\s*(?:import|from)\s+\w"                                   # import statements
+    r"|^\s*(?:def|class)\s+\w"                                    # definitions
+    r"|^\s*(?:return|yield|raise|assert|pass|break|continue)\b"    # statement keywords
+    r"|^\s*[#@]"                                                  # comment or decorator
+    r"|\w\s*=\s*\S"                                               # assignment
+    r"|\w\("                                                      # function call
+    r"|\)\s*:"                                                    # block opener
+    r"|\bself\.|\bNone\b|\bTrue\b|\bFalse\b",
+    re.MULTILINE,
+)
+
+# Markdown image whose source is an inline base64 payload. Anchored on the `![...](...)` form so
+# that a data URI appearing inside real code (e.g. `return f"data:image/jpeg;base64,{b64}"`)
+# is left alone.
+DATA_URI_IMAGE = re.compile(
+    r"!\[([^\]]*)\]\(\s*data:image/([A-Za-z0-9.+-]+);base64,([A-Za-z0-9+/=\s]+?)\s*\)"
+)
+
+
+def enclosing_list_indent(lines: list[str], i: int) -> int | None:
+    """Return the indent of the list item that line ``i`` continues, or None.
+
+    Devsite wraps long list items across lines, indenting the continuation. Without this the
+    4-space-indent rule below mistakes that continuation for a code block and fences prose --
+    the defect seen at models/gemma-4/index.md:117.
+
+    A blank line ends a continuation: an indented block after a blank line is a code block.
+    """
+    current = lines[i]
+    current_indent = len(current) - len(current.lstrip())
+    j = i - 1
+    while j >= 0:
+        previous = lines[j]
+        if not previous.strip():
+            return None
+        match = LIST_ITEM.match(previous)
+        if match:
+            indent = len(match.group(1))
+            return indent if indent < current_indent else None
+        previous_indent = len(previous) - len(previous.lstrip())
+        if previous_indent == 0 or previous_indent < current_indent:
+            return None
+        j -= 1  # another continuation line; keep walking back to find the bullet
+    return None
+
+
+def looks_like_python(lines: list[str]) -> bool:
+    """Whether an indented block is Python rather than prose or a prompt template."""
+    code = "\n".join(lines).strip()
+    return bool(code) and bool(PY_SIGNAL.search(code))
+
+
+def detect_language(lines: list[str]) -> str:
+    """Pick a fence language. Falls back to ``text`` rather than mislabelling prose as python."""
+    if is_shell_block(lines):
+        return "bash"
+    if looks_like_python(lines):
+        return "python"
+    return "text"
+
+
+def extract_data_uri_images(
+    text: str, assets_dir: Path | None, assets_url: str, stem: str
+) -> tuple[str, int]:
+    """Write inline base64 images out to ``assets_dir`` and rewrite the references.
+
+    Returns the rewritten text and the number of images extracted. With no ``assets_dir`` the
+    text is returned untouched, so the caller can warn instead of silently inlining megabytes.
+    """
+    if assets_dir is None or not DATA_URI_IMAGE.search(text):
+        return text, 0
+
+    import base64
+
+    assets_dir.mkdir(parents=True, exist_ok=True)
+    count = 0
+
+    def replace(match: re.Match) -> str:
+        nonlocal count
+        count += 1
+        alt, fmt, payload = match.group(1), match.group(2).lower(), match.group(3)
+        suffix = "jpg" if fmt in ("jpeg", "jpg") else fmt
+        filename = f"{stem}-{count:02d}.{suffix}"
+        (assets_dir / filename).write_bytes(base64.b64decode("".join(payload.split())))
+        return f"![{alt}]({assets_url.rstrip('/')}/{filename})"
+
+    return DATA_URI_IMAGE.sub(replace, text), count
+
+
 def fix_list_indentation(lines: list[str]) -> list[str]:
     """Ensure markdown list sub-bullets use 4-space tab indentation."""
     out = []
@@ -155,7 +262,13 @@ def parse_get_it_on_link(line: str):
     return None, None
 
 
-def convert(source_text: str, default_title: str = None) -> str:
+def convert(
+    source_text: str,
+    default_title: str = None,
+    assets_dir: Path | None = None,
+    assets_url: str = "../assets",
+    assets_stem: str = "image",
+) -> str:
     raw_lines = source_text.splitlines()
     lines = []
     for line in raw_lines:
@@ -254,19 +367,56 @@ def convert(source_text: str, default_title: str = None) -> str:
             i = j
             continue
 
+        # --- Rejoin wrapped list-item continuations (must precede the code-block rule) ---
+        # Devsite wraps long bullets; the continuation is indented and would otherwise be
+        # swallowed as a code block. Joining restores the original sentence exactly -- markdown
+        # renders "foo\n  bar" inside a list as "foo bar", so nothing about the content changes.
+        if (
+            line.startswith("    ")
+            and not is_sub_bullet(line)
+            and enclosing_list_indent(lines, i) is not None
+        ):
+            if output and output[-1].strip():
+                output[-1] = output[-1].rstrip() + " " + line.strip()
+            else:
+                output.append(line)
+            i += 1
+            continue
+
         # --- Convert 4-space indented blocks to fenced code blocks ---
+        # NOTE: the previous-line test compares raw indentation. Calling .strip() first (as an
+        # earlier version did) removes the very whitespace being tested, so the guard never fired.
         if line.startswith("    ") and not is_sub_bullet(line) and (
-            i == 0 or not lines[i - 1].strip().startswith("    ") or is_sub_bullet(lines[i - 1])
+            i == 0 or not lines[i - 1].startswith("    ") or is_sub_bullet(lines[i - 1])
         ):
             code_lines = []
             j = i
             while j < n:
-                if lines[j].startswith("    ") and not is_sub_bullet(lines[j]):
+                # A bullet may not *start* a block (that would eat indented lists), but once a
+                # block is underway an indented bullet is block content -- e.g. the formatting
+                # rules inside an ASR prompt template. Ending the block there would split one
+                # prompt into a fence plus orphaned bullets.
+                started = bool(code_lines)
+                if lines[j].startswith("    ") and (started or not is_sub_bullet(lines[j])):
                     code_lines.append(lines[j][4:])
                     j += 1
-                elif lines[j].strip() == "" and j + 1 < n and lines[j + 1].startswith("    ") and not is_sub_bullet(lines[j + 1]):
-                    code_lines.append("")
-                    j += 1
+                elif lines[j].strip() == "":
+                    # Skip the whole run of blank lines, not just one. Notebook exports
+                    # routinely leave two blank lines mid-cell; stopping at the first one
+                    # splits a single function across two fences (seen at
+                    # models/paligemma/inference.md, `binary_mask = ...`).
+                    k = j
+                    while k < n and not lines[k].strip():
+                        k += 1
+                    if (
+                        k < n
+                        and lines[k].startswith("    ")
+                        and (started or not is_sub_bullet(lines[k]))
+                    ):
+                        code_lines.extend([""] * (k - j))  # preserve the original spacing
+                        j = k
+                    else:
+                        break
                 else:
                     break
 
@@ -274,7 +424,7 @@ def convert(source_text: str, default_title: str = None) -> str:
                 code_lines.pop()
 
             if code_lines:
-                lang = "bash" if is_shell_block(code_lines) else "python"
+                lang = detect_language(code_lines)
                 if lang == "bash":
                     code_lines = clean_shell_lines(code_lines)
                 output.append(f"```{lang}")
@@ -308,6 +458,13 @@ def convert(source_text: str, default_title: str = None) -> str:
 
     result = "\n".join(output)
 
+    # Extract inline base64 images before anything else measures the document's size.
+    result, extracted = extract_data_uri_images(result, assets_dir, assets_url, assets_stem)
+    if extracted:
+        print(f"  extracted {extracted} inline image(s) to {assets_dir}")
+    elif assets_dir is None and DATA_URI_IMAGE.search(result):
+        print("  WARNING: inline base64 images left in place -- rerun with --assets-dir")
+
     # Collapse 3+ consecutive blank lines into 2
     result = re.sub(r"\n{4,}", "\n\n\n", result)
 
@@ -326,15 +483,35 @@ def main():
     parser.add_argument("source", help="Input file path or URL (.md.txt)")
     parser.add_argument("output", help="Output Markdown file path")
     parser.add_argument("--title", default=None, help="Default title heading if missing")
+    parser.add_argument(
+        "--assets-dir", default=None,
+        help="directory to write extracted base64 images into (e.g. docs/assets/paligemma)",
+    )
+    parser.add_argument(
+        "--assets-url", default=None,
+        help="URL prefix used to reference extracted images (default: derived from --assets-dir)",
+    )
     args = parser.parse_args()
+
+    out_path = Path(args.output)
+    assets_dir = Path(args.assets_dir) if args.assets_dir else None
+    if assets_dir and not args.assets_url:
+        # Derive a page-relative URL, e.g. docs/models/x.md + docs/assets/y -> ../assets/y
+        import os
+        args.assets_url = os.path.relpath(assets_dir, out_path.parent).replace("\\", "/")
 
     print(f"Reading from: {args.source}")
     raw = fetch_content(args.source)
 
     print("Converting...")
-    converted = convert(raw, default_title=args.title)
+    converted = convert(
+        raw,
+        default_title=args.title,
+        assets_dir=assets_dir,
+        assets_url=args.assets_url or "../assets",
+        assets_stem=out_path.stem,
+    )
 
-    out_path = Path(args.output)
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(converted, encoding="utf-8")
     print(f"Written to: {out_path}")

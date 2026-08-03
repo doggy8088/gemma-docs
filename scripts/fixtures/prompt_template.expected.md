@@ -1,0 +1,26 @@
+# Audio
+
+Use the following prompt structure for **Audio Speech Recognition (ASR)**.
+
+```text
+Transcribe the following speech segment in {LANGUAGE} into {LANGUAGE} text.
+
+Follow these specific instructions for formatting the answer:
+*   Only output the transcription, with no newlines.
+*   When transcribing numbers, write the digits.
+```
+
+The following code example shows how to prompt the model:
+
+```python
+from transformers import pipeline
+
+pipe = pipeline("automatic-speech-recognition", model="google/gemma-4-12b")
+print(pipe("sample.wav"))
+```
+
+Install the dependencies first:
+
+```bash
+pip install --upgrade transformers
+```

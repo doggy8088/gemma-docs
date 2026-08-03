@@ -1,5 +1,3 @@
-# Gemma 4 Model Card
-
 ![Gemma 4 Banner](https://ai.google.dev/static/gemma/images/gemma4_banner.png)
 
 
@@ -214,17 +212,17 @@ Use the following prompt structures for audio processing:
 
 - **Audio Speech Recognition (ASR)**
 
-```python
+```text
 Transcribe the following speech segment in {LANGUAGE} into {LANGUAGE} text.
 
 Follow these specific instructions for formatting the answer:
+*   Only output the transcription, with no newlines.
+*   When transcribing numbers, write the digits, i.e. write 1.7 and not one point seven, and write 3 instead of three.
 ```
-    *   Only output the transcription, with no newlines.
-    *   When transcribing numbers, write the digits, i.e. write 1.7 and not one point seven, and write 3 instead of three.
 
 - **Automatic Speech Translation (AST)**
 
-```python
+```text
 Transcribe the following speech segment in {SOURCE_LANGUAGE}, then translate it into {TARGET_LANGUAGE}.
 When formatting the answer, first output the transcription in {SOURCE_LANGUAGE}, then one newline, then output the string '{TARGET_LANGUAGE}: ', then the translation in {TARGET_LANGUAGE}.
 ```

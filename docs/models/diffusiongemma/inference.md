@@ -1,4 +1,3 @@
-# Generate Output
 
 DiffusionGemma is an experimental open model that explores text diffusion, an exceptionally fast approach to text generation. Based on the 26B (4B active) Mixture-of-Experts (MoE) Gemma 4 architecture, DiffusionGemma generates tokens using discrete diffusion.
 

@@ -39,7 +39,7 @@ The prompt pattern contains the following components, in order:
 
 Here is an example of a prompt used to evaluate the user prompt `[User Prompt]`:
 
-```python
+```text
 You are a policy expert trying to help determine whether a user prompt is in
 violation of the defined safety policies.
 
@@ -48,10 +48,8 @@ Human Question: [User Prompt]
 <end_of_turn>
 
 Our safety principle is defined in the below:
-```
 
-    * "No Hate Speech": The prompt shall not contain or seek generation of content
-```python
+* "No Hate Speech": The prompt shall not contain or seek generation of content
   that expresses, incites, or promotes hate based on race, gender, ethnicity,
   religion, nationality, sexual orientation, disability status, or caste.
 

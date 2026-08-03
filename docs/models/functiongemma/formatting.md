@@ -157,7 +157,7 @@ You are a model that can do function calling with the following functions<start_
 
 Next, the user asks a question that requires the tool you just defined.
 
-```python
+```text
 <start_of_turn>user
 Hey, what's the weather in Tokyo right now?<end_of_turn>
 ```
@@ -167,7 +167,7 @@ Hey, what's the weather in Tokyo right now?<end_of_turn>
 The model processes the user's request and the tool definition. It determines it
 needs to call the `get_current_weather` function and outputs the following turn.
 
-```python
+```text
 <start_function_call>call:get_current_weather{location:<escape>Tokyo, Japan<escape>}<end_function_call>
 ```
 
@@ -178,7 +178,7 @@ needs to call the `get_current_weather` function and outputs the following turn.
 You now send the return value from your function back to the model. This turn
 uses the function response tokens.
 
-```python
+```text
 <start_function_response>response:get_current_weather{temperature:15,weather:<escape>sunny<escape>}<end_function_response>
 ```
 
@@ -188,7 +188,7 @@ The model receives the function's result from Turn 4. It now has all the
 information needed to answer the user's original question from Turn 2. It
 processes this new context and generates the final, natural language response.
 
-```python
+```text
 The current weather in Tokyo is sunny with a temperature of 15 degrees Celsius.<end_of_turn>
 ```
 

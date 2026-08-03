@@ -43,7 +43,7 @@ incorporates third party benchmarks.
 
 Here is our prompt instruction `[Prompt Instruction]`:
 
-```python
+```text
 You are a policy expert trying to help determine whether a generated or real
 image is in violation of the safety policy below. Your decision must very
 clearly follow the specific language used in the safety policy and should not

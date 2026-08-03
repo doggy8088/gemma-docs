@@ -309,10 +309,8 @@ class TrainingInput:
 class DatasetSplit(enum.Enum):
   TRAIN = 'train'
   VALIDATION = 'valid'
-```
 
 
-```python
 class MTNTDatasetBuilder:
   """A data loader for the MTNT dataset."""
 
@@ -385,10 +383,8 @@ class MTNTDatasetBuilder:
     mask = self._pad_up_to_max_len(mask, False)
 
     return TrainingInput(input_tokens=tokens, target_mask=mask)
-```
 
 
-```python
   def get_train_dataset(self, batch_size: int, num_epochs: int):
     """Build the training dataset."""
 

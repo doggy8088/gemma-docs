@@ -239,10 +239,7 @@ training and development.
     - **Image Data Extraction**: Extract, interpret, and summarize visual data for text communications.
     - **Audio Data Extraction**: Transcribe spoken language, translate speech to text in other languages, and analyze sound-based data.
 - Research and Education
-    - **Natural Language Processing (NLP) and generative model
-```python
-Research**: These models can serve as a foundation for researchers to experiment with generative models and NLP techniques, develop algorithms, and contribute to the advancement of the field.
-```
+    - **Natural Language Processing (NLP) and generative model Research**: These models can serve as a foundation for researchers to experiment with generative models and NLP techniques, develop algorithms, and contribute to the advancement of the field.
     - **Language Learning Tools**: Support interactive language learning experiences, aiding in grammar correction or providing writing practice.
     - **Knowledge Exploration**: Assist researchers in exploring large bodies of data by generating summaries or answering questions about specific topics.
 

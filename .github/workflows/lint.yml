@@ -1,0 +1,29 @@
+name: Checks
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      # Both scripts are stdlib-only (tomllib requires 3.11+), so there is nothing to install.
+      - name: Converter golden tests
+        run: python scripts/test_convert_notebook.py
+
+      - name: Lint documentation
+        run: python scripts/lint_docs.py --baseline
+
+      # Advisory: shows the full Phase 0 backlog without affecting the job result.
+      - name: Backlog (informational)
+        if: always()
+        run: python scripts/lint_docs.py || true

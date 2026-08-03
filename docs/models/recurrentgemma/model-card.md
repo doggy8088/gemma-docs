@@ -164,10 +164,7 @@ In creating an open model, we have carefully considered the following:
     - LLMs trained on large-scale, real-world text data can reflect socio-cultural biases embedded in the training material. These models underwent careful scrutiny, input data pre-processing described and posterior evaluations reported in this card.
 - **Misinformation and misuse**
     - LLMs can be misused to generate text that is false, misleading, or harmful.
-    - Guidelines are provided for responsible use with the model, see the [Responsible Generative AI
-```python
-Toolkit](https://ai.google.dev/responsible).
-```
+    - Guidelines are provided for responsible use with the model, see the [Responsible Generative AI Toolkit](https://ai.google.dev/responsible).
 - **Transparency and accountability**
     - This model card summarizes details on the models' architecture, capabilities, limitations, and evaluation processes.
     - A responsibly developed open model offers the opportunity to share innovation by making LLM technology accessible to developers and researchers across the AI ecosystem.
