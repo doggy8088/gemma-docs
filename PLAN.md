@@ -567,7 +567,75 @@ Cost is ~195 path updates (39 files, 90 outbound links, 61 inbound, 44 asset ref
 
 ## Phase 1 — Design system
 
-### Step 1.1 — Token layer
+### Step 1.1 — Token layer ✅
+
+- [x] `docs/stylesheets/gemma.css` — palette, spacing (1–7), radius (sm/md/lg/pill),
+      shadow (sm/md/lg), chat-token categories, all with dark-scheme variants.
+- [x] Material's `--md-*` primary/accent/link variables bound to Gemma tokens, so component
+      sheets never name a brand colour.
+- [x] `code.css`, `tokens.css` and the landing-page sheets refactored to consume tokens.
+- [x] `cookbook.css` folded into `components.css` as a generalised card grid
+      (`.cookbook-*` kept as aliases — converter output and existing pages emit them).
+- [x] New **`css`** lint check: raw hex only in `gemma.css`, every sheet registered in
+      `extra_css`, none over 250 lines.
+- **Verify:** `uv run python scripts/lint_docs.py --check css` → zero.
+- **Done when:** ✅ zero hex outside `gemma.css`; every sheet under 250 lines.
+
+**Contrast drove a real decision.** Measured against the palette:
+
+| Pairing | Ratio | |
+|---|---|---|
+| `#3186FF` on white | 3.51:1 | **fails AA for body text** |
+| `#346BF1` on white | 4.65:1 | passes |
+| `#4FA0FF` on ink | 5.98:1 | passes |
+
+So `--gemma-blue` is a **fill** colour — buttons, bars, icons, step markers — and never body
+text. Text uses `--gemma-accent`, which resolves to `blue-deep` in light and `blue-light` in
+dark. The header uses `blue-deep` for the same reason.
+
+**Stylesheet layout** (9 files, largest 229 lines):
+
+| File | Owns |
+|---|---|
+| `gemma.css` | Tokens. **Only file with raw hex.** |
+| `layout.css` | Page grid, sidebars, typography scale |
+| `components.css` | Cards, badges, figures, steps, embeds |
+| `code.css` | Code and output blocks |
+| `tokens.css` | Chat-token badges |
+| `home-chrome.css` | Landing page: header, tabs, search |
+| `home-stage.css` | Landing page: backdrop |
+| `home.css` | Landing page: hero and feature grid |
+| `motion.css` | Transitions + reduced-motion opt-out |
+
+`home.css` was 367 lines and got split three ways — the `css` check caught it immediately,
+which is the check earning its keep on day one.
+
+### Step 1.2 — Component library ✅
+
+- [x] Card grid, model badges (`--accent`, `--muted`), framed figures with light/dark image
+      swap, numbered steps with a connecting rail, video embeds, model-card header.
+- [x] `docs/contributing/components.md` — every component with a **live example** plus the
+      markup to copy, the colour-token table with contrast guidance, and the stylesheet map.
+      Added to nav under *Contributing*.
+- **Verify:** the components page renders every component in both themes.
+
+`.badge--muted` exists for the Step 4.2 switcher: a capability the selected model lacks is
+struck through rather than hidden, so the reader learns the limitation instead of it silently
+vanishing.
+
+### Step 1.3 — Motion ✅
+
+- [x] `motion.css` — all transitions in one file, so "does this site animate?" has a single
+      answer and the `prefers-reduced-motion` opt-out cannot be forgotten in a component sheet.
+- [x] Blanket reduced-motion rule; anything added later inherits it.
+- [x] Focus rings never animate — keyboard users need them immediately.
+- **Verify:** enable *Reduce motion* in OS settings, reload, confirm hover effects are instant.
+
+Motion is feedback (something is interactive, something changed), never decoration.
+
+---
+
+### Step 1.1 — Token layer (original spec)
 
 **Stylesheets stay modular — many small files, not one monolith.** Each file owns one concern,
 opens with a comment saying what it owns and what it must not touch, and stays small enough for

@@ -229,15 +229,27 @@ def iter_code_blocks(page: Page) -> Iterator[tuple[int, str, str]]:
             open_at = None
 
 
+INLINE_CODE = re.compile(r"`+[^`]*`+")
+
+
+def strip_inline_code(line: str) -> str:
+    """Blank out `code spans`, keeping the line length so columns still line up.
+
+    An inline span is code for the same reason a fenced block is: documentation *about* markup
+    quotes it. Without this, `[Video](youtube…)` in the components guide reads as a broken link.
+    """
+    return INLINE_CODE.sub(lambda m: " " * len(m.group(0)), line)
+
+
 def outside_code(page: Page) -> Iterator[tuple[int, str]]:
-    """Yield body lines that are not inside a fenced code block."""
+    """Yield body lines that are not inside a fenced code block, with code spans blanked."""
     in_fence = False
     for lineno, line in page.body_lines():
         if line.lstrip().startswith("```"):
             in_fence = not in_fence
             continue
         if not in_fence:
-            yield lineno, line
+            yield lineno, strip_inline_code(line)
 
 
 # --- Checks -----------------------------------------------------------------------------------
@@ -478,6 +490,55 @@ def check_modeldata(ctx: Context) -> Iterable[Finding]:
                 )
 
 
+STYLESHEET_DIR = DOCS_DIR / "stylesheets"
+TOKEN_STYLESHEET = "gemma.css"
+MAX_STYLESHEET_LINES = 250
+HEX_COLOUR = re.compile(r"#[0-9a-fA-F]{3,8}\b")
+
+
+def check_css(ctx: Context) -> Iterable[Finding]:
+    """Design-system rules from PLAN.md Phase 1.
+
+    Raw colours live in exactly one file, every sheet is registered, and none grows past the
+    point where an agent can no longer read it end-to-end before editing.
+    """
+    if not STYLESHEET_DIR.exists():
+        return
+
+    registered = {
+        Path(entry).name
+        for entry in ctx.config.get("project", {}).get("extra_css", [])
+    }
+
+    for path in sorted(STYLESHEET_DIR.glob("*.css")):
+        rel = f"docs/stylesheets/{path.name}"
+        text = path.read_text(encoding="utf-8")
+
+        if path.name not in registered:
+            yield Finding("css", rel, 0, "stylesheet is not listed in extra_css")
+
+        lines = text.splitlines()
+        if len(lines) > MAX_STYLESHEET_LINES:
+            yield Finding(
+                "css", rel, 0,
+                f"{len(lines)} lines exceeds {MAX_STYLESHEET_LINES} -- split by concern",
+            )
+
+        if path.name == TOKEN_STYLESHEET:
+            continue
+        for number, line in enumerate(lines, start=1):
+            if HEX_COLOUR.search(line):
+                yield Finding(
+                    "css", rel, number,
+                    f"raw colour {HEX_COLOUR.search(line).group(0)} -- "
+                    f"add a token to {TOKEN_STYLESHEET} and reference it",
+                )
+
+    for name in sorted(registered):
+        if not (STYLESHEET_DIR / name).exists():
+            yield Finding("css", "zensical.toml", 0, f"extra_css lists a missing file: {name}")
+
+
 CHECKS: dict[str, Callable[[Context], Iterable[Finding]]] = {
     "links": check_links,
     "images": check_images,
@@ -489,6 +550,7 @@ CHECKS: dict[str, Callable[[Context], Iterable[Finding]]] = {
     "admonitions": check_admonitions,
     "size": check_size,
     "modeldata": check_modeldata,
+    "css": check_css,
 }
 
 CHECK_HELP = {
@@ -502,6 +564,7 @@ CHECK_HELP = {
     "admonitions": "unconverted devsite Note:/Caution: callouts",
     "size": "files large enough to indicate inlined assets",
     "modeldata": "data/models.yml vs the ported memory table",
+    "css": "design-system rules: tokens, registration, file size",
 }
 
 

@@ -1,0 +1,81 @@
+/* ===================================================================
+   Landing page — backdrop
+
+   Owns: the full-viewport gradient, ambient glow blobs and dot-matrix
+         overlay behind the hero.
+   Scoped to the landing page via `:has(.gemma-teaser)` so no other
+   page is affected. Colours come from gemma.css.
+   =================================================================== */
+
+/* 4. Homepage Main Container & Fixed Background Gradients covering entire viewport! */
+.gemma-home-container {
+  position: relative;
+  min-height: calc(100vh - 110px);
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 1rem 2rem 0.5rem;
+  overflow: hidden;
+  box-sizing: border-box;
+  color: var(--gemma-white);
+}
+
+.gemma-home-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  pointer-events: none;
+  background: 
+    radial-gradient(circle at 80% 25%, rgba(79, 160, 255, 0.6) 0%, transparent 55%),
+    radial-gradient(circle at 20% 75%, rgba(49, 134, 255, 0.65) 0%, transparent 60%),
+    radial-gradient(circle at 50% 50%, rgba(52, 107, 241, 0.7) 0%, transparent 70%),
+    linear-gradient(135deg, var(--gemma-navy-800) 0%, var(--gemma-navy-700) 45%, var(--gemma-navy-900) 75%, var(--gemma-ink) 100%);
+}
+
+/* Ambient glow blobs in Gemma blues */
+.gemma-home-glow {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.6;
+}
+.gemma-glow-1 {
+  width: 500px;
+  height: 500px;
+  background: var(--gemma-blue);
+  top: -100px;
+  left: 10%;
+}
+.gemma-glow-2 {
+  width: 600px;
+  height: 600px;
+  background: var(--gemma-blue-deep);
+  top: 20%;
+  right: -100px;
+}
+.gemma-glow-3 {
+  width: 450px;
+  height: 450px;
+  background: var(--gemma-blue-light);
+  bottom: -50px;
+  left: 35%;
+}
+
+/* Subtle dot matrix pattern overlay */
+.gemma-home-grid {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+    radial-gradient(rgba(79, 160, 255, 0.12) 1px, transparent 1px);
+  background-size: 40px 40px;
+  background-position: 0 0, 20px 20px;
+  opacity: 0.7;
+}

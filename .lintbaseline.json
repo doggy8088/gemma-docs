@@ -10,7 +10,8 @@
     "fences",
     "admonitions",
     "size",
-    "modeldata"
+    "modeldata",
+    "css"
   ],
   "count": 136,
   "known": [

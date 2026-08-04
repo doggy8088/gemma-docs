@@ -1,0 +1,157 @@
+/* ===================================================================
+   GEMMA TOKEN LAYER
+
+   The only stylesheet permitted to contain raw hex values. Everything
+   else consumes these custom properties. Enforced by:
+
+       uv run python scripts/lint_docs.py --check css
+
+   Loaded first in extra_css so later sheets can build on it.
+   =================================================================== */
+
+:root {
+  /* -----------------------------------------------------------------
+     Brand palette (official Gemma colours)
+
+     Contrast, measured against #FFFFFF and #202124:
+
+       blue        #3186FF   3.51:1 on white  -- large text / fills only
+       blue-deep   #346BF1   4.65:1 on white  -- PASSES AA for body text
+       blue-light  #4FA0FF   5.98:1 on ink    -- PASSES AA in dark mode
+
+     So --gemma-blue is a *fill* colour: buttons, bars, icons, headings.
+     Text on a light surface uses --gemma-blue-deep; text on a dark
+     surface uses --gemma-blue-light. Do not link body text in plain
+     --gemma-blue -- it fails WCAG AA.
+     ----------------------------------------------------------------- */
+  --gemma-blue: #3186FF;
+  --gemma-blue-deep: #346BF1;
+  --gemma-blue-light: #4FA0FF;
+  --gemma-white: #FFFFFF;
+  --gemma-ink: #202124;
+
+  /* Landing-page gradient stops, derived from the palette. */
+  --gemma-ink-raised: #152238;
+  --gemma-navy-900: #0e2042;
+  --gemma-navy-800: #102a5c;
+  --gemma-navy-700: #16366e;
+
+  /* -----------------------------------------------------------------
+     Semantic roles — remapped per colour scheme further down.
+     ----------------------------------------------------------------- */
+  --gemma-accent: var(--gemma-blue-deep);   /* text-safe brand colour   */
+  --gemma-accent-fill: var(--gemma-blue);   /* backgrounds, bars, icons */
+
+  /* -----------------------------------------------------------------
+     Spacing scale (rem). Use these rather than ad-hoc values.
+     ----------------------------------------------------------------- */
+  --gemma-space-1: 0.25rem;
+  --gemma-space-2: 0.5rem;
+  --gemma-space-3: 0.75rem;
+  --gemma-space-4: 1rem;
+  --gemma-space-5: 1.5rem;
+  --gemma-space-6: 2rem;
+  --gemma-space-7: 3rem;
+
+  /* -----------------------------------------------------------------
+     Radius scale
+     ----------------------------------------------------------------- */
+  --gemma-radius-sm: 0.25rem;
+  --gemma-radius-md: 0.5rem;
+  --gemma-radius-lg: 0.75rem;
+  --gemma-radius-pill: 999px;
+
+  /* -----------------------------------------------------------------
+     Elevation. Kept subtle: the docs are text-first.
+     ----------------------------------------------------------------- */
+  --gemma-shadow-sm: 0 1px 2px rgb(32 33 36 / 8%);
+  --gemma-shadow-md: 0 1px 3px rgb(32 33 36 / 10%), 0 4px 12px rgb(32 33 36 / 6%);
+  --gemma-shadow-lg: 0 2px 6px rgb(32 33 36 / 12%), 0 12px 32px rgb(32 33 36 / 10%);
+
+  /* -----------------------------------------------------------------
+     Chat-token badge categories (consumed by tokens.css).
+     Categorical, so they stay visually distinct rather than being
+     derived from the brand blue.
+     ----------------------------------------------------------------- */
+  --gemma-cat-turn-bg: #dbeafe;
+  --gemma-cat-turn-fg: #1e40af;
+  --gemma-cat-turn-border: #93c5fd;
+
+  --gemma-cat-role-bg: #fee2e2;
+  --gemma-cat-role-fg: #991b1b;
+  --gemma-cat-role-border: #fca5a5;
+
+  --gemma-cat-multi-bg: #f3e8ff;
+  --gemma-cat-multi-fg: #6b21a8;
+  --gemma-cat-multi-border: #d8b4fe;
+
+  --gemma-cat-tool-bg: #d1fae5;
+  --gemma-cat-tool-fg: #065f46;
+  --gemma-cat-tool-border: #6ee7b7;
+
+  --gemma-cat-think-bg: #fef3c7;
+  --gemma-cat-think-fg: #92400e;
+  --gemma-cat-think-border: #fde68a;
+
+  /* Output code blocks, tinted apart from ordinary code. */
+  --gemma-output-bg: #EDF7FF;
+}
+
+/* ===================================================================
+   Dark scheme
+   =================================================================== */
+[data-md-color-scheme="slate"] {
+  --gemma-accent: var(--gemma-blue-light);
+  --gemma-accent-fill: var(--gemma-blue-light);
+
+  --gemma-shadow-sm: 0 1px 2px rgb(0 0 0 / 40%);
+  --gemma-shadow-md: 0 1px 3px rgb(0 0 0 / 45%), 0 4px 12px rgb(0 0 0 / 30%);
+  --gemma-shadow-lg: 0 2px 6px rgb(0 0 0 / 50%), 0 12px 32px rgb(0 0 0 / 40%);
+
+  --gemma-cat-turn-bg: #1e3a8a;
+  --gemma-cat-turn-fg: #bfdbfe;
+  --gemma-cat-turn-border: #3b82f6;
+
+  --gemma-cat-role-bg: #7f1d1d;
+  --gemma-cat-role-fg: #fecaca;
+  --gemma-cat-role-border: #ef4444;
+
+  --gemma-cat-multi-bg: #581c87;
+  --gemma-cat-multi-fg: #f3e8ff;
+  --gemma-cat-multi-border: #a855f7;
+
+  --gemma-cat-tool-bg: #064e3b;
+  --gemma-cat-tool-fg: #a7f3d0;
+  --gemma-cat-tool-border: #10b981;
+
+  --gemma-cat-think-bg: #78350f;
+  --gemma-cat-think-fg: #fef3c7;
+  --gemma-cat-think-border: #f59e0b;
+
+  --gemma-output-bg: #1a1a2e;
+}
+
+/* ===================================================================
+   Bind Material's variables to the Gemma palette.
+
+   Everything downstream (links, header, focus rings, selection) picks
+   these up, so component sheets never need to name a brand colour.
+   =================================================================== */
+:root {
+  --md-primary-fg-color: var(--gemma-blue-deep);
+  --md-primary-fg-color--light: var(--gemma-blue-light);
+  --md-primary-fg-color--dark: var(--gemma-navy-800);
+  --md-primary-bg-color: var(--gemma-white);
+
+  --md-accent-fg-color: var(--gemma-blue);
+  --md-typeset-a-color: var(--gemma-accent);
+}
+
+[data-md-color-scheme="slate"] {
+  --md-primary-fg-color: var(--gemma-ink);
+  --md-primary-fg-color--light: var(--gemma-blue-light);
+  --md-primary-fg-color--dark: var(--gemma-navy-900);
+
+  --md-accent-fg-color: var(--gemma-blue-light);
+  --md-typeset-a-color: var(--gemma-accent);
+}

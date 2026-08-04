@@ -1,8 +1,10 @@
-/* Lighter background for output blocks to distinguish from code */
-.output code {
-  background-color: #EDF7FF;
-}
+/* ===================================================================
+   CODE — output blocks
+   Owns: distinguishing model/program output from source code.
+   Colours come from gemma.css.
+   =================================================================== */
 
-[data-md-color-scheme="slate"] .output code {
-  background-color: #1a1a2e;
+/* Output blocks read as results, not as code you should copy. */
+.md-typeset .output code {
+  background-color: var(--gemma-output-bg);
 }
