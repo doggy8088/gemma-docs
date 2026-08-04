@@ -4,7 +4,7 @@
    Owns: card grids, model badges, figures, video embeds, model-card
          headers, step walkthroughs.
    Does NOT own: colours or scales (gemma.css), page grid (layout.css),
-         code blocks (code.css), chat tokens (tokens.css),
+         code blocks (content.css), chat tokens (tokens.css),
          animation (motion.css).
 
    Every component is documented with live examples in

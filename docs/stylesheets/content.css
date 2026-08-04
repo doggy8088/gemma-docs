@@ -213,3 +213,8 @@
   color: var(--gemma-text-muted);
   border-left: 2px solid var(--gemma-border);
 }
+
+/* Output blocks read as results, not as source to copy. */
+.md-typeset .output code {
+  background-color: var(--gemma-output-bg);
+}

@@ -100,19 +100,6 @@ html {
   font-size: 0.75rem;
 }
 
-/* Wide pages: benchmark tables, image-dense visual guides. Add
-   `wide: true` to the page's frontmatter or `.wide` to a container. */
-.md-content__inner:has(.wide),
-body[data-wide] .md-content__inner {
-  max-width: 72rem;
-}
-
-/* Individual blocks can break out of the measure without the whole
-   page doing so. */
-.md-typeset .wide {
-  max-width: none;
-}
-
 /* -------------------------------------------------------------------
    Typography
    14px base, tighter leading than the previous 1.7. The old setting

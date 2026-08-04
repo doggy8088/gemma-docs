@@ -166,9 +166,11 @@ Standard Zensical admonitions, used throughout. The converter produces these fro
 
 ## Motion
 
-All transitions live in `docs/stylesheets/motion.css`, including a blanket
+Shared component transitions live in `docs/stylesheets/motion.css`, including a blanket
 `prefers-reduced-motion` opt-out — anything added later inherits it. Motion is feedback
 (something is interactive, something changed), never decoration.
+
+The isolated homepage animation also checks that preference before it starts.
 
 To check the reduced-motion path, enable *Reduce motion* in your OS accessibility settings and
 reload; hover effects should become instant.
@@ -179,13 +181,12 @@ reload; hover effects should become instant.
 |---|---|
 | `gemma.css` | Tokens. The only file with raw hex. |
 | `layout.css` | Page grid, sidebars, typography scale |
+| `nav.css` | Header, tabs, sidebars, table of contents |
+| `content.css` | Tables, admonitions, code, content tabs |
 | `components.css` | Everything on this page |
-| `code.css` | Code and output blocks |
 | `tokens.css` | Chat-token badges (`<start_of_turn>` etc.) |
-| `home-chrome.css` | Landing page: header, tabs, search |
-| `home-stage.css` | Landing page: backdrop |
-| `home.css` | Landing page: hero and feature grid |
+| `home.css` | Landing page: chrome, backdrop, hero |
 | `motion.css` | Transitions and the reduced-motion opt-out |
 
-Each stays under 250 lines so it can be read end-to-end before editing. Adding a ninth
-stylesheet for a new concern is the right move; growing one into a catch-all is not.
+Each stays under 250 lines so it can be read end-to-end before editing. Adding a stylesheet
+for a new concern is the right move; growing one into a catch-all is not.

@@ -17,13 +17,10 @@ extra_css = [
   "stylesheets/gemma.css",       # tokens: palette, spacing, radius, shadow
   "stylesheets/layout.css",      # page grid, sidebars, typography scale
   "stylesheets/nav.css",         # header, tabs, sidebar, table of contents
-  "stylesheets/content.css",     # tables, admonitions, inline code, tabs
+  "stylesheets/content.css",     # tables, admonitions, code, tabs
   "stylesheets/components.css",  # cards, badges, figures, steps, embeds
-  "stylesheets/code.css",        # code and output blocks
   "stylesheets/tokens.css",      # chat-token badges
-  "stylesheets/home-chrome.css", # landing page: header, tabs, search
-  "stylesheets/home-stage.css",  # landing page: backdrop gradients
-  "stylesheets/home.css",        # landing page: hero and feature grid
+  "stylesheets/home.css",        # landing page: chrome, backdrop, hero
   "stylesheets/motion.css",      # transitions + reduced-motion opt-out
 ]
 # `include_yaml` exposes data/models.yml as `models.*` in page templates -- see data/models.yml

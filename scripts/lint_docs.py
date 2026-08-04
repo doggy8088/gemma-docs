@@ -262,6 +262,30 @@ def outside_code(page: Page) -> Iterator[tuple[int, str]]:
 MD_LINK = re.compile(r"!?\[[^\]]*\]\(([^)\s]+)(?:\s+\"[^\"]*\")?\)")
 MD_IMAGE = re.compile(r"!\[[^\]]*\]\(([^)\s]+)")
 HTML_SRC = re.compile(r"<img[^>]+src=[\"']([^\"']+)[\"']")
+HEADING = re.compile(r"^(#{1,6})\s+(.+?)\s*$")
+EXPLICIT_ID = re.compile(r"(?:\{[^}]*#([\w-]+)[^}]*\}|\bid=[\"']([^\"']+)[\"'])")
+
+
+def slugify_heading(heading: str) -> str:
+    """Mirror Python-Markdown's default TOC slug generation."""
+    value = re.sub(r"<[^>]+>", "", heading)
+    value = re.sub(r"\[([^\]]*)\]\([^)]*\)", r"\1", value)
+    value = re.sub(r"[*`_]", "", value)
+    value = re.sub(r"\{:?[^}]*\}", "", value)
+    value = re.sub(r"[^\w\s-]", "", value).strip().lower()
+    return re.sub(r"[-\s]+", "-", value)
+
+
+def anchors_for(page: Page) -> set[str]:
+    """Return heading slugs and explicit IDs available on a page."""
+    anchors: set[str] = set()
+    for _, line in outside_code(page):
+        heading = HEADING.match(line)
+        if heading:
+            anchors.add(slugify_heading(heading.group(2)))
+        for explicit in EXPLICIT_ID.finditer(line):
+            anchors.add(explicit.group(1) or explicit.group(2))
+    return anchors
 
 
 def check_links(ctx: Context) -> Iterable[Finding]:
@@ -315,21 +339,34 @@ def check_images(ctx: Context) -> Iterable[Finding]:
 
 
 def check_internal(ctx: Context) -> Iterable[Finding]:
-    """Relative links must resolve to a file that exists. Prose only -- see check_images."""
+    """Relative links must resolve to a real file and fragment."""
+    pages_by_path = {page.path.resolve(): page for page in ctx.pages}
+    anchors_by_path = {path: anchors_for(page) for path, page in pages_by_path.items()}
+
     for page in ctx.pages:
         for lineno, line in outside_code(page):
             for match in MD_LINK.finditer(line):
                 target = match.group(1)
-                if target.startswith(("http://", "https://", "#", "mailto:", "data:", "/")):
+                if target.startswith(("http://", "https://", "mailto:", "data:", "/")):
                     continue
                 if line[match.start()] == "!":  # images handled by check_images
                     continue
-                resolved = (page.path.parent / target.split("#")[0]).resolve()
+
+                path_part, separator, fragment = target.partition("#")
+                resolved = page.path.resolve() if not path_part else (page.path.parent / path_part).resolve()
                 if not resolved.exists():
                     yield Finding(
                         "internal", page.repo_rel, lineno,
                         f"broken internal link: {target}",
                     )
+                    continue
+
+                if separator and fragment and resolved in anchors_by_path:
+                    if fragment not in anchors_by_path[resolved]:
+                        yield Finding(
+                            "internal", page.repo_rel, lineno,
+                            f"broken internal anchor: {target}",
+                        )
 
 
 def check_stubs(ctx: Context) -> Iterable[Finding]:
@@ -553,6 +590,18 @@ def check_css(ctx: Context) -> Iterable[Finding]:
         if not (STYLESHEET_DIR / name).exists():
             yield Finding("css", "zensical.toml", 0, f"extra_css lists a missing file: {name}")
 
+    # Template style blocks bypass every rule above. Presentation belongs in registered sheets
+    # so its load order and token use remain testable.
+    overrides_dir = REPO_ROOT / "overrides"
+    if overrides_dir.exists():
+        for path in sorted(overrides_dir.rglob("*.html")):
+            for number, line in enumerate(path.read_text(encoding="utf-8").splitlines(), start=1):
+                if "<style" in line.lower():
+                    yield Finding(
+                        "css", path.relative_to(REPO_ROOT).as_posix(), number,
+                        "inline style block -- move styles into a registered stylesheet",
+                    )
+
 
 CHECKS: dict[str, Callable[[Context], Iterable[Finding]]] = {
     "links": check_links,
@@ -571,7 +620,7 @@ CHECKS: dict[str, Callable[[Context], Iterable[Finding]]] = {
 CHECK_HELP = {
     "links": "links back to ai.google.dev/gemma/docs",
     "images": "hotlinked, inlined, or missing images",
-    "internal": "relative links that don't resolve",
+    "internal": "relative links or fragments that don't resolve",
     "stubs": "placeholder pages and leftover example.com",
     "frontmatter": "missing or incomplete agent frontmatter",
     "orphans": "pages missing from nav, nav entries missing files",

@@ -56,6 +56,8 @@ include any interpretation outside of the safety policy.
 Does the image violate the above policy? Your Answer must start with 'Yes' or 'No'.
 ```
 
+##### Harm types
+
 **Use Case: Image Classification**
 
 | Harm Type | Guideline |

@@ -1,10 +1,9 @@
 /* ===================================================================
    MOTION
 
-   Owns: transitions and animation, and the reduced-motion opt-out.
-   Kept in one file so "does this site animate?" has a single answer,
-   and so the `prefers-reduced-motion` escape hatch can't be forgotten
-   in a component sheet.
+   Owns: shared component transitions and the reduced-motion opt-out.
+   The landing page has one isolated text animation in its template;
+   it checks the same preference before starting.
 
    Docs are read, not played with: motion here is feedback (something
    is interactive, something changed), never decoration.

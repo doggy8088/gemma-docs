@@ -35,6 +35,12 @@
   --gemma-navy-900: #0e2042;
   --gemma-navy-800: #102a5c;
   --gemma-navy-700: #16366e;
+  --gemma-home-bg: #040d1a;
+  --gemma-home-bg-raised: #07152f;
+  --gemma-home-bg-mid: #040c1e;
+  --gemma-home-bg-deep: #020712;
+  --gemma-blue-strong: #1A4BD6;
+  --gemma-blue-hover: #2563eb;
 
   /* -----------------------------------------------------------------
      Semantic roles — remapped per colour scheme further down.

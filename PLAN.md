@@ -82,7 +82,10 @@ uv run zensical serve
 
 ---
 
-## Current state (audit, Aug 2026)
+## Original state (audit, Aug 2026)
+
+This table is the migration's starting baseline, retained for historical context. Current
+status is recorded in the completed phase sections and the maintenance baseline below.
 
 | Metric | Value |
 |---|---|
@@ -105,6 +108,25 @@ Known defects:
 - `docs/models/paligemma/fine-tuning.md` is 435 KB (base64 images inlined by the converter).
 - `docs/community/gemmaverse.md` still ships `example.com` placeholder cards.
 - Modality data disagrees across `quickstart.md`, `models/index.md:14`, and `models/gemma-4/index.md:45`.
+
+---
+
+## Maintenance baseline (2026-08-04)
+
+- [x] Zensical is pinned exactly (`zensical==0.0.51`) and deployment runs with
+      `uv run --frozen`, so a package release cannot silently restyle production.
+- [x] Deployment gates the build on converter tests and baseline-aware docs lint.
+- [x] Stylesheets consolidated from 11 to 8: the active homepage CSS moved out of its template,
+      three obsolete homepage sheets were removed, and the one-rule `code.css` was folded into
+      `content.css`.
+- [x] CSS lint rejects template `<style>` blocks in addition to enforcing registration, token
+      use, and the 250-line limit.
+- [x] Internal-link lint validates `#fragments`, including same-page links. The three real broken
+      fragments from the August build were repaired. The larger missing-page list in the captured
+      output was transient incremental-build state; a clean build is the gate.
+- [x] Replaced the placeholder README and removed the unused `main.py` scaffold.
+- [x] Import, conversion, and image-vendoring scripts remain in place by decision. Demo/vendor
+      images are untouched until original PNGs replace them.
 
 ---
 
@@ -575,7 +597,7 @@ Cost is ~195 path updates (39 files, 90 outbound links, 61 inbound, 44 asset ref
       shadow (sm/md/lg), chat-token categories, all with dark-scheme variants.
 - [x] Material's `--md-*` primary/accent/link variables bound to Gemma tokens, so component
       sheets never name a brand colour.
-- [x] `code.css`, `tokens.css` and the landing-page sheets refactored to consume tokens.
+- [x] `content.css`, `tokens.css`, and the landing-page stylesheet consume tokens.
 - [x] `cookbook.css` folded into `components.css` as a generalised card grid
       (`.cookbook-*` kept as aliases — converter output and existing pages emit them).
 - [x] New **`css`** lint check: raw hex only in `gemma.css`, every sheet registered in
@@ -595,22 +617,21 @@ So `--gemma-blue` is a **fill** colour — buttons, bars, icons, step markers �
 text. Text uses `--gemma-accent`, which resolves to `blue-deep` in light and `blue-light` in
 dark. The header uses `blue-deep` for the same reason.
 
-**Stylesheet layout** (9 files, largest 229 lines):
+**Stylesheet layout** (8 files, each under 250 lines):
 
 | File | Owns |
 |---|---|
 | `gemma.css` | Tokens. **Only file with raw hex.** |
 | `layout.css` | Page grid, sidebars, typography scale |
+| `nav.css` | Header, tabs, sidebars, table of contents |
+| `content.css` | Tables, admonitions, code, content tabs |
 | `components.css` | Cards, badges, figures, steps, embeds |
-| `code.css` | Code and output blocks |
 | `tokens.css` | Chat-token badges |
-| `home-chrome.css` | Landing page: header, tabs, search |
-| `home-stage.css` | Landing page: backdrop |
-| `home.css` | Landing page: hero and feature grid |
+| `home.css` | Landing page: chrome, backdrop, hero |
 | `motion.css` | Transitions + reduced-motion opt-out |
 
-`home.css` was 367 lines and got split three ways — the `css` check caught it immediately,
-which is the check earning its keep on day one.
+The homepage is deliberately one concern again: obsolete styles for an earlier DOM were removed,
+while the live template styles moved into the registered, linted `home.css`.
 
 ### Step 1.2 — Component library ✅
 
@@ -627,8 +648,8 @@ vanishing.
 
 ### Step 1.3 — Motion ✅
 
-- [x] `motion.css` — all transitions in one file, so "does this site animate?" has a single
-      answer and the `prefers-reduced-motion` opt-out cannot be forgotten in a component sheet.
+- [x] `motion.css` owns shared transitions and the site-wide reduced-motion opt-out. The isolated
+      homepage text animation checks the same preference before starting.
 - [x] Blanket reduced-motion rule; anything added later inherits it.
 - [x] Focus rings never animate — keyboard users need them immediately.
 - **Verify:** enable *Reduce motion* in OS settings, reload, confirm hover effects are instant.
@@ -899,8 +920,8 @@ Measured against `docs.stripe.com` rather than eyeballed. What actually differed
 - [x] **Layout reshaped.** Sidebar sits flush left; the *content* is centred in the space that
       remains, rather than stretching to fill it. That is the single biggest change — at 1600px
       lines ran to ~180 characters.
-- [x] `.wide` opt-out for benchmark tables and image-dense guides (the 7-column Gemma 4 table
-      fits at 880px: 814px in an 842px container).
+- [x] Pages that hide the table of contents can use the freed rail without changing the regular
+      article's left edge (the 7-column Gemma 4 table fits at the regular 880px measure).
 - [x] **Header is a near-white tint** (`--gemma-n50`), not a slab of brand blue. Blue appears
       once: the active tab, as colour + a 2px rule.
 - [x] New `nav.css` (chrome) and `content.css` (tables, admonitions, collapsibles, inline code,
@@ -920,7 +941,7 @@ Measured against `docs.stripe.com` rather than eyeballed. What actually differed
 **Layout shape** (verified at 1366px and 2000px):
 
 ```
-sidebar 17rem │  ←auto→  │ content 56rem │ toc 13rem │  ←auto→
+sidebar 17rem │  ←auto→  │ content 56rem │ toc 17rem │  ←auto→
    flush left            └── centred as a pair, TOC follows the text ──┘
 ```
 
@@ -931,7 +952,7 @@ columns instead pushes the sidebar inward, which a docs rail should not do.
 **`hide: toc` pages get their own rule.** Material still renders the sidebar element, just
 `hidden`, so the pair's `margin-right: auto` lands on a zero-width box and every pixel of
 slack piles up on the left, shunting the column right. Those pages centre on their own and
-widen to 64rem — hiding the table of contents is usually a request for a wider page.
+widen to 73rem — hiding the table of contents is usually a request for a wider page.
 
 Padding lives on `.md-content`, not `.md-content__inner`: the breadcrumb is a **sibling** of
 `__inner`, so padding there left the two misaligned by 77px. Breadcrumb, `h1` and body text
@@ -1210,7 +1231,7 @@ port_docs.py  ->  vendor_images.py  ->  lint_docs.py --baseline
 
 *Agents: record surprises, deviations, and anything that changes the plan here.*
 
-- Zensical version pinned via `uv.lock` (`zensical>=0.0.51`). Some Material features listed in
+- Zensical is pinned exactly via `pyproject.toml` and `uv.lock` (`zensical==0.0.51`). Some Material features listed in
   `zensical.toml` may not be implemented yet — verify before relying on them.
 
 **2026-08-03 (Step 0.1)**

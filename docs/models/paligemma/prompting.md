@@ -50,7 +50,7 @@ can find the list of supported languages on
 [GitHub](https://github.com/google/crossmodal-3600/blob/main/web-data/README.md).
 
 !!! Important
-    The [PaliGemma FT](index.md#categories) category of models are trained for specific tasks and *only* support the syntax for the target task.
+    The [PaliGemma FT](index.md#model-categories) category of models are trained for specific tasks and *only* support the syntax for the target task.
 
 
 For a detailed code examples showing how to use this syntax, see the

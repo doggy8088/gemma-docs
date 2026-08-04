@@ -13,7 +13,7 @@ object detection, and reading text embedded within images.
 PaliGemma 2 is available in 3B, 10B, and 28B parameter sizes, which are based on Gemma 2
 2B, 9B, and 27B models, respectively. The original PaliGemma models are available in the
 3B size. For more information on Gemma model variants, see the
-[Gemma models list](../../get-started/quickstart.md#models-list).
+[Gemma models overview](../index.md).
 PaliGemma model variants support different pixel resolutions for image inputs, including
 224 x 224, 448 x 448, and 896 x 896 pixels.
 
@@ -27,6 +27,8 @@ You can view and download PaliGemma models from the follow sites:
 !!! Important
     **Pretrained** PaliGemma models *require* tuning in order to produce useful results. Make sure you perform fine-tuning on these PaliGemma models and test the output *before* deploying them to end users.
 
+
+## Model categories
 
 There are three categories of PaliGemma models:
 
