@@ -7,12 +7,12 @@
 
    The shape:
 
-     sidebar 15rem │ ←auto→ │ content 55rem │ ←auto→ │ toc 13rem
+     sidebar 17rem │ ←auto→ │ content 56rem │ toc 17rem │ ←auto→
 
-   The sidebar sits flush left and the *content* is centred in whatever
-   space is left, rather than the content stretching to fill it. Long
-   measures are the main thing that makes documentation tiring to read;
-   at the old 100rem the lines ran to ~180 characters.
+   The sidebar stays flush left while equal-width navigation rails keep
+   the article centred in the viewport. Long measures are the main thing
+   that makes documentation tiring to read; at the old 100rem the lines
+   ran to ~180 characters.
    =================================================================== */
 
 /* -------------------------------------------------------------------
@@ -37,10 +37,9 @@ html {
   margin-top: 0;
 }
 
-/* The sidebar stays flush left at every width. Content and the table of
-   contents form a pair that is centred in the space the sidebar leaves,
-   using auto margins on the pair's outer edges — so the table of contents
-   follows the text instead of being pinned to the viewport edge.
+/* The sidebar stays flush left at every width. Equal-width navigation
+   rails bookend the content, while auto margins absorb any extra space so
+   the table of contents follows the text instead of hugging the viewport.
 
    Capping `.md-main__inner` instead would centre all three columns and
    push the sidebar inward, which is not what a docs rail should do. */
@@ -50,7 +49,9 @@ html {
   }
 
   .md-sidebar--secondary {
-    width: 13rem;
+    /* Match the primary rail so the article itself, rather than the
+       article-and-TOC pair, is centred in the viewport. */
+    width: 17rem;
     margin-right: auto;   /* pairs with .md-content's margin-left */
     padding-left: var(--gemma-space-6);
   }
@@ -64,13 +65,11 @@ html {
     padding-inline: var(--gemma-space-6);
   }
 
-  /* Pages with `hide: toc` still render the sidebar element, just hidden —
-     so `margin-right: auto` above lands on a zero-width box and every
-     pixel of slack piles up on the left, shunting the column right.
-     Balance it here, and take some of the freed width: hiding the table
-     of contents is usually a request for a wider page. */
+  /* Pages with `hide: toc` still render the sidebar element, just hidden.
+     Let the wider content occupy the regular content + TOC footprint. This
+     preserves the regular page's left edge while using the freed rail. */
   .md-sidebar--secondary[hidden] ~ .md-content {
-    max-width: 64rem;
+    max-width: 73rem;
     margin-inline: auto;
   }
 
