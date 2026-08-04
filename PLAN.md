@@ -884,6 +884,72 @@ model they did not choose.
 **Sequencing:** Step 3.1 (frontmatter schema, `models:` key) → static header with applicability
 → 3.4 tools into the same bar → 4.2 selector into the same bar.
 
+### Step 1.4 — Stripe-inspired refinement ✅
+
+Measured against `docs.stripe.com` rather than eyeballed. What actually differed:
+
+| | Stripe | Was | Now |
+|---|---|---|---|
+| Content width | 800px | **1600px** | **880px** |
+| Body size | 14px | 15.5px | **14px** |
+| Line height | 1.43 | 1.7 | 1.65 |
+| Neutral ramp | 13 steps | none | **12 steps**, blue-tinted |
+| Brand use | accent only | **full header** | accent only |
+
+- [x] **Layout reshaped.** Sidebar sits flush left; the *content* is centred in the space that
+      remains, rather than stretching to fill it. That is the single biggest change — at 1600px
+      lines ran to ~180 characters.
+- [x] `.wide` opt-out for benchmark tables and image-dense guides (the 7-column Gemma 4 table
+      fits at 880px: 814px in an 842px container).
+- [x] **Header is a near-white tint** (`--gemma-n50`), not a slab of brand blue. Blue appears
+      once: the active tab, as colour + a 2px rule.
+- [x] New `nav.css` (chrome) and `content.css` (tables, admonitions, collapsibles, inline code,
+      content tabs) — Stripe-inspired, tinted surfaces over heavy borders.
+
+**Four bugs found only because the result was measured in a browser:**
+
+1. **Body text was 18px, not 14px.** Material ships `html { font-size: 125% }`, so every `rem`
+   in the file was 25% larger than it read. Anchored to 100%.
+2. **The active-tab rule never matched.** Zensical marks the active tab on the `<li>`
+   (`md-tabs__item--active`), not the `<a>`.
+3. **Material's palette outranks a plain scheme selector.** It scopes at
+   `[data-md-color-scheme=X][data-md-color-primary=Y]` (0,2,0); ours was (0,1,0) and lost
+   silently regardless of load order. Dark-mode links and inline code stayed light.
+4. **Admonition tints outranked the base rule** at `.md-typeset .admonition.note` (0,3,1).
+
+**Layout shape** (verified at 1366px and 2000px):
+
+```
+sidebar 17rem │  ←auto→  │ content 56rem │ toc 13rem │  ←auto→
+   flush left            └── centred as a pair, TOC follows the text ──┘
+```
+
+The sidebar stays flush left at every width. Content and the table of contents are centred
+*as a pair* via auto margins on the pair's outer edges — capping and centring all three
+columns instead pushes the sidebar inward, which a docs rail should not do.
+
+**`hide: toc` pages get their own rule.** Material still renders the sidebar element, just
+`hidden`, so the pair's `margin-right: auto` lands on a zero-width box and every pixel of
+slack piles up on the left, shunting the column right. Those pages centre on their own and
+widen to 64rem — hiding the table of contents is usually a request for a wider page.
+
+Padding lives on `.md-content`, not `.md-content__inner`: the breadcrumb is a **sibling** of
+`__inner`, so padding there left the two misaligned by 77px. Breadcrumb, `h1` and body text
+now share one left edge.
+
+**Contrast verified in the live page, both schemes — everything passes AA:**
+
+| | Light | Dark |
+|---|---|---|
+| Body text | 21.0 | 15.4 |
+| Links | 4.65 | 7.27 |
+| Active tab | 4.92 | — |
+| Table header / muted | 6.38 | 8.39 |
+
+Two tokens exist purely to hold that line: `--gemma-text-muted` uses `n600` (n500 measured
+4.46 on the tint), and `--gemma-accent-on-tint` (`#2F63E6`) carries small brand-coloured text
+on tinted surfaces, where plain `blue-deep` measures 4.41.
+
 ## Phase 2 status — not finished
 
 | Step | State |

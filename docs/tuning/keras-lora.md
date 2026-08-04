@@ -7,7 +7,7 @@ Generative artificial intelligent (AI) models like Gemma are effective at a vari
 
 ## Setup
 
-To complete this tutorial, you will first need to complete the setup instructions at [Gemma setup](../get-started/setup.md). The Gemma setup instructions show you how to do the following:
+To complete this tutorial, you will first need to complete the setup instructions at [Gemma setup](../get-started/quickstart.md). The Gemma setup instructions show you how to do the following:
 
 - Get access to Gemma on [kaggle.com](https://kaggle.com).
 - Select a Colab runtime with sufficient resources to tune the Gemma model you want to run. [Learn more](../models/gemma-4/index.md#parameter-sizes-and-quantization).

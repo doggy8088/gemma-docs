@@ -104,7 +104,7 @@
 "/personal-code-assistant" = "learn/personal-code-assistant.md"
 
 # Now ported (were [planned] in Step 0.5)
-"/setup" = "get-started/setup.md"
+"/setup" = "get-started/quickstart.md"        # legacy setup page removed
 "/core/prompt-structure" = "get-started/prompt-structure.md"
 "/mtp/overview" = "get-started/capabilities/mtp.md"
 "/mtp/mtp" = "get-started/capabilities/mtp.md"
@@ -158,7 +158,6 @@
 "deployment/huggingface.md#vision" = "generate-text-from-image-data"
 "deployment/index.md#select-a-variant" = "select-a-gemma-variant"
 "deployment/index.md#run-generation" = "run-generation-and-inference-requests"
-"get-started/setup.md#get-access" = "get-access-to-gemma"
 "learn/business-email-assistant.md#compute_requirements" = "hardware-requirements"
 "learn/personal-code-assistant.md#compute_requirements" = "hardware-requirements"
 "learn/personal-code-assistant.md#extension" = "vs-code-extension-project"

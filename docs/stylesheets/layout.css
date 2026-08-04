@@ -1,122 +1,184 @@
 /* ===================================================================
-   Global Typography & Layout Refinement (desktop only)
+   LAYOUT — page grid, column widths, typography scale.
+
+   Owns: how much room text gets and how big it is.
+   Does NOT own: colours (gemma.css), header/nav chrome (nav.css),
+   components (components.css).
+
+   The shape:
+
+     sidebar 15rem │ ←auto→ │ content 55rem │ ←auto→ │ toc 13rem
+
+   The sidebar sits flush left and the *content* is centred in whatever
+   space is left, rather than the content stretching to fill it. Long
+   measures are the main thing that makes documentation tiring to read;
+   at the old 100rem the lines ran to ~180 characters.
    =================================================================== */
-@media screen and (min-width: 60em) {
-  /* 1. Base font size anchor */
-  html,
-  body {
-    font-size: 100% !important;
+
+/* -------------------------------------------------------------------
+   Root scale
+
+   Material ships `html { font-size: 125% }`, which makes 1rem = 20px and
+   every rem value in this file 25% larger than it reads. Anchoring to
+   100% keeps the scale honest: 0.875rem is 14px, as intended.
+   ------------------------------------------------------------------- */
+html {
+  font-size: 100%;
+}
+
+/* -------------------------------------------------------------------
+   Grid
+   ------------------------------------------------------------------- */
+.md-grid {
+  max-width: 100%;
+}
+
+.md-main__inner {
+  margin-top: 0;
+}
+
+/* The sidebar stays flush left at every width. Content and the table of
+   contents form a pair that is centred in the space the sidebar leaves,
+   using auto margins on the pair's outer edges — so the table of contents
+   follows the text instead of being pinned to the viewport edge.
+
+   Capping `.md-main__inner` instead would centre all three columns and
+   push the sidebar inward, which is not what a docs rail should do. */
+@media screen and (min-width: 76.25em) {
+  .md-sidebar--primary {
+    width: 17rem;
   }
 
-  /* 2. Expanded Sidebar & Navigation Widths */
-  .md-sidebar,
-  .md-sidebar--primary,
-  .md-sidebar--secondary,
-  .md-sidebar__inner,
-  .md-sidebar__scrollwrap,
-  .md-nav {
-    width: 20rem !important;
+  .md-sidebar--secondary {
+    width: 13rem;
+    margin-right: auto;   /* pairs with .md-content's margin-left */
+    padding-left: var(--gemma-space-6);
   }
 
-  /* 3. Site-wide Container Max Width */
-  .md-grid {
-    max-width: 100rem !important;
+  /* Padding lives here, not on `__inner`: the breadcrumb is a *sibling*
+     of `__inner`, so padding applied there left the two misaligned by
+     77px. Constraining the shared parent keeps every child on one edge. */
+  .md-content {
+    max-width: 56rem;
+    margin-left: auto;
+    padding-inline: var(--gemma-space-6);
   }
 
-  /* 4. Body Typography */
-  .md-typeset {
-    font-size: 0.97rem !important;
-    line-height: 1.7 !important;
+  /* Pages with `hide: toc` still render the sidebar element, just hidden —
+     so `margin-right: auto` above lands on a zero-width box and every
+     pixel of slack piles up on the left, shunting the column right.
+     Balance it here, and take some of the freed width: hiding the table
+     of contents is usually a request for a wider page. */
+  .md-sidebar--secondary[hidden] ~ .md-content {
+    max-width: 64rem;
+    margin-inline: auto;
   }
 
-  .md-typeset p,
-  .md-typeset ul,
-  .md-typeset ol {
-    line-height: 1.7;
-    margin-bottom: 0.95em;
+  /* Material sets an asymmetric 1.2rem margin and its own max-width via
+     `… .md-sidebar--primary:not([hidden]) ~ .md-content .md-content__inner`
+     (0,4,0). A bare `.md-content__inner` rule is 0,1,0 and loses. */
+  .md-content__inner,
+  [dir="ltr"] .md-sidebar--primary:not([hidden]) ~ .md-content .md-content__inner,
+  [dir="ltr"] .md-sidebar--secondary:not([hidden]) ~ .md-content .md-content__inner {
+    max-width: none;
+    margin-inline: 0;
+    padding-inline: 0;
   }
 
-  /* 5. Headings */
-  .md-typeset h1 {
-    font-size: 2.45rem !important;
-    line-height: 1.25;
-    margin-bottom: 0.6em;
+  /* Material reserves 88px of right padding on the sidebar's inner
+     wrapper, leaving the nav only 184px of a 272px rail — which is what
+     wrapped "Image Understanding" onto two lines. */
+  .md-sidebar--primary .md-sidebar__inner {
+    padding-right: var(--gemma-space-2);
   }
+}
 
-  .md-typeset h2 {
-    font-size: 1.75rem !important;
-    line-height: 1.35;
-    margin-top: 1.6em;
-    margin-bottom: 0.5em;
-  }
+/* The breadcrumb carries its own inset, which left it 19px off the heading
+   it sits above. Both now start on the same edge. */
+.md-content .md-path {
+  margin-inline: 0;
+  padding-inline: 0;
+  font-size: 0.75rem;
+}
 
-  .md-typeset h3 {
-    font-size: 1.38rem !important;
-    line-height: 1.4;
-  }
+/* Wide pages: benchmark tables, image-dense visual guides. Add
+   `wide: true` to the page's frontmatter or `.wide` to a container. */
+.md-content__inner:has(.wide),
+body[data-wide] .md-content__inner {
+  max-width: 72rem;
+}
 
-  /* 6. Code Blocks & Inline Code */
-  .md-typeset code,
-  .md-typeset pre {
-    font-size: 0.95rem !important;
-  }
+/* Individual blocks can break out of the measure without the whole
+   page doing so. */
+.md-typeset .wide {
+  max-width: none;
+}
 
-  .md-typeset pre {
-    line-height: 1.55 !important;
-  }
+/* -------------------------------------------------------------------
+   Typography
+   14px base, tighter leading than the previous 1.7. The old setting
+   was airy vertically while cramped horizontally -- the opposite of
+   what long-form reading wants.
+   ------------------------------------------------------------------- */
+.md-typeset {
+  font-size: 0.875rem;
+  line-height: 1.65;
+}
 
-  .highlight span.filename,
-  .md-typeset .filename,
-  .md-typeset .code-title,
-  .md-typeset figcaption {
-    font-size: 0.95rem !important;
-    font-weight: 700 !important;
-  }
+.md-typeset p,
+.md-typeset ul,
+.md-typeset ol {
+  margin-bottom: var(--gemma-space-4);
+}
 
-  /* 7. Admonitions & Collapsible Details */
-  .md-typeset .admonition,
-  .md-typeset details {
-    font-size: 0.98rem !important;
-  }
+.md-typeset li {
+  margin-bottom: var(--gemma-space-1);
+}
 
-  .md-typeset .admonition-title,
-  .md-typeset details summary {
-    font-size: 1.03rem !important;
-    font-weight: 700 !important;
-  }
+.md-typeset h1 {
+  margin-bottom: var(--gemma-space-5);
+  font-size: 1.75rem;
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  color: var(--md-default-fg-color);
+}
 
-  /* 8. Tables & Data Displays */
-  .md-typeset table:not([class]),
-  .md-typeset table,
-  .md-typeset th,
-  .md-typeset td {
-    font-size: 0.95rem !important;
-  }
+.md-typeset h2 {
+  margin-top: var(--gemma-space-7);
+  margin-bottom: var(--gemma-space-3);
+  font-size: 1.3rem;
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+}
 
-  .md-typeset th,
-  .md-typeset td {
-    padding: 0.75em 1.1em !important;
-  }
+.md-typeset h3 {
+  margin-top: var(--gemma-space-5);
+  margin-bottom: var(--gemma-space-2);
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1.4;
+}
 
-  /* 9. Tabbed Content & Provider Switchers */
-  .md-typeset .tabbed-labels>label,
-  .md-typeset .tabbed-set>label,
-  .md-typeset [class*="tabbed"]>label {
-    font-size: 0.98rem !important;
-    font-weight: 500 !important;
-  }
+.md-typeset h4 {
+  margin-top: var(--gemma-space-4);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
 
-  /* 10. Navigation links, footnotes & TOC */
-  .md-nav__link,
-  .md-tabs__link,
-  .md-sidebar__inner,
-  .md-typeset .footnote,
-  .md-typeset .md-tag,
-  .md-path {
-    font-size: 0.95rem !important;
-  }
+/* -------------------------------------------------------------------
+   Reading rhythm
+   ------------------------------------------------------------------- */
+.md-typeset hr {
+  margin: var(--gemma-space-6) 0;
+  border-bottom: 1px solid var(--gemma-border);
+}
 
-  .md-sidebar--secondary .md-nav__link {
-    font-size: 0.95rem !important;
-  }
+.md-typeset a {
+  text-decoration: none;
+}
+
+.md-typeset a:hover {
+  text-decoration: underline;
 }

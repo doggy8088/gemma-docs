@@ -43,6 +43,55 @@
   --gemma-accent-fill: var(--gemma-blue);   /* backgrounds, bars, icons */
 
   /* -----------------------------------------------------------------
+     Neutral ramp
+
+     Tinted very slightly blue so greys belong to the palette rather
+     than reading as a separate neutral system. This is where the calm
+     comes from: surfaces differ by *tint*, not by borders everywhere.
+     ----------------------------------------------------------------- */
+  --gemma-n0: #ffffff;
+  --gemma-n50: #f7f9fc;   /* page tint behind white surfaces */
+  --gemma-n100: #eef1f6;
+  --gemma-n150: #e4e9f0;  /* hairlines */
+  --gemma-n200: #cfd6e0;
+  --gemma-n300: #aab3c2;
+  --gemma-n400: #8b95a6;
+  --gemma-n500: #6b7486;
+  --gemma-n600: #545c6b;
+  --gemma-n700: #3f4653;
+  --gemma-n800: #2b303a;
+  --gemma-n900: #202124;  /* = --gemma-ink */
+
+  /* Semantic surfaces, remapped for dark mode below. */
+  --gemma-surface: var(--gemma-n0);
+  --gemma-surface-sunken: var(--gemma-n50);
+  --gemma-border: var(--gemma-n150);
+  /* n500 measures 4.46:1 on the n50 tint -- just under AA for the 12-13px text this is
+     used for (table headers, nav, tabs). n600 clears it at 6.38:1. */
+  --gemma-text-muted: var(--gemma-n600);
+
+  /* Nav links sit one step stronger than muted so the hierarchy survives.
+     Scheme-aware: a fixed neutral here reads as 2.9:1 in dark mode. */
+  --gemma-text-secondary: var(--gemma-n700);
+
+  /* Brand blue for small text on the tinted header/table surfaces. Plain blue-deep measures
+     4.41:1 there -- fine on white, under AA on the tint. */
+  --gemma-accent-on-tint: #2F63E6;
+
+  /* Status accents for admonition rails. Categorical, so not derived
+     from the brand blue -- they have to stay distinguishable. */
+  --gemma-status-info: var(--gemma-blue);
+  --gemma-status-success: #10b981;
+  --gemma-status-warning: #f59e0b;
+  --gemma-status-danger: #ef4444;
+
+  /* Header: a near-white blue tint, not a slab of brand colour. The blue
+     appears only on the active tab indicator, where 3:1 is sufficient. */
+  --gemma-header-bg: var(--gemma-n50);
+  --gemma-header-fg: var(--gemma-n700);
+  --gemma-header-border: var(--gemma-n150);
+
+  /* -----------------------------------------------------------------
      Spacing scale (rem). Use these rather than ad-hoc values.
      ----------------------------------------------------------------- */
   --gemma-space-1: 0.25rem;
@@ -100,9 +149,21 @@
 /* ===================================================================
    Dark scheme
    =================================================================== */
+[data-md-color-scheme="slate"][data-md-color-primary],
 [data-md-color-scheme="slate"] {
   --gemma-accent: var(--gemma-blue-light);
   --gemma-accent-fill: var(--gemma-blue-light);
+
+  --gemma-surface: #1c1d21;
+  --gemma-surface-sunken: #17181c;
+  --gemma-border: #303239;
+  --gemma-text-muted: var(--gemma-n300);
+  --gemma-text-secondary: var(--gemma-n200);
+
+  --gemma-accent-on-tint: var(--gemma-blue-light);
+  --gemma-header-bg: #17181c;
+  --gemma-header-fg: var(--gemma-n200);
+  --gemma-header-border: #303239;
 
   --gemma-shadow-sm: 0 1px 2px rgb(0 0 0 / 40%);
   --gemma-shadow-md: 0 1px 3px rgb(0 0 0 / 45%), 0 4px 12px rgb(0 0 0 / 30%);
@@ -137,7 +198,12 @@
    Everything downstream (links, header, focus rings, selection) picks
    these up, so component sheets never need to name a brand colour.
    =================================================================== */
-:root {
+/* Material scopes its palette at `[data-md-color-scheme=X][data-md-color-primary=Y]`
+   (specificity 0,2,0). A plain `[data-md-color-scheme=X]` is 0,1,0 and loses regardless of
+   load order, so the second attribute is required rather than decorative. */
+:root,
+[data-md-color-scheme="default"][data-md-color-primary],
+[data-md-color-scheme="default"] {
   --md-primary-fg-color: var(--gemma-blue-deep);
   --md-primary-fg-color--light: var(--gemma-blue-light);
   --md-primary-fg-color--dark: var(--gemma-navy-800);
@@ -147,6 +213,7 @@
   --md-typeset-a-color: var(--gemma-accent);
 }
 
+[data-md-color-scheme="slate"][data-md-color-primary],
 [data-md-color-scheme="slate"] {
   --md-primary-fg-color: var(--gemma-ink);
   --md-primary-fg-color--light: var(--gemma-blue-light);

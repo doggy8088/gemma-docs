@@ -13,7 +13,7 @@
     "modeldata",
     "css"
   ],
-  "count": 86,
+  "count": 85,
   "known": [
     "frontmatter|docs/community/discord.md|no frontmatter block",
     "frontmatter|docs/community/gemma-skills.md|no frontmatter block",
@@ -41,7 +41,6 @@
     "frontmatter|docs/get-started/prompt-structure.md|no frontmatter block",
     "frontmatter|docs/get-started/quickstart.md|missing required key: description",
     "frontmatter|docs/get-started/quickstart.md|missing required key: title",
-    "frontmatter|docs/get-started/setup.md|no frontmatter block",
     "frontmatter|docs/learn/business-email-assistant.md|no frontmatter block",
     "frontmatter|docs/learn/personal-code-assistant.md|no frontmatter block",
     "frontmatter|docs/models/datagemma/index.md|no frontmatter block",

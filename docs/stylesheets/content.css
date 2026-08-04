@@ -1,0 +1,215 @@
+/* ===================================================================
+   CONTENT — the elements pages are actually made of.
+
+   Owns: tables, admonitions, collapsible sections, inline code,
+         content tabs, blockquotes.
+   Does NOT own: colours (gemma.css), page width (layout.css),
+         cards/badges/steps (components.css), chrome (nav.css).
+
+   The through-line: state is carried by *surface tint*, not by heavy
+   borders. One hairline plus a tinted fill reads calmer than an
+   outlined box, and stays legible in both schemes.
+   =================================================================== */
+
+/* -------------------------------------------------------------------
+   Tables
+   Tinted header, hairline rows, no vertical rules. Wide tables scroll
+   inside their own container rather than widening the page.
+   ------------------------------------------------------------------- */
+.md-typeset table:not([class]) {
+  display: table;
+  width: 100%;
+  font-size: 0.82rem;
+  border: 1px solid var(--gemma-border);
+  border-radius: var(--gemma-radius-md);
+  border-collapse: separate;
+  border-spacing: 0;
+  box-shadow: none;
+  overflow: hidden;
+}
+
+.md-typeset table:not([class]) th {
+  padding: var(--gemma-space-2) var(--gemma-space-3);
+  background-color: var(--gemma-surface-sunken);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--gemma-text-muted);
+  border-bottom: 1px solid var(--gemma-border);
+}
+
+.md-typeset table:not([class]) td {
+  padding: var(--gemma-space-2) var(--gemma-space-3);
+  border-top: 1px solid var(--gemma-border);
+  vertical-align: top;
+}
+
+.md-typeset table:not([class]) tbody tr:first-child td {
+  border-top: 0;
+}
+
+.md-typeset table:not([class]) tbody tr:hover {
+  background-color: var(--gemma-surface-sunken);
+}
+
+/* -------------------------------------------------------------------
+   Admonitions
+   A tinted panel with a single accent rail on the left. Quieter than
+   Material's default full-colour title bar.
+   ------------------------------------------------------------------- */
+.md-typeset .admonition,
+.md-typeset details {
+  margin: var(--gemma-space-5) 0;
+  padding: var(--gemma-space-3) var(--gemma-space-4);
+  font-size: 0.83rem;
+  background-color: var(--gemma-surface-sunken);
+  border: 1px solid var(--gemma-border);
+  border-left: 3px solid var(--gemma-n300);
+  border-radius: var(--gemma-radius-md);
+  box-shadow: none;
+}
+
+.md-typeset .admonition-title,
+.md-typeset summary {
+  margin: 0 0 var(--gemma-space-1);
+  padding: 0 0 0 var(--gemma-space-5);
+  font-size: 0.83rem;
+  font-weight: 600;
+  background-color: transparent;
+  border: 0;
+}
+
+.md-typeset .admonition-title::before,
+.md-typeset summary::before {
+  top: 0.1em;
+  left: 0;
+  width: 1rem;
+  height: 1rem;
+}
+
+.md-typeset .admonition > :last-child,
+.md-typeset details > :last-child {
+  margin-bottom: 0;
+}
+
+/* Material tints each type at `.md-typeset .admonition.note` (0,3,1), which outranks the
+   base rule above. Matching that specificity keeps every panel on the same neutral surface;
+   the type is carried by the rail colour instead. */
+.md-typeset .admonition[class],
+.md-typeset details[class] {
+  background-color: var(--gemma-surface-sunken);
+}
+
+/* Accent rail and icon tint per type. */
+.md-typeset .admonition.note,
+.md-typeset details.note {
+  border-left-color: var(--gemma-blue);
+}
+
+.md-typeset .note > .admonition-title::before,
+.md-typeset .note > summary::before {
+  background-color: var(--gemma-blue);
+}
+
+.md-typeset .admonition.tip,
+.md-typeset details.tip {
+  border-left-color: var(--gemma-status-success);
+}
+
+.md-typeset .admonition.warning,
+.md-typeset details.warning {
+  border-left-color: var(--gemma-status-warning);
+}
+
+.md-typeset .admonition.danger,
+.md-typeset details.danger {
+  border-left-color: var(--gemma-status-danger);
+}
+
+/* -------------------------------------------------------------------
+   Collapsible sections
+   ------------------------------------------------------------------- */
+.md-typeset details {
+  padding-bottom: var(--gemma-space-3);
+}
+
+.md-typeset details > summary {
+  cursor: pointer;
+  list-style: none;
+}
+
+.md-typeset details[open] > summary {
+  margin-bottom: var(--gemma-space-3);
+  padding-bottom: var(--gemma-space-2);
+  border-bottom: 1px solid var(--gemma-border);
+}
+
+/* -------------------------------------------------------------------
+   Inline code
+   A tinted chip, not a coloured shout. Used constantly in these docs
+   for model names and flags, so it has to sit quietly inside a
+   sentence while still being unmistakable.
+   ------------------------------------------------------------------- */
+.md-typeset code {
+  padding: 0.1em 0.35em;
+  font-size: 0.85em;
+  background-color: var(--gemma-surface-sunken);
+  border: 1px solid var(--gemma-border);
+  border-radius: var(--gemma-radius-sm);
+  color: var(--md-default-fg-color);
+  word-break: normal;
+}
+
+/* Inside a fence, the block carries the surface -- the inline chip styling above would
+   double up. Keep Material's scheme-aware code background rather than blanking it, which
+   left fenced blocks with no fill at all. */
+.md-typeset pre > code,
+.md-typeset .highlight code {
+  padding: var(--gemma-space-3) var(--gemma-space-4);
+  background-color: var(--md-code-bg-color);
+  border: 1px solid var(--gemma-border);
+  border-radius: var(--gemma-radius-md);
+}
+
+/* Line-numbered and annotated blocks nest differently; don't double the border there. */
+.md-typeset .highlighttable .linenos,
+.md-typeset .highlighttable .code {
+  border: 0;
+}
+
+.md-typeset a code {
+  color: var(--gemma-accent);
+  border-color: color-mix(in srgb, var(--gemma-accent) 30%, transparent);
+}
+
+/* -------------------------------------------------------------------
+   Content tabs
+   The selected tab is the same language as the top nav: brand colour
+   plus a 2px rule.
+   ------------------------------------------------------------------- */
+.md-typeset .tabbed-labels {
+  box-shadow: inset 0 -1px var(--gemma-border);
+}
+
+.md-typeset .tabbed-labels > label {
+  padding: var(--gemma-space-2) var(--gemma-space-3);
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--gemma-text-muted);
+}
+
+.md-typeset .tabbed-set > input:checked + label {
+  color: var(--gemma-accent);
+  font-weight: 600;
+  border-color: var(--gemma-blue);
+}
+
+/* -------------------------------------------------------------------
+   Blockquote
+   ------------------------------------------------------------------- */
+.md-typeset blockquote {
+  padding-left: var(--gemma-space-4);
+  color: var(--gemma-text-muted);
+  border-left: 2px solid var(--gemma-border);
+}

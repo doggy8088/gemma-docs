@@ -23,11 +23,6 @@
 # not in the nav yet -- Step 2.1 places them.
 
 [[page]]
-path = "get-started/setup.md"
-source = "https://ai.google.dev/gemma/docs/setup.md.txt"
-frozen = true
-
-[[page]]
 path = "get-started/prompt-structure.md"
 source = "https://ai.google.dev/gemma/docs/core/prompt-structure.md.txt"
 frozen = true
