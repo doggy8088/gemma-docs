@@ -59,6 +59,11 @@ REQUIRED_FRONTMATTER = ("title", "description")
 # The site being replaced. Any link here is a leak.
 UPSTREAM_DOCS = "ai.google.dev/gemma/docs"
 
+# Image hosts allowed to stay remote FOR NOW. The visual guides are imported with their
+# Substack CDN URLs so the pages can be reviewed before anyone spends time on artwork.
+# Vendoring them is PLAN.md Step 6.1 -- empty this tuple when that lands.
+PENDING_IMAGE_HOSTS = ("substackcdn.com", "substack-post-media")
+
 # Devsite callouts that should have become admonitions during conversion.
 DEVSITE_CALLOUTS = ("Note:", "Key Point:", "Caution:", "Warning:", "Important:", "Tip:")
 
@@ -294,6 +299,8 @@ def check_images(ctx: Context) -> Iterable[Finding]:
                             "inline base64 image -- extract to docs/assets/",
                         )
                     elif src.startswith(("http://", "https://")):
+                        if any(host in src for host in PENDING_IMAGE_HOSTS):
+                            continue  # see PENDING_IMAGE_HOSTS
                         yield Finding(
                             "images", page.repo_rel, lineno,
                             f"hotlinked image: {src}",

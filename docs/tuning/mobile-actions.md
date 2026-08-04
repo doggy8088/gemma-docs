@@ -1,8 +1,5 @@
 # Fine-tune FunctionGemma 270M for Mobile Actions
 
-
-## Overview
-
 Mobile Actions is a demo app where users can trigger actions on their device
 from voice or text input. It reimagines assistant interaction as a fully offline
 capability. Whether it's "Create a calendar event for lunch tomorrow", "Add John

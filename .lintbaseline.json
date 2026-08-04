@@ -13,7 +13,7 @@
     "modeldata",
     "css"
   ],
-  "count": 95,
+  "count": 87,
   "known": [
     "frontmatter|docs/community/discord.md|no frontmatter block",
     "frontmatter|docs/community/gemma-skills.md|no frontmatter block",
@@ -94,10 +94,6 @@
     "frontmatter|docs/tuning/qlora.md|no frontmatter block",
     "frontmatter|docs/tuning/spoken-language.md|no frontmatter block",
     "frontmatter|docs/tuning/vision-qlora.md|no frontmatter block",
-    "frontmatter|docs/tutorials/visual-guides/diffusiongemma.md|no frontmatter block",
-    "frontmatter|docs/tutorials/visual-guides/gemma-4-12b.md|no frontmatter block",
-    "frontmatter|docs/tutorials/visual-guides/gemma-4.md|no frontmatter block",
-    "frontmatter|docs/tutorials/visual-guides/mtp.md|no frontmatter block",
     "stubs|docs/community/discord.md|stub: 46 chars of content (minimum 400)",
     "stubs|docs/community/gemma-skills.md|stub: 62 chars of content (minimum 400)",
     "stubs|docs/community/gemmaverse.md|placeholder link: example.com",
@@ -105,10 +101,6 @@
     "stubs|docs/demos/concurrent.md|stub: 52 chars of content (minimum 400)",
     "stubs|docs/index.md|stub: 0 chars of content (minimum 400)",
     "stubs|docs/tools/index.md|stub: 144 chars of content (minimum 400)",
-    "stubs|docs/tools/model-selector.md|stub: 58 chars of content (minimum 400)",
-    "stubs|docs/tutorials/visual-guides/diffusiongemma.md|stub: 50 chars of content (minimum 400)",
-    "stubs|docs/tutorials/visual-guides/gemma-4-12b.md|stub: 54 chars of content (minimum 400)",
-    "stubs|docs/tutorials/visual-guides/gemma-4.md|stub: 49 chars of content (minimum 400)",
-    "stubs|docs/tutorials/visual-guides/mtp.md|stub: 66 chars of content (minimum 400)"
+    "stubs|docs/tools/model-selector.md|stub: 58 chars of content (minimum 400)"
   ]
 }

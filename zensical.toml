@@ -161,21 +161,23 @@ nav = [
 
   { "Fine-tune" = [
     { "Overview" = "tuning/overview.md" },
+    { "Guides" = [
     { "QLoRA" = "tuning/qlora.md" },
     { "Full fine-tune" = "tuning/full-finetune.md" },
     { "Vision QLoRA" = "tuning/vision-qlora.md" },
     { "LoRA with Keras" = "tuning/keras-lora.md" },
     { "Distributed" = "tuning/distributed.md" },
     { "Spoken language" = "tuning/spoken-language.md" },
-    { "Mobile actions" = "tuning/mobile-actions.md" },
+    { "Mobile actions" = "tuning/mobile-actions.md" },]
+    }
   ]},
 
   { "Learn" = [
     { "Visual guides" = [
-      "tutorials/visual-guides/gemma-4.md",
-      "tutorials/visual-guides/gemma-4-12b.md",
-      "tutorials/visual-guides/mtp.md",
-      "tutorials/visual-guides/diffusiongemma.md",
+      { "Gemma 4" = "tutorials/visual-guides/gemma-4.md" },
+      { "Gemma 4 12B" = "tutorials/visual-guides/gemma-4-12b.md" },
+      { "Multi-Token Prediction" = "tutorials/visual-guides/mtp.md" },
+      { "DiffusionGemma" = "tutorials/visual-guides/diffusiongemma.md" },
     ]},
     { "Tutorials" = [
       "learn/business-email-assistant.md",

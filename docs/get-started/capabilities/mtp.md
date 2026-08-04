@@ -32,6 +32,10 @@ improving reuse of loaded weights. At batch size 1 this overlap is
 limited, which is why the 26B A4B drafter may not yield speedups on
 hardware platforms without good parallelism.
 
+!!! tip
+    For an illustrated walkthrough, see
+    [A Visual Guide to Multi-Token Prediction](../../tutorials/visual-guides/mtp.md).
+
 ## MTP Enhancements
 
 Gemma 4 introduces several enhancements to the standard speculative
