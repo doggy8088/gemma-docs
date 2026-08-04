@@ -87,7 +87,7 @@ You can deploy the model to the Google AI Edge Gallery - Mobile Actions option
 by choosing `Load Model` and selecting it from your Google Drive (or alternative
 method of distribution). The [Google AI Edge Gallery](https://play.google.com/store/apps/details?id=com.google.ai.edge.gallery) is
 available on Google Play Store.
-![Mobile Actions Finetune Challenge in Google AI Edge Gallery](../assets/deployment/gallery-mobile-actions-finetune-challenge.png) ![Mobile Actions task in Google AI Edge Gallery](../assets/deployment/gallery-mobile-actions.png)
+![Mobile Actions Finetune Challenge in Google AI Edge Gallery](../assets/tuning/gallery-mobile-actions-finetune-challenge.png) ![Mobile Actions task in Google AI Edge Gallery](../assets/tuning/gallery-mobile-actions.png)
 
 Now, you can try giving a voice command or typing in the app to see how well
 your new fine-tuned model does calling the functions available to it.

@@ -43,4 +43,4 @@ fine tune and deploy it in your own projects and applications.
 [Try FunctionGemma](inference.md)
 
 [Fine-tune FunctionGemma](fine-tuning.md)
-[Fine-tune the Mobile Actions demo](../../deployment/mobile-actions.md)
+[Fine-tune the Mobile Actions demo](../../tuning/mobile-actions.md)

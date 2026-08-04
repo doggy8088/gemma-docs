@@ -260,6 +260,27 @@ def collapse_card_grids(text: str) -> str:
     return CARD_ITEM.sub(replace, text)
 
 
+def merge_output_blocks(text: str) -> str:
+    """Join consecutive output blocks separated only by blank lines.
+
+    Upstream splits a single stream of terminal output across several fences -- Keras
+    `.summary()` emits a title line and a table, and the source fences them separately. Rendered
+    as two boxes it reads as two results. Only `{ .no-copy .output }` blocks are merged: two
+    adjacent *code* blocks may legitimately be separate cells, but output is one stream.
+    """
+    pattern = re.compile(
+        r"^(?P<pad>[ \t]*)```[ \t]*\n"          # closing fence of the first block
+        r"(?:[ \t]*\n)+"                        # blank lines between
+        r"(?P=pad)``` \{ \.no-copy \.output \}[ \t]*\n",  # reopening
+        re.MULTILINE,
+    )
+    previous = None
+    while previous != text:                     # runs of 3+ blocks collapse in passes
+        previous = text
+        text = pattern.sub("", text)
+    return text
+
+
 def tighten_nested_lists(text: str) -> str:
     """Drop the blank line between a list item and its own nested list.
 
@@ -642,6 +663,7 @@ def convert(
     # Whole-document cleanups. Order matters: collapse the card grids into bullets before
     # tightening lists, so the generated bullets are tightened too.
     result = collapse_card_grids(result)
+    result = merge_output_blocks(result)
     result = tighten_nested_lists(result)
     result = embed_videos(result)
     result = center_card_header(result)

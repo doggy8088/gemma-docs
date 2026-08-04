@@ -683,7 +683,47 @@ Target layout (`docs/stylesheets/`):
 
 ## Phase 2 — Navigation & content completion
 
-### Step 2.1 — Restructure nav
+### Step 2.1 — Restructure nav ✅
+
+- [x] Nav rewritten to the 8-tab target: **Home · Get started · Models · Run · Fine-tune ·
+      Learn · Demos · Ecosystem**.
+- [x] **All 13 orphans resolved.** `orphans` 13 → **0**.
+- [x] Cookbook folded into *Learn*; the old Tools tab folded into *Demos* as
+      "Interactive tools"; `contributing/components.md` placed under *Ecosystem → Contribute*.
+- **Verify:** `uv run python scripts/lint_docs.py --check orphans` → zero.
+- **Done when:** ✅ zero orphans, zero broken nav entries, 8 top-level tabs confirmed in the
+      rendered header.
+
+How each orphan was resolved:
+
+| Orphan | Resolution |
+|---|---|
+| `get-started/index.md` | **Deleted** — a strict subset of `quickstart.md` with zero inbound links |
+| `capabilities/vision.md` | **Ported** from upstream (was a stub); now the parent of Image/Video |
+| `deployment/keras.md` | **Ported** — clears the last 2 `internal` findings and fills *Run → Local* |
+| `models/index.md`, `tools/index.md` | placed as section landing pages |
+| the 9 pages from Step 0.5b | placed in Run / Fine-tune / Learn / Models |
+
+**Directory question settled: `models/` stays flat.** Grouping is nav-only, exactly so a
+model's URL survives reclassification — when Gemma 5 ships and Gemma 4 moves to *Previous
+generations*, no URL changes. The rationale is recorded in the nav file itself.
+
+**One more converter fix:** consecutive `{ .no-copy .output }` blocks separated only by blank
+lines are now merged. Upstream splits a single stream of terminal output across several fences
+(Keras `.summary()` prints a title then a table), which rendered as two separate result boxes.
+Only *output* blocks are merged — two adjacent code blocks may legitimately be separate cells.
+
+### Phase 2 progress: 136 → 120
+
+| Check | Now | |
+|---|---|---|
+| `links` `images` `internal` `fences` `admonitions` `size` `modeldata` `css` `orphans` | **0** | ✅ all clear |
+| `stubs` | 30 | → Steps 2.2–2.4 |
+| `frontmatter` | 90 | → Step 3.1 |
+
+**Only two checks still have findings**, and both are scheduled work. Build warnings: 5 → **3**.
+
+### Step 2.1 — Restructure nav (original spec)
 - [ ] Rewrite the `nav` block in `zensical.toml` to the target structure above.
 - [ ] Resolve the 4 orphans: fold `get-started/index.md` into `quickstart.md`,
       make `capabilities/vision.md` a real parent page, add `models/index.md` and
@@ -696,12 +736,39 @@ Target layout (`docs/stylesheets/`):
 These are *written*, not ported — upstream's versions are three paragraphs each. One step per
 engine so they can be tested and handed over independently.
 
-Template each page must follow: one-line install → one-line run → model tags for every
-size × quant → server mode with OpenAI-compatible endpoint → multimodal examples (gated by
-actual model support) → context/KV-cache flags → troubleshooting → measured tok/s on named hardware.
+**These are quick references, not manuals** (decided 2026-08-03). Users want working code
+fast, and a short page is a page that stays correct. Roughly 100 lines each.
 
-- [ ] 2.2a Ollama
-- [ ] 2.2b llama.cpp
+Template — in this order, nothing else:
+
+1. **Install** — the one command per platform
+2. **Run** — the one command that works
+3. **Model tags / repositories** — a table, every Gemma 4 size
+4. **Multimodal** — only where it differs from plain text, with a note when a size lacks a modality
+5. **Server** — the OpenAI-compatible snippet
+
+Deliberately **not** included: context-length deep dives, troubleshooting tables, importing
+your own fine-tunes, "next steps" link lists. Each is either engine documentation that we would
+have to keep in sync, or a link the sidebar already provides. A single `!!! tip` is allowed
+where a default will actively surprise someone (Ollama's 4K context, for instance).
+
+- [x] 2.2a Ollama ✅ *(written)*
+- [x] 2.2b llama.cpp ✅ *(written)*
+- [x] 2.2c LM Studio ✅ *(written)*
+- [x] 2.2d MLX ✅ *(written)*
+- [x] 2.2e Transformers ✅ *(ported — upstream `core/huggingface_inference` is already complete)*
+- [x] 2.2f vLLM ✅ *(written)*
+- [x] 2.2g SGLang ✅ *(written)*
+- [x] 2.2h LiteRT / mobile / WebGPU ✅ *(ported — upstream pages are already concise link hubs)*
+- [x] 2.2i Google Cloud ✅ *(ported)*
+- [x] Also filled: Keras, LangChain, Quantization & QAT. **The Run section has zero stubs.**
+
+**Nav labels are short, page titles are not** (2026-08-03). The sidebar shows "Hugging Face
+Transformers", "LangChain", "Keras"; the page H1s stay as ported ("Run Gemma with Hugging Face
+Transformers"). Labels live in `zensical.toml`, so no ported prose is touched.
+
+**`mobile-actions.md` moved `deployment/` → `tuning/`.** Its H1 is "Fine-tune FunctionGemma 270M
+for Mobile Actions" — a fine-tuning guide that was sitting under Run.
 - [ ] 2.2c LM Studio
 - [ ] 2.2d MLX
 - [ ] 2.2e Transformers
@@ -710,9 +777,59 @@ actual model support) → context/KV-cache flags → troubleshooting → measure
 - [ ] 2.2h LiteRT / mobile / WebGPU
 - [ ] 2.2i Google Cloud (GKE, Cloud Run)
 - **Verify per page:** every command runs as written on a clean machine.
+
+**Sourcing rule (2026-08-03).** Every command, flag and model identifier on these pages is
+taken from a primary source — the engine's own repository docs, its published model registry,
+or the upstream Gemma docs. Nothing is written from memory. Where a claim can't be verified it
+is omitted rather than guessed.
+
+Verified sources used so far:
+
+| Page | Sources |
+|---|---|
+| Ollama | `ollama.com/library/gemma4/tags` (tags, sizes, context) · `ollama/ollama` `docs/api`, `docs/api/openai-compatibility.mdx`, `docs/capabilities/vision.mdx`, `docs/context-length.mdx` · upstream `/integrations/ollama` |
+| llama.cpp | `ggml-org/llama.cpp` `docs/install.md`, `docs/multimodal.md` · `huggingface.co/ggml-org` (5 GGUF repos) · `huggingface.co/google` (5 QAT GGUF repos) · upstream `/integrations/llamacpp` |
+
+**Throughput numbers are deliberately absent.** Measured tok/s can't be sourced from
+documentation, and inventing it would be worse than omitting it. The pages give the verifiable
+performance levers instead — GPU-offload checks, context defaults, quantization choice. Add real
+figures when someone can measure them.
+
+**Unresolved discrepancy — Ollama download sizes.** `ollama.com/library/gemma4/tags` states
+E2B 7.2 GB, E4B 9.6 GB, **12B 7.6 GB**, 26B 18 GB, 31B 20 GB. That makes E4B *larger* than 12B,
+which contradicts the validated Q4_0 column in `models/gemma-4/index.md` (E4B 4.5 GB,
+12B 6.7 GB — monotonic, as expected). Verified verbatim from the tags page twice.
+
+Most likely the default tag for each size uses a different quantization, but that is a guess and
+**no explanation appears on the page**. An earlier draft rationalised it as a Per-Layer
+Embeddings effect; that was wrong and was removed. If someone can confirm the per-tag quant
+levels, add them to the table — otherwise leave the figures unexplained.
+
+Two corrections to upstream found while writing:
+
+- Upstream's Ollama page lists "four sizes: E2B, E4B, 26B and 31B" and **omits 12B**, which the
+  Ollama library does publish.
+- **Ollama exposes Gemma 4 as text + image only** — no audio — while llama.cpp supports image,
+  audio *and* video. Neither page upstream mentions this, and it's the kind of thing that costs
+  someone an afternoon.
+
+
 - **Done when:** the page is genuinely more useful than the upstream equivalent.
 
-### Step 2.3 — Fill remaining stubs
+### Step 2.3 — Fill remaining stubs (in progress)
+
+- [x] **Fine-tune section ported** — all six stubs filled from upstream: `tune`,
+      `huggingface_text_finetune_qlora`, `huggingface_text_full_finetune`,
+      `huggingface_vision_finetune_qlora`, `lora_tuning`, `distributed_tuning`.
+      These are validated tutorials, so porting beats authoring.
+
+**`slugify` bug fixed.** `rewrite_links.py` stripped parenthesised text, so
+"Google Kubernetes Engine (GKE)" produced `google-kubernetes-engine` while Python-Markdown
+emits `google-kubernetes-engine-gke`. Anchors computed from it silently never matched. It now
+mirrors the real algorithm: reduce markdown to visible text, then drop non-word characters —
+parentheses contribute their contents, they are not removed.
+
+### Step 2.3 — Fill remaining stubs (original spec)
 - [ ] Fine-tune pages (QLoRA, full FT, vision QLoRA, Keras LoRA, distributed).
 - [ ] Quantization & QAT page — move the QAT content currently buried in
       `models/gemma-4/index.md` into its own page under Run.
@@ -733,6 +850,37 @@ actual model support) → context/KV-cache flags → troubleshooting → measure
       `conversions/hf-to-mediapipe-task`, `mobile-actions`.
 
 ---
+
+## Page context header (decided 2026-08-03, build after Step 3.1)
+
+A Stripe-style bar at the top of **every page** — see <https://docs.stripe.com/billing/scripts>.
+Not silence-by-default: the slot is always present, so readers learn where to look.
+
+It carries three things, in this order of arrival:
+
+1. **Applicability** — which model(s) the page is about. Three states, resolved from frontmatter
+   against `data/models.yml`:
+
+    | State | Frontmatter | Shows |
+    |---|---|---|
+    | Universal | *(omitted)* | "All Gemma models" |
+    | Version-scoped | `models: gemma-3` | `Gemma 3` |
+    | Capability-scoped | `models: [e2b, e4b, 12b]` | `E2B · E4B · 12B` |
+
+2. **LLM tools** (Step 3.4) — Copy as Markdown, Open in Claude/ChatGPT, View raw.
+3. **Model + engine selector** (Step 4.2) — page-scoped context belongs here, not in site chrome.
+
+All three read `data/models.yml`, so the header, the tables, the VRAM calculator and the
+switcher cannot drift apart.
+
+**Open interaction question.** With 31B selected, on the audio page (E2B/E4B/12B only):
+passive (badges show 31B struck through, via `.badge--muted`), active (an inline note naming
+the substitution), or silent swap. Leaning passive, escalating to active only where the code
+samples would otherwise be wrong. Silent swap is rejected — the reader ends up with code for a
+model they did not choose.
+
+**Sequencing:** Step 3.1 (frontmatter schema, `models:` key) → static header with applicability
+→ 3.4 tools into the same bar → 4.2 selector into the same bar.
 
 ## Phase 3 — Agent-first infrastructure
 

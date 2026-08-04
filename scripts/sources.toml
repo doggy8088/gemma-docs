@@ -33,6 +33,11 @@ source = "https://ai.google.dev/gemma/docs/core/prompt-structure.md.txt"
 frozen = true
 
 [[page]]
+path = "get-started/capabilities/vision.md"
+source = "https://ai.google.dev/gemma/docs/capabilities/vision.md.txt"
+frozen = true
+
+[[page]]
 path = "get-started/capabilities/mtp.md"
 source = "https://ai.google.dev/gemma/docs/mtp/overview.md.txt"
 frozen = true
@@ -49,10 +54,64 @@ source = "https://ai.google.dev/gemma/docs/core/huggingface_inference.md.txt"
 assets = "huggingface"
 
 [[page]]
-path = "deployment/mobile-actions.md"
+path = "deployment/keras.md"
+source = "https://ai.google.dev/gemma/docs/core/keras_inference.md.txt"
+
+[[page]]
+path = "deployment/mobile.md"
+source = "https://ai.google.dev/gemma/docs/integrations/mobile.md.txt"
+
+[[page]]
+path = "deployment/web.md"
+source = "https://ai.google.dev/gemma/docs/integrations/web.md.txt"
+
+[[page]]
+path = "deployment/google-cloud.md"
+source = "https://ai.google.dev/gemma/docs/integrations/google-cloud.md.txt"
+
+[[page]]
+path = "deployment/langchain.md"
+source = "https://ai.google.dev/gemma/docs/integrations/langchain.md.txt"
+assets = "deployment"
+
+[[page]]
+path = "deployment/litert.md"
+source = "https://ai.google.dev/gemma/docs/conversions/hf-to-mediapipe-task.md.txt"
+
+[[page]]
+path = "tuning/mobile-actions.md"
 source = "https://ai.google.dev/gemma/docs/mobile-actions.md.txt"
 
 # --- Tuning / Learn ---------------------------------------------------------------------------
+
+[[page]]
+path = "tuning/overview.md"
+source = "https://ai.google.dev/gemma/docs/tune.md.txt"
+
+[[page]]
+path = "tuning/qlora.md"
+source = "https://ai.google.dev/gemma/docs/core/huggingface_text_finetune_qlora.md.txt"
+assets = "tuning"
+
+[[page]]
+path = "tuning/full-finetune.md"
+source = "https://ai.google.dev/gemma/docs/core/huggingface_text_full_finetune.md.txt"
+assets = "tuning"
+
+[[page]]
+path = "tuning/vision-qlora.md"
+source = "https://ai.google.dev/gemma/docs/core/huggingface_vision_finetune_qlora.md.txt"
+assets = "tuning"
+
+[[page]]
+path = "tuning/keras-lora.md"
+source = "https://ai.google.dev/gemma/docs/core/lora_tuning.md.txt"
+assets = "tuning"
+
+[[page]]
+path = "tuning/distributed.md"
+source = "https://ai.google.dev/gemma/docs/core/distributed_tuning.md.txt"
+assets = "tuning"
 
 [[page]]
 path = "tuning/spoken-language.md"

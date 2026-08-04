@@ -38,9 +38,6 @@ pipe = pipeline(
     device_map="auto",
     dtype="auto"
 )
-```
-
-``` { .no-copy .output }
 config.json:   0%|          | 0.00/4.95k [00:00<?, ?B/s]
 model.safetensors:   0%|          | 0.00/10.2G [00:00<?, ?B/s]
 Loading weights:   0%|          | 0/1951 [00:00<?, ?it/s]
@@ -59,9 +56,6 @@ Once you have the Gemma model loaded and configured in a `pipeline` object, you 
 
 ```python
 pipe(text="<|turn>user\nroses are red<turn|>\n<|turn>model\n")
-```
-
-``` { .no-copy .output }
 [transformers] The input data was not formatted as a chat with dicts containing 'role' and 'content' keys, even though this model supports chat. Consider using the chat format for better results. For more information, see https://huggingface.co/docs/transformers/en/chat_templating
 [transformers] Keyword argument `video` is not a valid argument for this processor and will be ignored.
 [transformers] Both `max_new_tokens` (=256) and `max_length`(=20) seem to have been set. `max_new_tokens` will take precedence. Please refer to the documentation for more information. (https://huggingface.co/docs/transformers/main/en/main_classes/text_generation)
@@ -91,9 +85,6 @@ messages = [
 ]
 
 pipe(messages, return_full_text=False, generate_kwargs=gen_kwargs)
-```
-
-``` { .no-copy .output }
 [{'input_text': [{'role': 'system',
     'content': [{'type': 'text', 'text': 'You are a helpful assistant.'}]},
    {'role': 'user',
@@ -132,9 +123,6 @@ messages = [
 ]
 
 pipe(text=messages, return_full_text=False, generate_kwargs=gen_kwargs)
-```
-
-``` { .no-copy .output }
 [{'input_text': [{'role': 'user',
     'content': [{'type': 'image',
       'url': 'https://ai.google.dev/static/gemma/docs/images/thali-indian-plate.jpg'},
@@ -174,9 +162,6 @@ messages = [
 ]
 
 pipe(text=messages, return_full_text=False, generate_kwargs=gen_kwargs)
-```
-
-``` { .no-copy .output }
 [{'input_text': [{'role': 'user',
     'content': [{'type': 'text',
       'text': 'Transcribe the following speech segment in its original language. Follow these specific instructions for formatting the answer:\n* Only output the transcription, with no newlines.\n* When transcribing numbers, write the digits, i.e. write 1.7 and not one point seven, and write 3 instead of three.'},

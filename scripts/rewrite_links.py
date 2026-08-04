@@ -49,9 +49,20 @@ LOCAL_LINK_WITH_ANCHOR = re.compile(r"(\]\()([^)\s#]*\.md)(#+)([^)\s]+)(\))")
 
 
 def slugify(heading: str) -> str:
-    """Mirror python-markdown's default toc slugify, which is what Zensical uses."""
-    value = re.sub(r"<[^>]+>", "", heading)                 # strip inline html
-    value = re.sub(r"[*`_\[\]]|\(.*?\)", "", value)         # strip inline markdown
+    """Mirror python-markdown's default toc slugify, which is what Zensical uses.
+
+    Order matters. Markdown syntax is reduced to its visible text first, then python-markdown's
+    own rule applies: drop everything that is not a word character, whitespace or hyphen, then
+    collapse runs to single hyphens.
+
+    Note what is *not* stripped: parentheses. "Google Kubernetes Engine (GKE)" becomes
+    `google-kubernetes-engine-gke`, keeping the GKE. An earlier version removed parenthesised
+    text wholesale and produced anchors that silently never matched.
+    """
+    value = re.sub(r"<[^>]+>", "", heading)              # inline html
+    value = re.sub(r"\[([^\]]*)\]\([^)]*\)", r"\1", value)  # [text](url) -> text
+    value = re.sub(r"[*`_]", "", value)                  # emphasis / code markers
+    value = re.sub(r"\{:?[^}]*\}", "", value)            # attr_list, e.g. {: #id }
     value = re.sub(r"[^\w\s-]", "", value).strip().lower()
     return re.sub(r"[-\s]+", "-", value)
 

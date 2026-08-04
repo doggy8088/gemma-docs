@@ -34,7 +34,11 @@ plugins = { macros = { enabled = true, include_yaml = { models = "data/models.ym
 nav = [
   { "Home" = "index.md" },
 
-  { "Get Started" = [
+  # ---------------------------------------------------------------------------
+  # Capabilities live here, not in their own tab: they are fundamental Gemma 4
+  # capabilities and belong where the full picture is visible at once.
+  # ---------------------------------------------------------------------------
+  { "Get started" = [
     "get-started/quickstart.md",
     { "Text" = [
       "get-started/capabilities/text.md",
@@ -42,134 +46,163 @@ nav = [
       "get-started/capabilities/function-calling.md",
     ]},
     { "Multimodal" = [
+      "get-started/capabilities/vision.md",
       "get-started/capabilities/image.md",
       "get-started/capabilities/video.md",
       "get-started/capabilities/audio.md",
     ]},
-    "get-started/prompt-formatting.md",
+    # MTP and the prompt-format references sit here so the main list stays the
+    # three things a newcomer needs: quickstart, text, multimodal.
+    { "Advanced" = [
+      { "Multi-Token Prediction" = "get-started/capabilities/mtp.md" },
+      "get-started/prompt-formatting.md",
+      { "Prompt structure (Gemma 1-3)" = "get-started/prompt-structure.md" },
+      { "Legacy setup" = "get-started/setup.md" },
+    ]},
   ]},
 
+  # ---------------------------------------------------------------------------
+  # Model-card centric on purpose. Grouping is presentation only -- the
+  # directories stay flat so a model's URL never changes when it is
+  # reclassified (see PLAN.md, "Open decision for Step 2.1").
+  # ---------------------------------------------------------------------------
   { "Models" = [
-    { "Core" = [
-      { "Gemma 4" = [
-        { "Overview" = "models/gemma-4/index.md" },
-        { "Model Card" = "models/gemma-4/model-card.md" },
-      ]},
-      { "Gemma 3" = "models/gemma-3/index.md" },
-      { "Gemma 2" = "models/gemma-2/index.md" },
-      { "Gemma" = "models/gemma-1/index.md" },
+    { "Overview" = "models/index.md" },
+    { "Gemma 4" = [
+      { "Overview" = "models/gemma-4/index.md" },
+      { "Model card" = "models/gemma-4/model-card.md" },
     ]},
     { "Variants" = [
-      { "Gemma3n" = [
+      { "Gemma 3n" = [
         { "Overview" = "models/gemma-3n/index.md" },
-        { "Model Card" = "models/gemma-3n/model-card.md" },
+        { "Model card" = "models/gemma-3n/model-card.md" },
       ]},
       { "DiffusionGemma" = [
         { "Overview" = "models/diffusiongemma/index.md" },
-        { "Model Card" = "models/diffusiongemma/model-card.md" },
-        { "Diffusion Explained" = "models/diffusiongemma/explained.md" },
-        { "Generate Output" = "models/diffusiongemma/inference.md" },
+        { "Model card" = "models/diffusiongemma/model-card.md" },
+        { "Diffusion explained" = "models/diffusiongemma/explained.md" },
+        { "Generate output" = "models/diffusiongemma/inference.md" },
       ]},
       { "FunctionGemma" = [
         { "Overview" = "models/functiongemma/index.md" },
-        { "Model Card" = "models/functiongemma/model-card.md" },
-        { "Formatting and Best Practices" = "models/functiongemma/formatting.md" },
-        { "Function Calling with HF" = "models/functiongemma/inference.md" },
-        { "Full Sequence" = "models/functiongemma/full-sequence.md" },
+        { "Model card" = "models/functiongemma/model-card.md" },
+        { "Formatting and best practices" = "models/functiongemma/formatting.md" },
+        { "Function calling with HF" = "models/functiongemma/inference.md" },
+        { "Full sequence" = "models/functiongemma/full-sequence.md" },
         { "Fine-tuning" = "models/functiongemma/fine-tuning.md" },
       ]},
       { "EmbeddingGemma" = [
         { "Overview" = "models/embeddinggemma/index.md" },
-        { "Model Card" = "models/embeddinggemma/model-card.md" },
-        { "Generate Embeddings" = "models/embeddinggemma/inference.md" },
+        { "Model card" = "models/embeddinggemma/model-card.md" },
+        { "Generate embeddings" = "models/embeddinggemma/inference.md" },
         { "Fine-tuning" = "models/embeddinggemma/fine-tuning.md" },
       ]},
       { "PaliGemma" = [
         { "Overview" = "models/paligemma/index.md" },
-        { "PaliGemma 1 Model Card" = "models/paligemma/model-card-v1.md" },
-        { "PaliGemma 2 Model Card" = "models/paligemma/model-card-v2.md" },
-        { "Prompting & System Instructions" = "models/paligemma/prompting.md" },
-        { "Generate Output with Keras" = "models/paligemma/inference.md" },
+        { "PaliGemma 1 model card" = "models/paligemma/model-card-v1.md" },
+        { "PaliGemma 2 model card" = "models/paligemma/model-card-v2.md" },
+        { "Prompting & system instructions" = "models/paligemma/prompting.md" },
+        { "Generate output with Keras" = "models/paligemma/inference.md" },
         { "Fine-tuning with JAX" = "models/paligemma/fine-tuning.md" },
       ]},
       { "ShieldGemma" = [
         { "Overview" = "models/shieldgemma/index.md" },
-        { "ShieldGemma Model Card" = "models/shieldgemma/model-card-v1.md" },
-        { "ShieldGemma 2 Model Card" = "models/shieldgemma/model-card-v2.md" },
+        { "ShieldGemma model card" = "models/shieldgemma/model-card-v1.md" },
+        { "ShieldGemma 2 model card" = "models/shieldgemma/model-card-v2.md" },
       ]},
+    ]},
+    { "Previous generations" = [
+      { "Gemma 3" = "models/gemma-3/index.md" },
+      { "Gemma 2" = "models/gemma-2/index.md" },
+      { "Gemma" = "models/gemma-1/index.md" },
     ]},
     { "Research" = [
       { "RecurrentGemma" = [
         { "Overview" = "models/recurrentgemma/index.md" },
-        { "Model Card" = "models/recurrentgemma/model-card.md" },
-        { "Generate Output with JAX" = "models/recurrentgemma/inference.md" },
+        { "Model card" = "models/recurrentgemma/model-card.md" },
+        { "Generate output with JAX" = "models/recurrentgemma/inference.md" },
         { "Fine-tuning with JAX" = "models/recurrentgemma/fine-tuning.md" },
       ]},
       { "DataGemma" = "models/datagemma/index.md" },
       { "Gemma Scope" = "models/gemma-scope/index.md" },
+      { "Gemma APS" = "models/gemma-aps/index.md" },
     ]},
     "models/releases.md",
   ]},
 
-  { "Tutorials" = [
-    { "A Visual Guide to:" = [
+  # ---------------------------------------------------------------------------
+  # Split by intent -- where you run it -- rather than by vendor.
+  # ---------------------------------------------------------------------------
+  # Nav labels are short on purpose -- page H1s stay as written ("Run Gemma with
+  # Hugging Face Transformers"), but the sidebar shows just the engine name.
+  { "Run" = [
+    { "Overview" = "deployment/index.md" },
+    { "Local" = [
+      { "Ollama" = "deployment/ollama.md" },
+      { "llama.cpp" = "deployment/llamacpp.md" },
+      { "LM Studio" = "deployment/lmstudio.md" },
+      { "MLX" = "deployment/mlx.md" },
+      { "Hugging Face Transformers" = "deployment/huggingface.md" },
+      { "Keras" = "deployment/keras.md" },
+      { "LiteRT" = "deployment/litert.md" },
+      { "Web browsers" = "deployment/web.md" },
+      { "Mobile" = "deployment/mobile.md" },
+    ]},
+    { "Serve" = [
+      { "vLLM" = "deployment/vllm.md" },
+      { "SGLang" = "deployment/sglang.md" },
+      { "Google Cloud" = "deployment/google-cloud.md" },
+    ]},
+    { "Frameworks" = [
+      { "LangChain" = "deployment/langchain.md" },
+    ]},
+    { "Quantization & QAT" = "deployment/qat.md" },
+  ]},
+
+  { "Fine-tune" = [
+    { "Overview" = "tuning/overview.md" },
+    { "QLoRA" = "tuning/qlora.md" },
+    { "Full fine-tune" = "tuning/full-finetune.md" },
+    { "Vision QLoRA" = "tuning/vision-qlora.md" },
+    { "LoRA with Keras" = "tuning/keras-lora.md" },
+    { "Distributed" = "tuning/distributed.md" },
+    { "Spoken language" = "tuning/spoken-language.md" },
+    { "Mobile actions" = "tuning/mobile-actions.md" },
+  ]},
+
+  { "Learn" = [
+    { "Visual guides" = [
       "tutorials/visual-guides/gemma-4.md",
       "tutorials/visual-guides/gemma-4-12b.md",
       "tutorials/visual-guides/mtp.md",
       "tutorials/visual-guides/diffusiongemma.md",
     ]},
+    { "Tutorials" = [
+      "learn/business-email-assistant.md",
+      "learn/personal-code-assistant.md",
+    ]},
+    { "Notebooks & resources" = "cookbook.md" },
   ]},
 
-  { "Deployment" = [
-    { "Run Locally" = [
-      "deployment/ollama.md",
-      "deployment/llamacpp.md",
-      "deployment/lmstudio.md",
-      "deployment/mlx.md",
-      "deployment/litert.md",
-      "deployment/mobile.md",
-      "deployment/web.md",
-    ]},
-    { "Cloud & Production" = [
-      "deployment/vllm.md",
-      "deployment/sglang.md",
-      "deployment/huggingface.md",
-      "deployment/google-cloud.md",
-    ]},
-    { "Frameworks" = [
-      "deployment/langchain.md",
-    ]},
-    "deployment/qat.md",
-  ]},
-
-  { "Tuning" = [
-    "tuning/overview.md",
-    "tuning/qlora.md",
-    "tuning/full-finetune.md",
-    "tuning/vision-qlora.md",
-    "tuning/keras-lora.md",
-    "tuning/distributed.md",
-  ]},
-
+  # ---------------------------------------------------------------------------
+  # Absorbs the old Tools tab: things we built, plus things we embed.
+  # ---------------------------------------------------------------------------
   { "Demos" = [
-    "demos/concurrent.md",
+    { "Interactive tools" = [
+      { "Overview" = "tools/index.md" },
+      "tools/vram-calculator.md",
+      "tools/model-selector.md",
+    ]},
+    { "Apps & Spaces" = [
+      "demos/concurrent.md",
+    ]},
   ]},
 
-  { "Cookbook" = "cookbook.md" },
-
-  { "Community" = [
+  { "Ecosystem" = [
     "community/gemmaverse.md",
     "community/discord.md",
     "community/gemma-skills.md",
-  ]},
-
-  { "Tools" = [
-    "tools/vram-calculator.md",
-    "tools/model-selector.md",
-  ]},
-
-  { "Contributing" = [
-    "contributing/components.md",
+    { "Contribute" = "contributing/components.md" },
   ]},
 ]
 

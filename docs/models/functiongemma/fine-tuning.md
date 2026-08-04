@@ -10,7 +10,7 @@ Models, especially smaller ones, have fewer parameters available to retain compl
 Common use cases for fine-tuning tool calling include:
 
 - **Model Distillation**: Generating synthetic training data with a larger model and fine-tuning a smaller model to replicate the specific workflow efficiently.
-- **Handling Non-Standard Schemas** : Overcoming base model struggles with legacy, highly complex data structures or proprietary format not found in public data, such as handling [domain-specific mobile actions](../../deployment/mobile-actions.md).
+- **Handling Non-Standard Schemas** : Overcoming base model struggles with legacy, highly complex data structures or proprietary format not found in public data, such as handling [domain-specific mobile actions](../../tuning/mobile-actions.md).
 - **Optimizing Context Usage**: "Baking" tool definitions into the model's weights. This allows you to use shorthand descriptions in your prompts, freeing up the context window for the actual conversation.
 - **Resolving Selection Ambiguity**: Biasing the model toward specific enterprise policies, such as prioritizing an internal knowledge base over an external search engine.
 

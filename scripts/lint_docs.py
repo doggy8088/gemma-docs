@@ -376,12 +376,17 @@ def check_fences(ctx: Context) -> Iterable[Finding]:
         if page.body.count("```") % 2:
             yield Finding("fences", page.repo_rel, 0, "unbalanced code fences")
 
-        # Two same-language blocks separated by nothing but blank lines is the signature of a
-        # block that got split -- usually by blank lines inside a notebook cell.
+        # Two adjacent *output* blocks separated by nothing but blank lines are one stream of
+        # terminal output that got split -- always safe to merge, and convert_notebook does.
+        #
+        # Deliberately not applied to code blocks: two adjacent `python` blocks are usually
+        # consecutive notebook cells, where the first happens to end with captured output.
+        # Merging those would be wrong. The blank-lines-inside-one-cell defect that motivated
+        # this check is fixed in the converter and pinned by a golden test.
         blocks = list(iter_code_blocks(page))
         body = page.body.splitlines()
         for (start_a, info_a, code_a), (start_b, info_b, _) in zip(blocks, blocks[1:]):
-            if info_a != info_b or not info_a:
+            if info_a != info_b or ".output" not in info_a:
                 continue
             end_a = start_a + len(code_a.splitlines()) + 1  # closing fence
             between = body[end_a - page.body_offset : start_b - page.body_offset - 1]

@@ -11,6 +11,7 @@
 # [ported] Target page exists today.
 # ------------------------------------------------------------------------------------------
 [ported]
+"" = "index.md"                                          # bare link to the docs root
 "/core" = "models/gemma-4/index.md"
 "/core/model_card_4" = "models/gemma-4/model-card.md"
 "/core/model_card_3" = "models/gemma-3/index.md"
@@ -82,7 +83,10 @@
 "/integrations/langchain" = "deployment/langchain.md"
 "/integrations/google-cloud" = "deployment/google-cloud.md"
 "/core/gke" = "deployment/google-cloud.md"               # GKE folded into the Google Cloud page
-"/mobile-actions" = "deployment/mobile-actions.md"
+"/integrations/vertex" = "deployment/google-cloud.md"    # Vertex AI likewise
+"/mobile-actions" = "tuning/mobile-actions.md"
+"/conversions/hf-to-mediapipe-task" = "deployment/litert.md"
+"/integrations/litert" = "deployment/litert.md"
 
 # Fine-tuning. Targets are existing stubs; Step 2.3 fills them in.
 "/tune" = "tuning/overview.md"
@@ -91,6 +95,8 @@
 "/core/huggingface_text_full_finetune" = "tuning/full-finetune.md"
 "/core/distributed_tuning" = "tuning/distributed.md"
 "/core/lora_tuning" = "tuning/keras-lora.md"
+"/lora_tuning" = "tuning/keras-lora.md"                   # short form used on some pages
+"/distributed_tuning" = "tuning/distributed.md"
 "/spoken-language/task-specific-tuning" = "tuning/spoken-language.md"
 
 # Learn
@@ -158,8 +164,20 @@
 "learn/personal-code-assistant.md#extension" = "vs-code-extension-project"
 "learn/personal-code-assistant.md#web-service" = "gemma-web-service-project"
 "tuning/spoken-language.md#compute_requirements" = "hardware-requirements"
+# tuning/overview.md carries its own contents list using devsite's short anchors.
+"tuning/overview.md#choose-framework" = "choose-a-framework"
+"tuning/overview.md#tune-and-test" = "tune-and-test-the-model"
+"tuning/overview.md#deploy-model" = "deploy-the-model"
+"models/gemma-4/index.md#sizes" = "parameter-sizes-and-quantization"
+"deployment/google-cloud.md#run" = "cloud-run"
 # The formatting guidance lives under this page's H1, not a section of its own.
 "get-started/prompt-structure.md#formatting-instruction" = "gemma-formatting-and-system-instructions"
+# google-cloud.md opens with its own contents list, using devsite's short anchors.
+"deployment/google-cloud.md#model-garden" = "gemini-enterprise-agent-platform"
+"deployment/google-cloud.md#gke" = "google-kubernetes-engine-gke"
+"deployment/google-cloud.md#adk" = "agent-development-kit-adk"
+"deployment/google-cloud.md#training-clusters" = "gemini-enterprise-agent-platform-training-clusters"
+"deployment/google-cloud.md#vllm-tpu" = "vllm-with-tpus"
 "models/gemma-3n/index.md#matformer" = "matformer-architecture"
 "models/gemma-3n/index.md#conditional-parameter" = "conditional-parameter-loading"
 "models/gemma-3n/index.md#parameters" = "model-parameters-and-effective-parameters"
