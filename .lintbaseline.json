@@ -13,7 +13,7 @@
     "modeldata",
     "css"
   ],
-  "count": 87,
+  "count": 86,
   "known": [
     "frontmatter|docs/community/discord.md|no frontmatter block",
     "frontmatter|docs/community/gemma-skills.md|no frontmatter block",
@@ -99,7 +99,6 @@
     "stubs|docs/community/gemmaverse.md|placeholder link: example.com",
     "stubs|docs/cookbook.md|stub: 395 chars of content (minimum 400)",
     "stubs|docs/demos/concurrent.md|stub: 52 chars of content (minimum 400)",
-    "stubs|docs/index.md|stub: 0 chars of content (minimum 400)",
     "stubs|docs/tools/index.md|stub: 144 chars of content (minimum 400)",
     "stubs|docs/tools/model-selector.md|stub: 58 chars of content (minimum 400)"
   ]

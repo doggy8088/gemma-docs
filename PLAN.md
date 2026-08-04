@@ -44,33 +44,35 @@ that validation is only transferable if the words survive the port intact.
 Rule of thumb: if a diff against the source `.md.txt` shows a prose change, it needs a reason
 written down.
 
-### Hand-maintained sections — do not re-convert
+### Import once, then hand-maintain — non-negotiable
 
-**As of 2026-08-03, `docs/models/**` and `docs/get-started/**` are hand-maintained by Maarten.**
-The converter is no longer the source of truth for them; the files on disk are. Running the
-converter over these pages would silently discard his edits.
+**Every page is hand-maintained the moment it is imported.** Maarten edits pages continuously
+to get them looking right; re-running an importer over one would silently discard that work.
 
-This is enforced, not just documented — those 41 pages carry `frozen = true` in
-`scripts/sources.toml`:
+All **64** manifest pages carry `frozen = true`. There are no unfrozen pages, and that is the
+steady state — not a backlog to work through.
 
-- `port_docs.py` skips them and reports `frozen (hand-maintained, skipped)`.
-- `check_fidelity.py` skips them: divergence from upstream is now *intended*, so comparing
-  against the source would produce noise, not signal.
-- Their `source` line stays in the manifest for provenance — `source_url` frontmatter in
-  Step 3.1 still needs it, and it records where the page originally came from.
+- `port_docs.py` skips frozen pages: `frozen (hand-maintained, skipped)`.
+- `check_fidelity.py` skips them too — divergence from upstream is now *intended*, so comparing
+  against the source would produce noise rather than signal.
+- The `source` line stays for provenance: `source_url` frontmatter (Step 3.1) needs it, and it
+  records where the page came from.
 
-**The converter is for new imports only.** When importing a new page: add it to the manifest
-*without* `frozen`, run the pipeline, review the result — and set `frozen = true` as soon as
-anyone starts editing it by hand.
+**Importing a new page** is the only time a converter runs:
 
-Currently convertible (6): `deployment/index.md`, `deployment/huggingface.md`,
-`deployment/mobile-actions.md`, `tuning/spoken-language.md`,
-`learn/business-email-assistant.md`, `learn/personal-code-assistant.md`.
+1. Add it to `scripts/sources.toml` *without* `frozen`.
+2. Run the pipeline (`port_docs.py` → `vendor_images.py` → `rewrite_links.py`).
+3. Review the result.
+4. **Set `frozen = true` immediately.** Before any hand-editing, not after.
 
-!!! warning "Converter fixes no longer reach frozen pages"
-    A future converter improvement will not propagate to Models or Get started. Those pages
-    need the equivalent fix applied by hand, or a one-off unfreeze/re-port/re-freeze with the
-    edits re-applied. Weigh that before adding converter transforms aimed at those sections.
+!!! warning "Converter improvements do not reach existing pages"
+    A fix to `convert_notebook.py` only affects future imports. Existing pages need the
+    equivalent change applied by hand. Weigh that before adding converter transforms aimed at
+    pages that are already in.
+
+**Visual guides** use `scripts/import_newsletter.py` instead, marked `importer =
+"import_newsletter"`. `gemma-4.md` and `mtp.md` were additionally split by hand after import —
+re-importing either would merge MTP back into the parent guide and drop the pointer.
 
 Local preview:
 
@@ -881,6 +883,40 @@ model they did not choose.
 
 **Sequencing:** Step 3.1 (frontmatter schema, `models:` key) → static header with applicability
 → 3.4 tools into the same bar → 4.2 selector into the same bar.
+
+## Phase 2 status — not finished
+
+| Step | State |
+|---|---|
+| 2.1 Restructure nav | ✅ 8 tabs, zero orphans |
+| 2.2 Local engine pages | ✅ Run section has zero stubs |
+| 2.3 Fill remaining stubs | **7 left** — see below |
+| 2.4 Port remaining upstream pages | **6 left** — see below |
+
+**Remaining stubs (7):**
+
+| Page | Blocked on |
+|---|---|
+| `community/gemmaverse.md` | real project data (still ships `example.com` cards) |
+| `community/discord.md` | port `/discord` |
+| `community/gemma-skills.md` | content — no upstream source |
+| `cookbook.md` | content decision |
+| `demos/concurrent.md` | content — the app lives in the cookbook repo |
+| `tools/index.md`, `tools/model-selector.md` | **Phase 4** — these are the interactive tools |
+
+**Upstream pages not ported (6):** `/core/gemma_library`, `/core/pytorch_gemma`,
+`/core/gemma_on_gemini_api`, `/core/deploy_to_cloud_run_from_ai_studio`, `/gemma_chat`,
+`/meme-generator`. Each needs a keep-or-drop decision rather than a straight port —
+`/meme-generator` in particular is a demo app, not reference material.
+
+Deliberately not ported and **not** gaps: `/integrations/{ollama,llamacpp,lmstudio,mlx}`
+(written as quick references instead), `/core/gke` (folded into Google Cloud),
+`/codegemma/*` (dropped by decision).
+
+**Provenance gap.** Pages ported before `sources.toml` existed — `get-started/capabilities/*`,
+`prompt-formatting.md`, `quickstart.md` — have no `source` line. They are protected by absence
+(nothing can re-convert them), but Step 3.1's `source_url` frontmatter will need those URLs
+adding to the manifest with `frozen = true`.
 
 ## Phase 3 — Agent-first infrastructure
 

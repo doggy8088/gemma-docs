@@ -47,86 +47,104 @@ frozen = true
 [[page]]
 path = "deployment/index.md"
 source = "https://ai.google.dev/gemma/docs/run.md.txt"
+frozen = true
 
 [[page]]
 path = "deployment/huggingface.md"
 source = "https://ai.google.dev/gemma/docs/core/huggingface_inference.md.txt"
 assets = "huggingface"
+frozen = true
 
 [[page]]
 path = "deployment/keras.md"
 source = "https://ai.google.dev/gemma/docs/core/keras_inference.md.txt"
+frozen = true
 
 [[page]]
 path = "deployment/mobile.md"
 source = "https://ai.google.dev/gemma/docs/integrations/mobile.md.txt"
+frozen = true
 
 [[page]]
 path = "deployment/web.md"
 source = "https://ai.google.dev/gemma/docs/integrations/web.md.txt"
+frozen = true
 
 [[page]]
 path = "deployment/google-cloud.md"
 source = "https://ai.google.dev/gemma/docs/integrations/google-cloud.md.txt"
+frozen = true
 
 [[page]]
 path = "deployment/langchain.md"
 source = "https://ai.google.dev/gemma/docs/integrations/langchain.md.txt"
 assets = "deployment"
+frozen = true
 
 [[page]]
 path = "deployment/litert.md"
 source = "https://ai.google.dev/gemma/docs/conversions/hf-to-mediapipe-task.md.txt"
+frozen = true
 
 [[page]]
 path = "tuning/mobile-actions.md"
 source = "https://ai.google.dev/gemma/docs/mobile-actions.md.txt"
+frozen = true
 
 # --- Tuning / Learn ---------------------------------------------------------------------------
 
 [[page]]
 path = "tuning/overview.md"
 source = "https://ai.google.dev/gemma/docs/tune.md.txt"
+frozen = true
 
 [[page]]
 path = "tuning/qlora.md"
 source = "https://ai.google.dev/gemma/docs/core/huggingface_text_finetune_qlora.md.txt"
 assets = "tuning"
+frozen = true
 
 [[page]]
 path = "tuning/full-finetune.md"
 source = "https://ai.google.dev/gemma/docs/core/huggingface_text_full_finetune.md.txt"
 assets = "tuning"
+frozen = true
 
 [[page]]
 path = "tuning/vision-qlora.md"
 source = "https://ai.google.dev/gemma/docs/core/huggingface_vision_finetune_qlora.md.txt"
 assets = "tuning"
+frozen = true
 
 [[page]]
 path = "tuning/keras-lora.md"
 source = "https://ai.google.dev/gemma/docs/core/lora_tuning.md.txt"
 assets = "tuning"
+frozen = true
 
 [[page]]
 path = "tuning/distributed.md"
 source = "https://ai.google.dev/gemma/docs/core/distributed_tuning.md.txt"
 assets = "tuning"
+frozen = true
 
 [[page]]
 path = "tuning/spoken-language.md"
 source = "https://ai.google.dev/gemma/docs/spoken-language/task-specific-tuning.md.txt"
 assets = "tuning"
+frozen = true
 
 [[page]]
 path = "learn/business-email-assistant.md"
 source = "https://ai.google.dev/gemma/docs/business-email-assistant.md.txt"
 assets = "learn"
+frozen = true
 
 [[page]]
 path = "learn/personal-code-assistant.md"
 source = "https://ai.google.dev/gemma/docs/personal-code-assistant.md.txt"
 assets = "learn"
+frozen = true
 
 # --- Core -------------------------------------------------------------------------------------
 
@@ -337,4 +355,32 @@ frozen = true
 [[page]]
 path = "models/gemma-scope/index.md"
 source = "https://ai.google.dev/gemma/docs/gemma_scope.md.txt"
+frozen = true
+
+# --- Visual guides ------------------------------------------------------------------------
+# Imported with scripts/import_newsletter.py, not convert_notebook.py.
+# gemma-4.md and mtp.md were split by hand after import -- re-importing would undo that.
+
+[[page]]
+path = "tutorials/visual-guides/gemma-4.md"
+source = "https://newsletter.maartengrootendorst.com/p/a-visual-guide-to-gemma-4"
+importer = "import_newsletter"
+frozen = true
+
+[[page]]
+path = "tutorials/visual-guides/gemma-4-12b.md"
+source = "https://newsletter.maartengrootendorst.com/p/a-visual-guide-to-gemma-4-12b"
+importer = "import_newsletter"
+frozen = true
+
+[[page]]
+path = "tutorials/visual-guides/mtp.md"
+source = "https://newsletter.maartengrootendorst.com/p/a-visual-guide-to-gemma-4"
+importer = "import_newsletter"
+frozen = true
+
+[[page]]
+path = "tutorials/visual-guides/diffusiongemma.md"
+source = "https://newsletter.maartengrootendorst.com/p/a-visual-guide-to-diffusiongemma"
+importer = "import_newsletter"
 frozen = true

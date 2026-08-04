@@ -335,6 +335,9 @@ def check_internal(ctx: Context) -> Iterable[Finding]:
 def check_stubs(ctx: Context) -> Iterable[Finding]:
     """Every page in the nav must have real content."""
     for page in ctx.pages:
+        # A page rendered by a template holds its content there, not in the body.
+        if page.frontmatter.get("template"):
+            continue
         if "Content coming soon" in page.body:
             yield Finding("stubs", page.repo_rel, 0, "placeholder text: 'Content coming soon'")
             continue
