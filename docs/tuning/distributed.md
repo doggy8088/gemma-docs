@@ -1,3 +1,10 @@
+---
+title: Distributed tuning with Gemma using Keras
+description: Gemma is a family of lightweight, state-of-the-art open models built from research and technology used to create Google Gemini models.
+models: [gemma-1]
+frameworks: [jax, keras]
+source_url: "https://ai.google.dev/gemma/docs/core/distributed_tuning.md.txt"
+---
 # Distributed tuning with Gemma using Keras
 
 

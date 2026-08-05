@@ -1,3 +1,10 @@
+---
+title: Fine-tune EmbeddingGemma
+description: Fine-tuning helps close the gap between a model's general-purpose understanding and the specialized, high-performance accuracy that your application requires.
+models: [embeddinggemma]
+frameworks: [sentence-transformers, transformers]
+source_url: "https://ai.google.dev/gemma/docs/embeddinggemma/fine-tuning-embeddinggemma-with-sentence-transformers.md.txt"
+---
 # Fine-tune EmbeddingGemma
 
 

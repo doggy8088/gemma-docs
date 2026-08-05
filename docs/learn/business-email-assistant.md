@@ -1,3 +1,10 @@
+---
+title: Build a business email AI assistant with Gemma
+description: Handling customer inquiries, including emails, is a necessary part of running many businesses, but it can quickly get overwhelming.
+models: [gemma-2]
+frameworks: [keras, jax]
+source_url: "https://ai.google.dev/gemma/docs/business-email-assistant.md.txt"
+---
 # Build a business email AI assistant with Gemma
 
 <div class="video-embed">

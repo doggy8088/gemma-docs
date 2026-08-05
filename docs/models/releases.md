@@ -1,3 +1,8 @@
+---
+title: Releases
+description: Dated release history for every Gemma model, from Gemma 1 through Gemma 4 and the specialized variants.
+source_url: "https://ai.google.dev/gemma/docs/releases.md.txt"
+---
 This page documents releases for the Gemma family of models.
 
 ## June 3, 2026

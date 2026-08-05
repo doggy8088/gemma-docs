@@ -1,3 +1,9 @@
+---
+title: Inference
+description: "Basic text inference with Gemma 4 in Hugging Face Transformers: single-turn prompts, multi-turn conversations, and system instructions."
+models: [gemma-4]
+frameworks: [transformers]
+---
 # Inference
 
 Gemma is a family of lightweight, state-of-the-art open models built from the same research and technology used to create the [Gemini](https://deepmind.google/technologies/gemini/#introduction) models. Gemma 4 is designed to be the world's most efficient open-weight model family.
@@ -26,8 +32,8 @@ pip install dialog
 
 Use `transformers` library to load the pipeline
 
-```python
-MODEL_ID = "google/gemma-4-E2B-it" # @param ["google/gemma-4-E2B-it", "google/gemma-4-E4B-it", "google/gemma-4-12B-it", "google/gemma-4-31B-it", "google/gemma-4-26B-A4B-it"]
+```python { .model-swap }
+MODEL_ID = "google/gemma-4-E2B-it"
 
 from transformers import pipeline
 

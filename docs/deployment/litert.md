@@ -1,3 +1,10 @@
+---
+title: Convert Hugging Face Safetensors to MediaPipe Task
+description: This guide provides instructions for converting Gemma models in Hugging Face Safetensors format (.safetensors) into the MediaPipe Task file format (.task).
+models: [gemma-3]
+frameworks: [litert]
+source_url: "https://ai.google.dev/gemma/docs/conversions/hf-to-mediapipe-task.md.txt"
+---
 # Convert Hugging Face Safetensors to MediaPipe Task
 
 This guide provides instructions for converting Gemma models in Hugging Face

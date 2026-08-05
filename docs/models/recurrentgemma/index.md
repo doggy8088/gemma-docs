@@ -1,3 +1,9 @@
+---
+title: RecurrentGemma
+description: RecurrentGemma is an open model based on Griffin, a hybrid model architecture that mixes gated linear recurrences with local sliding window attention.
+models: [recurrentgemma]
+source_url: "https://ai.google.dev/gemma/docs/recurrentgemma.md.txt"
+---
 # RecurrentGemma
 
 RecurrentGemma is an open model based on

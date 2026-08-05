@@ -1,5 +1,7 @@
 ---
 title: Components
+models: [gemma-4]
+frameworks: [ollama]
 description: The reusable building blocks these docs are made from, with live examples and the markup to copy.
 ---
 
@@ -74,6 +76,71 @@ disagree with the tables.
 
 `--muted` is how the model switcher (Step 4.2) will show a capability the selected model does
 not have — struck through rather than hidden, so the reader learns the limitation.
+
+## Page context strip
+
+The quiet band under every H1. You never write this markup; it is rendered from frontmatter by
+`overrides/partials/page-context.html`. The strip on *this* page is the live example.
+
+```yaml
+models: [gemma-4]        # what the page is about
+frameworks: [ollama]     # primary tools the page teaches, linked to their home pages
+requires: audio          # narrows the selector to models that accept audio
+```
+
+Two kinds of item sit on the line, and keeping them apart is the design:
+
+| Item | Comes from | Meaning |
+|---|---|---|
+| `Models` | `models` frontmatter | What the page is **about**. Links to the local model page. |
+| `Uses` | `frameworks` frontmatter | Primary tools the page teaches. Links out to each project. |
+| `Examples` | the page's own code | What **you** want the commands to target. A preference. |
+
+Pairs are separated by a 1px rule, values all share one weight, and labels are muted — 16px of
+space alone was not enough to stop `Frameworks Sentence Transformers` reading as a single run
+of grey text.
+
+Keep `frameworks` editorial rather than exhaustive. Name the user-facing stack needed to follow
+the page, not every imported or transitive dependency. For example, a Transformers tutorial that
+imports PyTorch tensors should say `frameworks: [transformers]`; add `pytorch` only when the page
+actually teaches its APIs or workflow.
+
+`Examples` is deliberately *not* derived from `models:`. Those answer different questions:
+the Ollama page is about Gemma 4, but its commands could target anything Ollama publishes. So
+the selector is built from what the page's marked blocks can actually be rewritten to — which
+means it disappears on pages with nothing switchable rather than claiming a size the page never
+mentioned.
+
+### Swappable code blocks
+
+Add `{ .model-swap }` to a fence and the selector rewrites its model identifiers:
+
+````markdown
+```bash { .model-swap }
+ollama pull gemma4:12b
+```
+````
+
+Substitution is **opt-in per block** because a page's code was validated as written. Unmarked
+blocks are never touched — which is what keeps the tag table on `deployment/ollama.md` listing
+every tag while the `pull` command above it follows the selector.
+
+A model is only offered if it has a published id for **every** engine appearing in the page's
+marked blocks, so switching can never rewrite some snippets and silently leave others behind.
+If an intentionally separate example lacks one size—such as a QAT checkpoint—mark it
+`{ .model-fixed }` and explain the limitation beside it instead of unnecessarily narrowing the
+page's primary examples.
+
+Identifier variants live under each size's `ids` mapping in `data/models.yml`. Use a distinct
+flavour when syntax has different semantics—for example `hf_base` for training, `hf_qat` for a
+quantization-aware Transformers checkpoint, and `gguf_qat` for its llama.cpp equivalent. The
+generator exposes those variants to the switcher; do not encode size substitutions by hand in
+JavaScript.
+
+The choice is remembered across the site and reflected in the page URL. If a remembered model
+is unavailable, the examples remain at their authored default and the picker explains why;
+there is no silent substitution. Use `{ .model-fixed }` to acknowledge an intentionally static
+block when the same page has swappable examples for that engine.
 
 ## Steps
 
@@ -184,6 +251,7 @@ reload; hover effects should become instant.
 | `nav.css` | Header, tabs, sidebars, table of contents |
 | `content.css` | Tables, admonitions, code, content tabs |
 | `components.css` | Everything on this page |
+| `page-context.css` | The applicability bar above every H1 |
 | `tokens.css` | Chat-token badges (`<start_of_turn>` etc.) |
 | `home.css` | Landing page: chrome, backdrop, hero |
 | `motion.css` | Transitions and the reduced-motion opt-out |

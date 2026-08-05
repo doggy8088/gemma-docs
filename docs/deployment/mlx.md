@@ -1,6 +1,8 @@
 ---
 title: Apple MLX
 description: Run Gemma 4 on Apple silicon with MLX — text and vision generation, model repos, and the OpenAI-compatible server.
+models: [gemma-4]
+frameworks: [mlx]
 ---
 
 # Run Gemma with MLX
@@ -19,14 +21,14 @@ pip install mlx mlx-lm mlx-vlm
 
 === "Text"
 
-    ```bash
-    mlx_lm.generate --model mlx-community/gemma-4-e2b-it-4bit --prompt "Who are you?"
+    ```bash { .model-swap }
+    mlx_lm.generate --model mlx-community/gemma-4-E2B-it-qat-4bit --prompt "Who are you?"
     ```
 
 === "Vision"
 
-    ```bash
-    mlx_vlm.generate --model mlx-community/gemma-4-e2b-it-4bit \
+    ```bash { .model-swap }
+    mlx_vlm.generate --model mlx-community/gemma-4-E2B-it-qat-4bit \
       --prompt "Describe this image." --image <path_to_image>
     ```
 
@@ -37,10 +39,11 @@ Community-converted weights live under
 
 | Size | Repository |
 |---|---|
-| E2B | `mlx-community/gemma-4-e2b-it-4bit` |
-| E4B | `mlx-community/gemma-4-e4b-it-qat-OptiQ-4bit` |
-| 12B | `mlx-community/gemma-4-12B-it-4bit`, `…-it-8bit` |
-| 26B A4B | `mlx-community/gemma-4-26b-a4b-it-4bit` |
+| E2B | `mlx-community/gemma-4-E2B-it-qat-4bit` |
+| E4B | `mlx-community/gemma-4-E4B-it-qat-4bit` |
+| 12B | `mlx-community/gemma-4-12B-it-qat-4bit` |
+| 26B A4B | `mlx-community/gemma-4-26B-A4B-it-qat-4bit` |
+| 31B | `mlx-community/gemma-4-31B-it-qat-4bit` |
 
 !!! note
     Coverage and naming vary — these are community conversions, not first-party releases.
@@ -50,19 +53,19 @@ Community-converted weights live under
 
 ## Server
 
-```bash
-mlx_vlm.server --model mlx-community/gemma-4-e2b-it-4bit --port 8080
+```bash { .model-swap }
+mlx_vlm.server --model mlx-community/gemma-4-E2B-it-qat-4bit --port 8080
 ```
 
 OpenAI-compatible API at `http://localhost:8080/v1`.
 
-```python
+```python { .model-swap }
 from openai import OpenAI
 
 client = OpenAI(base_url="http://localhost:8080/v1", api_key="not-needed")
 
 response = client.chat.completions.create(
-    model="mlx-community/gemma-4-e2b-it-4bit",
+    model="mlx-community/gemma-4-E2B-it-qat-4bit",
     messages=[{"role": "user", "content": "Say this is a test"}],
 )
 print(response.choices[0].message.content)

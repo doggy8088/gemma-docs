@@ -1,3 +1,9 @@
+---
+title: EmbeddingGemma model card
+description: "Model card for EmbeddingGemma: embedding inputs and outputs, training data, evaluation results, and intended use."
+models: [embeddinggemma]
+source_url: "https://ai.google.dev/gemma/docs/embeddinggemma/model_card.md.txt"
+---
 # Model card
 
 **Model Page** : [EmbeddingGemma](index.md)

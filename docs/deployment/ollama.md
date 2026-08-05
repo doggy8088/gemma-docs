@@ -1,6 +1,8 @@
 ---
 title: Ollama
 description: Run Gemma 4 locally with Ollama — model tags, image input, and the OpenAI-compatible server.
+models: [gemma-4]
+frameworks: [ollama]
 ---
 
 # Run Gemma with Ollama
@@ -18,13 +20,13 @@ ollama --version
 
 ## Run
 
-```bash
-ollama run gemma4 "Explain quantum computing simply"
+```bash { .model-swap }
+ollama run gemma4:12b "Explain quantum computing simply"
 ```
 
 Downloads the model on first use. To fetch without running:
 
-```bash
+```bash { .model-swap }
 ollama pull gemma4:12b
 ```
 
@@ -44,8 +46,8 @@ ollama pull gemma4:12b
 
 ## Images
 
-```bash
-ollama run gemma4 ./image.png "What is in this image?"
+```bash { .model-swap }
+ollama run gemma4:12b ./image.png "What is in this image?"
 ```
 
 !!! note
@@ -58,7 +60,7 @@ Ollama serves on port `11434`.
 
 === "OpenAI-compatible"
 
-    ```python
+    ```python { .model-swap }
     from openai import OpenAI
 
     client = OpenAI(
@@ -75,22 +77,22 @@ Ollama serves on port `11434`.
 
 === "Native API"
 
-    ```bash
+    ```bash { .model-swap }
     curl http://localhost:11434/api/generate -d '{
-      "model": "gemma4",
+      "model": "gemma4:12b",
       "prompt": "roses are red"
     }'
     ```
 
 === "Image via API"
 
-    ```bash
+    ```bash { .model-swap }
     IMG=$(base64 < test.jpg | tr -d '\n')
 
     curl -X POST http://localhost:11434/api/chat \
       -H "Content-Type: application/json" \
       -d '{
-        "model": "gemma4",
+        "model": "gemma4:12b",
         "messages": [{
           "role": "user",
           "content": "What is in this image?",

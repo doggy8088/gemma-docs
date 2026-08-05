@@ -1,3 +1,10 @@
+---
+title: Audio Understanding
+description: Starting with Gemma 3n, you can use audio directly into your prompts and workflows.
+models: [gemma-4, gemma-3n]
+requires: audio
+frameworks: [transformers]
+---
 
 # Audio Understanding
 
@@ -23,8 +30,8 @@ pip install "transformers>=5.10.1"
 
 Use the `transformers` libraries to create an instance of a `processor` and `model` using the `AutoProcessor` and `AutoModelForImageTextToText` classes as shown in the following code example:
 
-```python
-MODEL_ID = "google/gemma-4-E2B-it" # @param ["google/gemma-4-E2B-it","google/gemma-4-E4B-it", "google/gemma-4-12B-it"]
+```python { .model-swap }
+MODEL_ID = "google/gemma-4-E2B-it"
 
 from transformers import pipeline
 

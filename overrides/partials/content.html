@@ -1,0 +1,27 @@
+{#-
+  Overrides the theme's content partial for one reason: the page context strip belongs
+  *below* the H1, the way docs.stripe.com places its page-level controls (measured: their
+  control row sits ~60px under the title, with nothing at all between breadcrumb and title).
+
+  The H1 comes out of rendered markdown, so the only way to get beneath it is to split the
+  content on the first `</h1>`. Autoescaping is off in this theme, so the two halves emit as
+  raw HTML -- verified before relying on it.
+
+  Everything else is the theme's own content.html, kept in step with it.
+-#}
+{% include "partials/actions.html" %}
+{% if "<h1" not in page.content %}
+  {#- No heading of its own: Zensical synthesises one from `title`. -#}
+  <h1 id="__skip">{{ page.title | d(config.site_name, true) }}</h1>
+  {% include "partials/page-context.html" %}
+  {{ page.content }}
+{% else %}
+  {% set parts = page.content | split("</h1>", 1) | list %}
+  {{ parts[0] }}</h1>
+  {% include "partials/page-context.html" %}
+  {{ parts[1] }}
+{% endif %}
+{% include "partials/tags.html" %}
+{% include "partials/source-file.html" %}
+{% include "partials/feedback.html" %}
+{% include "partials/comments.html" %}

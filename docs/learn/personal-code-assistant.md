@@ -1,3 +1,10 @@
+---
+title: Build a personal AI coding assistant with Gemma
+description: Run a Gemma coding assistant on your own hardware, keeping your codebase local when connectivity, cost, or data security rule out hosted models.
+models: [gemma-2]
+frameworks: [keras, jax]
+source_url: "https://ai.google.dev/gemma/docs/personal-code-assistant.md.txt"
+---
 # Build a personal AI coding assistant with Gemma
 
 <div class="video-embed">

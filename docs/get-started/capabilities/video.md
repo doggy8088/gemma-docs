@@ -1,3 +1,9 @@
+---
+title: Video Understanding
+description: Video data is a rich source of information that can help you accomplish tasks and understand the world around you.
+models: [gemma-4]
+frameworks: [transformers]
+---
 # Video Understanding
 
 Video data is a rich source of information that can help you accomplish tasks and understand the world around you. Using Gemma with video data can help you understand spatial relationships, interpret human interactions, and assist with situational awareness. This tutorial shows you how to get started processing video data with Gemma using Hugging Face Transformers.
@@ -19,8 +25,8 @@ pip install "transformers>=5.10.1"
 
 Use the `transformers` libraries to create an instance of a `processor` and `model` using the `AutoProcessor` and `AutoModelForImageTextToText` classes as shown in the following code example:
 
-```python
-MODEL_ID = "google/gemma-4-E2B-it" # @param ["google/gemma-4-E2B-it", "google/gemma-4-E4B-it", "google/gemma-4-12B-it", "google/gemma-4-31B-it", "google/gemma-4-26B-A4B-it"]
+```python { .model-swap }
+MODEL_ID = "google/gemma-4-E2B-it"
 
 from transformers import AutoProcessor, AutoModelForMultimodalLM
 

@@ -1,3 +1,10 @@
+---
+title: Fine-tune Gemma in Keras using LoRA
+description: Generative artificial intelligent (AI) models like Gemma are effective at a variety of tasks.
+models: [gemma-3]
+frameworks: [keras]
+source_url: "https://ai.google.dev/gemma/docs/core/lora_tuning.md.txt"
+---
 # Fine-tune Gemma in Keras using LoRA
 
 

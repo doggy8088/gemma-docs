@@ -1,3 +1,9 @@
+---
+title: Gemma Scope
+description: Gemma Scope 2 is a comprehensive, open suite of interpretability tools designed for the Gemma 3 model collection.
+models: [gemma-scope]
+source_url: "https://ai.google.dev/gemma/docs/gemma_scope.md.txt"
+---
 # Gemma Scope
 
 ## Analyze Gemma 3 with Gemma Scope 2

@@ -1,3 +1,9 @@
+---
+title: PaliGemma
+description: PaliGemma 2 and PaliGemma are lightweight open vision-language models (VLM) inspired by PaLI-3, and based on open components like the SigLIP vision model and the Gemma language model.
+models: [paligemma]
+source_url: "https://ai.google.dev/gemma/docs/paligemma.md.txt"
+---
 # PaliGemma
 
 PaliGemma 2 and PaliGemma are lightweight open *vision-language models* (VLM)

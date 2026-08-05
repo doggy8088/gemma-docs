@@ -1,3 +1,9 @@
+---
+title: Image Understanding
+description: You can use Gemma 3 and later models to analyze and understand the content of images.
+models: [gemma-4, gemma-3]
+frameworks: [transformers]
+---
 # Image Understanding
 
 You can use Gemma 3 and later models to analyze and understand the content of images. This capability includes tasks like describing image content, identifying objects, recognizing scenes, and even inferring the context from visual information.
@@ -21,8 +27,8 @@ pip install "transformers>=5.10.1"
 
 Use `transformers` library to load the pipeline
 
-```python
-MODEL_ID = "google/gemma-4-E2B-it" # @param ["google/gemma-4-E2B-it", "google/gemma-4-E4B-it", "google/gemma-4-12B-it", "google/gemma-4-31B-it", "google/gemma-4-26B-A4B-it"]
+```python { .model-swap }
+MODEL_ID = "google/gemma-4-E2B-it"
 
 from transformers import pipeline
 

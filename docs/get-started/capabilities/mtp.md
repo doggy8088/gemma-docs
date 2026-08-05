@@ -1,3 +1,9 @@
+---
+title: Speed-up Gemma 4 with Multi-Token Prediction
+description: In Gemma 4, Multi-Token Prediction (MTP) is the specific architecture used to enable highly efficient Speculative Decoding.
+models: [gemma-4]
+source_url: "https://ai.google.dev/gemma/docs/mtp/overview.md.txt"
+---
 # Speed-up Gemma 4 with Multi-Token Prediction
 
 In Gemma 4, Multi-Token Prediction (MTP) is the specific architecture

@@ -1,3 +1,9 @@
+---
+title: Tool calling
+description: When using a generative artificial intelligence (AI) model such as Gemma, you may want to use the model to operate programming interfaces in order to complete tasks or answer questions.
+models: [gemma-4]
+frameworks: [transformers]
+---
 <!-- TODO: Rename this to "tool calling"? -->
 # Tool calling
 
@@ -29,8 +35,8 @@ pip install "transformers>=5.10.1"
 
 Use the `transformers` libraries to create an instance of a `processor` and `model` using the `AutoProcessor` and `AutoModelForImageTextToText` classes as shown in the following code example:
 
-```python
-MODEL_ID = "google/gemma-4-E2B-it" # @param ["google/gemma-4-E2B-it", "google/gemma-4-E4B-it", "google/gemma-4-12B-it", "google/gemma-4-31B-it", "google/gemma-4-26B-A4B-it"]
+```python { .model-swap }
+MODEL_ID = "google/gemma-4-E2B-it"
 
 from transformers import AutoProcessor, AutoModelForMultimodalLM
 

@@ -120,10 +120,22 @@ def words(text: str) -> Counter:
     return Counter(t for t in tokens if len(t) >= 2)
 
 
+def strip_frontmatter(text: str) -> str:
+    """Drop the YAML block. It is metadata this repo adds (PLAN.md Step 3.1), never prose
+    from upstream, so counting it would report every page as having gained words."""
+    if not text.startswith("---"):
+        return text
+    lines = text.split("\n")
+    for idx in range(1, len(lines)):
+        if lines[idx].strip() == "---":
+            return "\n".join(lines[idx + 1 :])
+    return text
+
+
 def compare(source_text: str, converted_text: str) -> tuple[Counter, Counter]:
     """Return (unexpected drops, additions)."""
     source = words(strip_designed_drops(source_text))
-    converted = words(converted_text)
+    converted = words(strip_frontmatter(converted_text))
     dropped = Counter({w: c for w, c in (source - converted).items() if w not in EXPECTED_DROPS})
     return dropped, converted - source
 

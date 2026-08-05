@@ -1,3 +1,9 @@
+---
+title: Gemma 4
+description: Gemma is a family of generative artificial intelligence models and you can use them in a wide variety of generation tasks, including question answering, summarization, and reasoning.
+models: [gemma-4]
+source_url: "https://ai.google.dev/gemma/docs/core.md.txt"
+---
 # Gemma 4 {: #hidden-title style="display: none;" }
 
 <div class="video-embed">

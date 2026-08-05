@@ -1,3 +1,9 @@
+---
+title: Gemma 3n model card
+description: "Model card for Gemma 3n: on-device inputs and outputs, training data, evaluation results, and intended use."
+models: [gemma-3n]
+source_url: "https://ai.google.dev/gemma/docs/gemma-3n/model_card.md.txt"
+---
 # Model card
 
 **Model Page** : [Gemma 3n](index.md)

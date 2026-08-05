@@ -1,3 +1,10 @@
+---
+title: Deploy Gemma in web browsers
+description: You can run Gemma models completely on-device with the MediaPipe LLM Inference API.
+models: [gemma-4]
+frameworks: [webgpu, transformers]
+source_url: "https://ai.google.dev/gemma/docs/integrations/web.md.txt"
+---
 # Deploy Gemma in web browsers
 
 You can run Gemma models completely on-device with the [MediaPipe LLM Inference

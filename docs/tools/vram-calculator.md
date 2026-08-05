@@ -1,3 +1,7 @@
+---
+title: (V)RAM Calculator
+description: Estimate memory requirements for running Gemma models.
+---
 # (V)RAM Calculator
 
 Estimate memory requirements for running Gemma models.

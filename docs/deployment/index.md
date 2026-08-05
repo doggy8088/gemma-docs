@@ -1,3 +1,9 @@
+---
+title: Overview
+description: Choose an execution framework and a Gemma variant for your hardware, then run your first generation request.
+models: [gemma-4]
+source_url: "https://ai.google.dev/gemma/docs/run.md.txt"
+---
 There are two key decisions to make when you want to run a Gemma model:
 1) what Gemma variant you want to run, and 2) what AI execution framework you
 are going to use to run it? A key issue in making both these decisions has to do

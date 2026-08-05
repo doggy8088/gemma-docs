@@ -1,3 +1,9 @@
+---
+title: ShieldGemma
+description: ShieldGemma is a set of instruction tuned models for evaluating the safety of text and images against a set of defined safety policies.
+models: [shieldgemma]
+source_url: "https://ai.google.dev/gemma/docs/shieldgemma.md.txt"
+---
 # ShieldGemma {: #hidden-title style="display: none;" }
 
 <div class="video-embed">

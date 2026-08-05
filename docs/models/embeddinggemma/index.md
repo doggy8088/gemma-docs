@@ -1,3 +1,9 @@
+---
+title: EmbeddingGemma model overview
+description: EmbeddingGemma is a 308M parameter multilingual text embedding model based on Gemma 3.
+models: [embeddinggemma]
+source_url: "https://ai.google.dev/gemma/docs/embeddinggemma.md.txt"
+---
 # EmbeddingGemma model overview {: #hidden-title style="display: none;" }
 
 <div class="video-embed">

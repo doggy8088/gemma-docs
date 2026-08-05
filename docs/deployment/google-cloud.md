@@ -1,3 +1,10 @@
+---
+title: Google Cloud
+description: "Deploy, serve, and fine-tune Gemma 4 on Google Cloud: Cloud Run, GKE, the Agent Development Kit, vLLM on TPUs, MaxText, and Sovereign Cloud."
+models: [gemma-4]
+frameworks: [google-cloud, vllm]
+source_url: "https://ai.google.dev/gemma/docs/integrations/google-cloud.md.txt"
+---
 The Google Cloud platform provides many options for deploying, serving,
 and fine-tuning Gemma 4 open models, including the following:
 

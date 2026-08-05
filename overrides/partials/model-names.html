@@ -1,0 +1,92 @@
+{#-
+  GENERATED FILE -- DO NOT EDIT.
+
+  Written by scripts/generate_model_names.py from data/models.yml.
+  Verified by: uv run python scripts/lint_docs.py --check generated
+
+  `gemma_model_names` maps every family, size and framework id to its display name.
+  `gemma_model_urls` maps a family id to its canonical local documentation page.
+  `gemma_framework_urls` maps a tool id to its project home.
+
+  No size lists here: the strip shows the page's subject, and the size selector is built in
+  JavaScript from what the page's marked code blocks can actually be rewritten to.
+-#}
+{% set gemma_model_names = {
+  "gemma-4"              : "Gemma 4",
+  "gemma-3n"             : "Gemma 3n",
+  "diffusiongemma"       : "DiffusionGemma",
+  "functiongemma"        : "FunctionGemma",
+  "embeddinggemma"       : "EmbeddingGemma",
+  "paligemma"            : "PaliGemma",
+  "shieldgemma"          : "ShieldGemma",
+  "gemma-3"              : "Gemma 3",
+  "gemma-2"              : "Gemma 2",
+  "gemma-1"              : "Gemma",
+  "recurrentgemma"       : "RecurrentGemma",
+  "datagemma"            : "DataGemma",
+  "gemma-scope"          : "Gemma Scope",
+  "gemma-aps"            : "Gemma APS",
+  "gemma-4/e2b"          : "E2B",
+  "gemma-4/e4b"          : "E4B",
+  "gemma-4/12b"          : "12B",
+  "gemma-4/26b-a4b"      : "26B A4B",
+  "gemma-4/31b"          : "31B",
+  "ollama"               : "Ollama",
+  "llamacpp"             : "llama.cpp",
+  "lmstudio"             : "LM Studio",
+  "mlx"                  : "MLX",
+  "litert"               : "LiteRT",
+  "webgpu"               : "WebGPU",
+  "vllm"                 : "vLLM",
+  "sglang"               : "SGLang",
+  "google-cloud"         : "Google Cloud",
+  "transformers"         : "Hugging Face Transformers",
+  "keras"                : "Keras",
+  "jax"                  : "JAX",
+  "pytorch"              : "PyTorch",
+  "sentence-transformers": "Sentence Transformers",
+  "peft"                 : "PEFT",
+  "trl"                  : "TRL",
+  "langchain"            : "LangChain",
+  "android"              : "Android",
+  "ios"                  : "iOS",
+} %}
+
+{% set gemma_model_urls = {
+  "gemma-4"       : "/models/gemma-4/model-card/",
+  "gemma-3n"      : "/models/gemma-3n/model-card/",
+  "diffusiongemma": "/models/diffusiongemma/model-card/",
+  "functiongemma" : "/models/functiongemma/model-card/",
+  "embeddinggemma": "/models/embeddinggemma/model-card/",
+  "paligemma"     : "/models/paligemma/model-card-v2/",
+  "shieldgemma"   : "/models/shieldgemma/model-card-v2/",
+  "gemma-3"       : "/models/gemma-3/",
+  "gemma-2"       : "/models/gemma-2/",
+  "gemma-1"       : "/models/gemma-1/",
+  "recurrentgemma": "/models/recurrentgemma/model-card/",
+  "datagemma"     : "/models/datagemma/",
+  "gemma-scope"   : "/models/gemma-scope/",
+  "gemma-aps"     : "/models/gemma-aps/",
+} %}
+
+{% set gemma_framework_urls = {
+  "ollama"               : "https://ollama.com",
+  "llamacpp"             : "https://github.com/ggml-org/llama.cpp",
+  "lmstudio"             : "https://lmstudio.ai",
+  "mlx"                  : "https://github.com/ml-explore/mlx",
+  "litert"               : "https://ai.google.dev/edge/litert",
+  "webgpu"               : "https://www.w3.org/TR/webgpu/",
+  "vllm"                 : "https://docs.vllm.ai",
+  "sglang"               : "https://docs.sglang.io",
+  "google-cloud"         : "https://cloud.google.com",
+  "transformers"         : "https://huggingface.co/docs/transformers",
+  "keras"                : "https://keras.io",
+  "jax"                  : "https://jax.readthedocs.io",
+  "pytorch"              : "https://pytorch.org",
+  "sentence-transformers": "https://sbert.net",
+  "peft"                 : "https://huggingface.co/docs/peft",
+  "trl"                  : "https://github.com/huggingface/trl",
+  "langchain"            : "https://python.langchain.com",
+  "android"              : "https://developer.android.com",
+  "ios"                  : "https://developer.apple.com/ios/",
+} %}

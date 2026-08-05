@@ -1,3 +1,9 @@
+---
+title: FunctionGemma model card
+description: "Model card for FunctionGemma: function-calling inputs and outputs, training data, evaluation results, and intended use."
+models: [functiongemma]
+source_url: "https://ai.google.dev/gemma/docs/functiongemma/model_card.md.txt"
+---
 # Model card
 
 **Model Page** : [FunctionGemma](index.md)

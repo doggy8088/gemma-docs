@@ -1,3 +1,10 @@
+---
+title: Fine-tuning with FunctionGemma
+description: This guide demonstrates how to fine-tune FunctionGemma for tool calling.
+models: [functiongemma]
+frameworks: [transformers, peft, trl]
+source_url: "https://ai.google.dev/gemma/docs/functiongemma/finetuning-with-functiongemma.md.txt"
+---
 # Fine-tuning with FunctionGemma
 
 

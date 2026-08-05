@@ -1,3 +1,10 @@
+---
+title: Run Gemma with Hugging Face Transformers
+description: Generating text, summarizing, and analysing content are just some of the tasks you can accomplish with Gemma open models.
+models: [gemma-4, gemma-3, gemma-3n]
+frameworks: [transformers]
+source_url: "https://ai.google.dev/gemma/docs/core/huggingface_inference.md.txt"
+---
 # Run Gemma with Hugging Face Transformers
 
 
@@ -27,7 +34,7 @@ Prompting a Gemma model with text to get a text response is the simplest way to 
 
 Use the `torch` and `transformers` libraries to create an instance of a model execution `pipeline` class with Gemma. When using a model for generating output or following directions, select an instruction tuned (IT) model, which typically has `it` in the model ID string. Using the `pipeline` object, you specify the Gemma variant you want to use, the type of task you want to perform, specifically `"any-to-any"` for multimodal generation, as shown in the following code example:
 
-```python
+```python { .model-swap }
 from transformers import pipeline
 
 MODEL_ID = "google/gemma-4-E2B-it"

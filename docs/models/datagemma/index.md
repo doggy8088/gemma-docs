@@ -1,3 +1,9 @@
+---
+title: DataGemma
+description: DataGemma is a research tool that lets users ask questions in plain language and receive answers based on publicly available statistical data in the Data Commons repository.
+models: [datagemma]
+source_url: "https://ai.google.dev/gemma/docs/datagemma.md.txt"
+---
 # DataGemma
 
 DataGemma is a research tool that lets users ask questions in plain language and receive

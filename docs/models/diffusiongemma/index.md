@@ -1,3 +1,9 @@
+---
+title: DiffusionGemma model overview
+description: DiffusionGemma is an experimental open model that explores text diffusion, an exceptionally fast approach to text generation.
+models: [diffusiongemma]
+source_url: "https://ai.google.dev/gemma/docs/diffusiongemma.md.txt"
+---
 # DiffusionGemma model overview
 
 DiffusionGemma is an experimental open model that explores text diffusion, an

@@ -1,3 +1,10 @@
+---
+title: Fine-tune PaliGemma with JAX and Flax
+description: This notebook shows how to fine-tune PaliGemma on a vision-language task with JAX.
+models: [paligemma]
+frameworks: [jax]
+source_url: "https://ai.google.dev/gemma/docs/paligemma/fine-tuning-paligemma.md.txt"
+---
 # Fine-tune PaliGemma with JAX and Flax
 
 

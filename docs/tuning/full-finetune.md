@@ -1,3 +1,10 @@
+---
+title: Full Model Fine-Tune using Hugging Face Transformers
+description: This guide walks you through how to fine-tune Gemma on a mobile game NPC dataset using Hugging Face Transformers and TRL.
+models: [gemma-3]
+frameworks: [transformers, trl]
+source_url: "https://ai.google.dev/gemma/docs/core/huggingface_text_full_finetune.md.txt"
+---
 # Full Model Fine-Tune using Hugging Face Transformers
 
 

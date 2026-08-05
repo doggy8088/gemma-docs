@@ -1,6 +1,8 @@
 ---
 title: vLLM
 description: Serve Gemma 4 with vLLM — install, vllm serve, model repositories, and the OpenAI-compatible API.
+models: [gemma-4]
+frameworks: [vllm]
 ---
 
 # Serve Gemma with vLLM
@@ -17,7 +19,7 @@ uv pip install vllm --torch-backend=auto
 
 ## Serve
 
-```bash
+```bash { .model-swap }
 vllm serve google/gemma-4-12B-it
 ```
 
@@ -38,15 +40,17 @@ Drop `-it` for base weights, which you want only for further training.
 For 4-bit serving, use the [QAT](qat.md) compressed-tensors builds — 4-bit weights with 16-bit
 activations:
 
-```bash
+```bash { .model-fixed }
 vllm serve google/gemma-4-12B-it-qat-w4a16-ct
 ```
 
-Published as `google/gemma-4-{E2B,E4B,12B,31B}-it-qat-w4a16-ct`.
+Published as `google/gemma-4-{E2B,E4B,12B,31B}-it-qat-w4a16-ct`. This QAT example stays at
+12B because no 26B A4B compressed-tensors checkpoint is published; the page selector controls
+the regular serving and client examples above and below.
 
 ## Call it
 
-```python
+```python { .model-swap }
 from openai import OpenAI
 
 client = OpenAI(api_key="EMPTY", base_url="http://localhost:8000/v1")

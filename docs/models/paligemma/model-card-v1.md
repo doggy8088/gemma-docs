@@ -1,3 +1,9 @@
+---
+title: PaliGemma model card
+description: PaliGemma is a versatile and lightweight vision-language model (VLM) inspired by PaLI-3 and based on open components such as the SigLIP vision model and the Gemma language model.
+models: [paligemma]
+source_url: "https://ai.google.dev/gemma/docs/paligemma/model-card.md.txt"
+---
 # Model card
 
 **Model page:** [PaliGemma](index.md)

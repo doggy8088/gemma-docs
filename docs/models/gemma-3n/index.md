@@ -1,3 +1,9 @@
+---
+title: Gemma 3n model overview
+description: Gemma 3n is a generative AI model optimized for use in everyday devices, such as phones, laptops, and tablets.
+models: [gemma-3n]
+source_url: "https://ai.google.dev/gemma/docs/gemma-3n.md.txt"
+---
 # Gemma 3n model overview {: #hidden-title style="display: none;" }
 
 <div class="video-embed">

@@ -1,3 +1,10 @@
+---
+title: Fine-tune FunctionGemma 270M for Mobile Actions
+description: Mobile Actions is a demo app where users can trigger actions on their device from voice or text input.
+models: [functiongemma]
+frameworks: [transformers, litert, android]
+source_url: "https://ai.google.dev/gemma/docs/mobile-actions.md.txt"
+---
 # Fine-tune FunctionGemma 270M for Mobile Actions
 
 Mobile Actions is a demo app where users can trigger actions on their device

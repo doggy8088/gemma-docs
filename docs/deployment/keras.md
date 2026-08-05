@@ -1,3 +1,10 @@
+---
+title: Run Gemma with Keras
+description: Generating content, summarizing, and analysing content are just some of the tasks you can accomplish with Gemma open models.
+models: [gemma-4]
+frameworks: [keras]
+source_url: "https://ai.google.dev/gemma/docs/core/keras_inference.md.txt"
+---
 # Run Gemma with Keras
 
 

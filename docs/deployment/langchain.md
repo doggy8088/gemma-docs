@@ -1,3 +1,10 @@
+---
+title: Get started with Gemma and LangChain
+description: This tutorial shows you how to get started with Gemma and LangChain, running in Google Cloud or in your Colab environment.
+models: [gemma-1]
+frameworks: [langchain, google-cloud, keras, jax, transformers]
+source_url: "https://ai.google.dev/gemma/docs/integrations/langchain.md.txt"
+---
 # Get started with Gemma and LangChain
 
 

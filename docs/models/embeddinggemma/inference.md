@@ -1,3 +1,10 @@
+---
+title: Generate Embeddings with Sentence Transformers
+description: EmbeddingGemma is a lightweight, open embedding model designed for fast, high-quality retrieval on everyday devices like mobile phones.
+models: [embeddinggemma]
+frameworks: [sentence-transformers, transformers]
+source_url: "https://ai.google.dev/gemma/docs/embeddinggemma/inference-embeddinggemma-with-sentence-transformers.md.txt"
+---
 # Generate Embeddings with Sentence Transformers
 
 

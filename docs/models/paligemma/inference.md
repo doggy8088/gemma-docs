@@ -1,3 +1,10 @@
+---
+title: Generate PaliGemma output with Keras
+description: PaliGemma models have multimodal capabilities, allowing you to generate output using both text and image input data.
+models: [paligemma]
+frameworks: [keras]
+source_url: "https://ai.google.dev/gemma/docs/paligemma/inference-with-keras.md.txt"
+---
 # Generate PaliGemma output with Keras
 
 

@@ -72,6 +72,9 @@
   --gemma-surface: var(--gemma-n0);
   --gemma-surface-sunken: var(--gemma-n50);
   --gemma-border: var(--gemma-n150);
+  /* One step darker than the hairline. Separators inside a row have to out-read the rule
+     that closes the row, or the row looks like a grid. Stripe uses the same relationship. */
+  --gemma-border-strong: var(--gemma-n200);
   /* n500 measures 4.46:1 on the n50 tint -- just under AA for the 12-13px text this is
      used for (table headers, nav, tabs). n600 clears it at 6.38:1. */
   --gemma-text-muted: var(--gemma-n600);
@@ -163,6 +166,7 @@
   --gemma-surface: #1c1d21;
   --gemma-surface-sunken: #17181c;
   --gemma-border: #303239;
+  --gemma-border-strong: #454852;
   --gemma-text-muted: var(--gemma-n300);
   --gemma-text-secondary: var(--gemma-n200);
 

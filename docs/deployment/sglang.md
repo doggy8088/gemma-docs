@@ -1,6 +1,8 @@
 ---
 title: SGLang
 description: Serve Gemma 4 with SGLang — install, launch_server, model repositories, and the OpenAI-compatible API.
+models: [gemma-4]
+frameworks: [sglang]
 ---
 
 # Serve Gemma with SGLang
@@ -17,7 +19,7 @@ uv pip install --prerelease=allow sglang
 
 ## Serve
 
-```bash
+```bash { .model-swap }
 python3 -m sglang.launch_server \
   --model-path google/gemma-4-12B-it \
   --host 0.0.0.0 \
@@ -39,7 +41,7 @@ For 4-bit serving, use the [QAT](qat.md) compressed-tensors builds,
 
 ## Call it
 
-```python
+```python { .model-swap }
 from openai import OpenAI
 
 client = OpenAI(api_key="EMPTY", base_url="http://localhost:30000/v1")

@@ -1,3 +1,10 @@
+---
+title: Tasks in spoken languages with Gemma
+description: Using artificial intelligence (AI) technology in a specific spoken language is a critical need for many businesses to be able to use it effectively.
+models: [gemma-2]
+frameworks: [keras]
+source_url: "https://ai.google.dev/gemma/docs/spoken-language/task-specific-tuning.md.txt"
+---
 # Tasks in spoken languages with Gemma
 
 <div class="video-embed">

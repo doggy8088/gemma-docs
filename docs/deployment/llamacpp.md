@@ -1,6 +1,8 @@
 ---
 title: llama.cpp
 description: Run Gemma 4 with llama.cpp — GGUF repos for every size, image/audio/video input, and the OpenAI-compatible server.
+models: [gemma-4]
+frameworks: [llamacpp]
 ---
 
 # Run Gemma with llama.cpp
@@ -37,14 +39,14 @@ most capable local runtime for Gemma 4 — **image, audio and video input all wo
 
 ## Run
 
-```bash
+```bash { .model-swap }
 llama-cli -hf ggml-org/gemma-4-E2B-it-GGUF --prompt "Write a poem about the Kraken."
 ```
 
 `-hf` downloads the weights on first use, including the multimodal projector. With a system
 prompt:
 
-```bash
+```bash { .model-swap }
 llama-cli -hf ggml-org/gemma-4-E2B-it-GGUF -sys "You are Hong Gildong." -p "Who are you?"
 ```
 
@@ -61,7 +63,7 @@ llama-cli -hf ggml-org/gemma-4-E2B-it-GGUF -sys "You are Hong Gildong." -p "Who 
 For 4-bit, prefer Google's [QAT](qat.md) weights — trained with quantization simulated rather
 than compressed afterwards:
 
-```bash
+```bash { .model-swap }
 llama-cli -hf google/gemma-4-12B-it-qat-q4_0-gguf -p "Explain PLE in one paragraph"
 ```
 
@@ -69,7 +71,7 @@ Available as `google/gemma-4-{E2B,E4B,12B,26B-A4B,31B}-it-qat-q4_0-gguf`.
 
 ## Multimodal
 
-```bash
+```bash { .model-swap }
 llama-mtmd-cli -hf ggml-org/gemma-4-E2B-it-GGUF
 ```
 
@@ -85,7 +87,7 @@ llama-server -m gemma-4-12B-it-Q4_K_M.gguf --mmproj mmproj-gemma-4-12B-it.gguf
 
 ## Server
 
-```bash
+```bash { .model-swap }
 llama-server -hf ggml-org/gemma-4-E2B-it-GGUF
 ```
 

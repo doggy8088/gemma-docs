@@ -1,3 +1,9 @@
+---
+title: Gemma formatting and system instructions
+description: Gemma instruction-tuned (IT) models are trained with a specific formatter that annotates all instruction tuning examples with extra information, both at training and inference time.
+models: [gemma-4]
+source_url: "https://ai.google.dev/gemma/docs/core/prompt-structure.md.txt"
+---
 # Gemma formatting and system instructions
 
 Gemma instruction-tuned (IT) models are trained with a specific *formatter* that

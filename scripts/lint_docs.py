@@ -38,6 +38,11 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Callable, Iterable, Iterator
 
+import yaml
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import frontmatter_schema  # noqa: E402  (needs the path above)
+
 REPO_ROOT = Path(__file__).resolve().parent.parent
 DOCS_DIR = REPO_ROOT / "docs"
 CONFIG_FILE = REPO_ROOT / "zensical.toml"
@@ -51,10 +56,8 @@ MIN_BODY_CHARS = 400
 # Above this, something went wrong in conversion (usually inlined base64 images).
 MAX_FILE_BYTES = 60_000
 
-# Frontmatter keys required today. Phase 3.1 expands this to the full agent schema
-# (estimated_tokens, prerequisites, frameworks, code_languages, models, last_updated,
-# source_url, ported_at) -- add them here when that step lands.
-REQUIRED_FRONTMATTER = ("title", "description")
+# The frontmatter schema lives in scripts/frontmatter_schema.py so the linter and the
+# backfill script can never disagree about it. See PLAN.md, "Frontmatter schema".
 
 # The site being replaced. Any link here is a leak.
 UPSTREAM_DOCS = "ai.google.dev/gemma/docs"
@@ -152,8 +155,9 @@ class Context:
 def parse_frontmatter(text: str) -> tuple[dict, bool, str, int]:
     """Split a YAML frontmatter block off the top of a document.
 
-    Returns (mapping, had_frontmatter, body, lines_consumed). Parsing is intentionally shallow:
-    we only need top-level scalar keys, so a full YAML dependency isn't warranted here.
+    Returns (mapping, had_frontmatter, body, lines_consumed). Parsed as real YAML: the schema
+    validates list-valued keys (`models`, `frameworks`), which a line-splitting parser reads
+    as the string "[gemma-4]".
     """
     if not text.startswith("---"):
         return {}, False, text, 0
@@ -161,15 +165,13 @@ def parse_frontmatter(text: str) -> tuple[dict, bool, str, int]:
     lines = text.splitlines()
     for idx in range(1, len(lines)):
         if lines[idx].strip() == "---":
-            block = lines[1:idx]
-            mapping: dict = {}
-            for raw in block:
-                # Top-level keys only -- indented lines belong to nested structures.
-                if not raw or raw[0].isspace() or raw.lstrip().startswith("#"):
-                    continue
-                if ":" in raw:
-                    key, _, value = raw.partition(":")
-                    mapping[key.strip()] = value.strip()
+            block = "\n".join(lines[1:idx])
+            try:
+                mapping = yaml.safe_load(block) or {}
+            except yaml.YAMLError as exc:
+                mapping = {"__error__": str(exc)}
+            if not isinstance(mapping, dict):
+                mapping = {"__error__": "frontmatter is not a mapping"}
             body = "\n".join(lines[idx + 1 :])
             return mapping, True, body, idx + 1
 
@@ -392,15 +394,49 @@ def check_stubs(ctx: Context) -> Iterable[Finding]:
             )
 
 
+def first_heading(page: Page) -> str | None:
+    """The page's own H1, or None. Fenced blocks are skipped -- a shell comment such as
+    `# Install PyTorch` is not a heading, and reading it as one mistitles the page."""
+    in_fence = False
+    for line in page.body.splitlines():
+        if line.lstrip().startswith(("```", "~~~")):
+            in_fence = not in_fence
+            continue
+        if in_fence or not line.startswith("# "):
+            continue
+        text = re.sub(r"\s*\{[^}]*\}\s*$", "", line[2:])
+        text = re.sub(r"\[([^\]]*)\]\([^)]*\)", r"\1", text)
+        text = re.sub(r"[*`_]", "", text).strip()
+        if text:
+            return text
+    return None
+
+
 def check_frontmatter(ctx: Context) -> Iterable[Finding]:
-    """Every page carries agent-readable frontmatter (see PLAN.md Phase 3.1)."""
+    """Every page carries agent-readable frontmatter (see PLAN.md, "Frontmatter schema")."""
     for page in ctx.pages:
         if not page.has_frontmatter:
             yield Finding("frontmatter", page.repo_rel, 0, "no frontmatter block")
             continue
-        for key in REQUIRED_FRONTMATTER:
-            if key not in page.frontmatter:
-                yield Finding("frontmatter", page.repo_rel, 0, f"missing required key: {key}")
+        if "__error__" in page.frontmatter:
+            yield Finding(
+                "frontmatter", page.repo_rel, 0, f"unparseable: {page.frontmatter['__error__']}"
+            )
+            continue
+        for problem in frontmatter_schema.validate(page.frontmatter, page_paths=ctx.page_paths):
+            yield Finding("frontmatter", page.repo_rel, 0, problem.message)
+
+        # A page with no H1 of its own gets one synthesised from `title` (Zensical emits
+        # `<h1 id="__skip">`). On those pages the title is visible content, not just metadata,
+        # so it has to say what the page already said. Where the page *has* an H1, the title
+        # only reaches the browser tab and llms.txt and may be more specific than the heading.
+        if first_heading(page) is None and "title" not in page.frontmatter:
+            yield Finding(
+                "frontmatter",
+                page.repo_rel,
+                0,
+                "page has no H1, so `title` is rendered as the heading -- it must be set",
+            )
 
 
 def check_orphans(ctx: Context) -> Iterable[Finding]:
@@ -458,6 +494,49 @@ def check_fences(ctx: Context) -> Iterable[Finding]:
             )
 
 
+def check_model_swap(ctx: Context) -> Iterable[Finding]:
+    """A swappable engine must not also appear in unacknowledged static code blocks."""
+    data = yaml.safe_load((REPO_ROOT / "data" / "models.yml").read_text(encoding="utf-8"))
+    engines: dict[str, set[str]] = {}
+    for size in data.get("gemma4", {}).get("sizes", []):
+        for engine, identifier in size.get("ids", {}).items():
+            engines.setdefault(str(engine), set()).add(str(identifier))
+
+    for page in ctx.pages:
+        blocks = list(iter_code_blocks(page))
+        marked = [(line, info, code) for line, info, code in blocks if ".model-swap" in info]
+        if not marked:
+            continue
+
+        active = {
+            engine
+            for _, _, code in marked
+            for engine, identifiers in engines.items()
+            if any(identifier in code for identifier in identifiers)
+        }
+        for line, info, code in blocks:
+            if ".model-swap" in info or ".model-fixed" in info or ".output" in info:
+                continue
+            for engine in active:
+                identifiers = engines[engine]
+                hits = [identifier for identifier in identifiers if identifier in code]
+                if not hits and any(":" in identifier for identifier in identifiers):
+                    prefixes = {identifier.split(":", 1)[0] for identifier in identifiers}
+                    hits = [
+                        prefix
+                        for prefix in prefixes
+                        if re.search(rf"(?<![\w/-]){re.escape(prefix)}(?=[:\s\"'])", code)
+                    ]
+                if hits:
+                    yield Finding(
+                        "model-swap",
+                        page.repo_rel,
+                        line,
+                        f"{engine} identifier '{sorted(hits)[0]}' is outside a .model-swap "
+                        "block -- mark it swappable or explicitly .model-fixed",
+                    )
+
+
 def check_admonitions(ctx: Context) -> Iterable[Finding]:
     """Devsite and GitHub callouts should both be Zensical admonitions."""
     for page in ctx.pages:
@@ -490,6 +569,14 @@ def check_size(ctx: Context) -> Iterable[Finding]:
             )
 
 
+def _figure(value) -> str | None:
+    """Render a memory figure the way the ported table writes it: 11.4, not 11.400000000001."""
+    if value is None:
+        return None
+    text = f"{float(value):g}"
+    return text
+
+
 def check_modeldata(ctx: Context) -> Iterable[Finding]:
     """Keep data/models.yml in step with the ported memory table it was copied from.
 
@@ -502,19 +589,16 @@ def check_modeldata(ctx: Context) -> Iterable[Finding]:
     if not data_file.exists() or not page_path.exists():
         return
 
-    # Minimal parse: `bf16: 11.4` style keys under each size's `memory:` block, in file order.
-    text = data_file.read_text(encoding="utf-8")
-    declared: list[tuple[str, dict[str, str]]] = []
-    current: str | None = None
-    for line in text.splitlines():
-        name = re.match(r"^\s*name:\s*(\S.*?)\s*$", line)
-        if name:
-            current = name.group(1)
-            declared.append((current, {}))
-            continue
-        figure = re.match(r"^\s*(bf16|sfp8|q4_0):\s*([\d.]+)\s*$", line)
-        if figure and declared:
-            declared[-1][1][figure.group(1)] = figure.group(2)
+    # Parsed as YAML, scoped to gemma4.sizes. An earlier line-scraper matched every `name:` in
+    # the file, so adding the `families:` block made it demand a memory row for "DataGemma".
+    data = yaml.safe_load(data_file.read_text(encoding="utf-8"))
+    declared: list[tuple[str, dict[str, str]]] = [
+        (
+            str(size["name"]),
+            {key: _figure(size.get("memory", {}).get(key)) for key in ("bf16", "sfp8", "q4_0")},
+        )
+        for size in data.get("gemma4", {}).get("sizes", [])
+    ]
 
     # Table rows look like: | Gemma 4 E2B | 11.4 GB | 5.7 GB | 2.9 GB | ...
     rows = {}
@@ -603,6 +687,30 @@ def check_css(ctx: Context) -> Iterable[Finding]:
                     )
 
 
+def check_generated(ctx: Context) -> Iterable[Finding]:
+    """Committed build output must match the data it was generated from.
+
+    Zensical has no hook mechanism, so the page context header's model display names are
+    generated from data/models.yml into a template partial. That partial is the one place in
+    the repo where model data could silently go stale, hence this check.
+    """
+    import generate_model_names
+
+    outputs = (
+        (generate_model_names.TARGET, generate_model_names.render()),
+        (generate_model_names.JS_TARGET, generate_model_names.render_js()),
+    )
+    for target, expected in outputs:
+        rel = target.relative_to(REPO_ROOT).as_posix()
+        if not target.exists():
+            yield Finding("generated", rel, 0, "missing -- run scripts/generate_model_names.py")
+        elif target.read_text(encoding="utf-8") != expected:
+            yield Finding(
+                "generated", rel, 0,
+                "stale vs data/models.yml -- run scripts/generate_model_names.py",
+            )
+
+
 CHECKS: dict[str, Callable[[Context], Iterable[Finding]]] = {
     "links": check_links,
     "images": check_images,
@@ -611,10 +719,12 @@ CHECKS: dict[str, Callable[[Context], Iterable[Finding]]] = {
     "frontmatter": check_frontmatter,
     "orphans": check_orphans,
     "fences": check_fences,
+    "model-swap": check_model_swap,
     "admonitions": check_admonitions,
     "size": check_size,
     "modeldata": check_modeldata,
     "css": check_css,
+    "generated": check_generated,
 }
 
 CHECK_HELP = {
@@ -625,10 +735,12 @@ CHECK_HELP = {
     "frontmatter": "missing or incomplete agent frontmatter",
     "orphans": "pages missing from nav, nav entries missing files",
     "fences": "prose or prompts captured as python code blocks",
+    "model-swap": "model identifiers omitted from a page's opt-in switching",
     "admonitions": "unconverted devsite Note:/Caution: callouts",
     "size": "files large enough to indicate inlined assets",
     "modeldata": "data/models.yml vs the ported memory table",
     "css": "design-system rules: tokens, registration, file size",
+    "generated": "committed build output that has drifted from its source data",
 }
 
 

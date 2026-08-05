@@ -1,3 +1,10 @@
+---
+title: Deploy Gemma on mobile devices
+description: This document outlines various methods and tools for deploying and running Gemma models on mobile devices, including using the Google AI Edge Gallery app and the MediaPipe LLM Inference API.
+models: [gemma-4]
+frameworks: [litert, android, ios]
+source_url: "https://ai.google.dev/gemma/docs/integrations/mobile.md.txt"
+---
 # Deploy Gemma on mobile devices
 
 This document outlines various methods and tools for deploying and running Gemma

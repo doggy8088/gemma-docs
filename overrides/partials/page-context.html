@@ -1,0 +1,43 @@
+{#- Page facts. model-switcher.js adds the Examples picker only when marked code can change.
+    Minijinja has no `.get()`; use `dict[key] | default(...)`. -#}
+{% include "partials/model-names.html" %}
+{%- set models = page.meta.models if page.meta and page.meta.models else [] -%}
+{%- set requires = page.meta.requires if page.meta and page.meta.requires else "" -%}
+{%- set frameworks = page.meta.frameworks if page.meta and page.meta.frameworks else [] -%}
+{%- set ns = namespace(families=[]) -%}
+{%- for id in models -%}
+  {%- set family = id | split("/") | first -%}
+  {%- if family not in ns.families -%}
+    {%- set ns.families = ns.families + [family] -%}
+  {%- endif -%}
+{%- endfor -%}
+{%- if models or frameworks %}
+<div class="page-context" data-requires="{{ requires }}">
+  {%- if ns.families %}
+  <span class="page-context__item">
+    <span class="page-context__label">Models</span>
+    {%- for family in ns.families %}
+    {%- set url = gemma_model_urls[family] | default("") %}
+    {%- if url %}
+    <a class="page-context__value page-context__value--link" href="{{ url }}">{{ gemma_model_names[family] | default(family) }}</a>
+    {%- else %}
+    <span class="page-context__value">{{ gemma_model_names[family] | default(family) }}</span>
+    {%- endif %}
+    {%- endfor %}
+  </span>
+  {%- endif %}
+  {%- if frameworks %}
+  <span class="page-context__item">
+    <span class="page-context__label">Uses</span>
+    {%- for id in frameworks %}
+    {%- set url = gemma_framework_urls[id] | default("") %}
+    {%- if url %}
+    <a class="page-context__value page-context__value--link" href="{{ url }}">{{ gemma_model_names[id] | default(id) }}</a>
+    {%- else %}
+    <span class="page-context__value">{{ gemma_model_names[id] | default(id) }}</span>
+    {%- endif %}
+    {%- endfor %}
+  </span>
+  {%- endif %}
+</div>
+{%- endif %}

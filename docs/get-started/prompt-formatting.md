@@ -1,4 +1,7 @@
 ---
+title: Prompt Formatting
+description: The control tokens Gemma 4 uses to structure a prompt, and what each one is for.
+models: [gemma-4]
 hide:
   - toc
 ---

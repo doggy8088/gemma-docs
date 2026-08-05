@@ -1,6 +1,7 @@
 ---
 title: A Visual Guide to MTP
 description: How multi-token prediction and speculative decoding make Gemma 4 faster — drafter models, shared KV cache, and the clustered LM head.
+models: [gemma-4]
 source_url: https://newsletter.maartengrootendorst.com/p/a-visual-guide-to-gemma-4
 ---
 

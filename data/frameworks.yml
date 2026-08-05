@@ -1,0 +1,114 @@
+# Engines, libraries and runtimes the docs show code for -- the single source of truth.
+#
+# Consumed by:
+#   - Frontmatter validation  (scripts/frontmatter_schema.py, the `frameworks` key)
+#   - The page context strip  (overrides/partials/model-names.html, generated)
+#
+# A controlled vocabulary on purpose: "transformers" vs "huggingface" vs "hf" spread across 89
+# pages would be unusable. Add an entry here before using it in a page -- the linter rejects
+# anything not listed, which is the point.
+#
+# This list holds only what is in use. It is not a catalogue of everything that can run Gemma.
+#
+#   id    what frontmatter uses. Lowercase, kebab-case.
+#   name  how it is written in prose and in the UI.
+#   url   the project's own home. Where one was already linked from a docs page, that URL is
+#         reused verbatim; the four marked `unverified` were not found anywhere in docs/ and
+#         should be confirmed before anyone relies on them.
+#   page  our page for it, where we have one.
+#
+# There is deliberately no `category`. The previous version had one and it was incoherent:
+# `local`/`serve` classify where something runs while `library`/`tuning`/`orchestration`
+# classify what kind of software it is, so `transformers` and `llamacpp` -- both libraries,
+# both usually local -- landed in different groups for no reason a reader could follow.
+
+frameworks:
+  - id: ollama
+    name: Ollama
+    url: https://ollama.com
+    page: deployment/ollama.md
+
+  - id: llamacpp
+    name: llama.cpp
+    url: https://github.com/ggml-org/llama.cpp
+    page: deployment/llamacpp.md
+
+  - id: lmstudio
+    name: LM Studio
+    url: https://lmstudio.ai
+    page: deployment/lmstudio.md
+
+  - id: mlx
+    name: MLX
+    url: https://github.com/ml-explore/mlx
+    page: deployment/mlx.md
+
+  - id: litert
+    name: LiteRT
+    url: https://ai.google.dev/edge/litert
+    page: deployment/litert.md
+
+  - id: webgpu
+    name: WebGPU
+    url: https://www.w3.org/TR/webgpu/     # unverified
+    page: deployment/web.md
+
+  - id: vllm
+    name: vLLM
+    url: https://docs.vllm.ai
+    page: deployment/vllm.md
+
+  - id: sglang
+    name: SGLang
+    url: https://docs.sglang.io
+    page: deployment/sglang.md
+
+  - id: google-cloud
+    name: Google Cloud
+    url: https://cloud.google.com          # unverified
+    page: deployment/google-cloud.md
+
+  - id: transformers
+    name: Hugging Face Transformers
+    url: https://huggingface.co/docs/transformers
+    page: deployment/huggingface.md
+
+  - id: keras
+    name: Keras
+    url: https://keras.io
+    page: deployment/keras.md
+
+  - id: jax
+    name: JAX
+    url: https://jax.readthedocs.io
+
+  - id: pytorch
+    name: PyTorch
+    url: https://pytorch.org               # unverified
+
+  - id: sentence-transformers
+    name: Sentence Transformers
+    url: https://sbert.net
+
+  - id: peft
+    name: PEFT
+    url: https://huggingface.co/docs/peft
+
+  - id: trl
+    name: TRL
+    url: https://github.com/huggingface/trl
+
+  - id: langchain
+    name: LangChain
+    url: https://python.langchain.com
+    page: deployment/langchain.md
+
+  - id: android
+    name: Android
+    url: https://developer.android.com
+    page: deployment/mobile.md
+
+  - id: ios
+    name: iOS
+    url: https://developer.apple.com/ios/  # unverified
+    page: deployment/mobile.md

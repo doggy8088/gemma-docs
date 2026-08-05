@@ -1,6 +1,7 @@
 ---
 title: A Visual Guide to Gemma 4
 description: A Visual Guide to Gemma 4 — a visual walkthrough.
+models: [gemma-4]
 source_url: https://newsletter.maartengrootendorst.com/p/a-visual-guide-to-gemma-4
 ---
 

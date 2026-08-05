@@ -1,3 +1,9 @@
+---
+title: DiffusionGemma model card
+description: DiffusionGemma is a generative model built by Google DeepMind.
+models: [diffusiongemma]
+source_url: "https://ai.google.dev/gemma/docs/diffusiongemma/model_card.md.txt"
+---
 # DiffusionGemma model card
 
 [Hugging Face](https://huggingface.co/google/diffusiongemma-26B-A4B-it) \|

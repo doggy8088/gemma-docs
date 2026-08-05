@@ -1,3 +1,10 @@
+---
+title: Fine-Tune Gemma using Hugging Face Transformers and QloRA
+description: This guide walks you through how to fine-tune Gemma on a custom text-to-sql dataset using Hugging Face Transformers and TRL.
+models: [gemma-4]
+frameworks: [transformers, peft, trl]
+source_url: "https://ai.google.dev/gemma/docs/core/huggingface_text_finetune_qlora.md.txt"
+---
 # Fine-Tune Gemma using Hugging Face Transformers and QloRA
 
 
@@ -134,13 +141,13 @@ You are now ready to fine-tune your model. Hugging Face TRL [SFTTrainer](https:/
 
 The following code loads the Gemma model and tokenizer from Hugging Face and initializes the quantization configuration.
 
-```python
+```python { .model-swap }
 import torch
 from transformers import AutoProcessor, AutoModelForMultimodalLM, BitsAndBytesConfig
 from peft import prepare_model_for_kbit_training
 
 # Hugging Face model id
-model_id = "google/gemma-4-E2B" # @param ["google/gemma-4-E2B","google/gemma-4-E4B","google/gemma-4-12B","google/gemma-4-31B","google/gemma-4-26B-A4B"] {"allow-input":true}
+model_id = "google/gemma-4-E2B"
 
 # Check if GPU supports bfloat16
 if torch.cuda.is_bf16_supported():
@@ -358,7 +365,7 @@ When using QLoRA, you only train adapters and not the full model. This means whe
     It requires more than 30GB of CPU Memory when you want to merge the adapter into the model. You can skip this and continue with Test Model Inference.
 
 
-```python
+```python { .model-swap }
 from transformers import AutoModelForMultimodalLM, AutoProcessor
 from peft import PeftModel
 

@@ -1,3 +1,9 @@
+---
+title: FunctionGemma formatting and best practices
+description: FunctionGemma is a specialized version of the Gemma 3 270M model, trained specifically for function calling (i.e., tool use).
+models: [functiongemma]
+source_url: "https://ai.google.dev/gemma/docs/functiongemma/formatting-and-best-practices.md.txt"
+---
 # FunctionGemma formatting and best practices
 
 FunctionGemma is a specialized version of the Gemma 3 270M model,

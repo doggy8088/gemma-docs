@@ -1,6 +1,8 @@
 ---
 title: Quantization & QAT
 description: Which Gemma 4 quantized weights to download for each engine, and why QAT beats post-training quantization at 4-bit.
+models: [gemma-4]
+frameworks: [llamacpp, vllm]
 ---
 
 # Quantization and QAT
@@ -25,7 +27,7 @@ quality doing it.
 
 Names follow `google/gemma-4-{SIZE}-it{SUFFIX}`, for example:
 
-```bash
+```bash { .model-swap }
 # Local, via llama.cpp
 llama-cli -hf google/gemma-4-12B-it-qat-q4_0-gguf
 

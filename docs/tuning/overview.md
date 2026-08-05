@@ -1,3 +1,9 @@
+---
+title: Gemma model fine-tuning
+description: Fine-tuning a generative artificial intelligence (AI) model such as Gemma modifies the behavior of the model.
+models: [gemma-4]
+source_url: "https://ai.google.dev/gemma/docs/tune.md.txt"
+---
 # Gemma model fine-tuning
 
 Fine-tuning a generative artificial intelligence (AI) model such as

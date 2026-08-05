@@ -1,3 +1,9 @@
+---
+title: FunctionGemma model overview
+description: FunctionGemma is a specialized version of our Gemma 3 270M model tuned for function calling.
+models: [functiongemma]
+source_url: "https://ai.google.dev/gemma/docs/functiongemma.md.txt"
+---
 # FunctionGemma model overview {: #hidden-title style="display: none;" }
 
 <div class="video-embed">

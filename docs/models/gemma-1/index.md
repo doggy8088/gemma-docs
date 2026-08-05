@@ -1,3 +1,9 @@
+---
+title: Gemma model card
+description: "Model card for the first-generation Gemma text-to-text models: description, inputs and outputs, training data, and evaluation."
+models: [gemma-1]
+source_url: "https://ai.google.dev/gemma/docs/core/model_card.md.txt"
+---
 # Model card
 
 **Model Page** : [Gemma](index.md)

@@ -1,3 +1,9 @@
+---
+title: ShieldGemma model card
+description: "Model card for ShieldGemma: safety-classification inputs and outputs, training data, evaluation results, and intended use."
+models: [shieldgemma]
+source_url: "https://ai.google.dev/gemma/docs/shieldgemma/model_card.md.txt"
+---
 # ShieldGemma model card
 
 **Model Page** : [ShieldGemma](index.md)

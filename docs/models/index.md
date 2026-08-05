@@ -1,3 +1,7 @@
+---
+title: Gemma Model Family
+description: The Gemma family of open models spans multiple generations and specialized variants.
+---
 # Gemma Model Family
 
 The Gemma family of open models spans multiple generations and specialized variants.
@@ -10,7 +14,7 @@ Gemma 4 spans four distinct architectures:
 
 | Variant | Parameters | Input | Context | Intended Platform |
 |---|---|---|---|---|
-{% for size in models.gemma4.sizes -%}
+{% for size in modeldata.gemma4.sizes -%}
 | **{{ size.name }}** | {{ size.parameters }} | {{ size.modalities.input | map('capitalize') | join(', ') }} | {{ size.context }} | {{ size.platform_short }} |
 {% endfor %}
 !!! note "Audio and video support"

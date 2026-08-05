@@ -1,3 +1,9 @@
+---
+title: Model card
+description: Gemma is a family of open models built by Google DeepMind.
+models: [gemma-4]
+source_url: "https://ai.google.dev/gemma/docs/core/model_card_4.md.txt"
+---
 <div class="model-card-header" markdown>
 
 ![Gemma 4 Banner](../../assets/gemma-4/gemma4_banner.png)

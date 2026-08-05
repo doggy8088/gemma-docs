@@ -1,3 +1,10 @@
+---
+title: Fine-Tune Gemma for Vision Tasks using Hugging Face Transformers and QLoRA
+description: This guide walks you through how to fine-tune Gemma on a custom image and text dataset for a vision task (generating product descriptions) using Hugging Face Transformers and TRL.
+models: [gemma-4]
+frameworks: [transformers, peft, trl]
+source_url: "https://ai.google.dev/gemma/docs/core/huggingface_vision_finetune_qlora.md.txt"
+---
 # Fine-Tune Gemma for Vision Tasks using Hugging Face Transformers and QLoRA
 
 
@@ -165,13 +172,13 @@ You are now ready to fine-tune your model. Hugging Face TRL [SFTTrainer](https:/
 
 The following code loads the Gemma model and tokenizer from Hugging Face and initializes the quantization configuration.
 
-```python
+```python { .model-swap }
 import torch
 from transformers import AutoProcessor, AutoModelForMultimodalLM, BitsAndBytesConfig
 from peft import prepare_model_for_kbit_training
 
 # Hugging Face model id
-model_id = "google/gemma-4-E2B" # @param ["google/gemma-4-E2B","google/gemma-4-E4B","google/gemma-4-12B","google/gemma-4-31B","google/gemma-4-26B-A4B"] {"allow-input":true}
+model_id = "google/gemma-4-E2B"
 
 # Check if GPU supports bfloat16
 if not torch.cuda.is_bf16_supported():
