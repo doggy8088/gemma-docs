@@ -202,7 +202,9 @@
 
     picker.append(trigger, menu);
     item.append(label, picker);
-    strip.appendChild(item);
+    const colabItem = strip.querySelector(".page-context__item--colab");
+    if (colabItem) strip.insertBefore(item, colabItem);
+    else strip.appendChild(item);
     choose(picker, initial);
   };
 

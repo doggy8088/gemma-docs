@@ -1,0 +1,25 @@
+/* External interactive demos. */
+.md-typeset .demo-embed {
+  width: 100%;
+  min-height: 42rem;
+  margin: var(--gemma-space-5) 0 var(--gemma-space-3);
+  overflow: hidden;
+  border: 1px solid var(--md-default-fg-color--lightest);
+  border-radius: var(--gemma-radius-lg);
+  background: var(--md-default-bg-color);
+  box-shadow: var(--gemma-shadow-sm);
+}
+
+.md-typeset .demo-embed iframe {
+  display: block;
+  width: 100%;
+  min-height: 42rem;
+  border: 0;
+}
+
+@media screen and (max-width: 44.9375em) {
+  .md-typeset .demo-embed,
+  .md-typeset .demo-embed iframe {
+    min-height: 36rem;
+  }
+}

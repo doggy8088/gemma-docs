@@ -52,6 +52,18 @@
   text-decoration: underline;
 }
 
+.md-typeset .page-context__colab {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gemma-space-1);
+}
+
+.page-context__colab img {
+  display: block;
+  width: 1rem;
+  height: 1rem;
+}
+
 .page-context__picker {
   position: relative;
   display: inline-flex;

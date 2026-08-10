@@ -4,6 +4,7 @@ description: This guide walks you through how to fine-tune Gemma on a mobile gam
 models: [gemma-3]
 frameworks: [transformers, trl]
 source_url: "https://ai.google.dev/gemma/docs/core/huggingface_text_full_finetune.md.txt"
+colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs/notebooks/full-finetune.ipynb
 ---
 # Full Model Fine-Tune using Hugging Face Transformers
 
@@ -23,7 +24,7 @@ This guide walks you through how to fine-tune Gemma on a mobile game NPC dataset
 
 The first step is to install Hugging Face Libraries, including TRL, and datasets to fine-tune open model, including different RLHF and alignment techniques.
 
-```python
+```python { .notebook-cell }
 # Install Pytorch & other libraries
 %pip install torch tensorboard
 
@@ -42,7 +43,7 @@ Before you can start training, you have to make sure that you accepted the terms
 
 After you have accepted the license, you need a valid Hugging Face Token to access the model. If you are running inside a Google Colab, you can securely use your Hugging Face Token using the Colab secrets otherwise you can set the token as directly in the `login` method. Make sure your token has write access too, as you push your model to the Hub during training.
 
-```python
+```python { .notebook-cell }
 from google.colab import userdata
 from huggingface_hub import login
 
@@ -53,14 +54,14 @@ login(hf_token)
 
 You can keep the results on Colab's local virtual machine. However, we highly recommend saving your intermediate results to your Google Drive. This ensures your training results are safe and allows you to easily compare and select the best model.
 
-```python
+```python { .notebook-cell }
 from google.colab import drive
 drive.mount('/content/drive')
 ```
 
 Select the base model to fine-tune, adjust the checkpoint directory and the learning rate.
 
-```python
+```python { .notebook-cell }
 base_model = "google/gemma-3-270m-it" # @param ["google/gemma-3-270m-it","google/gemma-3-1b-it","google/gemma-3-4b-it","google/gemma-3-12b-it","google/gemma-3-27b-it"] {"allow-input":true}
 checkpoint_dir = "/content/drive/MyDrive/MyGemmaNPC"
 learning_rate = 5e-5
@@ -112,7 +113,7 @@ You are now ready to fine-tune your model. Hugging Face TRL [SFTTrainer](https:/
 
 The following code loads the Gemma model and tokenizer from Hugging Face.
 
-```python
+```python { .notebook-cell }
 import torch
 from transformers import AutoTokenizer, AutoModelForCausalLM
 
@@ -135,7 +136,7 @@ DType: torch.bfloat16
 
 The output below shows that the out-of-the-box capabilities may not be good enough for this use case.
 
-```python
+```python { .notebook-cell }
 from transformers import pipeline
 
 from random import randint
@@ -171,7 +172,7 @@ The example above checks the model's primary function of generating in-game dial
 
 The goal is to see if the model can stay in character rather than answering the out-of-context question. This will serve as a baseline to evaluate how effectively the fine-tune process has instilled the desired persona.
 
-```python
+```python { .notebook-cell }
 outputs = pipe([{"role": "user", "content": "Sorry, you are a game NPC."}], max_new_tokens=256, disable_compile=True)
 print(outputs[0]['generated_text'][1]['content'])
 Okay, I'm ready. Let's begin!
@@ -179,7 +180,7 @@ Okay, I'm ready. Let's begin!
 
 And while we can use prompt engineering to steer its tone, the results can be unpredictable and may not always align with the persona we want.
 
-```python
+```python { .notebook-cell }
 message = [
     # give persona
     {"role": "system", "content": "You are a Martian NPC with a unique speaking style. Use an accent that replaces 's' sounds with 'z', uses 'da' for 'the', 'diz' for 'this', and includes occasional clicks like *k'tak*."},
@@ -212,7 +213,7 @@ This is a cave. It's made of rock and dust.
 
 Before you can start your training, you need to define the hyperparameters you want to use in a `SFTConfig` instance.
 
-```python
+```python { .notebook-cell }
 from trl import SFTConfig
 
 torch_dtype = model.dtype
@@ -243,7 +244,7 @@ args = SFTConfig(
 
 You now have every building block you need to create your `SFTTrainer` to start the training of your model.
 
-```python
+```python { .notebook-cell }
 from trl import SFTTrainer
 
 # Create Trainer object
@@ -262,7 +263,7 @@ Truncating eval dataset:   0%|          | 0/5 [00:00<?, ? examples/s]
 
 Start training by calling the `train()` method.
 
-```python
+```python { .notebook-cell }
 # Start training, the model will be automatically saved to the Hub and the output directory
 trainer.train()
 
@@ -285,7 +286,7 @@ To plot the training and validation losses, you would typically extract these va
 
 Libraries like Matplotlib can then be used to visualize these values over training steps or epochs. The x-asis would represent the training steps or epochs, and the y-axis would represent the corresponding loss values.
 
-```python
+```python { .notebook-cell }
 import matplotlib.pyplot as plt
 
 # Access the log history
@@ -325,7 +326,7 @@ After the training is done, you'll want to evaluate and test your model. You can
 
 For this particular use case, the best model is a matter of preference. Interestingly, what we'd normally call 'overfitting' can be very useful for a game NPC. It forces the model to forget general information and instead lock onto the specific persona and characteristics it was trained on, ensuring it stays consistently in character.
 
-```python
+```python { .notebook-cell }
 from transformers import AutoTokenizer, AutoModelForCausalLM
 
 model_id = checkpoint_dir
@@ -342,7 +343,7 @@ tokenizer = AutoTokenizer.from_pretrained(model_id)
 
 Let's load all questions from the test dataset and generate outputs.
 
-```python
+```python { .notebook-cell }
 from transformers import pipeline
 
 # Load the model and tokenizer into the pipeline
@@ -402,7 +403,7 @@ A genuine Martian Zcrap-fruit. Very... strange. Why you burn it with... k'tak...
 
 If you try our original generalist prompt, you can see that the model still attempts to answer in the trained style. In this example overfitting and catastrophic forgetting are actually beneficial for the game NPC because it will begin forgetting general knowledge which might not be applicable. This is also true for other types of full fine-tuning where the goal is to restrict the output to specific data formats.
 
-```python
+```python { .notebook-cell }
 outputs = pipe([{"role": "user", "content": "Sorry, you are a game NPC."}], max_new_tokens=256, disable_compile=True)
 print(outputs[0]['generated_text'][1]['content'])
 Nameless. You... you z-mell like... wet plantz. Why you wear shiny piecez on your head?

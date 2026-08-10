@@ -3,6 +3,7 @@ title: Image Understanding
 description: You can use Gemma 3 and later models to analyze and understand the content of images.
 models: [gemma-4, gemma-3]
 frameworks: [transformers]
+colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs/notebooks/image.ipynb
 ---
 # Image Understanding
 
@@ -15,7 +16,7 @@ Here are some examples demonstrating these capabilities.
 
 Install the Hugging Face libraries required for running the Gemma model and making requests.
 
-```bash
+```bash { .notebook-cell }
 # Install PyTorch & other libraries
 pip install torch accelerate
 
@@ -27,7 +28,7 @@ pip install "transformers>=5.10.1"
 
 Use `transformers` library to load the pipeline
 
-```python { .model-swap }
+```python { .notebook-cell .model-swap }
 MODEL_ID = "google/gemma-4-E2B-it"
 
 from transformers import pipeline
@@ -55,7 +56,7 @@ tokenizer.json:   0%|          | 0.00/32.2M [00:00<?, ?B/s]
 
 The following example shows how to provide an image and ask question about it.
 
-```python
+```python { .notebook-cell }
 from PIL import Image
 from IPython.display import display
 import requests
@@ -102,7 +103,7 @@ It's a scenic photograph capturing the bridge and the coastal environment.<turn|
 
 You can provide multiple images in a single prompt by including multiple image content in prompt template.
 
-```python
+```python { .notebook-cell }
 from PIL import Image
 from IPython.display import display
 import requests
@@ -196,7 +197,7 @@ Here are captions for the two images you provided:
 
 Models can recognize multilingual texts in the image.
 
-```python
+```python { .notebook-cell }
 from PIL import Image
 from IPython.display import display
 import requests
@@ -241,7 +242,7 @@ In the context of the picture (showing a cat playfully jumping), the sign is lik
 
 Models are trained to detect objects in an image and get their bounding box coordinates. Bounding box coordinates are expressed as normalized values relative to a 1000x1000 grid. You need to descale these coordinates based on your original image size.
 
-```python
+```python { .notebook-cell }
 import numpy as np
 from PIL import Image
 from IPython.display import display
@@ -355,7 +356,7 @@ This budget determines how much the image is resized. Imagine you have a budget 
 
 Let's explore what happens if we perform object detection on an image and setting the budget size very low (70):
 
-```python
+```python { .notebook-cell }
 import numpy as np
 from PIL import Image
 import requests, cv2, re, json
@@ -436,7 +437,7 @@ It does alright but it is clear that the image is being compressed quite a bit a
 
 Let's explore what happens when we increase the budget sizes! A larger budget size results in more soft tokens being generated and processed. This should improve the object detection.
 
-```python
+```python { .notebook-cell }
 import matplotlib.pyplot as plt
 
 def count_tokens(processor, tokens):

@@ -11,7 +11,8 @@
 # This list holds only what is in use. It is not a catalogue of everything that can run Gemma.
 #
 #   id    what frontmatter uses. Lowercase, kebab-case.
-#   name  how it is written in prose and in the UI.
+#   name  the canonical display name.
+#   short_name  optional compact label for dense UI such as the page context strip.
 #   url   the project's own home. Where one was already linked from a docs page, that URL is
 #         reused verbatim; the four marked `unverified` were not found anywhere in docs/ and
 #         should be confirmed before anyone relies on them.
@@ -70,6 +71,7 @@ frameworks:
 
   - id: transformers
     name: Hugging Face Transformers
+    short_name: Transformers
     url: https://huggingface.co/docs/transformers
     page: deployment/huggingface.md
 

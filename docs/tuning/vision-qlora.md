@@ -4,6 +4,7 @@ description: This guide walks you through how to fine-tune Gemma on a custom ima
 models: [gemma-4]
 frameworks: [transformers, peft, trl]
 source_url: "https://ai.google.dev/gemma/docs/core/huggingface_vision_finetune_qlora.md.txt"
+colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs/notebooks/vision-qlora.ipynb
 ---
 # Fine-Tune Gemma for Vision Tasks using Hugging Face Transformers and QLoRA
 
@@ -28,7 +29,7 @@ This guide demonstrates the use of [Quantized Low-Rank Adaptation (QLoRA)](https
 
 The first step is to install Hugging Face Libraries, including TRL, and datasets to fine-tune open model.
 
-```python
+```python { .notebook-cell }
 # Install Pytorch & other libraries
 %pip install torch tensorboard torchvision
 %pip install -U torchao
@@ -47,7 +48,7 @@ The first step is to install Hugging Face Libraries, including TRL, and datasets
 
 You need a valid Hugging Face Token to publish your model. If you are running inside a Google Colab, you can securely use your Hugging Face Token using the Colab secrets otherwise you can set the token as directly in the `login` method. Make sure your token has write access too, as you push your model to the Hub during training.
 
-```python
+```python { .notebook-cell }
 # Login into Hugging Face Hub
 from huggingface_hub import login
 login()
@@ -73,7 +74,7 @@ Hugging Face TRL supports multimodal conversations. The important piece is the "
 
 You can now use the Hugging Face Datasets library to load the dataset and create a prompt template to combine the image, product name, and category, and add a system message. The dataset includes images as`Pil.Image` objects.
 
-```python
+```python { .notebook-cell }
 from datasets import load_dataset
 from PIL import Image
 
@@ -172,7 +173,7 @@ You are now ready to fine-tune your model. Hugging Face TRL [SFTTrainer](https:/
 
 The following code loads the Gemma model and tokenizer from Hugging Face and initializes the quantization configuration.
 
-```python { .model-swap }
+```python { .notebook-cell .model-swap }
 import torch
 from transformers import AutoProcessor, AutoModelForMultimodalLM, BitsAndBytesConfig
 from peft import prepare_model_for_kbit_training
@@ -214,7 +215,7 @@ Loading weights:   0%|          | 0/1951 [00:00<?, ?it/s]
 
 The `SFTTrainer` supports a built-in integration with `peft`, which makes it straightforward to efficiently tune LLMs using QLoRA. You only need to create a `LoraConfig` and provide it to the trainer.
 
-```python
+```python { .notebook-cell }
 from peft import LoraConfig
 
 peft_config = LoraConfig(
@@ -231,7 +232,7 @@ peft_config = LoraConfig(
 
 Before you can start your training, you need to define the hyperparameter you want to use in a `SFTConfig` and a custom `collate_fn` to handle the vision processing. The `collate_fn` converts the messages with text and images into a format that the model can understand.
 
-```python
+```python { .notebook-cell }
 from trl import SFTConfig
 
 args = SFTConfig(
@@ -286,7 +287,7 @@ def collate_fn(examples):
 
 You now have every building block you need to create your `SFTTrainer` to start the training of your model.
 
-```python
+```python { .notebook-cell }
 from trl import SFTTrainer
 
 # Create Trainer object
@@ -303,7 +304,7 @@ trainer = SFTTrainer(
 
 Start training by calling the `train()` method.
 
-```python
+```python { .notebook-cell }
 # Start training, the model will be automatically saved to the Hub and the output directory
 trainer.train()
 
@@ -334,7 +335,7 @@ WARNING:huggingface_hub.hf_api:No files have been modified since last commit. Sk
 
 Before you can test your model, make sure to free the memory.
 
-```python
+```python { .notebook-cell }
 # free the memory again
 del model
 del trainer
@@ -347,7 +348,7 @@ When using QLoRA, you only train adapters and not the full model. This means whe
     It requires more than 30GB of CPU Memory when you want to merge the adapter into the model. You can skip this and continue with Test Model Inference.
 
 
-```python
+```python { .notebook-cell }
 from transformers import AutoModelForMultimodalLM, AutoProcessor
 from peft import PeftModel
 
@@ -374,7 +375,7 @@ After the training is done, you'll want to evaluate and test your model. You can
     Evaluating Generative AI models is not a trivial task since one input can have multiple correct outputs. This guide only focuses on manual evaluation and vibe checks.
 
 
-```python
+```python { .notebook-cell }
 from transformers import AutoModelForMultimodalLM, AutoProcessor
 
 model_id = "merged_model"
@@ -391,7 +392,7 @@ Loading weights:   0%|          | 0/1951 [00:00<?, ?it/s]
 
 You can test inference by providing a product name, category and image. The `sample` includes a marvel action figure.
 
-```python
+```python { .notebook-cell }
 import requests
 from PIL import Image
 

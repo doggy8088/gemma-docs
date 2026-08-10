@@ -5,6 +5,7 @@
   Verified by: uv run python scripts/lint_docs.py --check generated
 
   `gemma_model_names` maps every family, size and framework id to its display name.
+  `gemma_framework_short_names` maps tools with a compact UI label to that label.
   `gemma_model_urls` maps a family id to its canonical local documentation page.
   `gemma_framework_urls` maps a tool id to its project home.
 
@@ -89,4 +90,8 @@
   "langchain"            : "https://python.langchain.com",
   "android"              : "https://developer.android.com",
   "ios"                  : "https://developer.apple.com/ios/",
+} %}
+
+{% set gemma_framework_short_names = {
+  "transformers": "Transformers",
 } %}

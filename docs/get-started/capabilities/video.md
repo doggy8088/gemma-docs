@@ -3,6 +3,7 @@ title: Video Understanding
 description: Video data is a rich source of information that can help you accomplish tasks and understand the world around you.
 models: [gemma-4]
 frameworks: [transformers]
+colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs/notebooks/video.ipynb
 ---
 # Video Understanding
 
@@ -13,7 +14,7 @@ Video data is a rich source of information that can help you accomplish tasks an
 
 Install the Hugging Face libraries required for running the Gemma model and making requests.
 
-```bash
+```bash { .notebook-cell }
 # Install PyTorch & other libraries
 pip install torch accelerate
 
@@ -25,7 +26,7 @@ pip install "transformers>=5.10.1"
 
 Use the `transformers` libraries to create an instance of a `processor` and `model` using the `AutoProcessor` and `AutoModelForImageTextToText` classes as shown in the following code example:
 
-```python { .model-swap }
+```python { .notebook-cell .model-swap }
 MODEL_ID = "google/gemma-4-E2B-it"
 
 from transformers import AutoProcessor, AutoModelForMultimodalLM
@@ -49,7 +50,7 @@ tokenizer.json:   0%|          | 0.00/32.2M [00:00<?, ?B/s]
 
 You can reference the location of the file in the chat template. The `processor` will then take care of loading in the video and processing it. The following example code shows a request using a chat template, output generation, and decoding the response:
 
-```python
+```python { .notebook-cell }
 from transformers import AutoProcessor
 
 messages = [

@@ -694,20 +694,24 @@ def check_generated(ctx: Context) -> Iterable[Finding]:
     generated from data/models.yml into a template partial. That partial is the one place in
     the repo where model data could silently go stale, hence this check.
     """
+    import agent_docs
     import generate_model_names
+    import notebooks
 
     outputs = (
         (generate_model_names.TARGET, generate_model_names.render()),
         (generate_model_names.JS_TARGET, generate_model_names.render_js()),
+        *agent_docs.generated_outputs(),
+        *notebooks.generated_outputs(),
     )
     for target, expected in outputs:
         rel = target.relative_to(REPO_ROOT).as_posix()
         if not target.exists():
-            yield Finding("generated", rel, 0, "missing -- run scripts/generate_model_names.py")
+            yield Finding("generated", rel, 0, "missing -- rerun the corresponding generator")
         elif target.read_text(encoding="utf-8") != expected:
             yield Finding(
                 "generated", rel, 0,
-                "stale vs data/models.yml -- run scripts/generate_model_names.py",
+                "stale vs its canonical source -- rerun the corresponding generator",
             )
 
 

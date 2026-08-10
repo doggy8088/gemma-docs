@@ -36,6 +36,7 @@ HEADER = """{#-
   Verified by: uv run python scripts/lint_docs.py --check generated
 
   `gemma_model_names` maps every family, size and framework id to its display name.
+  `gemma_framework_short_names` maps tools with a compact UI label to that label.
   `gemma_model_urls` maps a family id to its canonical local documentation page.
   `gemma_framework_urls` maps a tool id to its project home.
 
@@ -81,6 +82,11 @@ def render() -> str:
         for entry in frameworks["frameworks"]
         if entry.get("url")
     ]
+    framework_short_names = [
+        (str(entry["id"]), f'"{entry["short_name"]}"')
+        for entry in frameworks["frameworks"]
+        if entry.get("short_name")
+    ]
 
     return (
         HEADER
@@ -89,6 +95,8 @@ def render() -> str:
         + _map("gemma_model_urls", model_urls)
         + "\n"
         + _map("gemma_framework_urls", framework_urls)
+        + "\n"
+        + _map("gemma_framework_short_names", framework_short_names)
     )
 
 

@@ -99,6 +99,9 @@ Local preview:
 uv run zensical serve
 ```
 
+Zensical's local server may download `.md` routes because it labels them as binary files. This
+is an accepted preview-only limitation; verify inline raw Markdown on the GitHub Pages deployment.
+
 ---
 
 ## Current status
@@ -107,11 +110,24 @@ uv run zensical serve
 |---|---|
 | 0 — Foundation | ✅ complete |
 | 1 — Design system | ✅ complete |
-| 2 — Navigation & content | 🟡 nav and Run section done; 7 stubs and 6 keep-or-drop decisions left |
-| 3 — Agent-first infrastructure | 🟡 3.1 done; 3.2–3.5 open |
-| 4–8 | not started |
+| 2 — Navigation & content | 🟡 nav and Run section done; 6 stubs and 6 keep-or-drop decisions left |
+| 3 — Agent-first infrastructure | ✅ POC complete: metadata, `llms.txt`, and raw Markdown routes |
+| 4 — Interactive context | 🟡 global model selection done; further tools deferred |
+| 5–6 — Showcase and Learn | ✅ narrow POC complete; broader rollout deferred |
+| 7–8 | deferred until after the POC |
 
-89 pages · 63 ported and frozen · 9 stylesheets · lint backlog **7** (all stubs).
+90 pages · 63 ported and frozen · 10 stylesheets · lint backlog **6** (all stubs).
+
+### POC finish line — in order
+
+1. Resolve the remaining Phase 2 content decisions and obvious stubs needed for a credible demo.
+2. ✅ Finish computed metadata and the Stripe-style `llms.txt` + raw Markdown surface (Steps 3.2–3.3).
+3. ✅ Add notebook launch actions to the exportable tutorials and one small task-first entry page
+   (Steps 6.2–6.3).
+4. ✅ Embed one HF Space with a plain-link fallback (Step 5.1).
+
+The persisted model selector is already the POC's interactive showcase. Everything explicitly
+marked deferred below is outside this finish line and must not block presenting the site.
 
 **Remaining Phase 2 work**, all blocked on content decisions rather than engineering:
 
@@ -121,7 +137,6 @@ uv run zensical serve
 | `community/discord.md` | port `/discord` |
 | `community/gemma-skills.md` | content — no upstream source |
 | `cookbook.md` | content decision |
-| `demos/concurrent.md` | content — the app lives in the cookbook repo |
 | `tools/index.md`, `tools/model-selector.md` | **Phase 4** — these *are* the interactive tools |
 
 **Upstream pages not ported (6):** `/core/gemma_library`, `/core/pytorch_gemma`,
@@ -189,8 +204,8 @@ stay as written ("Run Gemma with Ollama").
 Use `--gemma-accent`, which resolves to `blue-deep` in light and `blue-light` in dark, rather
 than naming a brand colour directly.
 
-**Stylesheets** — 9 files, each under 250 lines, each opening with what it owns and what it must
-not touch. Adding a ninth is the right move when a new concern appears; growing one into a
+**Stylesheets** — 10 files, each under 250 lines, each opening with what it owns and what it must
+not touch. Adding a focused sheet is the right move when a new concern appears; growing one into a
 catch-all is not.
 
 | File | Owns |
@@ -204,6 +219,7 @@ catch-all is not.
 | `tokens.css` | Chat-token badges |
 | `home.css` | Landing page |
 | `motion.css` | Transitions + reduced-motion opt-out |
+| `embeds.css` | Responsive external demo frames |
 
 Enforced by `lint_docs.py --check css`: raw hex only in `gemma.css`, every sheet registered in
 `extra_css`, none over 250 lines, no `<style>` blocks in templates.
@@ -235,9 +251,10 @@ linter and the backfill script so they cannot disagree. Validated by
 | `prerequisites` | list | docs-relative paths; must resolve to real pages |
 | `name` | string | Stable kebab-case id for agents to reference |
 | `source_url` | string | Upstream page, from `scripts/sources.toml` |
+| `colab` | string | Generated notebook URL; renders a Colab link in the page context strip |
 
-**Reserved** for the Step 3.2 build hook and rejected if hand-written: `estimated_tokens`,
-`code_languages`, `last_updated`. Theme keys (`template`, `hide`, `cards`, …) pass through.
+**Reserved** for the Step 3.2 build hook and rejected if hand-written: `estimated_tokens` and
+`last_updated`. Theme keys (`template`, `hide`, `cards`, …) pass through.
 
 ### Authored vs computed
 
@@ -295,11 +312,10 @@ Giving those five a real H1 would be a content change, so it is Maarten's call, 
 A Stripe-style bar at the top of **every page** — see <https://docs.stripe.com/billing/scripts>.
 Not silence-by-default: the slot is always present, so readers learn where to look.
 
-It carries three things, in this order of arrival:
+It carries two things:
 
 1. **Applicability** — ✅ built.
-2. **LLM tools** (Step 3.4) — Copy as Markdown, Open in Claude/ChatGPT, View raw.
-3. **Model + engine selector** (Step 4.2) — page-scoped context belongs here, not site chrome.
+2. **Model selection** (Step 4.2) — ✅ built; page-scoped context belongs here, not site chrome.
 
 - [x] `overrides/main.html` renders the bar on every page, inside `.md-content__inner` so it
       shares one left edge with the breadcrumb, H1 and body.
@@ -397,120 +413,171 @@ Silent substitution is rejected.
 
 ## Phase 3 — Agent-first infrastructure (3.1 ✅)
 
-### Step 3.2 — Computed metadata
-- [ ] Build hook computing `estimated_tokens`, `code_languages`, and `last_updated`
-      automatically so they cannot drift.
-- **Verify:** add a code block to a page, rebuild, confirm metadata updates.
+This is the main unfinished POC phase. A good machine-readable index and raw Markdown pages give
+agents enough to discover and traverse the live site without cloning this repository.
 
-### Step 3.3 — Machine-readable surfaces
-- [ ] Generate `/llms.txt` (index with descriptions) and `/llms-full.txt` (everything).
-- [ ] Serve raw markdown at `<page>.md` for every page.
-- **Verify:** `curl` the built site for `llms.txt` and one `.md` endpoint.
+### Step 3.2 — Computed metadata
+- [x] Build-time generator computing `estimated_tokens` and `last_updated` automatically so they cannot
+      drift. Do not compute or expose code-language metadata; it adds noise without improving
+      discovery.
+- [x] Publish the values in `/page-metadata.json`; keep them out of authored frontmatter.
+- **Verify:** edit a page, rebuild, and confirm both values update without frontmatter changes.
+- **Done when:** neither value is hand-authored and the linter rejects attempts to do so.
+
+Zensical does not yet expose a stable build-hook API, so `scripts/build_docs.py` is the explicit
+build entry point. It runs the deterministic generators, delegates to Zensical, and then adds
+the raw-document routes. This keeps the integration replaceable when a supported hook arrives.
+
+### Step 3.3 — Machine-readable surfaces — **POC priority**
+- [x] Generate `/llms.txt` and serve raw Markdown at `<page>.md` for every documentation page.
+- [x] Keep `llms.txt` concise; do not add `/llms-full.txt` unless a demonstrated agent workflow
+      needs the entire site in one response.
+- [x] Mirror the useful structure of <https://docs.stripe.com/llms.txt>:
+    - one `# Gemma Documentation` heading;
+    - a short introduction with durable Gemma-specific guidance for agents;
+    - `##` sections matching the site's main information architecture, with an optional
+      one-sentence description;
+    - entries formatted as `- [Title](https://gemma.ai/path.md): Description` using absolute
+      raw-Markdown URLs;
+    - descriptions and titles generated from page frontmatter, with deterministic ordering and
+      no duplicate entries.
+- [x] Include a short agent-guidance section only for genuinely important defaults and
+      deprecations. Keep navigation in the sectioned link index rather than writing a separate
+      agent skill.
+- **Verify:** fetch `/llms.txt`, follow representative `.md` links from at least three sections,
+      and confirm each returns clean source Markdown rather than rendered HTML.
+- **Done when:** an agent starting with only `https://gemma.ai/llms.txt` can find the appropriate
+      page and retrieve its Markdown without repository access.
 
 Compose entry labels from `title` + `models` rather than adding a second title key —
 `models: [gemma-4]` plus `title: Model card` gives "Gemma 4 — Model card" without touching the
 page. Every input this needs already exists.
 
-### Step 3.4 — Copy-for-agent affordances
-- [ ] "Copy page as Markdown" button, in the page context header.
-- [ ] "Open in Gemini / Claude / ChatGPT" links.
-- **Verify:** click the button, paste, confirm clean markdown with frontmatter.
+### Deliberately omitted from the POC
 
-### Step 3.5 — Docs as a skill
-- [ ] Package the docs as an installable skill and/or MCP server so agents can query them
-      directly.
-
----
-
-## Phase 4 — Interactive tools
-
-### Step 4.1 — VRAM & context calculator
-Replace the static table in `docs/tools/vram-calculator.md` with a real calculator.
-
-- [ ] Inputs: model, quantization, context length, batch size, KV-cache dtype, GPU preset
-      (4090, 5090, A100, H100, M-series unified memory, …).
-- [ ] Outputs: fits / doesn't fit with headroom, estimated tok/s, recommended engine,
-      **and the exact copy-paste command for that engine**.
-- [ ] URL-encoded state (`?model=gemma-4/12b&quant=q4_0&gpu=rtx4090&ctx=32k`) so results are
-      shareable.
-- [ ] Reads from `data/models.yml`.
-- **Verify:** results match the memory table in `models/gemma-4/index.md` at matching settings.
-- **Done when:** a shared URL reproduces the exact same state.
-
-### Step 4.2 — Global model switcher, then engine preference
-
-The model half is implemented: pick "E4B" and marked examples across the site rewrite their model
-IDs. A global engine preference remains a separate follow-up; pages currently show the runtimes
-their tutorial actually covers.
-
-- [x] Lean control in the page context header, persisted in `localStorage` and the URL.
-- [ ] Add a global engine preference once pages have equivalent, verified examples for each engine.
-- [ ] Extend Zensical's `content.tabs.link` to sync site-wide.
-- [x] **Capability-aware gating, driven by `data/models.yml`:** audio examples must not offer
-      26B A4B or 31B. When the selected model can't do what the page shows, show an inline
-      explanation and the nearest valid model — never a broken snippet, never a silent swap.
-- [x] Graceful fallback when a model/engine or identifier-flavour pair has no published weights.
-- [x] Opt-in `.model-swap` blocks across the current Gemma 4 quickstart, deployment, capability,
-      QAT, and QLoRA pages; base, instruction, QAT, GGUF, Ollama, and MLX IDs stay semantically
-      correct.
-- **Verify:** select 31B, navigate to `capabilities/audio.md`, confirm the gating message appears
-      and no invalid command is shown.
-- **Model selector verified:** 31B → audio shows the gating message and retains the authored E2B
-      example; multi-engine pages only offer models published for every marked block.
-- **Done when:** engine selection and linked tabs are implemented and no combination of model and
-      engine state produces a command that would fail.
-
-### Step 4.3 — "Choose your model" decision flow
-- [ ] Four questions → recommendation + copy-paste command for the user's engine.
-- [ ] Embeds the VRAM calculator.
-
-### Step 4.4 — Tokenizer & chat-template playground
-- [ ] Paste a conversation → exact `<start_of_turn>` token stream, token count.
-- [ ] Image token budget for a given resolution and aspect ratio.
-- [ ] Reuses the existing `tokens.css` badge styling. Pairs with `get-started/prompt-formatting.md`.
+- **Step 3.4:** no "Copy page as Markdown" button and no "Open in Gemini / Claude / ChatGPT"
+  links. Raw `.md` URLs are the smaller, universal primitive.
+- **Step 3.5:** no packaged docs skill or MCP server. If `llms.txt` later proves insufficient,
+  a live-site skill should teach an agent to fetch `llms.txt`, choose a section, and follow `.md`
+  pages on the website—never require cloning the repository.
 
 ---
 
-## Phase 5 — Demos & embeds
+## Phase 4 — Interactive context
 
-### Step 5.1 — First HF Space embed (spike)
-- [ ] Embed <https://huggingface.co/spaces/google/gemma4_vision_token_budget> on a Demos page.
-- [ ] Lazy-load (Spaces are heavy) and design a fallback for sleeping Spaces — a dead iframe
-      looks worse than no iframe.
-- **Verify:** view on mobile and desktop, light and dark. Test with the Space asleep.
-- **Done when:** we know whether to standardize on iframe or `<gradio-app>`, documented here.
+### Step 4.2 — Global model switcher — **complete**
 
-### Step 5.2 — Demos section build-out
-- [ ] Concurrent inference demo (currently a stub).
-- [ ] Additional Spaces once 5.1 establishes the pattern.
+The current behavior is already global: selecting a Gemma 4 model persists the full model choice
+in `localStorage`, follows the reader across pages, and is mirrored in `?model=` for shareable
+URLs. The selector is only rendered on pages with examples it can safely rewrite.
 
----
+- [x] Persist the selected model across pages and in the URL.
+- [x] Rewrite opt-in quickstart, deployment, capability, QAT, and QLoRA examples.
+- [x] Gate choices by capability and published identifier flavor.
+- [x] Keep intentionally separate examples fixed when a matching checkpoint is unavailable.
+- **Verified:** selecting 31B persists across compatible pages; audio explains its fallback to
+  E2B; selecting 26B on vLLM rewrites regular examples while its unavailable 26B QAT example
+  remains explicitly fixed at 12B.
+- **Done:** no global engine preference is required for the POC. Revisit it only after several
+  pages have equivalent, verified examples for the same set of engines.
 
-## Phase 6 — Learn
+### Deferred interactive tools
 
-### Step 6.1 — Visual guides: vendor the images
-The four guides are imported and hand-edited. Their images still point at the Substack CDN.
-
-- [ ] Replace remote images with local assets (Maarten provides raw SVG).
-- [ ] Empty `PENDING_IMAGE_HOSTS` in `lint_docs.py` when done — it exists only for this.
-- [ ] **Contextual cross-linking** — link the MoE guide from the 26B A4B section, Quantization
-      from QAT, Reasoning LLMs from `capabilities/thinking.md`.
-- **Verify:** SVGs render crisply at all widths, legible in both themes; `--check images` → 0.
-
-### Step 6.2 — Notebooks as source of truth
-- [ ] Keep `.ipynb` canonical, render to pages at build time.
-- [ ] Colab / Kaggle / local badges on every tutorial.
-- [ ] Execute notebooks in CI — a "snippets are tested" badge is a real credibility marker.
-
-### Step 6.3 — Task-first entry points
-- [ ] "I want to…" layer: build a RAG app · extract structured JSON · caption images · classify
-      content · build a tool-using agent. Each is a curated path across existing pages.
+The existing model switcher is enough to demonstrate interactive documentation. The former
+"Choose your model" flow and tokenizer/chat-template playground are useful follow-ups, but are
+not required for the POC.
 
 ---
 
-## Phase 7 — The wow tier
+## Phase 5 — Demos & embeds — **finish after the core POC**
+
+### Step 5.1 — One simple HF Space embed
+- [x] Embed <https://huggingface.co/spaces/google/gemma4_vision_token_budget> on one Demos page
+      using the simplest supported iframe approach.
+- [x] Lazy-load it and provide a normal link as the fallback if the embed cannot load.
+- **Verify:** the embed and fallback link are usable at desktop and mobile widths.
+- **Done when:** one representative external demo works; no reusable embed framework or sleeping
+      Space detection is required.
+
+The former Step 5.2—concurrent inference and a broader collection of Spaces—is not planned for
+the current POC.
+
+---
+
+## Phase 6 — Learn — **minimal POC scope**
+
+### Step 6.1 — Visual-guide asset work — **deferred**
+
+Do not vendor or rework the visual-guide images for the current POC. The existing guides can
+remain as they are; revisit ownership and asset quality only if they become part of the final
+production scope.
+
+### Step 6.2 — Markdown-first tutorials and generated notebooks
+
+The capability tutorials originated as notebooks in the
+[`google-gemma/cookbook`](https://github.com/google-gemma/cookbook/tree/main/docs/capabilities)
+repository, but the Zensical pages are now intentionally diverging: they add frontmatter,
+admonitions, styled output, HTML components, and runtime features such as the page-level model
+selector on `get-started/capabilities/thinking.md`. Re-importing an updated notebook would erase
+those documentation-specific improvements.
+
+**Decision:** Markdown is canonical for documentation content. Runnable notebooks are generated
+artifacts, not an alternate place to maintain the same tutorial.
+
+- [x] Spike the workflow on `get-started/capabilities/thinking.md` before applying it elsewhere.
+- [x] Apply the same first-party export and Colab behavior to the text, function calling, image,
+      video, audio, QLoRA, full fine-tuning, and vision QLoRA tutorials. Their Colab links open
+      notebooks generated in this repository, not the older Cookbook sources.
+- [x] Define an explicit export contract in Markdown:
+    - Python fences marked for notebook export become code cells;
+    - ordinary prose becomes Markdown cells;
+    - `.output` blocks are omitted and recreated by execution;
+    - site-only HTML, tabs, and interactive components are omitted or reduced to a plain-text
+      notebook fallback;
+    - `.model-swap` exports its authored default model—the browser selector remains a site-only
+      enhancement.
+- [x] Generate `.ipynb` with stable cell boundaries and kernel/Colab metadata through a small,
+      dependency-light exporter. Keep the contract compatible with a later Jupytext-backed
+      implementation rather than forcing MyST syntax into the website sources.
+- [ ] Support notebook → Markdown as a **one-time ingestion path** for new or heavily revised code
+      examples. Once imported, the Markdown becomes canonical and subsequent notebook builds run
+      Markdown → `.ipynb`; do not allow routine edits in both directions.
+- [x] Add one quiet **Colab** icon link to the page context strip. Do not add
+      redundant download or source actions; Colab already supports download and Markdown is the
+      visible source of truth. Do not claim a Kaggle target until there is a stable published URL.
+- [x] Start with lightweight structural tests rather than execution of GPU notebooks in CI:
+      validate nbformat v4 output, executable-cell selection, and removal of site-only regions.
+- **Verify:** export all registered pages, open at least one capability and one tuning notebook,
+      and confirm that their prose and code cells are useful while the live pages retain their
+      selectors and Zensical presentation.
+- **Done when:** each registered tutorial can be edited only in Markdown, published as the richer
+      Zensical page, and exported to a runnable notebook without hand-editing notebook JSON.
+
+This deliberately separates **authoring origin** from **source of truth**: it is fine to prototype
+new code in Jupyter and import it, but after the documentation-specific pass the Markdown owns the
+tutorial. That prevents a later notebook export from overwriting selector hooks, HTML, or styling.
+
+### Step 6.3 — One simple task-first page
+- [x] Create a single "I want to…" page with a small set of cards—such as run locally, understand
+      images, call tools, and fine-tune—linking to existing documentation.
+- [x] Do not add a recommendation engine or duplicate tutorial content.
+- **Done when:** a newcomer can choose a common goal and reach an existing starting page in one
+      click.
+
+---
+
+## Phase 7 — The wow tier — **deferred; retain for later**
 
 Only after Phases 0–2 are clean.
+
+### VRAM & context calculator — **moved from Step 4.1**
+
+- [ ] Replace the static table in `docs/tools/vram-calculator.md` with inputs for model,
+      quantization, context length, batch size, KV-cache dtype, and a small set of GPU presets.
+- [ ] Show whether it fits with headroom and provide the exact command for the recommended engine.
+- [ ] Read model facts from `data/models.yml` and encode state in the URL.
+- **Verify:** results match the memory table in `models/gemma-4/index.md` at matching settings.
+- **Done when:** a shared URL reproduces the same result.
 
 - [ ] **In-browser playground** — E2B q4 via WebGPU/transformers.js, running in the docs page.
       ~1.5–2 GB download, so explicit opt-in and clear progress UI.
@@ -526,7 +593,7 @@ Only after Phases 0–2 are clean.
 
 ---
 
-## Phase 8 — Maintainer skill & handover
+## Phase 8 — Maintainer skill & handover — **deferred; retain for later**
 
 *Finalized once the docs are done, but **drafted incrementally** — every phase that establishes a
 convention adds its section immediately, while the reasoning is fresh.*
@@ -565,14 +632,14 @@ archive of one-shot scripts nobody dares delete.
 | `lint_docs.py` | 804 | **Permanent.** CI gate. |
 | `frontmatter_schema.py` | 233 | **Permanent.** Imported by the linter. |
 | `generate_model_names.py` | 86 | **Permanent.** Compiles `data/models.yml` into the template partial the page context header reads; CI verifies it is current. |
-| `convert_notebook.py` + `test_convert_notebook.py` | 896 | **Delete when Phase 2.4 closes** — i.e. once the 6 keep-or-drop decisions are made and nothing more will be imported from upstream. |
+| `convert_notebook.py` + `test_convert_notebook.py` | 896 | **Refactor during Step 6.2.** Keep notebook → Markdown as an ingestion path and add the Markdown → notebook exporter; remove assumptions that upstream notebooks remain canonical after import. |
 | `port_docs.py` | 135 | **Delete with the converter.** All 63 manifest pages are frozen, so today it can only skip. |
 | `check_fidelity.py` | 223 | **Delete with the converter.** Same reason: it reports `0 faithful, 63 frozen` and has nothing left to check. |
 | `rewrite_links.py` | 253 | **Delete with the converter.** One-shot link migration; `links` and `internal` have been 0 for weeks. |
 | `sources.toml` + `link_map.toml` | 577 | **Delete with the converter.** ⚠️ `source` is now duplicated in every page's `source_url` frontmatter — the manifest's only unique data is `frozen`, `assets` and `importer`. |
 | `backfill_frontmatter.py` | 373 | **Delete when Phase 3 closes.** One-shot; frontmatter is complete and hand-maintained from here. New pages get theirs from the Phase 8 skill. |
-| `import_newsletter.py` | 259 | **Keep while more visual guides may arrive**; revisit at Phase 6.1. |
-| `vendor_images.py` | 136 | **Keep until Phase 6.1** — the Substack images still need vendoring. |
+| `import_newsletter.py` | 259 | **Keep through the POC.** Visual-guide work is deferred, so there is no cleanup deadline yet. |
+| `vendor_images.py` | 136 | **Keep through the POC.** Revisit only if visual-guide assets return to scope. |
 
 Roughly **2,450 of 3,877 lines are scheduled for deletion**, most of it gated on one decision:
 whether anything else gets ported from upstream. Making that call early shrinks the surface a

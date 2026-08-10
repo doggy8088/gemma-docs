@@ -19,6 +19,7 @@ extra_css = [
   "stylesheets/nav.css",         # header, tabs, sidebar, table of contents
   "stylesheets/content.css",     # tables, admonitions, code, tabs
   "stylesheets/components.css",  # cards, badges, figures, steps, embeds
+  "stylesheets/embeds.css",      # external interactive demos
   "stylesheets/page-context.css",# the applicability bar above every H1
   "stylesheets/tokens.css",      # chat-token badges
   "stylesheets/home.css",        # landing page: chrome, backdrop, hero
@@ -179,6 +180,7 @@ nav = [
   ]},
 
   { "Learn" = [
+    { "Overview" = "learn/index.md" },
     { "Visual guides" = [
       { "Gemma 4" = "tutorials/visual-guides/gemma-4.md" },
       { "Gemma 4 12B" = "tutorials/visual-guides/gemma-4-12b.md" },
@@ -202,7 +204,7 @@ nav = [
       "tools/model-selector.md",
     ]},
     { "Apps & Spaces" = [
-      "demos/concurrent.md",
+      { "Vision token budget" = "demos/vision-token-budget.md" },
     ]},
   ]},
 

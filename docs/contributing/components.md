@@ -142,6 +142,31 @@ is unavailable, the examples remain at their authored default and the picker exp
 there is no silent substitution. Use `{ .model-fixed }` to acknowledge an intentionally static
 block when the same page has swappable examples for that engine.
 
+### Exportable notebook cells
+
+Markdown remains the source of truth for tutorials. Add `.notebook-cell` only to fences that
+should become executable cells in the generated notebook:
+
+````markdown
+```python { .notebook-cell .model-swap }
+print("This becomes a code cell; the authored model is retained.")
+```
+````
+
+Unmarked fences remain part of a Markdown cell, and `{ .output }` blocks are omitted because a
+notebook recreates them when it runs. Add the generated notebook's Colab URL to frontmatter to
+show a quiet, accessible Colab icon in the page context strip:
+
+```yaml
+colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs/notebooks/tutorial.ipynb
+```
+
+Wrap any other site-only controls in `<!-- notebook:skip-start -->` and
+`<!-- notebook:skip-end -->`. Register the source and output in `scripts/notebooks.py`, then
+generate every registered notebook with `uv run python scripts/notebooks.py`; use `--check`
+during verification. Do not edit the generated `.ipynb`
+directly.
+
 ## Steps
 
 A numbered walkthrough. Built on an ordered list, so it still reads correctly without CSS.

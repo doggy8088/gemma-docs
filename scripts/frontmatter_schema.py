@@ -8,8 +8,8 @@ Two kinds of key live here, and the distinction is the whole design:
   AUTHORED   Facts only a person knows -- what the page is about, which models it applies
              to, what you should read first. Hand-written, validated here.
 
-  COMPUTED   Facts derivable from the file itself -- token count, code languages, last
-             edit date. Hand-writing these guarantees they go stale, so authoring one is
+  COMPUTED   Facts derivable from the file itself -- token count and last edit date.
+             Hand-writing these guarantees they go stale, so authoring one is
              an *error*. The build hook in PLAN.md Step 3.2 fills them in.
 
 Vocabularies are read from the repository rather than hardcoded, so adding a model
@@ -48,7 +48,7 @@ THEME_KEYS = frozenset({"template", "hide", "cards", "search", "icon", "subtitle
 
 # Reserved for the Step 3.2 build hook. Authoring one is an error: a hand-written token
 # count is wrong the moment the page is edited.
-COMPUTED_KEYS = frozenset({"estimated_tokens", "code_languages", "last_updated"})
+COMPUTED_KEYS = frozenset({"estimated_tokens", "last_updated"})
 
 URL = re.compile(r"^https?://\S+$")
 SLUG = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
@@ -71,6 +71,7 @@ SCHEMA: tuple[Field, ...] = (
     Field("frameworks", False, "list", "Engines/libraries the page shows code for."),
     Field("prerequisites", False, "list", "Pages to read first, as docs-relative paths."),
     Field("source_url", False, "str", "Upstream page this was ported from."),
+    Field("colab", False, "str", "Generated notebook URL for the page context strip."),
 )
 
 REQUIRED = tuple(f.name for f in SCHEMA if f.required)
@@ -245,5 +246,9 @@ def validate(frontmatter: dict, *, page_paths: set[str] | None = None) -> list[P
     source_url = frontmatter.get("source_url")
     if source_url is not None and not URL.match(str(source_url)):
         problems.append(Problem("source_url", f"source_url must be an http(s) URL: {source_url}"))
+
+    colab = frontmatter.get("colab")
+    if colab is not None and not URL.match(str(colab)):
+        problems.append(Problem("colab", f"colab must be an http(s) URL: {colab}"))
 
     return problems

@@ -8,18 +8,19 @@
     "frontmatter",
     "orphans",
     "fences",
+    "model-swap",
     "admonitions",
     "size",
     "modeldata",
-    "css"
+    "css",
+    "generated"
   ],
-  "count": 7,
+  "count": 6,
   "known": [
     "stubs|docs/community/discord.md|stub: 46 chars of content (minimum 400)",
     "stubs|docs/community/gemma-skills.md|stub: 62 chars of content (minimum 400)",
     "stubs|docs/community/gemmaverse.md|placeholder link: example.com",
     "stubs|docs/cookbook.md|stub: 395 chars of content (minimum 400)",
-    "stubs|docs/demos/concurrent.md|stub: 52 chars of content (minimum 400)",
     "stubs|docs/tools/index.md|stub: 144 chars of content (minimum 400)",
     "stubs|docs/tools/model-selector.md|stub: 58 chars of content (minimum 400)"
   ]

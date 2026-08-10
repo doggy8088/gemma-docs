@@ -4,6 +4,7 @@ description: Starting with Gemma 3n, you can use audio directly into your prompt
 models: [gemma-4, gemma-3n]
 requires: audio
 frameworks: [transformers]
+colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs/notebooks/audio.ipynb
 ---
 
 # Audio Understanding
@@ -18,7 +19,7 @@ This guide provides an overview of the audio processing capabilities of [Gemma 4
 
 Install the Hugging Face libraries required for running the Gemma model and making requests.
 
-```bash
+```bash { .notebook-cell }
 # Install PyTorch & other libraries
 pip install torch accelerate
 
@@ -30,7 +31,7 @@ pip install "transformers>=5.10.1"
 
 Use the `transformers` libraries to create an instance of a `processor` and `model` using the `AutoProcessor` and `AutoModelForImageTextToText` classes as shown in the following code example:
 
-```python { .model-swap }
+```python { .notebook-cell .model-swap }
 MODEL_ID = "google/gemma-4-E2B-it"
 
 from transformers import pipeline
@@ -104,7 +105,7 @@ Follow these specific instructions for formatting the answer:
 
 The following code examples show how to prompt the model to transcribe text from audio files using Hugging Face Transformers:
 
-```python
+```python { .notebook-cell }
 from transformers import GenerationConfig
 config = GenerationConfig.from_pretrained(MODEL_ID)
 config.max_new_tokens = 64
@@ -131,7 +132,7 @@ print(outputs[0]['generated_text'])
 I woke up early today feeling really fresh the morning light was beautiful and I enjoyed a nice cup of coffee<turn|>
 ```
 
-```python
+```python { .notebook-cell }
 from transformers import GenerationConfig
 config = GenerationConfig.from_pretrained(MODEL_ID)
 config.max_new_tokens = 1024
@@ -184,7 +185,7 @@ When formatting the answer, first output the transcription in {SOURCE_LANGUAGE},
 
 The following code examples show how to prompt the model to translate spoken audio into text using Hugging Face Transformers:
 
-```python
+```python { .notebook-cell }
 from transformers import GenerationConfig
 config = GenerationConfig.from_pretrained(MODEL_ID)
 config.max_new_tokens = 64
@@ -213,13 +214,13 @@ Korean: 장미는 빨갛고, 제비꽃은 파랗다.<turn|>
 
 Try this by yourself
 
-```bash
+```bash { .notebook-cell }
 pip install ipywebrtc
 ```
 
 Press the circle button and start speaking. Click the circle button again when you are finished. The widget will immediately begin to play back what it captured.
 
-```python
+```python { .notebook-cell }
 from google.colab import output
 output.enable_custom_widget_manager()
 
@@ -236,7 +237,7 @@ AudioRecorder(audio=Audio(value=b'', format='webm'), stream=CameraStream(constra
 
 Convert webm file to wav format that PyTorch can understand.
 
-```python
+```python { .notebook-cell }
 with open('/content/recording.webm', 'wb') as f:
     f.write(recorder.audio.value)
 !ffmpeg -i /content/recording.webm /content/recording.wav -y
@@ -274,7 +275,7 @@ video:0kB audio:287kB subtitle:0kB other streams:0kB global headers:0kB muxing o
 
 ### ASR
 
-```python
+```python { .notebook-cell }
 from transformers import GenerationConfig
 config = GenerationConfig.from_pretrained(MODEL_ID)
 config.max_new_tokens = 64
@@ -298,7 +299,7 @@ How can I get to the station?<turn|>
 
 ### AST
 
-```python
+```python { .notebook-cell }
 messages = [{
   "role": "user",
   "content": [

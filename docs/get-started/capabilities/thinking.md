@@ -3,6 +3,7 @@ title: Reasoning
 description: Use Gemma 4's thinking mode to reason before answering, for text and image prompts, and parse the reasoning apart from the answer.
 models: [gemma-4]
 frameworks: [transformers]
+colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs/notebooks/thinking.ipynb
 ---
 # Reasoning
 
@@ -11,12 +12,11 @@ Gemma is a family of lightweight, state-of-the-art open models built from the sa
 
 This document demonstrates how to use the thinking capabilities of Gemma 4 to generate reasoning processes before providing a final answer. You will learn how to enable thinking mode for both text-only and multimodal (image-text) tasks using the Hugging Face `transformers` library, and how to parse the output to separate thinking from the answer.
 
-
 ## Install Python packages
 
 Install the Hugging Face libraries required for running the Gemma model and making requests.
 
-```bash
+```bash { .notebook-cell }
 # Install PyTorch & other libraries
 pip install torch accelerate
 
@@ -28,7 +28,7 @@ pip install "transformers>=5.10.1"
 
 Use the `transformers` libraries to create an instance of a `processor` and `model` using the `AutoProcessor` and `AutoModelForImageTextToText` classes as shown in the following code example:
 
-```python { .model-swap }
+```python { .model-swap .notebook-cell }
 MODEL_ID = "google/gemma-4-E2B-it"
 
 from transformers import AutoProcessor, AutoModelForMultimodalLM
@@ -61,7 +61,7 @@ To generate a response using the model's thinking capabilities, pass `enable_thi
 | **12B/26B/31B** | **OFF** | ⚠️ `<|turn>user\n[Prompt]<turn|>\n<|turn>model\n<|channel>thought\n<channel|>` |
 | **12B/26B/31B** | **ON** | `<|turn>system\n<|think|><turn|>\n<|turn>user\n[Prompt]<turn|>\n<|turn>model` |
 
-```python
+```python { .notebook-cell }
 from transformers import TextStreamer
 
 message = [
@@ -150,7 +150,7 @@ Once the text is generated, the response will contain both the reasoning blocks 
 !!! Note
     `skip_special_tokens=False` is mandatory to make the reasoning parser to work correctly.
 
-```python
+```python { .notebook-cell }
 response = processor.decode(outputs[0][input_len:], skip_special_tokens=False)
 result = processor.parse_response(response)
 
@@ -242,7 +242,7 @@ Properly managing the model's generated thoughts is critical for maintaining per
 - **Function Calling (Exception):** If a single model turn involves function or tool calls, thoughts must **NOT** be removed between the function calls.
 - **Maintaining Conversation History:** The historical model output must only include the final response. Ensure that no generated thoughts from previous turns remain in the context window before the next user turn begins.
 
-```python
+```python { .notebook-cell }
 from transformers import TextStreamer
 
 # Append the clean response to the message history
@@ -340,7 +340,7 @@ $$\mathbf{100^\circ\text{C} }$$
 **Note:** If the atmospheric pressure is lower (e.g., at high altitudes), the boiling point will be slightly lower than \\(100^\circ\text{C}\\). If the pressure is higher, the boiling point will be higher.<turn|>
 ```
 
-```python
+```python { .notebook-cell }
 response = processor.decode(outputs[0][input_len:], skip_special_tokens=False)
 result = processor.parse_response(response)
 
@@ -385,7 +385,7 @@ $$\mathbf{100^\circ\text{C} }$$
 
 The procedure for using the thinking model with visual data is very similar. You can provide an image as part of the `messages` array. Just ensure you pass the image to the processor along with the formatted text, and the model will reason about the visual input before responding.
 
-```python
+```python { .notebook-cell }
 from PIL import Image
 import matplotlib.pyplot as plt
 
