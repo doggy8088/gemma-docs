@@ -1,19 +1,16 @@
 #!/usr/bin/env python3
 """Generate agent-facing documentation artifacts from the canonical Markdown pages.
 
-The committed outputs (`docs/llms.txt` and `docs/page-metadata.json`) work with the normal
-Zensical preview. After a site build, `--publish site` also writes raw Markdown beside the
+The committed `docs/llms.txt` works with the normal Zensical preview. After a site build,
+`--publish site` also writes raw Markdown beside the
 rendered HTML using Stripe-style URLs such as `/get-started/quickstart.md`.
 """
 
 from __future__ import annotations
 
 import argparse
-import json
 import re
-import subprocess
 import tomllib
-from datetime import date
 from pathlib import Path
 from typing import Iterable
 
@@ -25,10 +22,8 @@ DOCS_DIR = REPO_ROOT / "docs"
 CONFIG_FILE = REPO_ROOT / "zensical.toml"
 MODELS_FILE = REPO_ROOT / "data" / "models.yml"
 LLMS_TARGET = DOCS_DIR / "llms.txt"
-METADATA_TARGET = DOCS_DIR / "page-metadata.json"
 SITE_URL = "https://gemma.ai"
 
-TOKEN = re.compile(r"\w+|[^\w\s]", re.UNICODE)
 H1 = re.compile(r"^#\s+", re.MULTILINE)
 
 
@@ -99,44 +94,8 @@ def display_title(metadata: dict, family_names: dict[str, str]) -> str:
     return title
 
 
-def last_updated(path: Path) -> str:
-    relative = path.relative_to(REPO_ROOT).as_posix()
-    result = subprocess.run(
-        ["git", "log", "-1", "--format=%cs", "--", relative],
-        cwd=REPO_ROOT,
-        capture_output=True,
-        text=True,
-        check=False,
-    )
-    value = result.stdout.strip()
-    if value:
-        return value
-    return date.fromtimestamp(path.stat().st_mtime).isoformat()
-
-
-def estimated_tokens(body: str) -> int:
-    return max(1, len(TOKEN.findall(body)))
-
-
 def model_data() -> dict:
     return yaml.safe_load(MODELS_FILE.read_text(encoding="utf-8"))
-
-
-def render_metadata() -> str:
-    pages = source_pages()
-    payload = {
-        "generated_at": "build-time",
-        "pages": {
-            relative: {
-                "url": route_for(relative),
-                "markdown_url": markdown_route_for(relative),
-                "estimated_tokens": estimated_tokens(body),
-                "last_updated": last_updated(path),
-            }
-            for relative, (path, _metadata, body) in pages.items()
-        },
-    }
-    return json.dumps(payload, indent=2, ensure_ascii=False) + "\n"
 
 
 def render_llms() -> str:
@@ -200,7 +159,7 @@ def raw_targets(site_dir: Path) -> Iterable[tuple[Path, str]]:
 
 
 def generated_outputs() -> tuple[tuple[Path, str], ...]:
-    return ((LLMS_TARGET, render_llms()), (METADATA_TARGET, render_metadata()))
+    return ((LLMS_TARGET, render_llms()),)
 
 
 def write_generated() -> None:

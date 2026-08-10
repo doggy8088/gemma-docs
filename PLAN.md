@@ -47,8 +47,8 @@ code, but after its one-time import the Markdown owns all subsequent edits.
 
 ### Other generated artifacts
 
-- [ ] Remove `docs/page-metadata.json` unless a concrete consumer is introduced. Nothing reads it
-      today, and its Git-derived update dates make ordinary documentation commits appear stale.
+- [x] Remove `docs/page-metadata.json`. Nothing consumed it, and its Git-derived update dates made
+      ordinary documentation commits appear stale only after the commit already existed.
 - [ ] Decide whether `docs/llms.txt` remains committed for local `zensical serve` previews or is
       written only into `site/`. It changes only with navigation and frontmatter, so either choice
       is defensible; document the chosen behavior in `README.md`.
@@ -132,7 +132,7 @@ The directory layout separates production infrastructure, optional import utilit
 | File | Responsibility |
 |---|---|
 | `build_docs.py` | Production entry point: generators, Zensical build and raw Markdown publication. |
-| `agent_docs.py` | Builds `llms.txt` and raw `.md` routes. Remove page-metadata generation with the unused artifact. |
+| `agent_docs.py` | Builds `llms.txt` and raw `.md` routes. |
 | `lint_docs.py` | CI gate for documentation and repository invariants. |
 | `frontmatter_schema.py` | Shared frontmatter schema and controlled vocabularies. |
 | `generate_model_names.py` | Compiles model/framework data for templates and the browser selector. |
