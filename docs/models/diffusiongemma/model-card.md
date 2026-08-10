@@ -1,9 +1,15 @@
+---
+title: DiffusionGemma model card
+description: DiffusionGemma is a generative model built by Google DeepMind.
+models: [diffusiongemma]
+source_url: "https://ai.google.dev/gemma/docs/diffusiongemma/model_card.md.txt"
+---
 # DiffusionGemma model card
 
 [Hugging Face](https://huggingface.co/google/diffusiongemma-26B-A4B-it) \|
 [GitHub](https://github.com/google-gemma) \|
 [Launch Blog](https://blog.google/innovation-and-ai/technology/developers-tools/diffusion-gemma-faster-text-generation/) \|
-[Documentation](https://ai.google.dev/gemma/docs/diffusiongemma)
+[Documentation](index.md)
 
 
 **License** : [Apache 2.0](https://ai.google.dev/gemma/apache_2) \| **Authors** : [Google DeepMind](https://deepmind.google/models/gemma/)
@@ -128,8 +134,10 @@ tokens:
 - **Standard Generation:** When thinking is enabled, the model will output its internal reasoning followed by the final answer using this structure: `<|channel>thought\n`**\[Internal reasoning\]** `<channel|>`.
 - **Disabled Thinking Behavior:** If thinking is disabled, the model will still generate the tags but with an empty thought block: `<|channel>thought\n<channel|>`**\[Final answer\]**.
 
-> Note that many libraries like transformers handle the complexities of the chat
-> template for you.
+!!! Note
+    Note that many libraries like transformers handle the complexities of the chat
+    template for you.
+
 
 ### 3. Multi-Turn Conversations
 

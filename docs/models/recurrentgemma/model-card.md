@@ -1,6 +1,12 @@
-# RecurrentGemma model card
+---
+title: RecurrentGemma model card
+description: RecurrentGemma is a family of open language models built on a novel recurrent architecture developed at Google.
+models: [recurrentgemma]
+source_url: "https://ai.google.dev/gemma/docs/recurrentgemma/model_card.md.txt"
+---
+# Model card
 
-**Model page:** [RecurrentGemma](https://ai.google.dev/gemma/docs/recurrentgemma)
+**Model page:** [RecurrentGemma](index.md)
 
 **Resources and technical documentation:**
 
@@ -50,14 +56,14 @@ Gemma and achieves faster inference when generating long sequences.
 
 RecurrentGemma uses the same training data and data processing as used by the
 Gemma model family. A full description can be found on the [Gemma model
-card](https://ai.google.dev/gemma/docs/core/model_card#model_data).
+card](../gemma-1/index.md#model-data).
 
 ## Implementation information
 
 ### Hardware and frameworks used during training
 
 Like
-[Gemma](https://ai.google.dev/gemma/docs/core/model_card#implementation_information),
+[Gemma](../gemma-1/index.md#implementation-information),
 RecurrentGemma was trained on
 [TPUv5e](https://cloud.google.com/tpu/docs/intro-to-tpu?_gl=1*18wi411*_ga*MzE3NDU5OTY1LjE2MzQwNDA4NDY.*_ga_WH2QY8WWF5*MTcxMTA0MjUxMy4xNy4wLjE3MTEwNDI1MTkuMC4wLjA.&_ga=2.239449409.-317459965.1634040846),
 using [JAX](https://github.com/jax-ml/jax) and [ML
@@ -164,10 +170,7 @@ In creating an open model, we have carefully considered the following:
     - LLMs trained on large-scale, real-world text data can reflect socio-cultural biases embedded in the training material. These models underwent careful scrutiny, input data pre-processing described and posterior evaluations reported in this card.
 - **Misinformation and misuse**
     - LLMs can be misused to generate text that is false, misleading, or harmful.
-    - Guidelines are provided for responsible use with the model, see the [Responsible Generative AI
-```python
-Toolkit](https://ai.google.dev/responsible).
-```
+    - Guidelines are provided for responsible use with the model, see the [Responsible Generative AI Toolkit](https://ai.google.dev/responsible).
 - **Transparency and accountability**
     - This model card summarizes details on the models' architecture, capabilities, limitations, and evaluation processes.
     - A responsibly developed open model offers the opportunity to share innovation by making LLM technology accessible to developers and researchers across the AI ecosystem.

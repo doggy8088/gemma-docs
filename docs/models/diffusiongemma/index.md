@@ -1,3 +1,9 @@
+---
+title: DiffusionGemma model overview
+description: DiffusionGemma is an experimental open model that explores text diffusion, an exceptionally fast approach to text generation.
+models: [diffusiongemma]
+source_url: "https://ai.google.dev/gemma/docs/diffusiongemma.md.txt"
+---
 # DiffusionGemma model overview
 
 DiffusionGemma is an experimental open model that explores text diffusion, an
@@ -58,8 +64,8 @@ default parameters for the Diffusion Sampling Settings:
 Access the experimental model weights (released under the Apache 2.0 license),
 allowing you to deploy it in your own projects and applications.
 
-[Learn more about DiffusionGemma architecture](https://ai.google.dev/gemma/docs/diffusiongemma/explained)
-[Try DiffusionGemma](https://ai.google.dev/gemma/docs/diffusiongemma/inference-diffusiongemma-with-hf)
+[Learn more about DiffusionGemma architecture](explained.md)
+[Try DiffusionGemma](inference.md)
 
 [Fine-tune DiffusionGemma](https://github.com/google/hackable_diffusion)
 [Deploy DiffusionGemma](https://docs.cloud.google.com/kubernetes-engine/docs/tutorials/serve-gemma-gpu-vllm)

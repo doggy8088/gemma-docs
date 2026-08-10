@@ -1,0 +1,9 @@
+# QAT collections
+
+Official QAT collections on Hugging Face
+
+- **[collections/google/gemma-4-qat-q4-0](https://huggingface.co/collections/google/gemma-4-qat-q4-0)**
+  - **Unquantized QAT Checkpoints (`-unquantized` / `-assistant`):** Half-precision weights extracted directly from the QAT pipeline. *Available for
+    Gemma 4 E2B, E4B, 12B, 26B A4B, and 31B.*
+  - **GGUF (`-gguf`):** Checkpoints available for immediate drop-in compatibility across the local LLM ecosystem. *Available for Gemma 4
+    E2B, E4B, 12B, 26B A4B, and 31B.*

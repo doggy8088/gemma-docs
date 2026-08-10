@@ -1,0 +1,78 @@
+/* ===================================================================
+   MOTION
+
+   Owns: shared component transitions and the reduced-motion opt-out.
+   The landing page has one isolated text animation in its template;
+   it checks the same preference before starting.
+
+   Docs are read, not played with: motion here is feedback (something
+   is interactive, something changed), never decoration.
+   =================================================================== */
+
+:root {
+  --gemma-ease: cubic-bezier(0.2, 0, 0.2, 1);
+  --gemma-duration-fast: 100ms;
+  --gemma-duration: 160ms;
+}
+
+/* -------------------------------------------------------------------
+   Interactive surfaces
+   ------------------------------------------------------------------- */
+.md-typeset .card,
+.md-typeset .cookbook-card {
+  transition:
+    border-color var(--gemma-duration) var(--gemma-ease),
+    background-color var(--gemma-duration) var(--gemma-ease),
+    transform var(--gemma-duration) var(--gemma-ease);
+}
+
+.md-typeset a.card:hover,
+.md-typeset a.cookbook-card:hover {
+  transform: translateY(-1px);
+}
+
+.md-typeset a.card:active,
+.md-typeset a.cookbook-card:active {
+  transform: translateY(0);
+  transition-duration: var(--gemma-duration-fast);
+}
+
+.md-typeset .badge {
+  transition: border-color var(--gemma-duration) var(--gemma-ease),
+              color var(--gemma-duration) var(--gemma-ease);
+}
+
+/* -------------------------------------------------------------------
+   Focus
+   Always visible, never animated away — keyboard users need it
+   immediately.
+   ------------------------------------------------------------------- */
+.md-typeset a.card:focus-visible,
+.md-typeset a.cookbook-card:focus-visible {
+  outline: 2px solid var(--gemma-accent);
+  outline-offset: 2px;
+  transition: none;
+}
+
+/* -------------------------------------------------------------------
+   Reduced motion
+
+   A blanket opt-out. Anything added later inherits it automatically,
+   which is the point of keeping motion in one file. Durations are near
+   zero rather than 0s so transitionend handlers still fire.
+   ------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .md-typeset a.card:hover,
+  .md-typeset a.cookbook-card:hover {
+    transform: none;
+  }
+}

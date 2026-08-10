@@ -1,3 +1,7 @@
+---
+title: Gemmaverse
+description: Explore community projects and showcases.
+---
 # Gemmaverse
 
 Explore community projects and showcases.

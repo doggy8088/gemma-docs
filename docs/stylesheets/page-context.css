@@ -1,0 +1,187 @@
+/* Page facts and the optional example-model picker beneath the H1. */
+.page-context {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--gemma-space-4);
+  padding-bottom: var(--gemma-space-3);
+  margin-bottom: var(--gemma-space-5);
+  font-size: 0.75rem;
+  line-height: 1.4;
+  border-bottom: 1px solid var(--gemma-border);
+}
+
+.page-context__item {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gemma-space-2);
+}
+
+.page-context__item:not(:first-child)::before {
+  content: "";
+  width: 1px;
+  align-self: stretch;
+  margin-right: 10px;
+  background-color: var(--gemma-border-strong);
+}
+
+.page-context__label {
+  color: var(--gemma-text-muted);
+}
+
+.page-context__value {
+  font-weight: 600;
+  color: var(--gemma-text-secondary);
+}
+
+.page-context__value:not(:last-child)::after {
+  content: ",";
+  font-weight: 400;
+  color: var(--gemma-text-muted);
+}
+
+.md-typeset .page-context__value--link {
+  color: var(--gemma-text-secondary);
+  text-decoration: none;
+}
+
+.md-typeset .page-context__value--link:hover,
+.md-typeset .page-context__value--link:focus-visible {
+  color: var(--gemma-accent);
+  text-decoration: underline;
+}
+
+.md-typeset .page-context__colab {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--gemma-space-1);
+}
+
+.page-context__colab img {
+  display: block;
+  width: 1rem;
+  height: 1rem;
+}
+
+.page-context__picker {
+  position: relative;
+  display: inline-flex;
+}
+
+.page-context__picker-trigger {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 1.25rem 0 var(--gemma-space-1);
+  font: inherit;
+  font-weight: 600;
+  color: var(--gemma-text-secondary);
+  background: transparent;
+  border: 0;
+  border-radius: var(--gemma-radius-sm);
+  box-shadow: inset 0 0 0 1px var(--gemma-border);
+  cursor: pointer;
+}
+
+/* Keep a comfortable pointer target without increasing the metadata row's line box. */
+.page-context__picker-trigger::before {
+  content: "";
+  position: absolute;
+  inset: -0.25rem;
+}
+
+.page-context__picker-trigger::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 0.45rem;
+  width: 0.34em;
+  height: 0.34em;
+  border-right: 1px solid currentColor;
+  border-bottom: 1px solid currentColor;
+  transform: translateY(-70%) rotate(45deg);
+}
+
+.page-context__picker-trigger:hover,
+.page-context__picker-trigger[aria-expanded="true"] {
+  color: var(--gemma-text-primary);
+  background: var(--gemma-surface-sunken);
+  box-shadow: inset 0 0 0 1px var(--gemma-border-strong);
+}
+
+.page-context__picker-trigger:focus-visible,
+.page-context__picker-option:focus-visible {
+  outline: 2px solid var(--gemma-accent);
+  outline-offset: 2px;
+}
+
+.page-context__picker-menu {
+  position: absolute;
+  top: calc(100% + var(--gemma-space-2));
+  left: 0;
+  z-index: 20;
+  display: grid;
+  width: max-content;
+  min-width: 17rem;
+  max-width: min(22rem, calc(100vw - 2rem));
+  padding: var(--gemma-space-1);
+  background: var(--gemma-surface);
+  border: 1px solid var(--gemma-border-strong);
+  border-radius: var(--gemma-radius-lg);
+  box-shadow: var(--gemma-shadow-md);
+}
+
+.page-context__picker-menu[hidden] {
+  display: none;
+}
+
+.page-context__picker-option {
+  display: grid;
+  gap: 0.125rem;
+  width: 100%;
+  padding: var(--gemma-space-2) var(--gemma-space-3);
+  font: inherit;
+  color: var(--gemma-text-secondary);
+  text-align: left;
+  background: transparent;
+  border: 0;
+  border-radius: var(--gemma-radius-md);
+  cursor: pointer;
+}
+
+.page-context__picker-option:hover,
+.page-context__picker-option:focus-visible,
+.page-context__picker-option[aria-selected="true"] {
+  background: color-mix(in srgb, var(--gemma-accent) 10%, transparent);
+}
+
+.page-context__picker-option-name {
+  font-weight: 600;
+}
+
+.page-context__picker-option-meta,
+.page-context__picker-notice {
+  color: var(--gemma-text-muted);
+  font-size: 0.6875rem;
+}
+
+.page-context__picker-notice {
+  padding: var(--gemma-space-2) var(--gemma-space-3) var(--gemma-space-3);
+  margin-bottom: var(--gemma-space-1);
+  border-bottom: 1px solid var(--gemma-border);
+}
+
+@media screen and (max-width: 44.98em) {
+  .page-context {
+    gap: var(--gemma-space-3);
+  }
+
+  .page-context__item:not(:first-child)::before {
+    display: none;
+  }
+
+  .page-context__picker-menu {
+    min-width: min(17rem, calc(100vw - 2rem));
+  }
+}

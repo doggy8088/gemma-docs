@@ -1,3 +1,9 @@
+---
+title: FunctionGemma formatting and best practices
+description: FunctionGemma is a specialized version of the Gemma 3 270M model, trained specifically for function calling (i.e., tool use).
+models: [functiongemma]
+source_url: "https://ai.google.dev/gemma/docs/functiongemma/formatting-and-best-practices.md.txt"
+---
 # FunctionGemma formatting and best practices
 
 FunctionGemma is a specialized version of the Gemma 3 270M model,
@@ -11,7 +17,7 @@ results.
 
 ## Base Prompt Structure
 
-FunctionGemma builds on the [Gemma prompt structure](https://ai.google.dev/gemma/docs/core/prompt-structure), using
+FunctionGemma builds on the [Gemma prompt structure](../../get-started/prompt-structure.md), using
 `<start_of_turn>role` and `<end_of_turn>` to describe conversational turns.
 The `role` is typically `user` or `model` (and sometimes `developer` for
 providing initial context, as seen below).
@@ -30,8 +36,10 @@ lifecycle.
 | `<start_function_call>` `<end_function_call>` | Indicates a model's request to use a tool. |
 | `<start_function_response>` `<end_function_response>` | Provides a tool's result back to the model. |
 
-> NOTE: `<start_function_response>` is an additional stop sequence for the
-> inference engine.
+!!! Note
+    `<start_function_response>` is an additional stop sequence for the
+    inference engine.
+
 
 ### Delimiter for String Values: `<escape>`
 
@@ -66,9 +74,11 @@ each other.
 
 The model has **not** been explicitly trained on **Multi-Turn** or
 **Multi-Step** workflows.
-> **Note:** We expect the model to be able to generalize a bit to these
-> scenarios, especially if fine-tuned on specific use cases, but it has not been
-> trained to perform these tasks out of the box.
+!!! Note
+    We expect the model to be able to generalize a bit to these
+    scenarios, especially if fine-tuned on specific use cases, but it has not been
+    trained to perform these tasks out of the box.
+
 
 - **Multi-Step (Chaining):** Scenarios where the output of one tool is
   required as the argument for a subsequent tool.
@@ -112,7 +122,7 @@ does not make the semantic connection in that specific context.
 - **Mitigation Strategies:**
     - **Enriched Tool Definition:** This is often the most effective fix. Expanding the function's description to include semantic keywords helps the model bridge the gap. For example, adding "This function can be used to determine if the weather is hot or cold in a given location" to the docstring allows FunctionGemma to correctly map those qualitative descriptors to the tool.
     - **Prompt Engineering:** Making the user query more detailed or explicit can help the model trigger the correct tool, though this relies on user behavior.
-    - **Fine-tuning:** For production environments where users frequently use highly indirect language (e.g., "is it nice out?" versus "get weather"), we recommend [fine-tuning](https://ai.google.dev/gemma/docs/functiongemma/finetuning-with-functiongemma) the model on a dataset that explicitly maps these semantic nuances to the correct tool definitions.
+    - **Fine-tuning:** For production environments where users frequently use highly indirect language (e.g., "is it nice out?" versus "get weather"), we recommend [fine-tuning](fine-tuning.md) the model on a dataset that explicitly maps these semantic nuances to the correct tool definitions.
 
 **Example: Make Semantic Connection**
 > **User:** "Hey, is it cold in Paris right now?"
@@ -134,7 +144,7 @@ successfully makes the connection:
 Here is a complete, step-by-step formatted example demonstrating the flow for
 using the `get_current_weather` tool.
 
-![A diagram of Weather Tool Flow](https://ai.google.dev/gemma/docs/images/functiongemma_flow.png)
+![A diagram of Weather Tool Flow](../../assets/functiongemma/functiongemma_flow.png)
 
 ### Turn 1: Tool Definition (Developer)
 
@@ -157,7 +167,7 @@ You are a model that can do function calling with the following functions<start_
 
 Next, the user asks a question that requires the tool you just defined.
 
-```python
+```text
 <start_of_turn>user
 Hey, what's the weather in Tokyo right now?<end_of_turn>
 ```
@@ -167,7 +177,7 @@ Hey, what's the weather in Tokyo right now?<end_of_turn>
 The model processes the user's request and the tool definition. It determines it
 needs to call the `get_current_weather` function and outputs the following turn.
 
-```python
+```text
 <start_function_call>call:get_current_weather{location:<escape>Tokyo, Japan<escape>}<end_function_call>
 ```
 
@@ -178,7 +188,7 @@ needs to call the `get_current_weather` function and outputs the following turn.
 You now send the return value from your function back to the model. This turn
 uses the function response tokens.
 
-```python
+```text
 <start_function_response>response:get_current_weather{temperature:15,weather:<escape>sunny<escape>}<end_function_response>
 ```
 
@@ -188,9 +198,9 @@ The model receives the function's result from Turn 4. It now has all the
 information needed to answer the user's original question from Turn 2. It
 processes this new context and generates the final, natural language response.
 
-```python
+```text
 The current weather in Tokyo is sunny with a temperature of 15 degrees Celsius.<end_of_turn>
 ```
 
 You can see more complete version of this example in the
-[Full function calling sequence with FunctionGemma](https://ai.google.dev/gemma/docs/functiongemma/full-function-calling-sequence-with-functiongemma)
+[Full function calling sequence with FunctionGemma](full-sequence.md)

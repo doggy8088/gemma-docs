@@ -1,17 +1,25 @@
+---
+title: Audio Understanding
+description: Starting with Gemma 3n, you can use audio directly into your prompts and workflows.
+models: [gemma-4, gemma-3n]
+requires: audio
+frameworks: [transformers]
+colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs/notebooks/audio.ipynb
+---
 
 # Audio Understanding
 
-Starting with [Gemma 3n](https://ai.google.dev/gemma/docs/gemma-3n), you can use audio directly into your prompts and workflows. Audio and spoken language are rich sources of data for capturing user intents, recording information about the world around us, and understanding
+Starting with [Gemma 3n](../../models/gemma-3n/index.md), you can use audio directly into your prompts and workflows. Audio and spoken language are rich sources of data for capturing user intents, recording information about the world around us, and understanding
 specific problems to be solved.
 
-This guide provides an overview of the audio processing capabilities of [Gemma 4](https://ai.google.dev/gemma/docs/core), including automatic speech recognition (ASR), translation, and general speech understanding.
+This guide provides an overview of the audio processing capabilities of [Gemma 4](../../models/gemma-4/index.md), including automatic speech recognition (ASR), translation, and general speech understanding.
 
 
 ## Install Python packages
 
 Install the Hugging Face libraries required for running the Gemma model and making requests.
 
-```bash
+```bash { .notebook-cell }
 # Install PyTorch & other libraries
 pip install torch accelerate
 
@@ -23,8 +31,8 @@ pip install "transformers>=5.10.1"
 
 Use the `transformers` libraries to create an instance of a `processor` and `model` using the `AutoProcessor` and `AutoModelForImageTextToText` classes as shown in the following code example:
 
-```python
-MODEL_ID = "google/gemma-4-E2B-it" # @param ["google/gemma-4-E2B-it","google/gemma-4-E4B-it", "google/gemma-4-12B-it"]
+```python { .notebook-cell .model-swap }
+MODEL_ID = "google/gemma-4-E2B-it"
 
 from transformers import pipeline
 
@@ -78,16 +86,16 @@ signed 16-bit PCM integer WAV files at 44.1 kHz, follow these steps:
 - Downmix from stereo to mono by averaging the 2 channels
 - Convert from int16 to float32, and divide by 32768.0 to scale to the range \[-1, 1\]
 
-> > [!NOTE]
-> > **Note:** When resampling audio to 16 kHz, you should use a Fourier method for best results, such as `scipy.signal.resample` or `librosa.sample(res_type ='scipy')`.
->
+!!! Note
+    When resampling audio to 16 kHz, you should use a Fourier method for best results, such as `scipy.signal.resample` or `librosa.sample(res_type ='scipy')`.
+
 ## Speech to text
 
 Gemma 4 E2B, E4B, and 12B Unified are trained for multilingual speech recognition, allowing you to transcribe audio input in various languages into text.
 
 Use the following prompt structure for **Audio Speech Recognition (ASR)**.
 
-```python
+```text
 Transcribe the following speech segment in {LANGUAGE} into {LANGUAGE} text.
 
 Follow these specific instructions for formatting the answer:
@@ -97,7 +105,7 @@ Follow these specific instructions for formatting the answer:
 
 The following code examples show how to prompt the model to transcribe text from audio files using Hugging Face Transformers:
 
-```python
+```python { .notebook-cell }
 from transformers import GenerationConfig
 config = GenerationConfig.from_pretrained(MODEL_ID)
 config.max_new_tokens = 64
@@ -124,7 +132,7 @@ print(outputs[0]['generated_text'])
 I woke up early today feeling really fresh the morning light was beautiful and I enjoyed a nice cup of coffee<turn|>
 ```
 
-```python
+```python { .notebook-cell }
 from transformers import GenerationConfig
 config = GenerationConfig.from_pretrained(MODEL_ID)
 config.max_new_tokens = 1024
@@ -170,14 +178,14 @@ Gemma 4 E2B, E4B and 12B Unified are trained for multilingual speech translation
 
 Use the following prompt structure for **Automatic Speech Translation (AST)**.
 
-```python
+```text
 Transcribe the following speech segment in {SOURCE_LANGUAGE}, then translate it into {TARGET_LANGUAGE}.
 When formatting the answer, first output the transcription in {SOURCE_LANGUAGE}, then one newline, then output the string '{TARGET_LANGUAGE}: ', then the translation in {TARGET_LANGUAGE}.
 ```
 
 The following code examples show how to prompt the model to translate spoken audio into text using Hugging Face Transformers:
 
-```python
+```python { .notebook-cell }
 from transformers import GenerationConfig
 config = GenerationConfig.from_pretrained(MODEL_ID)
 config.max_new_tokens = 64
@@ -206,13 +214,13 @@ Korean: 장미는 빨갛고, 제비꽃은 파랗다.<turn|>
 
 Try this by yourself
 
-```bash
+```bash { .notebook-cell }
 pip install ipywebrtc
 ```
 
 Press the circle button and start speaking. Click the circle button again when you are finished. The widget will immediately begin to play back what it captured.
 
-```python
+```python { .notebook-cell }
 from google.colab import output
 output.enable_custom_widget_manager()
 
@@ -229,7 +237,7 @@ AudioRecorder(audio=Audio(value=b'', format='webm'), stream=CameraStream(constra
 
 Convert webm file to wav format that PyTorch can understand.
 
-```python
+```python { .notebook-cell }
 with open('/content/recording.webm', 'wb') as f:
     f.write(recorder.audio.value)
 !ffmpeg -i /content/recording.webm /content/recording.wav -y
@@ -267,7 +275,7 @@ video:0kB audio:287kB subtitle:0kB other streams:0kB global headers:0kB muxing o
 
 ### ASR
 
-```python
+```python { .notebook-cell }
 from transformers import GenerationConfig
 config = GenerationConfig.from_pretrained(MODEL_ID)
 config.max_new_tokens = 64
@@ -291,7 +299,7 @@ How can I get to the station?<turn|>
 
 ### AST
 
-```python
+```python { .notebook-cell }
 messages = [{
   "role": "user",
   "content": [
@@ -316,6 +324,6 @@ In this guide, you learned how to process audio using Gemma 4 models. The exampl
 <!-- TODO: Port over
 ### Next steps
 
-- [Run Gemma overview](https://ai.google.dev/gemma/docs/run)
-- [Vision understanding](https://ai.google.dev/gemma/docs/capabilities/vision)
-- [Thinking mode](https://ai.google.dev/gemma/docs/capabilities/thinking) -->
+- [Run Gemma overview](../../deployment/index.md)
+- [Vision understanding](vision.md)
+- [Thinking mode](thinking.md) -->

@@ -1,4 +1,10 @@
-# Generate Output
+---
+title: Generate output
+description: Generate text with DiffusionGemma using Hugging Face Transformers, including the GPU memory the model requires.
+models: [diffusiongemma]
+frameworks: [transformers]
+source_url: "https://ai.google.dev/gemma/docs/diffusiongemma/inference-diffusiongemma-with-hf.md.txt"
+---
 
 DiffusionGemma is an experimental open model that explores text diffusion, an exceptionally fast approach to text generation. Based on the 26B (4B active) Mixture-of-Experts (MoE) Gemma 4 architecture, DiffusionGemma generates tokens using discrete diffusion.
 
@@ -160,8 +166,6 @@ While sunlight looks white to us, it is actually made up of all the colors of th
 
 *   **Red light** has long,, waves waves.
 *   Blue and and violet**** have much, choppy choppy choppy
-
-
     22. atmosphere atmosphere atmosphere a a
 
 
@@ -524,10 +528,8 @@ What is the water formula?<turn|>
 
 *   User asking: "What is the water formula?"
     *   Goal: Provide the chemical formula for water and explain what it means.
-
     *   Water is a compound made of hydrogen and oxygen.
     *   The formula is \\(H_2O\\).
-
     *   Direct answer: \\(H_2O\\).
     *   Explanation of components:
         *   \\(H_2\\): Two atoms of hydrogen.
@@ -569,7 +571,7 @@ text = processor.decode(output[0], skip_special_tokens=False)
 print(text[0])
 ```
 
-![png](https://ai.google.dev/static/gemma/docs/diffusiongemma/inference-diffusiongemma-with-hf_files/output_Gsxfo7TuN0Vu_0.png)
+![png](../../assets/diffusiongemma/output_Gsxfo7TuN0Vu_0.png)
 
 ``` { .no-copy .output }
 <bos><|turn>user
@@ -581,4 +583,4 @@ print(text[0])
 
 ## Summary and next steps
 
-In this guide, you learned how to use DiffusionGemma for various tasks. Check out [Diffusion in Text Generation Explained](https://ai.google.dev/gemma/docs/diffusiongemma/explained) to understand how model works in detail.
+In this guide, you learned how to use DiffusionGemma for various tasks. Check out [Diffusion in Text Generation Explained](explained.md) to understand how model works in detail.

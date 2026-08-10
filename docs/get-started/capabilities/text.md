@@ -1,3 +1,10 @@
+---
+title: Inference
+description: "Basic text inference with Gemma 4 in Hugging Face Transformers: single-turn prompts, multi-turn conversations, and system instructions."
+models: [gemma-4]
+frameworks: [transformers]
+colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs/notebooks/text.ipynb
+---
 # Inference
 
 Gemma is a family of lightweight, state-of-the-art open models built from the same research and technology used to create the [Gemini](https://deepmind.google/technologies/gemini/#introduction) models. Gemma 4 is designed to be the world's most efficient open-weight model family.
@@ -8,7 +15,7 @@ This document provides a guide to performing basic text inference with Gemma 4 u
 
 Install the Hugging Face libraries required for running the Gemma model and making requests.
 
-```bash
+```bash { .notebook-cell }
 # Install PyTorch & other libraries
 pip install torch accelerate
 
@@ -18,7 +25,7 @@ pip install "transformers>=5.10.1"
 
 [Dialog](https://github.com/google-deepmind/dialog) is a library to manipulate and display conversations.
 
-```bash
+```bash { .notebook-cell }
 pip install dialog
 ```
 
@@ -26,8 +33,8 @@ pip install dialog
 
 Use `transformers` library to load the pipeline
 
-```python
-MODEL_ID = "google/gemma-4-E2B-it" # @param ["google/gemma-4-E2B-it", "google/gemma-4-E4B-it", "google/gemma-4-12B-it", "google/gemma-4-31B-it", "google/gemma-4-26B-A4B-it"]
+```python { .notebook-cell .model-swap }
+MODEL_ID = "google/gemma-4-E2B-it"
 
 from transformers import pipeline
 
@@ -44,7 +51,7 @@ txt_pipe = pipeline(
 
 Once you have the Gemma model loaded and configured in a `pipeline` object, you can send prompts to the model. The following example code shows a basic request using the `text_inputs` parameter:
 
-```python
+```python { .notebook-cell }
 output = txt_pipe(text_inputs="<|turn>user\nRoses are..<turn|>\n<|turn>model\n")
 print(output[0]['generated_text'].removesuffix("<turn|>"))
 ```
@@ -77,7 +84,7 @@ Here are a few ways to complete the phrase "Roses are...":
 
 ## Use Dialog library
 
-```python
+```python { .notebook-cell }
 import dialog
 from transformers import GenerationConfig
 config = GenerationConfig.from_pretrained(MODEL_ID)
@@ -126,7 +133,7 @@ Here are a few ways to complete the phrase "Roses are...":
 
 When generating content with more complex prompting, use a prompt template to structure your request. A prompt template allows you to specify input from specific roles, such as `user` or `model`, and is a required format for managing multi-turn chat interactions with Gemma models. The following example code shows how to construct a prompt template for Gemma:
 
-```python
+```python { .notebook-cell }
 from transformers import GenerationConfig
 config = GenerationConfig.from_pretrained(MODEL_ID)
 config.max_new_tokens = 512
@@ -160,7 +167,7 @@ A primal fear, a dark design.
 
 In a multi-turn setup, the conversation history is preserved as a sequence of alternating `user` and `model` roles. This cumulative list serves as the model's memory, ensuring that each new output is informed by the preceding dialogue.
 
-```python
+```python { .notebook-cell }
 import dialog
 from transformers import GenerationConfig
 config = GenerationConfig.from_pretrained(MODEL_ID)
@@ -213,7 +220,7 @@ That breaks the sailor's guarded heart.
 
 And here's the conversation exported as text.
 
-```python
+```python { .notebook-cell }
 chat_history = conv.as_text(training=True)
 print(chat_history)
 print("-"*80)
@@ -256,7 +263,7 @@ That breaks the sailor's guarded heart.<turn|>
 
 Use the `system` role to provide the system-level instructions.
 
-```python
+```python { .notebook-cell }
 import dialog
 from transformers import GenerationConfig
 config = GenerationConfig.from_pretrained(MODEL_ID)
@@ -307,6 +314,6 @@ In this guide, you learned how to perform basic text inference with Gemma 4 usin
 <!-- TODO: Port over
 ### Next Steps
 
-- [Prompt and system instructions](https://ai.google.dev/gemma/docs/core/prompt-formatting-gemma4)
-- [Function calling](https://ai.google.dev/gemma/docs/capabilities/text/function-calling-gemma4)
-- [Run Gemma overview](https://ai.google.dev/gemma/docs/run) -->
+- [Prompt and system instructions](../prompt-formatting.md)
+- [Function calling](function-calling.md)
+- [Run Gemma overview](../../deployment/index.md) -->

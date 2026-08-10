@@ -1,3 +1,10 @@
+---
+title: Fine-tune EmbeddingGemma
+description: Fine-tuning helps close the gap between a model's general-purpose understanding and the specialized, high-performance accuracy that your application requires.
+models: [embeddinggemma]
+frameworks: [sentence-transformers, transformers]
+source_url: "https://ai.google.dev/gemma/docs/embeddinggemma/fine-tuning-embeddinggemma-with-sentence-transformers.md.txt"
+---
 # Fine-tune EmbeddingGemma
 
 
@@ -102,7 +109,7 @@ A search for "tax-free investment" might have given the following results, with 
 3. Document: Home Loan Application Guide (Score: 0.44)
 
 !!! Note
-    To generate optimal embeddings with EmbeddingGemma, you should add an "instructional prompt" or "task" to the beginning of your input text. You will use `STS` for sentence similarity. For details on all available EmbeddingGemma prompts, see the [model card](http://ai.google.dev/gemma/docs/embeddinggemma/model_card#prompt_instructions).
+    To generate optimal embeddings with EmbeddingGemma, you should add an "instructional prompt" or "task" to the beginning of your input text. You will use `STS` for sentence similarity. For details on all available EmbeddingGemma prompts, see the [model card](model-card.md#prompt-instructions).
     
 
 ```python
@@ -224,15 +231,15 @@ The same search now yields much clearer results:
 2. Document: Opening a Regular Saving Account (Score: 0.34) \<- *Clearly less relevant*
 3. Document: Home Loan Application Guide (Score: 0.47)
 
-```python
-get_scores(query, documents)
-```
+   ```python
+   get_scores(query, documents)
+   ```
 
-``` { .no-copy .output }
-Document:  Opening a NISA Account -> 🤖 Score:  0.73378766
-Document:  Opening a Regular Savings Account -> 🤖 Score:  0.34055778
-Document:  Home Loan Application Guide -> 🤖 Score:  0.47503752
-```
+   ``` { .no-copy .output }
+   Document:  Opening a NISA Account -> 🤖 Score:  0.73378766
+   Document:  Opening a Regular Savings Account -> 🤖 Score:  0.34055778
+   Document:  Home Loan Application Guide -> 🤖 Score:  0.47503752
+   ```
 
 To upload your model to the Hugging Face Hub, you can use the `push_to_hub` method from the Sentence Transformers library.
 
@@ -250,5 +257,5 @@ You have now learned how to adapt an EmbeddingGemma model for a specific domain 
 Explore what more you can do with EmbeddingGemma:
 
 - [Training Overview](https://sbert.net/docs/sentence_transformer/training_overview.html) in Sentence Transformers Documentation
-- [Generate embeddings with Sentence Transformers](https://ai.google.dev/gemma/docs/embeddinggemma/inference-embeddinggemma-with-sentence-transformers)
+- [Generate embeddings with Sentence Transformers](inference.md)
 - [Simple RAG example](https://github.com/google-gemma/cookbook/blob/main/Gemma/%5BGemma_3%5DRAG_with_EmbeddingGemma.ipynb) in the Gemma Cookbook

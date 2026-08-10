@@ -1,0 +1,163 @@
+/* ===================================================================
+   NAV — header, top tabs, sidebar and table of contents.
+
+   Owns: the site chrome around the content.
+   Does NOT own: colours (gemma.css), content width (layout.css).
+
+   The header is a near-white tint rather than a slab of brand colour.
+   Brand blue appears once, on the active tab indicator — which is also
+   the one place --gemma-blue is safe, since a 2px rule has no contrast
+   requirement to meet.
+   =================================================================== */
+
+/* -------------------------------------------------------------------
+   Header
+   ------------------------------------------------------------------- */
+.md-header {
+  background-color: var(--gemma-header-bg);
+  color: var(--gemma-header-fg);
+  border-bottom: 1px solid var(--gemma-header-border);
+  box-shadow: none;
+}
+
+.md-header--shadow {
+  box-shadow: none;
+}
+
+.md-header__title {
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.md-header__button {
+  color: var(--gemma-header-fg);
+}
+
+/* Search sits on the tinted header, so it needs a surface of its own. */
+.md-search__form {
+  background-color: var(--gemma-surface);
+  border: 1px solid var(--gemma-border);
+  border-radius: var(--gemma-radius-md);
+  box-shadow: none;
+}
+
+.md-search__form:hover {
+  background-color: var(--gemma-surface);
+  border-color: var(--gemma-n200);
+}
+
+.md-search__input {
+  font-size: 0.8rem;
+}
+
+.md-search__input::placeholder,
+.md-search__icon {
+  color: var(--gemma-text-muted);
+}
+
+/* -------------------------------------------------------------------
+   Top tabs
+   The active tab is the strongest signal on the page chrome: brand
+   colour plus a 2px rule, rather than a faint weight change.
+   ------------------------------------------------------------------- */
+.md-tabs {
+  background-color: var(--gemma-header-bg);
+  color: var(--gemma-header-fg);
+  border-bottom: 1px solid var(--gemma-header-border);
+  box-shadow: none;
+}
+
+.md-tabs__list {
+  gap: var(--gemma-space-1);
+}
+
+.md-tabs__link {
+  margin-top: 0;
+  padding: var(--gemma-space-3) var(--gemma-space-3);
+  font-size: 0.8rem;
+  font-weight: 500;
+  opacity: 1;
+  color: var(--gemma-text-muted);
+  border-bottom: 2px solid transparent;
+}
+
+.md-tabs__link:hover {
+  color: var(--md-default-fg-color);
+}
+
+/* Zensical marks the active tab on the <li>, not the <a>. */
+.md-tabs__item--active > .md-tabs__link,
+.md-tabs__item--active > .md-tabs__link:hover,
+.md-tabs__link--active {
+  color: var(--gemma-accent-on-tint);
+  font-weight: 600;
+  border-bottom-color: var(--gemma-blue);
+}
+
+/* -------------------------------------------------------------------
+   Sidebar
+   Quiet by default; the active item is the only thing with weight.
+   ------------------------------------------------------------------- */
+.md-nav {
+  font-size: 0.8rem;
+}
+
+.md-nav__title {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--gemma-text-muted);
+}
+
+.md-nav__link {
+  margin-block: 0;
+  padding-block: var(--gemma-space-1);
+  color: var(--gemma-text-secondary);
+}
+
+.md-nav__link:hover {
+  color: var(--md-default-fg-color);
+}
+
+/* Material's own rule is `.md-nav--primary .md-nav__item .md-nav__link--active`
+   (0,3,0); anything less specific silently loses. */
+.md-nav--primary .md-nav__item .md-nav__link--active,
+.md-nav--primary .md-nav__item .md-nav__link--active:hover,
+.md-nav__item .md-nav__link--active {
+  font-weight: 600;
+  color: var(--gemma-accent);
+}
+
+/* Section labels inside the sidebar (Text, Multimodal, Advanced…). */
+.md-nav__item--section > .md-nav__link {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--gemma-text-muted);
+}
+
+/* Indentation alone carries the nesting. An earlier hairline rail drew a
+   line down the outside of the whole sidebar, because Material wraps even
+   the top level in a nested list. */
+.md-nav__list .md-nav__list {
+  margin-left: var(--gemma-space-2);
+  padding-left: var(--gemma-space-3);
+}
+
+/* -------------------------------------------------------------------
+   Table of contents
+   ------------------------------------------------------------------- */
+.md-sidebar--secondary .md-nav__title {
+  padding-bottom: var(--gemma-space-2);
+}
+
+.md-sidebar--secondary .md-nav__link {
+  font-size: 0.78rem;
+  color: var(--gemma-text-muted);
+}
+
+.md-sidebar--secondary .md-nav__link--active {
+  color: var(--gemma-accent);
+}

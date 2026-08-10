@@ -1,0 +1,52 @@
+{#- Page facts. model-switcher.js adds the Examples picker only when marked code can change.
+    Minijinja has no `.get()`; use `dict[key] | default(...)`. -#}
+{% include "partials/model-names.html" %}
+{%- set models = page.meta.models if page.meta and page.meta.models else [] -%}
+{%- set requires = page.meta.requires if page.meta and page.meta.requires else "" -%}
+{%- set frameworks = page.meta.frameworks if page.meta and page.meta.frameworks else [] -%}
+{%- set colab = page.meta.colab if page.meta and page.meta.colab else "" -%}
+{%- set ns = namespace(families=[]) -%}
+{%- for id in models -%}
+  {%- set family = id | split("/") | first -%}
+  {%- if family not in ns.families -%}
+    {%- set ns.families = ns.families + [family] -%}
+  {%- endif -%}
+{%- endfor -%}
+{%- if models or frameworks or colab %}
+<div class="page-context" data-requires="{{ requires }}">
+  {%- if ns.families %}
+  <span class="page-context__item">
+    <span class="page-context__label">Models</span>
+    {%- for family in ns.families %}
+    {%- set url = gemma_model_urls[family] | default("") %}
+    {%- if url %}
+    <a class="page-context__value page-context__value--link" href="{{ url }}">{{ gemma_model_names[family] | default(family) }}</a>
+    {%- else %}
+    <span class="page-context__value">{{ gemma_model_names[family] | default(family) }}</span>
+    {%- endif %}
+    {%- endfor %}
+  </span>
+  {%- endif %}
+  {%- if frameworks %}
+  <span class="page-context__item">
+    <span class="page-context__label">Uses</span>
+    {%- for id in frameworks %}
+    {%- set url = gemma_framework_urls[id] | default("") %}
+    {%- if url %}
+    <a class="page-context__value page-context__value--link" href="{{ url }}" title="{{ gemma_model_names[id] | default(id) }}">{{ gemma_framework_short_names[id] | default(gemma_model_names[id]) | default(id) }}</a>
+    {%- else %}
+    <span class="page-context__value" title="{{ gemma_model_names[id] | default(id) }}">{{ gemma_framework_short_names[id] | default(gemma_model_names[id]) | default(id) }}</span>
+    {%- endif %}
+    {%- endfor %}
+  </span>
+  {%- endif %}
+  {%- if colab %}
+  <span class="page-context__item page-context__item--colab">
+    <a class="page-context__value page-context__value--link page-context__colab" href="{{ colab }}" target="_blank" rel="noopener" title="Open in Google Colab" aria-label="Open in Google Colab">
+      <img src="https://www.tensorflow.org/images/colab_logo_32px.png" alt="" width="16" height="16">
+      <span>Colab</span>
+    </a>
+  </span>
+  {%- endif %}
+</div>
+{%- endif %}

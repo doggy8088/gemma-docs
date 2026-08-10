@@ -1,4 +1,8 @@
 ---
+title: Quick Start
+description: The Gemma family of open models includes a range of model sizes, capabilities, and task-specialized variations to help you build custom generative solutions.
+models: [gemma-4]
+frameworks: [transformers, ollama, mlx]
 hide:
   - toc
 ---
@@ -9,13 +13,13 @@ The Gemma family of open models includes a range of model sizes, capabilities, a
 
 *The latest generation featuring multimodal (text, image, audio) inputs.*
 
-| Size | Variant | Input ➔ Output | Intended Platform |
-|---|---|---|---|
-| **E2B** | [Gemma 4 (core)](https://ai.google.dev/gemma/docs/core) | Text, images, audio ➔ Text | Mobile devices |
-| **E4B** | [Gemma 4 (core)](https://ai.google.dev/gemma/docs/core) | Text, images, audio ➔ Text | Mobile devices and laptops |
-| **12B** | [Gemma 4 (core)](https://ai.google.dev/gemma/docs/core) | Text, images, audio ➔ Text | Laptops, desktop computers and small servers |
-| **A4B** | [Gemma 4 (core)](https://ai.google.dev/gemma/docs/core) | Text, images ➔ Text | Desktop computers and small servers |
-| **31B** | [Gemma 4 (core)](https://ai.google.dev/gemma/docs/core) | Text, images ➔ Text | Large servers or server clusters |
+<!-- Generated from data/models.yml -- edit that file, not this table. -->
+
+| Size | Variant | Input ➔ Output | Context | Intended Platform |
+|---|---|---|---|---|
+{% for size in modeldata.gemma4.sizes -%}
+| **{{ size.name }}** | [Gemma 4 (core)](../models/gemma-4/index.md) | {{ size.modalities.input | map('capitalize') | join(', ') }} ➔ {{ size.modalities.output | map('capitalize') | join(', ') }} | {{ size.context }} | {{ size.platform }} |
+{% endfor %}
 
 !!! tip "New to Gemma?"
     A good place to start is the Gemma 4 12B model, which can be used for many tasks and runs on laptop hardware.
@@ -37,12 +41,12 @@ You can download Gemma models from:
 
     Then use:
 
-    ```python
+    ```python { .model-swap }
     from transformers import pipeline
 
     pipe = pipeline(
         "text-generation",
-        model="google/gemma-4-12b",
+        model="google/gemma-4-12B-it",
         device_map="auto"
     )
     output = pipe("Explain quantum computing simply:", max_new_tokens=150)
@@ -51,15 +55,15 @@ You can download Gemma models from:
 
 === "Ollama"
 
-    ```bash
+    ```bash { .model-swap }
     ollama run gemma4:12b "Explain quantum computing simply:"
     ```
 
 === "Apple MLX"
 
-    ```bash
+    ```bash { .model-swap }
     pip install mlx-lm
-    mlx_lm.generate --model mlx-community/gemma-4-12b-4bit \
+    mlx_lm.generate --model mlx-community/gemma-4-12B-it-qat-4bit \
         --prompt "Explain quantum computing simply:"
     ```
 

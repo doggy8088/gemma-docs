@@ -1,3 +1,10 @@
+---
+title: Fine-tuning with FunctionGemma
+description: This guide demonstrates how to fine-tune FunctionGemma for tool calling.
+models: [functiongemma]
+frameworks: [transformers, peft, trl]
+source_url: "https://ai.google.dev/gemma/docs/functiongemma/finetuning-with-functiongemma.md.txt"
+---
 # Fine-tuning with FunctionGemma
 
 
@@ -10,7 +17,7 @@ Models, especially smaller ones, have fewer parameters available to retain compl
 Common use cases for fine-tuning tool calling include:
 
 - **Model Distillation**: Generating synthetic training data with a larger model and fine-tuning a smaller model to replicate the specific workflow efficiently.
-- **Handling Non-Standard Schemas** : Overcoming base model struggles with legacy, highly complex data structures or proprietary format not found in public data, such as handling [domain-specific mobile actions](https://ai.google.dev/gemma/docs/mobile-actions).
+- **Handling Non-Standard Schemas** : Overcoming base model struggles with legacy, highly complex data structures or proprietary format not found in public data, such as handling [domain-specific mobile actions](../../tuning/mobile-actions.md).
 - **Optimizing Context Usage**: "Baking" tool definitions into the model's weights. This allows you to use shorthand descriptions in your prompts, freeing up the context window for the actual conversation.
 - **Resolving Selection Ambiguity**: Biasing the model toward specific enterprise policies, such as prioritizing an internal knowledge base over an external search engine.
 
@@ -31,7 +38,9 @@ The first step is to install Hugging Face Libraries, including TRL, and datasets
 #% pip install flash-attn
 ```
 
-> *Note: If you are using a GPU with Ampere architecture (such as NVIDIA L4) or newer, you can use Flash attention. Flash Attention is a method that significantly speeds computations up and reduces memory usage from quadratic to linear in sequence length, leading to accelerating training up to 3x. Learn more at [FlashAttention](https://github.com/Dao-AILab/flash-attention/tree/main).*
+!!! Note
+    If you are using a GPU with Ampere architecture (such as NVIDIA L4) or newer, you can use Flash attention. Flash Attention is a method that significantly speeds computations up and reduces memory usage from quadratic to linear in sequence length, leading to accelerating training up to 3x. Learn more at [FlashAttention](https://github.com/Dao-AILab/flash-attention/tree/main).*
+
 
 Before you can start training, you have to make sure that you accepted the terms of use for Gemma. You can accept the license on [Hugging Face](http://huggingface.co/google/functiongemma-270m-it) by clicking on the **Agree** and access repository button on the model page at: <http://huggingface.co/google/functiongemma-270m-it>
 
@@ -152,10 +161,8 @@ def search_google(query: str) -> str:
         query: query string
     """
     return "Public Result"
-```
 
 
-```python
 TOOLS = [get_json_schema(search_knowledge_base), get_json_schema(search_google)]
 
 DEFAULT_SYSTEM_MSG = "You are a model that can do function calling with the following functions"
@@ -517,7 +524,7 @@ plt.grid(True)
 plt.show()
 ```
 
-![png](https://ai.google.dev/static/gemma/docs/functiongemma/finetuning-with-functiongemma_files/output_6JBty2rq05Jz_0.png)
+![png](../../assets/functiongemma/output_6JBty2rq05Jz_0.png)
 
 ## Test Model Inference
 
@@ -607,5 +614,5 @@ Now that you have a fine-tuned model, consider the following steps to move towar
 
 Check out the following docs next:
 
-- [Full function calling sequence with FunctionGemma](https://ai.google.dev/gemma/docs/functiongemma/full-function-calling-sequence-with-functiongemma)
+- [Full function calling sequence with FunctionGemma](full-sequence.md)
 - [Fine-tune FunctionGemma for Mobile Actions](https://github.com/google-gemma/cookbook/blob/main/FunctionGemma/%5BFunctionGemma%5DFinetune_FunctionGemma_270M_for_Mobile_Actions_with_Hugging_Face.ipynb) in the Gemma Cookbook

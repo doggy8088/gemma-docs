@@ -1,6 +1,12 @@
-# EmbeddingGemma model card
+---
+title: EmbeddingGemma model card
+description: "Model card for EmbeddingGemma: embedding inputs and outputs, training data, evaluation results, and intended use."
+models: [embeddinggemma]
+source_url: "https://ai.google.dev/gemma/docs/embeddinggemma/model_card.md.txt"
+---
+# Model card
 
-**Model Page** : [EmbeddingGemma](https://ai.google.dev/gemma/docs/embeddinggemma)
+**Model Page** : [EmbeddingGemma](index.md)
 
 **Resources and Technical Documentation**:
 
@@ -37,11 +43,9 @@ For more technical details, refer to our paper:
 ### Inputs and outputs
 
 - **Input:**
-
     - Text string, such as a question, a prompt, or a document to be embedded
     - Maximum input context length of 2K
 - **Output:**
-
     - Numerical vector representations of input text data
     - Output embedding dimension size of 768, with smaller options available (512, 256, or 128) via Matryoshka Representation Learning (MRL). MRL allows users to truncate the output embedding of size 768 to their desired size and then re-normalize for efficient and accurate representation.
 
@@ -87,12 +91,12 @@ data:
 
 EmbeddingGemma was trained using the latest generation of
 [Tensor Processing Unit (TPU)](https://cloud.google.com/tpu/docs/intro-to-tpu) hardware (TPUv5e), for more details refer to
-the [Gemma 3 model card](https://ai.google.dev/gemma/docs/core/model_card_3).
+the [Gemma 3 model card](../gemma-3/index.md).
 
 ### Software
 
 Training was done using [JAX](https://github.com/jax-ml/jax) and [ML Pathways](https://blog.google/technology/ai/introducing-pathways-next-generation-ai-architecture/). For more details refer
-to the [Gemma 3 model card](https://ai.google.dev/gemma/docs/core/model_card_3).
+to the [Gemma 3 model card](../gemma-3/index.md).
 
 ## Evaluation
 
@@ -203,7 +207,6 @@ training and development.
 - **Classification**: Embeddings optimized to classify texts according to preset labels, such as sentiment analysis and spam detection
 - **Clustering**: Embeddings optimized to cluster texts based on their similarities, such as document organization, market research, and anomaly detection
 - **Retrieval**
-
     - **Document**: Embeddings optimized for document search, such as indexing articles, books, or web pages for search
     - **Query**: Embeddings optimized for general search queries, such as custom search
     - **Code Query**: Embeddings optimized for retrieval of code blocks based on natural language queries, such as code suggestions and search
@@ -218,11 +221,9 @@ training and development.
 ### Limitations
 
 - Training Data
-
     - The quality and diversity of the training data significantly influence the model's capabilities. Biases or gaps in the training data can lead to limitations in the model's responses.
     - The scope of the training dataset determines the subject areas the model can handle effectively.
 - Language Ambiguity and Nuance
-
     - Natural language is inherently complex. Models might struggle to grasp subtle nuances, sarcasm, or figurative language.
 
 ### Ethical Considerations and Risks

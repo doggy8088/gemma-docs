@@ -1,8 +1,17 @@
-# ShieldGemma
+---
+title: ShieldGemma
+description: ShieldGemma is a set of instruction tuned models for evaluating the safety of text and images against a set of defined safety policies.
+models: [shieldgemma]
+source_url: "https://ai.google.dev/gemma/docs/shieldgemma.md.txt"
+---
+# ShieldGemma {: #hidden-title style="display: none;" }
 
-## ShieldGemma
-
-[Video](https://www.youtube.com/watch?v=BgWO2iVPlyw)
+<div class="video-embed">
+  <iframe src="https://www.youtube-nocookie.com/embed/BgWO2iVPlyw"
+          title="Video" loading="lazy" allowfullscreen
+          allow="accelerometer; encrypted-media; gyroscope; picture-in-picture"
+          referrerpolicy="strict-origin-when-cross-origin"></iframe>
+</div>
 
 
 ShieldGemma is a set of instruction tuned models for evaluating the safety of text and images against a set of defined safety policies. You can use
@@ -12,23 +21,15 @@ for your specific use case.
 
 
 ShieldGemma 2 is a 4B parameter model built to label images for safety.
-ShieldGemma 1 is built on [Gemma 2](https://ai.google.dev/gemma/docs/core) in 2B, 9B, and 27B parameter sizes.
+ShieldGemma 1 is built on [Gemma 2](../gemma-4/index.md) in 2B, 9B, and 27B parameter sizes.
 
 
--
-
-  #### Content safety evaluation
-
-  Evaluate the safety of prompt input and output responses against a set of defined safety policies.
-- [](https://huggingface.co/collections/google/shieldgemma-67d130ef8da6af884072a789)
-
-  #### [Tuneable, open models](https://huggingface.co/collections/google/shieldgemma-67d130ef8da6af884072a789)
-
-  ShieldGemma models are provided with open weights and can be fine-tuned for your specific use case.
+- **Content safety evaluation** — Evaluate the safety of prompt input and output responses against a set of defined safety policies.
+- **[Tuneable, open models](https://huggingface.co/collections/google/shieldgemma-67d130ef8da6af884072a789)** — ShieldGemma models are provided with open weights and can be fine-tuned for your specific use case.
 
 ## ShieldGemma 2
 
-### [View the model card](http://ai.google.dev/gemma/docs/shieldgemma/model_card_2)
+### [View the model card](model-card-v2.md)
 
 ShieldGemma's 2 model card contains detailed information about the model implementation, evaluations, model usage and limitations, and more.
 
@@ -42,7 +43,7 @@ Run a working example for using ShieldGemma to evaluate images.
 
 ## ShieldGemma 1
 
-### [View the model card](http://ai.google.dev/gemma/docs/shieldgemma/model_card)
+### [View the model card](model-card-v1.md)
 
 ShieldGemma's model card contains detailed information about the model implementation, evaluations, model usage and limitations, and more.
 

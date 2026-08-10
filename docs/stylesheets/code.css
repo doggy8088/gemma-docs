@@ -1,8 +1,0 @@
-/* Lighter background for output blocks to distinguish from code */
-.output code {
-  background-color: #EDF7FF;
-}
-
-[data-md-color-scheme="slate"] .output code {
-  background-color: #1a1a2e;
-}

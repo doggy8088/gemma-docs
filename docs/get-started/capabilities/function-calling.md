@@ -1,3 +1,10 @@
+---
+title: Tool calling
+description: When using a generative artificial intelligence (AI) model such as Gemma, you may want to use the model to operate programming interfaces in order to complete tasks or answer questions.
+models: [gemma-4]
+frameworks: [transformers]
+colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs/notebooks/function-calling.ipynb
+---
 <!-- TODO: Rename this to "tool calling"? -->
 # Tool calling
 
@@ -17,7 +24,7 @@ This guide shows the process of using Gemma 4 within the Hugging Face ecosystem.
 
 Install the Hugging Face libraries required for running the Gemma model and making requests.
 
-```bash
+```bash { .notebook-cell }
 # Install PyTorch & other libraries
 pip install torch accelerate
 
@@ -29,8 +36,8 @@ pip install "transformers>=5.10.1"
 
 Use the `transformers` libraries to create an instance of a `processor` and `model` using the `AutoProcessor` and `AutoModelForImageTextToText` classes as shown in the following code example:
 
-```python
-MODEL_ID = "google/gemma-4-E2B-it" # @param ["google/gemma-4-E2B-it", "google/gemma-4-E4B-it", "google/gemma-4-12B-it", "google/gemma-4-31B-it", "google/gemma-4-26B-A4B-it"]
+```python { .notebook-cell .model-swap }
+MODEL_ID = "google/gemma-4-E2B-it"
 
 from transformers import AutoProcessor, AutoModelForMultimodalLM
 
@@ -51,7 +58,7 @@ You can pass tools to the model using the `apply_chat_template()` function via t
 
 Below is the example with the JSON schema.
 
-```python
+```python { .notebook-cell }
 from transformers import TextStreamer
 
 weather_function_schema = {
@@ -98,7 +105,7 @@ What's the temperature in London?<turn|>
 
 And the same example with the raw Python function.
 
-```python
+```python { .notebook-cell }
 from transformers.utils import get_json_schema
 
 def get_current_temperature(location: str):
@@ -139,7 +146,7 @@ This section demonstrates a three-stage cycle for connecting the model to extern
 
 Here's the user prompt `"Hey, what's the weather in Tokyo right now?"`, and the tool `[get_current_weather]`. Gemma generates a function call object as follows.
 
-```python
+```python { .notebook-cell }
 # Define a function that our model can use.
 def get_current_weather(location: str, unit: str = "celsius"):
     """
@@ -190,7 +197,7 @@ Your application should parse the model's response to extract the function name 
 !!! Note
     Always validate function names and arguments before execution.
 
-```python
+```python { .notebook-cell }
 import re
 import json
 
@@ -261,7 +268,7 @@ if calls:
 !!! Note
     For optimal results, append the tool execution result to your message history using the specific format below. This ensures the chat template correctly generates the required token structure (e.g., `response:get_current_weather{temperature:15,weather:<|"|>sunny<|"|>}`).
 
-```python
+```python { .notebook-cell }
 "tool_responses": [
   {
     "name": function_name,
@@ -272,7 +279,7 @@ if calls:
 
 In case of multiple independent requests:
 
-```python
+```python { .notebook-cell }
 "tool_responses": [
   {
     "name": function_name_1,
@@ -289,7 +296,7 @@ In case of multiple independent requests:
 
 Finally, Gemma reads the tool response and reply to the user.
 
-```python
+```python { .notebook-cell }
 text = processor.apply_chat_template(message, tools=tools, tokenize=False, add_generation_prompt=True)
 inputs = processor(text=text, return_tensors="pt").to(model.device)
 out = model.generate(**inputs, max_new_tokens=128)
@@ -305,7 +312,7 @@ Output: The current weather in Tokyo is 15 degrees Celsius and sunny.
 
 You can see the full chat history below.
 
-```python
+```python { .notebook-cell }
 # full history
 print(json.dumps(message, indent=2))
 
@@ -361,7 +368,7 @@ Hey, what's the weather in Tokyo right now?<turn|>
 
 By utilizing an internal reasoning process, the model significantly enhances its function-calling accuracy. This allows for more precise decision-making regarding when to trigger a tool and how to define its parameters.
 
-```python
+```python { .notebook-cell }
 prompt = "Hey, I'm in Seoul. Is it good for running now?"
 message = [
     {
@@ -428,7 +435,7 @@ Role: assistant
 
 Process the tool call and get the final answer.
 
-```python
+```python { .notebook-cell }
 calls = extract_tool_calls(output)
 if calls:
     # Call the function and get the result
@@ -514,7 +521,7 @@ If a function uses a custom object (like a Config class) as an argument, the aut
 
 In these cases, manually defining the JSON schema is preferred to ensure nested properties (such as theme or font_size within a config object) are explicitly defined for the model.
 
-```python
+```python { .notebook-cell }
 import json
 from transformers.utils import get_json_schema
 
@@ -626,7 +633,7 @@ You have established how to build an application that can call functions with Ge
 ### Next Steps
 Check out the following documentation for further reading.
 
-- [Run Gemma overview](https://ai.google.dev/gemma/docs/run)
-- [Vision understanding](https://ai.google.dev/gemma/docs/capabilities/vision)
-- [Audio understanding](https://ai.google.dev/gemma/docs/capabilities/audio)
-- [Thinking mode](https://ai.google.dev/gemma/docs/capabilities/thinking) -->
+- [Run Gemma overview](../../deployment/index.md)
+- [Vision understanding](vision.md)
+- [Audio understanding](audio.md)
+- [Thinking mode](thinking.md) -->

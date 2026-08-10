@@ -1,6 +1,17 @@
-# Gemma 4 Overview
+---
+title: Gemma 4
+description: Gemma is a family of generative artificial intelligence models and you can use them in a wide variety of generation tasks, including question answering, summarization, and reasoning.
+models: [gemma-4]
+source_url: "https://ai.google.dev/gemma/docs/core.md.txt"
+---
+# Gemma 4 {: #hidden-title style="display: none;" }
 
-[Video](https://www.youtube.com/watch?v=jZVBoFOJK-Q)
+<div class="video-embed">
+  <iframe src="https://www.youtube-nocookie.com/embed/jZVBoFOJK-Q"
+          title="Video" loading="lazy" allowfullscreen
+          allow="accelerometer; encrypted-media; gyroscope; picture-in-picture"
+          referrerpolicy="strict-origin-when-cross-origin"></iframe>
+</div>
 
 Gemma is a family of generative artificial intelligence models and you can
 use them in a wide variety of generation tasks, including question answering,
@@ -21,10 +32,10 @@ You can download Gemma 4 models from
 [Kaggle](https://www.kaggle.com/models?query=gemma-4&publisher=google) and
 [Hugging Face](https://huggingface.co/collections/google/gemma-4).
 For more technical details on Gemma 4, see the
-[Model Card](https://ai.google.dev/gemma/docs/core/model_card_4) and
+[Model Card](model-card.md) and
 [Technical Report](https://goo.gle/Gemma4Report).
 Earlier versions of Gemma core models are also available for download. For more
-information, see [Previous Gemma models](https://ai.google.dev/gemma/docs/core#previous-models).
+information, see [Previous Gemma models](index.md#previous-gemma-models).
 
 <div class="cookbook-grid">
 <a class="cookbook-card" href="https://www.kaggle.com/models?query=gemma-4&publisher=google" target="_blank" rel="noopener">
@@ -41,13 +52,13 @@ information, see [Previous Gemma models](https://ai.google.dev/gemma/docs/core#p
 ## Capabilities
 
 - **Reasoning:** All models in the family are designed as highly capable reasoners, with configurable [thinking
-  modes](https://ai.google.dev/gemma/docs/capabilities/thinking).
-- **Extended Multimodalities:** Processes Text, [Image](https://ai.google.dev/gemma/docs/capabilities/vision/image) with variable aspect ratio and resolution support (all models), [Video](https://ai.google.dev/gemma/docs/capabilities/vision/video), and [Audio](https://ai.google.dev/gemma/docs/capabilities/audio) (featured natively on the E2B, E4B and 12B models).
+  modes](../../get-started/capabilities/thinking.md).
+- **Extended Multimodalities:** Processes Text, [Image](../../get-started/capabilities/image.md) with variable aspect ratio and resolution support (all models), [Video](../../get-started/capabilities/video.md), and [Audio](../../get-started/capabilities/audio.md) (featured natively on the E2B, E4B and 12B models).
 - **Increased Context Window:** Small models feature a 128K context window, while the medium models support 256K.
 - **Enhanced Coding \& Agentic Capabilities:** Achieves notable improvements in coding benchmarks alongside built-in [function-calling
-  support](https://ai.google.dev/gemma/docs/capabilities/text/function-calling-gemma4), powering highly capable autonomous agents.
+  support](../../get-started/capabilities/function-calling.md), powering highly capable autonomous agents.
 - **Native System Prompt Support:** Gemma 4 introduces built-in support for the system role, enabling more structured and controllable conversations.
-- **[Multi-Token Prediction](https://ai.google.dev/gemma/docs/mtp/overview):** All Gemma 4 models (E2B, E4B, 12B, 31B, and 26B A4B) include a dedicated draft model for speculative decoding, enabling significantly faster inference with no quality loss.
+- **[Multi-Token Prediction](../../get-started/capabilities/mtp.md):** All Gemma 4 models (E2B, E4B, 12B, 31B, and 26B A4B) include a dedicated draft model for speculative decoding, enabling significantly faster inference with no quality loss.
 
 ## Parameter sizes and quantization
 
@@ -113,14 +124,8 @@ nearly identically to their high-precision baselines.
 Official QAT collections on Hugging Face
 
 - **[collections/google/gemma-4-qat-q4-0](https://huggingface.co/collections/google/gemma-4-qat-q4-0)**
-    - **Unquantized QAT Checkpoints (`-unquantized` / `-assistant`):** Half-precision weights extracted directly from the QAT pipeline. These are ideal for custom downstream compilation, research, or running speculative decoding using the assistant draft models. *Available for
-```python
-Gemma 4 E2B, E4B, 12B, 26B A4B, and 31B.*
-```
-    - **GGUF (`-gguf`):** Checkpoints available for immediate drop-in compatibility across the local LLM ecosystem. *Available for Gemma 4
-```python
-E2B, E4B, 12B, 26B A4B, and 31B.*
-```
+    - **Unquantized QAT Checkpoints (`-unquantized` / `-assistant`):** Half-precision weights extracted directly from the QAT pipeline. These are ideal for custom downstream compilation, research, or running speculative decoding using the assistant draft models. *Available for Gemma 4 E2B, E4B, 12B, 26B A4B, and 31B.*
+    - **GGUF (`-gguf`):** Checkpoints available for immediate drop-in compatibility across the local LLM ecosystem. *Available for Gemma 4 E2B, E4B, 12B, 26B A4B, and 31B.*
     - **Compressed Tensors (`-w4a16-ct`):** Serialized natively in the `compressed-tensors` standard for optimized, high-concurrency cloud serving. *Available for Gemma 4 E2B, E4B, 12B, and 31B.*
 - **[collections/google/gemma-4-qat-mobile](https://huggingface.co/collections/google/gemma-4-qat-mobile)**
     - **Mobile-Optimized (`-mobile-transformers` / `-mobile-ct`):** Built on a custom `wNa8o8` schema engineered specifically for mobile hardware limits. It utilizes targeted 2-bit decoding layers, optimized KV caches, and static activations to maximize on-device RAM savings without choking edge processors. *Available for Gemma 4 E2B and E4B.*
@@ -136,10 +141,10 @@ available from [Kaggle](https://www.kaggle.com/models?query=gemma) and
 For more technical details about previous Gemma models, see the following
 model card pages:
 
-- Gemma 3 [Model Card](https://ai.google.dev/gemma/docs/core/model_card_3)
-- Gemma 2 [Model Card](https://ai.google.dev/gemma/docs/core/model_card_2)
-- Gemma 1 [Model Card](https://ai.google.dev/gemma/docs/core/model_card)
+- Gemma 3 [Model Card](../gemma-3/index.md)
+- Gemma 2 [Model Card](../gemma-2/index.md)
+- Gemma 1 [Model Card](../gemma-1/index.md)
 
 Ready to start building?
-[Get started](https://ai.google.dev/gemma/docs/get_started)
+[Get started](../../get-started/quickstart.md)
 with Gemma models!

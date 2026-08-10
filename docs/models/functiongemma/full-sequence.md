@@ -1,3 +1,10 @@
+---
+title: Full function calling sequence with FunctionGemma
+description: "The complete FunctionGemma tool-calling cycle: the model's call, the developer's execution, and the final response built from the tool's output."
+models: [functiongemma]
+frameworks: [transformers]
+source_url: "https://ai.google.dev/gemma/docs/functiongemma/full-function-calling-sequence-with-functiongemma.md.txt"
+---
 # Full function calling sequence with FunctionGemma
 
 
@@ -271,4 +278,4 @@ You have established how to build an application that can calls functions with F
 
 Check out the following documentation for further reading.
 
-- [Fine-tuning with FunctionGemma](https://ai.google.dev/gemma/docs/functiongemma/finetuning-with-functiongemma)
+- [Fine-tuning with FunctionGemma](fine-tuning.md)

@@ -1,3 +1,10 @@
+---
+title: Image Understanding
+description: You can use Gemma 3 and later models to analyze and understand the content of images.
+models: [gemma-4, gemma-3]
+frameworks: [transformers]
+colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs/notebooks/image.ipynb
+---
 # Image Understanding
 
 You can use Gemma 3 and later models to analyze and understand the content of images. This capability includes tasks like describing image content, identifying objects, recognizing scenes, and even inferring the context from visual information.
@@ -9,7 +16,7 @@ Here are some examples demonstrating these capabilities.
 
 Install the Hugging Face libraries required for running the Gemma model and making requests.
 
-```bash
+```bash { .notebook-cell }
 # Install PyTorch & other libraries
 pip install torch accelerate
 
@@ -21,8 +28,8 @@ pip install "transformers>=5.10.1"
 
 Use `transformers` library to load the pipeline
 
-```python
-MODEL_ID = "google/gemma-4-E2B-it" # @param ["google/gemma-4-E2B-it", "google/gemma-4-E4B-it", "google/gemma-4-12B-it", "google/gemma-4-31B-it", "google/gemma-4-26B-A4B-it"]
+```python { .notebook-cell .model-swap }
+MODEL_ID = "google/gemma-4-E2B-it"
 
 from transformers import pipeline
 
@@ -49,7 +56,7 @@ tokenizer.json:   0%|          | 0.00/32.2M [00:00<?, ?B/s]
 
 The following example shows how to provide an image and ask question about it.
 
-```python
+```python { .notebook-cell }
 from PIL import Image
 from IPython.display import display
 import requests
@@ -76,7 +83,7 @@ output = vqa_pipe(messages, return_full_text=False, generate_kwargs=gen_kwargs)
 print(output[0]['generated_text'])
 ```
 
-![png](https://ai.google.dev/static/gemma/docs/capabilities/vision/image_files/output_a6927bd0_0.png)
+![png](../../assets/capabilities/output_a6927bd0_0.png)
 
 ``` { .no-copy .output }
 This image shows the **Golden Gate Bridge** in San Francisco, California.
@@ -96,7 +103,7 @@ It's a scenic photograph capturing the bridge and the coastal environment.<turn|
 
 You can provide multiple images in a single prompt by including multiple image content in prompt template.
 
-```python
+```python { .notebook-cell }
 from PIL import Image
 from IPython.display import display
 import requests
@@ -127,9 +134,9 @@ output = vqa_pipe(messages, return_full_text=False, generate_kwargs=gen_kwargs)
 print(output[0]['generated_text'])
 ```
 
-![png](https://ai.google.dev/static/gemma/docs/capabilities/vision/image_files/output_6b3b62e7_0.png)
+![png](../../assets/capabilities/output_6b3b62e7_0.png)
 
-![png](https://ai.google.dev/static/gemma/docs/capabilities/vision/image_files/output_6b3b62e7_1.png)
+![png](../../assets/capabilities/output_6b3b62e7_1.png)
 
 ``` { .no-copy .output }
 Here are captions for the two images you provided:
@@ -190,7 +197,7 @@ Here are captions for the two images you provided:
 
 Models can recognize multilingual texts in the image.
 
-```python
+```python { .notebook-cell }
 from PIL import Image
 from IPython.display import display
 import requests
@@ -217,7 +224,7 @@ output = vqa_pipe(messages, return_full_text=False, generate_kwargs=gen_kwargs)
 print(output[0]['generated_text'])
 ```
 
-![png](https://ai.google.dev/static/gemma/docs/capabilities/vision/image_files/output_ebb5fd08_0.png)
+![png](../../assets/capabilities/output_ebb5fd08_0.png)
 
 ``` { .no-copy .output }
 The sign in the image says:
@@ -235,7 +242,7 @@ In the context of the picture (showing a cat playfully jumping), the sign is lik
 
 Models are trained to detect objects in an image and get their bounding box coordinates. Bounding box coordinates are expressed as normalized values relative to a 1000x1000 grid. You need to descale these coordinates based on your original image size.
 
-```python
+```python { .notebook-cell }
 import numpy as np
 from PIL import Image
 from IPython.display import display
@@ -309,10 +316,8 @@ def draw_results(text_content):
     return output_image
   else:
     print("No JSON code block found.")
-```
 
 
-```python
 messages = [
     {
         "role": "user", "content": [
@@ -337,7 +342,7 @@ draw_results(output[0]['generated_text'])
 ```<turn|>
 ````
 
-![png](https://ai.google.dev/static/gemma/docs/capabilities/vision/image_files/output_b041486b_1.png)
+![png](../../assets/capabilities/output_b041486b_1.png)
 
 ## Variable Resolution (Token Budget)
 
@@ -351,7 +356,7 @@ This budget determines how much the image is resized. Imagine you have a budget 
 
 Let's explore what happens if we perform object detection on an image and setting the budget size very low (70):
 
-```python
+```python { .notebook-cell }
 import numpy as np
 from PIL import Image
 import requests, cv2, re, json
@@ -396,10 +401,8 @@ def draw_results(text_content):
         output_img = draw_bounding_box(output_img, item["box_2d"], item["label"], label_colors, w, h)
 
     return Image.fromarray(output_img)
-```
 
 
-```python
 # Detect person, card, and traffic light
 messages = [
     {
@@ -426,7 +429,7 @@ draw_results(output[0]['generated_text'])
 ```<turn|>
 ````
 
-![png](https://ai.google.dev/static/gemma/docs/capabilities/vision/image_files/output_bc2920e6_1.png)
+![png](../../assets/capabilities/output_bc2920e6_1.png)
 
 It does alright but it is clear that the image is being compressed quite a bit as it does not detect all cars and persons. A higher token budget should resolve this!
 
@@ -434,7 +437,7 @@ It does alright but it is clear that the image is being compressed quite a bit a
 
 Let's explore what happens when we increase the budget sizes! A larger budget size results in more soft tokens being generated and processed. This should improve the object detection.
 
-```python
+```python { .notebook-cell }
 import matplotlib.pyplot as plt
 
 def count_tokens(processor, tokens):
@@ -478,10 +481,8 @@ messages = [
         ]
      }
 ]
-```
 
 
-```python
 # Run for different budget sizes
 budget_sizes = [70, 140, 280, 560]
 # 1120 won't fit on T4, but works on L4 or highger
@@ -563,7 +564,7 @@ Budget Size: 560
 ```<turn|>
 ````
 
-![png](https://ai.google.dev/static/gemma/docs/capabilities/vision/image_files/output_76f17518_3.png)
+![png](../../assets/capabilities/output_76f17518_3.png)
 
 ## Summary
 
@@ -572,6 +573,6 @@ In this guide, you learned how to use Gemma 4 models for image understanding tas
 <!-- TODO: Port over 
 ### Next Steps
 
-- [Prompt and system instructions](https://ai.google.dev/gemma/docs/core/prompt-formatting-gemma4)
-- [Function calling](https://ai.google.dev/gemma/docs/capabilities/text/function-calling-gemma4)
-- [Run Gemma overview](https://ai.google.dev/gemma/docs/run) -->
+- [Prompt and system instructions](../prompt-formatting.md)
+- [Function calling](function-calling.md)
+- [Run Gemma overview](../../deployment/index.md) -->

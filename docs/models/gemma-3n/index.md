@@ -1,6 +1,17 @@
-# Gemma 3n model overview
+---
+title: Gemma 3n model overview
+description: Gemma 3n is a generative AI model optimized for use in everyday devices, such as phones, laptops, and tablets.
+models: [gemma-3n]
+source_url: "https://ai.google.dev/gemma/docs/gemma-3n.md.txt"
+---
+# Gemma 3n model overview {: #hidden-title style="display: none;" }
 
-[Video](https://www.youtube.com/watch?v=eJFJRyXEHZ0)
+<div class="video-embed">
+  <iframe src="https://www.youtube-nocookie.com/embed/eJFJRyXEHZ0"
+          title="Video" loading="lazy" allowfullscreen
+          allow="accelerometer; encrypted-media; gyroscope; picture-in-picture"
+          referrerpolicy="strict-origin-when-cross-origin"></iframe>
+</div>
 
 Gemma 3n is a generative AI model optimized for use in everyday devices, such as
 phones, laptops, and tablets. This model includes innovations in
@@ -11,12 +22,12 @@ handling, as well as text and visual data.
 
 Gemma 3n includes the following key features:
 
-- **Audio input** : Process sound data for speech recognition, translation, and audio data analysis. [Learn more](https://ai.google.dev/gemma/docs/core/huggingface_inference#audio)
-- **Visual and text input** : Multimodal capabilities let you handle vision, sound, and text to help you understand and analyze the world around you. [Learn more](https://ai.google.dev/gemma/docs/core/huggingface_inference#vision)
+- **Audio input** : Process sound data for speech recognition, translation, and audio data analysis. [Learn more](../../deployment/huggingface.md#generate-text-from-audio-data)
+- **Visual and text input** : Multimodal capabilities let you handle vision, sound, and text to help you understand and analyze the world around you. [Learn more](../../deployment/huggingface.md#generate-text-from-image-data)
 - **Vision encoder:** High-performance MobileNet-V5 encoder substantially improves speed and accuracy of processing visual data. [Learn more](https://developers.googleblog.com/en/introducing-gemma-3n-developer-guide/#mobilenet-v5:-new-state-of-the-art-vision-encoder)
-- **PLE caching** : Per-Layer Embedding (PLE) parameters contained in these models can be cached to fast, local storage to reduce model memory run costs. [Learn more](https://ai.google.dev/gemma/docs/gemma-3n#ple-caching)
-- **MatFormer architecture:** Matryoshka Transformer architecture allows for selective activation of the models parameters per request to reduce compute cost and response times. [Learn more](https://ai.google.dev/gemma/docs/gemma-3n#matformer)
-- **Conditional parameter loading:** Bypass loading of vision and audio parameters in the model to reduce the total number of loaded parameters and save memory resources. [Learn more](https://ai.google.dev/gemma/docs/gemma-3n#conditional-parameter)
+- **PLE caching** : Per-Layer Embedding (PLE) parameters contained in these models can be cached to fast, local storage to reduce model memory run costs. [Learn more](index.md#ple-caching)
+- **MatFormer architecture:** Matryoshka Transformer architecture allows for selective activation of the models parameters per request to reduce compute cost and response times. [Learn more](index.md#matformer-architecture)
+- **Conditional parameter loading:** Bypass loading of vision and audio parameters in the model to reduce the total number of loaded parameters and save memory resources. [Learn more](index.md#conditional-parameter-loading)
 - **Wide language support**: Wide linguistic capabilities, trained in over 140 languages.
 - **32K token context**: Substantial input context for analyzing data and handling processing tasks.
 
@@ -56,7 +67,7 @@ However, using parameter skipping and PLE caching techniques, this model can be
 operated with an effective memory load of just under 2 billion (1.91B)
 parameters, as illustrated in Figure 1.
 
-![Gemma 3n diagram of parameter usage](https://ai.google.dev/static/gemma/docs/images/gemma-3n-parameters.png)
+![Gemma 3n diagram of parameter usage](../../assets/gemma-3n/gemma-3n-parameters.png)
 
 **Figure 1.** Gemma 3n E2B model parameters running in standard execution
 versus an effectively lower parameter load using PLE caching and parameter
@@ -107,5 +118,5 @@ demanding tasks.
 
 
 Ready to start building?
-[Get started](https://ai.google.dev/gemma/docs/get_started)
+[Get started](../../get-started/quickstart.md)
 with Gemma models!

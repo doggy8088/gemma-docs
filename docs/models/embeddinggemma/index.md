@@ -1,6 +1,17 @@
-# EmbeddingGemma model overview
+---
+title: EmbeddingGemma model overview
+description: EmbeddingGemma is a 308M parameter multilingual text embedding model based on Gemma 3.
+models: [embeddinggemma]
+source_url: "https://ai.google.dev/gemma/docs/embeddinggemma.md.txt"
+---
+# EmbeddingGemma model overview {: #hidden-title style="display: none;" }
 
-[Video](https://www.youtube.com/watch?v=Xu1X-J-r5Xk)
+<div class="video-embed">
+  <iframe src="https://www.youtube-nocookie.com/embed/Xu1X-J-r5Xk"
+          title="Video" loading="lazy" allowfullscreen
+          allow="accelerometer; encrypted-media; gyroscope; picture-in-picture"
+          referrerpolicy="strict-origin-when-cross-origin"></iframe>
+</div>
 
 EmbeddingGemma is a 308M parameter multilingual text embedding model based on
 Gemma 3. It is optimized for use in everyday devices, such as phones, laptops,
@@ -38,5 +49,5 @@ As with other Gemma models, EmbeddingGemma is provided with open weights and
 licensed for responsible [commercial use](https://ai.google.dev/gemma/terms), allowing you to
 fine tune and deploy it in your own projects and applications.
 
-[Try EmbeddingGemma](https://ai.google.dev/gemma/docs/embeddinggemma/inference-embeddinggemma-with-sentence-transformers)
-[Fine-tune EmbeddingGemma](https://ai.google.dev/gemma/docs/embeddinggemma/fine-tuning-embeddinggemma-with-sentence-transformers)
+[Try EmbeddingGemma](inference.md)
+[Fine-tune EmbeddingGemma](fine-tuning.md)

@@ -1,6 +1,12 @@
-# Gemma 3 model card
+---
+title: Gemma 3 model card
+description: "Model card for the multimodal Gemma 3 models: 128K context, 140+ languages, inputs and outputs, training data, and evaluation."
+models: [gemma-3]
+source_url: "https://ai.google.dev/gemma/docs/core/model_card_3.md.txt"
+---
+# Model card
 
-**Model Page** : [Gemma](https://ai.google.dev/gemma/docs/core)
+**Model Page** : [Gemma](index.md)
 
 **Resources and Technical Documentation**:
 
@@ -35,12 +41,10 @@ for everyone.
 ### Inputs and outputs
 
 - **Input:**
-
     - Text string, such as a question, a prompt, or a document to be summarized
     - Images, normalized to 896 x 896 resolution and encoded to 256 tokens each
     - Total input context of 128K tokens for the 4B, 12B, and 27B sizes, and 32K tokens for the 1B and 270M sizes.
 - **Output:**
-
     - Generated text in response to the input, such as an answer to a question, analysis of image content, or a summary of a document
     - Total output context up to 128K tokens for the 4B, 12B, and 27B sizes, and 32K tokens for the 1B and 270M sizes per request, subtracting the request input tokens
 

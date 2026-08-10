@@ -1,0 +1,14 @@
+# Fine-tuning
+
+The helper below encodes an image for the API:
+
+    def to_data_url(image_b64):
+        return f"data:image/jpeg;base64,{image_b64}"
+
+Running the cell produces:
+
+![](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==)
+
+And a second output with alt text:
+
+![png](data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==)

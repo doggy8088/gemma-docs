@@ -1,16 +1,22 @@
-# Gemma 4 Model Card
+---
+title: Model card
+description: Gemma is a family of open models built by Google DeepMind.
+models: [gemma-4]
+source_url: "https://ai.google.dev/gemma/docs/core/model_card_4.md.txt"
+---
+<div class="model-card-header" markdown>
 
-![Gemma 4 Banner](https://ai.google.dev/static/gemma/images/gemma4_banner.png)
-
+![Gemma 4 Banner](../../assets/gemma-4/gemma4_banner.png)
 
 [Hugging Face](https://huggingface.co/collections/google/gemma-4) \|
 [GitHub](https://github.com/google-gemma) \|
 [Launch Blog](https://blog.google/innovation-and-ai/technology/developers-tools/gemma-4/) \|
-[Documentation](https://ai.google.dev/gemma/docs/core) \|
+[Documentation](index.md) \|
 [Technical Report](https://arxiv.org/abs/2607.02770)
 
-
 **License** : [Apache 2.0](https://ai.google.dev/gemma/apache_2) \| **Authors** : [Google DeepMind](https://deepmind.google/models/gemma/)
+
+</div>
 
 Gemma is a family of open models built by Google DeepMind. Gemma 4 models are
 multimodal, handling text and image input (with audio supported on E2B, E4B, and 12B models)
@@ -182,8 +188,10 @@ tokens:
 - **Disabled Thinking Behavior:** For all models except for the E2B and E4B variants, if thinking is disabled, the model will still generate the tags but with an empty thought block: `<|channel>thought\n<channel|>`**\[Final
   answer\]**
 
-> Note that many libraries like Transformers and llama.cpp handle the
-> complexities of the chat template for you.
+!!! Note
+    Note that many libraries like Transformers and llama.cpp handle the
+    complexities of the chat template for you.
+
 
 ### 3. Multi-Turn Conversations
 
@@ -214,20 +222,20 @@ Use the following prompt structures for audio processing:
 
 - **Audio Speech Recognition (ASR)**
 
-```python
-Transcribe the following speech segment in {LANGUAGE} into {LANGUAGE} text.
+  ```text
+  Transcribe the following speech segment in {LANGUAGE} into {LANGUAGE} text.
 
-Follow these specific instructions for formatting the answer:
-```
+  Follow these specific instructions for formatting the answer:
     *   Only output the transcription, with no newlines.
     *   When transcribing numbers, write the digits, i.e. write 1.7 and not one point seven, and write 3 instead of three.
+  ```
 
 - **Automatic Speech Translation (AST)**
 
-```python
-Transcribe the following speech segment in {SOURCE_LANGUAGE}, then translate it into {TARGET_LANGUAGE}.
-When formatting the answer, first output the transcription in {SOURCE_LANGUAGE}, then one newline, then output the string '{TARGET_LANGUAGE}: ', then the translation in {TARGET_LANGUAGE}.
-```
+  ```text
+  Transcribe the following speech segment in {SOURCE_LANGUAGE}, then translate it into {TARGET_LANGUAGE}.
+  When formatting the answer, first output the transcription in {SOURCE_LANGUAGE}, then one newline, then output the string '{TARGET_LANGUAGE}: ', then the translation in {TARGET_LANGUAGE}.
+  ```
 
 ### 7. Audio and Video Length
 

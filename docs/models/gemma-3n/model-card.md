@@ -1,6 +1,12 @@
-# Gemma 3n model card
+---
+title: Gemma 3n model card
+description: "Model card for Gemma 3n: on-device inputs and outputs, training data, evaluation results, and intended use."
+models: [gemma-3n]
+source_url: "https://ai.google.dev/gemma/docs/gemma-3n/model_card.md.txt"
+---
+# Model card
 
-**Model Page** : [Gemma 3n](https://ai.google.dev/gemma/docs/gemma-3n)
+**Model Page** : [Gemma 3n](index.md)
 
 **Resources and Technical Documentation**:
 
@@ -32,7 +38,7 @@ requirements. This technique allows the models to operate at an effective size
 of 2B and 4B parameters, which is lower than the total number of parameters they
 contain. For more information on Gemma 3n's efficient parameter management
 technology, see the
-[Gemma 3n](https://ai.google.dev/gemma/docs/gemma-3n#parameters)
+[Gemma 3n](index.md#model-parameters-and-effective-parameters)
 page.
 
 ### Inputs and outputs
@@ -239,10 +245,7 @@ training and development.
     - **Image Data Extraction**: Extract, interpret, and summarize visual data for text communications.
     - **Audio Data Extraction**: Transcribe spoken language, translate speech to text in other languages, and analyze sound-based data.
 - Research and Education
-    - **Natural Language Processing (NLP) and generative model
-```python
-Research**: These models can serve as a foundation for researchers to experiment with generative models and NLP techniques, develop algorithms, and contribute to the advancement of the field.
-```
+    - **Natural Language Processing (NLP) and generative model Research**: These models can serve as a foundation for researchers to experiment with generative models and NLP techniques, develop algorithms, and contribute to the advancement of the field.
     - **Language Learning Tools**: Support interactive language learning experiences, aiding in grammar correction or providing writing practice.
     - **Knowledge Exploration**: Assist researchers in exploring large bodies of data by generating summaries or answering questions about specific topics.
 

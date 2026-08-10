@@ -1,6 +1,12 @@
+---
+title: ShieldGemma 2 model card
+description: ShieldGemma 2 is a model trained on Gemma 3's 4B IT checkpoint for image safety classification across key categories that takes in images and outputs safety labels per policy.
+models: [shieldgemma]
+source_url: "https://ai.google.dev/gemma/docs/shieldgemma/model_card_2.md.txt"
+---
 # ShieldGemma model card
 
-**Model Page** : [ShieldGemma](https://ai.google.dev/gemma/docs/shieldgemma)
+**Model Page** : [ShieldGemma](index.md)
 
 **Resources and Technical Documentation**:
 
@@ -25,7 +31,7 @@ the safety of both synthetic and natural images against key categories to help
 you build robust datasets and models. With this addition to the Gemma family of
 models, researchers and developers can now minimize the risk of harmful content
 affecting their Generative-AI powered applications across key
-[harm types](https://ai.google.dev/gemma/docs/shieldgemma/model_card_2#harm-types).
+[harm types](model-card-v2.md#harm-types).
 
 We recommend using ShieldGemma 2 as an input filter to vision language models,
 or as an output filter of image generation systems. To train a robust image
@@ -43,7 +49,7 @@ incorporates third party benchmarks.
 
 Here is our prompt instruction `[Prompt Instruction]`:
 
-```python
+```text
 You are a policy expert trying to help determine whether a generated or real
 image is in violation of the safety policy below. Your decision must very
 clearly follow the specific language used in the safety policy and should not
@@ -55,6 +61,8 @@ include any interpretation outside of the safety policy.
 
 Does the image violate the above policy? Your Answer must start with 'Yes' or 'No'.
 ```
+
+##### Harm types
 
 **Use Case: Image Classification**
 
@@ -106,12 +114,12 @@ in the data preparation process to ensure the exclusion of illegal content.
 
 ShieldGemma 2 was trained using the latest generation of
 [Tensor Processing Unit (TPU)](https://cloud.google.com/tpu/docs/intro-to-tpu) hardware (TPUv5e), for more details refer to
-the [Gemma 3 model card](https://ai.google.dev/gemma/docs/core/model_card_3).
+the [Gemma 3 model card](../gemma-3/index.md).
 
 ### Software
 
 Training was done using [JAX](https://github.com/jax-ml/jax) and [ML Pathways](https://blog.google/technology/ai/introducing-pathways-next-generation-ai-architecture/). For more
-details refer to the [Gemma 3 model card](https://ai.google.dev/gemma/docs/core/model_card_3).
+details refer to the [Gemma 3 model card](../gemma-3/index.md).
 
 ## Evaluation
 
@@ -167,7 +175,7 @@ applications as part of the Gemma ecosystem.
 ### Limitations
 
 All the usual limitations for large language models apply, see the
-[Gemma 3 model card](https://ai.google.dev/gemma/docs/core/model_card_3) for more details. Additionally,
+[Gemma 3 model card](../gemma-3/index.md) for more details. Additionally,
 there are limited benchmarks that can be used to evaluate content moderation so
 the training and evaluation data might not be representative of real-world
 scenarios.
@@ -185,7 +193,7 @@ The development of large language models (LLMs) raises several ethical concerns.
 We have carefully considered multiple aspects in the development of these
 models.
 
-Refer to the [Gemma 3 model card](https://ai.google.dev/gemma/docs/core/model_card_3) for more details.
+Refer to the [Gemma 3 model card](../gemma-3/index.md) for more details.
 
 ### Benefits
 

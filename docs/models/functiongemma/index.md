@@ -1,6 +1,17 @@
-# FunctionGemma model overview
+---
+title: FunctionGemma model overview
+description: FunctionGemma is a specialized version of our Gemma 3 270M model tuned for function calling.
+models: [functiongemma]
+source_url: "https://ai.google.dev/gemma/docs/functiongemma.md.txt"
+---
+# FunctionGemma model overview {: #hidden-title style="display: none;" }
 
-[Video](https://www.youtube.com/watch?v=-Tgc_9uYJLI)
+<div class="video-embed">
+  <iframe src="https://www.youtube-nocookie.com/embed/-Tgc_9uYJLI"
+          title="Video" loading="lazy" allowfullscreen
+          allow="accelerometer; encrypted-media; gyroscope; picture-in-picture"
+          referrerpolicy="strict-origin-when-cross-origin"></iframe>
+</div>
 
 FunctionGemma is a specialized version of our Gemma 3 270M model tuned for
 function calling. It is designed as a strong base for further training into
@@ -34,8 +45,8 @@ As with other Gemma models, FunctionGemma is provided with open weights and
 licensed for responsible [commercial use](https://ai.google.dev/gemma/terms), allowing you to
 fine tune and deploy it in your own projects and applications.
 
-[Formatting and best practices](https://ai.google.dev/gemma/docs/functiongemma/formatting-and-best-practices)
-[Try FunctionGemma](https://ai.google.dev/gemma/docs/functiongemma/function-calling-with-hf)
+[Formatting and best practices](formatting.md)
+[Try FunctionGemma](inference.md)
 
-[Fine-tune FunctionGemma](https://ai.google.dev/gemma/docs/functiongemma/finetuning-with-functiongemma)
-[Fine-tune the Mobile Actions demo](https://ai.google.dev/gemma/docs/mobile-actions)
+[Fine-tune FunctionGemma](fine-tuning.md)
+[Fine-tune the Mobile Actions demo](../../tuning/mobile-actions.md)

@@ -1,3 +1,10 @@
+---
+title: Generate PaliGemma output with Keras
+description: PaliGemma models have multimodal capabilities, allowing you to generate output using both text and image input data.
+models: [paligemma]
+frameworks: [keras]
+source_url: "https://ai.google.dev/gemma/docs/paligemma/inference-with-keras.md.txt"
+---
 # Generate PaliGemma output with Keras
 
 
@@ -181,10 +188,8 @@ def display_segment_output(image, bounding_box, segment_mask, target_image_size)
         mask = mask.resize((x2 - x1, y2 - y1), resample=Image.NEAREST)
         mask = np.array(mask)
         binary_mask = (mask > 0.5).astype(np.uint8)
-```
 
 
-```python
         # Place the binary mask onto the full mask
         full_mask[y1:y2, x1:x2] = np.maximum(full_mask[y1:y2, x1:x2], binary_mask)
     cmap = plt.get_cmap('jet')
@@ -208,7 +213,7 @@ def display_segment_output(image, bounding_box, segment_mask, target_image_size)
 
 ## Generate output
 
-After loading the model and creating utility methods, you can prompt the model with image and text data to generate a responses. PaliGemma models are trained with specific prompt syntax for specific tasks, such as `answer`, `caption`, and `detect`. For more information about PaliGemma prompt task syntax, see [PaliGemma prompt and system instructions](https://ai.google.dev/gemma/docs/paligemma/prompt-system-instructions##prompt_task_syntax).
+After loading the model and creating utility methods, you can prompt the model with image and text data to generate a responses. PaliGemma models are trained with specific prompt syntax for specific tasks, such as `answer`, `caption`, and `detect`. For more information about PaliGemma prompt task syntax, see [PaliGemma prompt and system instructions](prompting.md#prompt-task-syntax).
 
 Prepare an image for use in a generation prompt by using the following code to load a test image into an object:
 
@@ -281,12 +286,10 @@ if not os.path.exists("big_vision_repo"):
 # Append big_vision code to python import path
 if "big_vision_repo" not in sys.path:
   sys.path.append("big_vision_repo")
-```
 
 
-```bash
 # Install missing dependencies. Assume jax~=0.4.25 with GPU available.
-pip3 install -q "overrides" "ml_collections" "einops~=0.7" "sentencepiece"
+!pip3 install -q "overrides" "ml_collections" "einops~=0.7" "sentencepiece"
 ```
 
 For this segmentation example, load and prepare a different image that includes a cat.
@@ -304,9 +307,7 @@ reconstruct_masks = segeval.get_reconstruct_masks('oi')
 def parse_segments(detokenized_output: str) -> tuple[np.ndarray, np.ndarray]:
   matches = re.finditer(
       '<loc(?P<y0>\d\d\d\d)><loc(?P<x0>\d\d\d\d)><loc(?P<y1>\d\d\d\d)><loc(?P<x1>\d\d\d\d)>'
-```
-          + ''.join(f'<seg(?P<s{i}>\d\d\d)>' for i in range(16)),
-```python
+        + ''.join(f'<seg(?P<s{i}>\d\d\d)>' for i in range(16)),
       detokenized_output,
   )
   boxes, segs = [], []

@@ -1,3 +1,10 @@
+---
+title: Function calling with Hugging Face Transformers
+description: Call functions with FunctionGemma in Hugging Face Transformers, passing tools as manual JSON schemas or as raw Python functions.
+models: [functiongemma]
+frameworks: [transformers]
+source_url: "https://ai.google.dev/gemma/docs/functiongemma/function-calling-with-hf.md.txt"
+---
 # Function calling with Hugging Face Transformers
 
 
@@ -254,5 +261,5 @@ Now you understand function calling with FunctionGemma. Key takeaways from this 
 
 Check out the following docs next:
 
-- [Full function calling sequence with FunctionGemma](https://ai.google.dev/gemma/docs/functiongemma/full-function-calling-sequence-with-functiongemma)
-- [Fine-tuning with FunctionGemma](https://ai.google.dev/gemma/docs/functiongemma/finetuning-with-functiongemma)
+- [Full function calling sequence with FunctionGemma](full-sequence.md)
+- [Fine-tuning with FunctionGemma](fine-tuning.md)

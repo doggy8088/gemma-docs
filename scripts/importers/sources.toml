@@ -1,0 +1,381 @@
+# Upstream source for every ported page.
+#
+# Consumed by `scripts/importers/port_docs.py` and `check_fidelity.py`, and the origin of the
+# `source_url` frontmatter added in PLAN.md Step 3.1.
+#
+#   frozen = true  -> HAND-MAINTAINED. Never re-convert; the file on disk is the source of
+#                     truth. port_docs.py skips it and check_fidelity.py ignores it, because
+#                     divergence from upstream is intended. The `source` line is kept purely
+#                     for provenance. All of models/** and get-started/** are frozen as of
+#                     2026-08-03 -- see "Hand-maintained sections" in PLAN.md.
+#   (no frozen)    -> a straight port; the converter may rewrite it freely.
+#
+# Set `frozen = true` as soon as anyone starts hand-editing a page.
+#
+# Deliberately absent entirely (never ported from upstream):
+#   models/index.md          hand-authored hub page
+#   cookbook.md, index.md    authored for this site
+#
+# `assets` is the subdirectory under docs/assets/ that inline base64 images are extracted to.
+
+# --- Get started ------------------------------------------------------------------------------
+# Ported in Step 0.6 to resolve links that Step 0.5 pointed at planned paths. These pages are
+# not in the nav yet -- Step 2.1 places them.
+
+[[page]]
+path = "get-started/prompt-structure.md"
+source = "https://ai.google.dev/gemma/docs/core/prompt-structure.md.txt"
+frozen = true
+
+[[page]]
+path = "get-started/capabilities/vision.md"
+source = "https://ai.google.dev/gemma/docs/capabilities/vision.md.txt"
+frozen = true
+
+[[page]]
+path = "get-started/capabilities/mtp.md"
+source = "https://ai.google.dev/gemma/docs/mtp/overview.md.txt"
+frozen = true
+
+# --- Run --------------------------------------------------------------------------------------
+
+[[page]]
+path = "deployment/index.md"
+source = "https://ai.google.dev/gemma/docs/run.md.txt"
+frozen = true
+
+[[page]]
+path = "deployment/huggingface.md"
+source = "https://ai.google.dev/gemma/docs/core/huggingface_inference.md.txt"
+assets = "huggingface"
+frozen = true
+
+[[page]]
+path = "deployment/keras.md"
+source = "https://ai.google.dev/gemma/docs/core/keras_inference.md.txt"
+frozen = true
+
+[[page]]
+path = "deployment/mobile.md"
+source = "https://ai.google.dev/gemma/docs/integrations/mobile.md.txt"
+frozen = true
+
+[[page]]
+path = "deployment/web.md"
+source = "https://ai.google.dev/gemma/docs/integrations/web.md.txt"
+frozen = true
+
+[[page]]
+path = "deployment/google-cloud.md"
+source = "https://ai.google.dev/gemma/docs/integrations/google-cloud.md.txt"
+frozen = true
+
+[[page]]
+path = "deployment/langchain.md"
+source = "https://ai.google.dev/gemma/docs/integrations/langchain.md.txt"
+assets = "deployment"
+frozen = true
+
+[[page]]
+path = "deployment/litert.md"
+source = "https://ai.google.dev/gemma/docs/conversions/hf-to-mediapipe-task.md.txt"
+frozen = true
+
+[[page]]
+path = "tuning/mobile-actions.md"
+source = "https://ai.google.dev/gemma/docs/mobile-actions.md.txt"
+frozen = true
+
+# --- Tuning / Learn ---------------------------------------------------------------------------
+
+[[page]]
+path = "tuning/overview.md"
+source = "https://ai.google.dev/gemma/docs/tune.md.txt"
+frozen = true
+
+[[page]]
+path = "tuning/qlora.md"
+source = "https://ai.google.dev/gemma/docs/core/huggingface_text_finetune_qlora.md.txt"
+assets = "tuning"
+frozen = true
+
+[[page]]
+path = "tuning/full-finetune.md"
+source = "https://ai.google.dev/gemma/docs/core/huggingface_text_full_finetune.md.txt"
+assets = "tuning"
+frozen = true
+
+[[page]]
+path = "tuning/vision-qlora.md"
+source = "https://ai.google.dev/gemma/docs/core/huggingface_vision_finetune_qlora.md.txt"
+assets = "tuning"
+frozen = true
+
+[[page]]
+path = "tuning/keras-lora.md"
+source = "https://ai.google.dev/gemma/docs/core/lora_tuning.md.txt"
+assets = "tuning"
+frozen = true
+
+[[page]]
+path = "tuning/distributed.md"
+source = "https://ai.google.dev/gemma/docs/core/distributed_tuning.md.txt"
+assets = "tuning"
+frozen = true
+
+[[page]]
+path = "tuning/spoken-language.md"
+source = "https://ai.google.dev/gemma/docs/spoken-language/task-specific-tuning.md.txt"
+assets = "tuning"
+frozen = true
+
+[[page]]
+path = "learn/business-email-assistant.md"
+source = "https://ai.google.dev/gemma/docs/business-email-assistant.md.txt"
+assets = "learn"
+frozen = true
+
+[[page]]
+path = "learn/personal-code-assistant.md"
+source = "https://ai.google.dev/gemma/docs/personal-code-assistant.md.txt"
+assets = "learn"
+frozen = true
+
+# --- Core -------------------------------------------------------------------------------------
+
+[[page]]
+path = "models/gemma-aps/index.md"
+source = "https://ai.google.dev/gemma/docs/gemma-aps.md.txt"
+frozen = true
+
+[[page]]
+path = "models/gemma-4/index.md"
+source = "https://ai.google.dev/gemma/docs/core.md.txt"
+frozen = true
+
+[[page]]
+path = "models/gemma-4/model-card.md"
+source = "https://ai.google.dev/gemma/docs/core/model_card_4.md.txt"
+frozen = true
+
+[[page]]
+path = "models/gemma-3/index.md"
+source = "https://ai.google.dev/gemma/docs/core/model_card_3.md.txt"
+frozen = true
+
+[[page]]
+path = "models/gemma-2/index.md"
+source = "https://ai.google.dev/gemma/docs/core/model_card_2.md.txt"
+frozen = true
+
+[[page]]
+path = "models/gemma-1/index.md"
+source = "https://ai.google.dev/gemma/docs/core/model_card.md.txt"
+frozen = true
+
+[[page]]
+path = "models/releases.md"
+source = "https://ai.google.dev/gemma/docs/releases.md.txt"
+frozen = true
+
+# --- Gemma 3n ---------------------------------------------------------------------------------
+
+[[page]]
+path = "models/gemma-3n/index.md"
+source = "https://ai.google.dev/gemma/docs/gemma-3n.md.txt"
+frozen = true
+
+[[page]]
+path = "models/gemma-3n/model-card.md"
+source = "https://ai.google.dev/gemma/docs/gemma-3n/model_card.md.txt"
+frozen = true
+
+# --- DiffusionGemma ---------------------------------------------------------------------------
+
+[[page]]
+path = "models/diffusiongemma/index.md"
+source = "https://ai.google.dev/gemma/docs/diffusiongemma.md.txt"
+frozen = true
+
+[[page]]
+path = "models/diffusiongemma/model-card.md"
+source = "https://ai.google.dev/gemma/docs/diffusiongemma/model_card.md.txt"
+frozen = true
+
+[[page]]
+path = "models/diffusiongemma/explained.md"
+source = "https://ai.google.dev/gemma/docs/diffusiongemma/explained.md.txt"
+frozen = true
+
+[[page]]
+path = "models/diffusiongemma/inference.md"
+source = "https://ai.google.dev/gemma/docs/diffusiongemma/inference-diffusiongemma-with-hf.md.txt"
+assets = "diffusiongemma"
+frozen = true
+
+# --- FunctionGemma ----------------------------------------------------------------------------
+
+[[page]]
+path = "models/functiongemma/index.md"
+source = "https://ai.google.dev/gemma/docs/functiongemma.md.txt"
+frozen = true
+
+[[page]]
+path = "models/functiongemma/model-card.md"
+source = "https://ai.google.dev/gemma/docs/functiongemma/model_card.md.txt"
+frozen = true
+
+[[page]]
+path = "models/functiongemma/formatting.md"
+source = "https://ai.google.dev/gemma/docs/functiongemma/formatting-and-best-practices.md.txt"
+frozen = true
+
+[[page]]
+path = "models/functiongemma/inference.md"
+source = "https://ai.google.dev/gemma/docs/functiongemma/function-calling-with-hf.md.txt"
+frozen = true
+
+[[page]]
+path = "models/functiongemma/full-sequence.md"
+source = "https://ai.google.dev/gemma/docs/functiongemma/full-function-calling-sequence-with-functiongemma.md.txt"
+frozen = true
+
+[[page]]
+path = "models/functiongemma/fine-tuning.md"
+source = "https://ai.google.dev/gemma/docs/functiongemma/finetuning-with-functiongemma.md.txt"
+assets = "functiongemma"
+frozen = true
+
+# --- EmbeddingGemma ---------------------------------------------------------------------------
+
+[[page]]
+path = "models/embeddinggemma/index.md"
+source = "https://ai.google.dev/gemma/docs/embeddinggemma.md.txt"
+frozen = true
+
+[[page]]
+path = "models/embeddinggemma/model-card.md"
+source = "https://ai.google.dev/gemma/docs/embeddinggemma/model_card.md.txt"
+frozen = true
+
+[[page]]
+path = "models/embeddinggemma/inference.md"
+source = "https://ai.google.dev/gemma/docs/embeddinggemma/inference-embeddinggemma-with-sentence-transformers.md.txt"
+frozen = true
+
+[[page]]
+path = "models/embeddinggemma/fine-tuning.md"
+source = "https://ai.google.dev/gemma/docs/embeddinggemma/fine-tuning-embeddinggemma-with-sentence-transformers.md.txt"
+frozen = true
+
+# --- PaliGemma --------------------------------------------------------------------------------
+
+[[page]]
+path = "models/paligemma/index.md"
+source = "https://ai.google.dev/gemma/docs/paligemma.md.txt"
+frozen = true
+
+[[page]]
+path = "models/paligemma/model-card-v1.md"
+source = "https://ai.google.dev/gemma/docs/paligemma/model-card.md.txt"
+frozen = true
+
+[[page]]
+path = "models/paligemma/model-card-v2.md"
+source = "https://ai.google.dev/gemma/docs/paligemma/model-card-2.md.txt"
+frozen = true
+
+[[page]]
+path = "models/paligemma/prompting.md"
+source = "https://ai.google.dev/gemma/docs/paligemma/prompt-system-instructions.md.txt"
+frozen = true
+
+[[page]]
+path = "models/paligemma/inference.md"
+source = "https://ai.google.dev/gemma/docs/paligemma/inference-with-keras.md.txt"
+assets = "paligemma"
+frozen = true
+
+[[page]]
+path = "models/paligemma/fine-tuning.md"
+source = "https://ai.google.dev/gemma/docs/paligemma/fine-tuning-paligemma.md.txt"
+assets = "paligemma"
+frozen = true
+
+# --- ShieldGemma ------------------------------------------------------------------------------
+
+[[page]]
+path = "models/shieldgemma/index.md"
+source = "https://ai.google.dev/gemma/docs/shieldgemma.md.txt"
+frozen = true
+
+[[page]]
+path = "models/shieldgemma/model-card-v1.md"
+source = "https://ai.google.dev/gemma/docs/shieldgemma/model_card.md.txt"
+frozen = true
+
+[[page]]
+path = "models/shieldgemma/model-card-v2.md"
+source = "https://ai.google.dev/gemma/docs/shieldgemma/model_card_2.md.txt"
+frozen = true
+
+# --- Research ---------------------------------------------------------------------------------
+
+[[page]]
+path = "models/recurrentgemma/index.md"
+source = "https://ai.google.dev/gemma/docs/recurrentgemma.md.txt"
+frozen = true
+
+[[page]]
+path = "models/recurrentgemma/model-card.md"
+source = "https://ai.google.dev/gemma/docs/recurrentgemma/model_card.md.txt"
+frozen = true
+
+[[page]]
+path = "models/recurrentgemma/inference.md"
+source = "https://ai.google.dev/gemma/docs/recurrentgemma/recurrentgemma_jax_inference.md.txt"
+frozen = true
+
+[[page]]
+path = "models/recurrentgemma/fine-tuning.md"
+source = "https://ai.google.dev/gemma/docs/recurrentgemma/recurrentgemma_jax_finetune.md.txt"
+assets = "recurrentgemma"
+frozen = true
+
+[[page]]
+path = "models/datagemma/index.md"
+source = "https://ai.google.dev/gemma/docs/datagemma.md.txt"
+frozen = true
+
+[[page]]
+path = "models/gemma-scope/index.md"
+source = "https://ai.google.dev/gemma/docs/gemma_scope.md.txt"
+frozen = true
+
+# --- Visual guides ------------------------------------------------------------------------
+# Imported with `scripts/importers/import_newsletter.py`, not `convert_notebook.py`.
+# gemma-4.md and mtp.md were split by hand after import -- re-importing would undo that.
+
+[[page]]
+path = "tutorials/visual-guides/gemma-4.md"
+source = "https://newsletter.maartengrootendorst.com/p/a-visual-guide-to-gemma-4"
+importer = "import_newsletter"
+frozen = true
+
+[[page]]
+path = "tutorials/visual-guides/gemma-4-12b.md"
+source = "https://newsletter.maartengrootendorst.com/p/a-visual-guide-to-gemma-4-12b"
+importer = "import_newsletter"
+frozen = true
+
+[[page]]
+path = "tutorials/visual-guides/mtp.md"
+source = "https://newsletter.maartengrootendorst.com/p/a-visual-guide-to-gemma-4"
+importer = "import_newsletter"
+frozen = true
+
+[[page]]
+path = "tutorials/visual-guides/diffusiongemma.md"
+source = "https://newsletter.maartengrootendorst.com/p/a-visual-guide-to-diffusiongemma"
+importer = "import_newsletter"
+frozen = true
