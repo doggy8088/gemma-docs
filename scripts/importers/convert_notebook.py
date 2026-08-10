@@ -27,7 +27,7 @@ Usage:
                                [--assets-dir docs/assets/<section>] [--assets-url ../assets/<section>]
 
 Tests:
-    python scripts/test_convert_notebook.py
+    python tests/test_convert_notebook.py
 """
 
 import re

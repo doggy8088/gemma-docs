@@ -1,6 +1,6 @@
 """The frontmatter schema every page in docs/ must satisfy.
 
-Single source of truth. `lint_docs.py` enforces it; `backfill_frontmatter.py` writes it.
+Single source of truth enforced by `lint_docs.py`.
 Documented for humans in PLAN.md, "Frontmatter schema".
 
 Two kinds of key live here, and the distinction is the whole design:
@@ -30,7 +30,7 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 DOCS_DIR = REPO_ROOT / "docs"
 MODELS_DATA = REPO_ROOT / "data" / "models.yml"
 FRAMEWORKS_DATA = REPO_ROOT / "data" / "frameworks.yml"
-SOURCES = Path(__file__).resolve().parent / "sources.toml"
+SOURCES = Path(__file__).resolve().parent / "importers" / "sources.toml"
 
 # Descriptions feed llms.txt, search results, and page cards. Too short says nothing;
 # too long gets truncated everywhere it is used.

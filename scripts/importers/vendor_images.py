@@ -6,8 +6,8 @@ The port inherited images pointing at ai.google.dev/static. That makes the site 
 Google's CDN staying put, blocks offline builds, and leaves no way to add dark-mode variants.
 This vendors them.
 
-    python scripts/vendor_images.py --dry-run    # show what would be downloaded
-    python scripts/vendor_images.py              # download and rewrite
+    python scripts/importers/vendor_images.py --dry-run    # show what would be downloaded
+    python scripts/importers/vendor_images.py              # download and rewrite
 
 Assets are grouped by the page's parent directory, matching the layout port_docs.py already
 uses (docs/assets/paligemma/, docs/assets/diffusiongemma/, ...). Original filenames are kept
@@ -28,7 +28,7 @@ import urllib.error
 import urllib.request
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from lint_docs import load_pages, outside_code  # noqa: E402
 

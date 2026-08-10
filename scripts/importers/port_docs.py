@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 """
-Batch-port upstream pages listed in scripts/sources.toml.
+Batch-port upstream pages listed in `scripts/importers/sources.toml`.
 
 Only pages in the manifest are touched, and only those not marked `frozen = true`.
 A page absent from the manifest, or frozen in it, is hand-maintained and must never be
 re-converted -- see "Hand-maintained sections" in PLAN.md.
 
-    python scripts/port_docs.py --dry-run              # show what would change
-    python scripts/port_docs.py --filter models/       # port one section
-    python scripts/port_docs.py                        # port everything in the manifest
+    python scripts/importers/port_docs.py --dry-run              # show what would change
+    python scripts/importers/port_docs.py --filter models/       # port one section
+    python scripts/importers/port_docs.py                        # port everything in the manifest
 
 Every page is fidelity-checked after conversion. A page that drops prose is reported and, unless
 --force is given, left unwritten -- a bad conversion never lands on disk.
@@ -122,7 +122,7 @@ def main() -> int:
         # The linter's `images` check is at zero, so a missed run fails CI -- but say it here
         # rather than making someone discover it from a red build.
         print("\nNext: re-vendor images, which this run reverted to upstream URLs:")
-        print("  uv run python scripts/vendor_images.py")
+        print("  uv run python scripts/importers/vendor_images.py")
     if failures:
         print("\nFidelity failures (not written):")
         for path in failures:

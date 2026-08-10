@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """
-Rewrite upstream ai.google.dev links to local page paths, per scripts/link_map.toml.
+Rewrite upstream ai.google.dev links to local page paths, per `scripts/importers/link_map.toml`.
 
-    python scripts/rewrite_links.py --dry-run
-    python scripts/rewrite_links.py
-    python scripts/rewrite_links.py --report      # unmapped targets only, no changes
+    python scripts/importers/rewrite_links.py --dry-run
+    python scripts/importers/rewrite_links.py
+    python scripts/importers/rewrite_links.py --report      # unmapped targets only, no changes
 
 Three behaviours, driven by the map:
   [ported]   -> relative link to an existing page
@@ -29,7 +29,7 @@ import tomllib
 from collections import Counter
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from lint_docs import load_pages, outside_code  # noqa: E402
 
@@ -238,7 +238,7 @@ def main() -> int:
         for path, count in unmapped.most_common():
             print(f"  {count:3}  {path}")
         if unmapped:
-            print("\nAdd these to scripts/link_map.toml and re-run.")
+            print("\nAdd these to scripts/importers/link_map.toml and re-run.")
 
     if not args.report:
         verb = "would rewrite" if args.dry_run else "rewrote"

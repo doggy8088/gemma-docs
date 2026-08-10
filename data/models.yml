@@ -11,7 +11,7 @@
 # Hand-editing a model table in a page is a bug. Change it here instead.
 #
 # NOT generated from this file: the memory table in models/gemma-4/index.md. That page is a
-# straight port (scripts/sources.toml) and re-porting would overwrite any template. The figures
+# straight port (`scripts/importers/sources.toml`) and re-porting would overwrite any template. The figures
 # below are copied from it; keep them in sync if upstream revises them.
 
 # ---------------------------------------------------------------------------------------------

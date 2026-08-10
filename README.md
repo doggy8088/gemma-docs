@@ -23,7 +23,7 @@ GitHub Pages serves those static files with their Markdown content type.
 Run these checks before committing documentation or styling changes:
 
 ```bash
-uv run --frozen python -m unittest discover -s scripts -p "test_*.py"
+uv run --frozen python -m unittest discover -s tests -p "test_*.py"
 uv run --frozen python scripts/lint_docs.py --baseline
 uv run --frozen python scripts/build_docs.py
 ```

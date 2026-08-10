@@ -217,7 +217,7 @@ For a diagram that needs different artwork per theme, mark the pair and let CSS 
 
 ## Video
 
-Emitted automatically by `scripts/convert_notebook.py` from a standalone `[Video](youtube…)`
+Emitted automatically by `scripts/importers/convert_notebook.py` from a standalone `[Video](youtube…)`
 link. Full content width, 16:9, lazy-loaded, privacy-mode host.
 
 ```html

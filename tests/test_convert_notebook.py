@@ -2,13 +2,13 @@
 """
 Golden tests for convert_notebook.py.
 
-Each fixture in scripts/fixtures/ pairs a `.md.txt` source with the `.expected.md` output the
+Each fixture in `tests/fixtures/` pairs a `.md.txt` source with the `.expected.md` output the
 converter must produce. Fixtures are minimised reproductions of real defects found in the port
 -- see PLAN.md Step 0.2. Named regression tests sit alongside the golden comparison so a failure
 says *which* defect came back rather than just "output differs".
 
-    python scripts/test_convert_notebook.py            # run
-    python scripts/test_convert_notebook.py --update   # regenerate .expected.md, then REVIEW the diff
+    python tests/test_convert_notebook.py            # run
+    python tests/test_convert_notebook.py --update   # regenerate .expected.md, then REVIEW the diff
 
 Stdlib only, so CI needs no install step.
 """
@@ -20,7 +20,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts" / "importers"))
 
 from convert_notebook import convert  # noqa: E402
 

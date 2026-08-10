@@ -1,7 +1,7 @@
 # Upstream documentation path -> local page.
 #
 # Keys are the path after "https://ai.google.dev/gemma/docs" (http/https and #fragments are
-# handled by the rewriter). Values are paths under docs/. Consumed by scripts/rewrite_links.py.
+# handled by the rewriter). Values are paths under docs/. Consumed by `rewrite_links.py`.
 #
 # Not listed here on purpose:
 #   - URLs inside code blocks (sample data, BibTeX citations) stay external; see check_links.

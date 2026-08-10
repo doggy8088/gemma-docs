@@ -2,7 +2,7 @@
 """
 Import a visual guide from newsletter.maartengrootendorst.com as markdown.
 
-    python scripts/import_newsletter.py <post-url> <output.md> --title "A Visual Guide to X"
+    python scripts/importers/import_newsletter.py <post-url> <output.md> --title "A Visual Guide to X"
 
 Extracts the article body verbatim -- headings, prose, lists, quotes and images -- rather than
 summarising it. The guides are Maarten's own writing, so the words have to survive the import

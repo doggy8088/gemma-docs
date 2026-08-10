@@ -7,8 +7,8 @@ This compares the *word multiset* of an upstream source against its converted pa
 anything dropped. Word-level rather than line-level, because the converter legitimately reflows
 wrapped list items and re-indents code, but must never lose a word.
 
-    python scripts/check_fidelity.py <source.md.txt> <converted.md>
-    python scripts/check_fidelity.py --manifest            # every page in sources.toml
+    python scripts/importers/check_fidelity.py <source.md.txt> <converted.md>
+    python scripts/importers/check_fidelity.py --manifest  # every page in sources.toml
 
 Expected drops are metadata the converter is meant to strip (Colab badges, "View on
 ai.google.dev", `<br>`). Those are filtered by EXPECTED_DROPS; anything else is a finding.

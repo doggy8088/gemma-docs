@@ -1,6 +1,6 @@
 # Upstream source for every ported page.
 #
-# Consumed by scripts/port_docs.py and scripts/check_fidelity.py, and the origin of the
+# Consumed by `scripts/importers/port_docs.py` and `check_fidelity.py`, and the origin of the
 # `source_url` frontmatter added in PLAN.md Step 3.1.
 #
 #   frozen = true  -> HAND-MAINTAINED. Never re-convert; the file on disk is the source of
@@ -353,7 +353,7 @@ source = "https://ai.google.dev/gemma/docs/gemma_scope.md.txt"
 frozen = true
 
 # --- Visual guides ------------------------------------------------------------------------
-# Imported with scripts/import_newsletter.py, not convert_notebook.py.
+# Imported with `scripts/importers/import_newsletter.py`, not `convert_notebook.py`.
 # gemma-4.md and mtp.md were split by hand after import -- re-importing would undo that.
 
 [[page]]

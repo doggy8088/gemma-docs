@@ -22,8 +22,8 @@
     "contributing/components.md": {
       "url": "/contributing/components/",
       "markdown_url": "/contributing/components.md",
-      "estimated_tokens": 2675,
-      "last_updated": "2026-08-05"
+      "estimated_tokens": 2677,
+      "last_updated": "2026-08-10"
     },
     "cookbook.md": {
       "url": "/cookbook/",
@@ -131,19 +131,19 @@
       "url": "/get-started/capabilities/audio/",
       "markdown_url": "/get-started/capabilities/audio.md",
       "estimated_tokens": 3814,
-      "last_updated": "2026-08-05"
+      "last_updated": "2026-08-10"
     },
     "get-started/capabilities/function-calling.md": {
       "url": "/get-started/capabilities/function-calling/",
       "markdown_url": "/get-started/capabilities/function-calling.md",
       "estimated_tokens": 5585,
-      "last_updated": "2026-08-05"
+      "last_updated": "2026-08-10"
     },
     "get-started/capabilities/image.md": {
       "url": "/get-started/capabilities/image/",
       "markdown_url": "/get-started/capabilities/image.md",
       "estimated_tokens": 5055,
-      "last_updated": "2026-08-05"
+      "last_updated": "2026-08-10"
     },
     "get-started/capabilities/mtp.md": {
       "url": "/get-started/capabilities/mtp/",
@@ -155,19 +155,19 @@
       "url": "/get-started/capabilities/text/",
       "markdown_url": "/get-started/capabilities/text.md",
       "estimated_tokens": 2560,
-      "last_updated": "2026-08-05"
+      "last_updated": "2026-08-10"
     },
     "get-started/capabilities/thinking.md": {
       "url": "/get-started/capabilities/thinking/",
       "markdown_url": "/get-started/capabilities/thinking.md",
       "estimated_tokens": 6288,
-      "last_updated": "2026-08-05"
+      "last_updated": "2026-08-10"
     },
     "get-started/capabilities/video.md": {
       "url": "/get-started/capabilities/video/",
       "markdown_url": "/get-started/capabilities/video.md",
       "estimated_tokens": 12092,
-      "last_updated": "2026-08-05"
+      "last_updated": "2026-08-10"
     },
     "get-started/capabilities/vision.md": {
       "url": "/get-started/capabilities/vision/",
@@ -479,7 +479,7 @@
       "url": "/tuning/full-finetune/",
       "markdown_url": "/tuning/full-finetune.md",
       "estimated_tokens": 4869,
-      "last_updated": "2026-08-05"
+      "last_updated": "2026-08-10"
     },
     "tuning/keras-lora.md": {
       "url": "/tuning/keras-lora/",
@@ -503,7 +503,7 @@
       "url": "/tuning/qlora/",
       "markdown_url": "/tuning/qlora.md",
       "estimated_tokens": 6042,
-      "last_updated": "2026-08-05"
+      "last_updated": "2026-08-10"
     },
     "tuning/spoken-language.md": {
       "url": "/tuning/spoken-language/",
@@ -515,7 +515,7 @@
       "url": "/tuning/vision-qlora/",
       "markdown_url": "/tuning/vision-qlora.md",
       "estimated_tokens": 5232,
-      "last_updated": "2026-08-05"
+      "last_updated": "2026-08-10"
     },
     "tutorials/visual-guides/diffusiongemma.md": {
       "url": "/tutorials/visual-guides/diffusiongemma/",
