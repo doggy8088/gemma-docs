@@ -1,7 +1,6 @@
 {#-
   Overrides the theme's content partial for one reason: the page context strip belongs
-  *below* the H1, the way docs.stripe.com places its page-level controls (measured: their
-  control row sits ~60px under the title, with nothing at all between breadcrumb and title).
+  *below* the H1.
 
   The H1 comes out of rendered markdown, so the only way to get beneath it is to split the
   content on the first `</h1>`. Autoescaping is off in this theme, so the two halves emit as

@@ -3,7 +3,7 @@
 
 The committed `docs/llms.txt` works with the normal Zensical preview. After a site build,
 `--publish site` also writes raw Markdown beside the
-rendered HTML using Stripe-style URLs such as `/get-started/quickstart.md`.
+rendered HTML.
 """
 
 from __future__ import annotations
