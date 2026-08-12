@@ -6,6 +6,8 @@ hide:
   - toc
 ---
 
+Use the interactive visualization to compare how image dimensions and aspect ratios affect Gemma 4's visual token usage.
+
 <div class="demo-embed">
   <iframe
     src="https://google-gemma4-vision-token-budget.static.hf.space/index.html"
