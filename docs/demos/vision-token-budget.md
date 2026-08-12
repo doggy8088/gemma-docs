@@ -2,12 +2,9 @@
 title: Vision token budget
 description: Explore how Gemma 4 resizes images and allocates visual tokens across aspect ratios.
 models: [gemma-4]
+hide:
+  - toc
 ---
-
-# Explore the Gemma 4 vision token budget
-
-Upload an image to see how Gemma 4 preserves its aspect ratio while mapping it onto different
-visual token budgets. This interactive demo is hosted on Hugging Face Spaces.
 
 <div class="demo-embed">
   <iframe

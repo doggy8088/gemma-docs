@@ -15,10 +15,11 @@ window.GEMMA_MODELS = {
       "hf": "google/gemma-4-E2B-it",
       "hf_base": "google/gemma-4-E2B",
       "hf_qat": "google/gemma-4-E2B-it-qat-w4a16-ct",
-      "gguf": "ggml-org/gemma-4-E2B-it-GGUF",
+      "gguf": "google/gemma-4-E2B-it-qat-q4_0-gguf",
       "gguf_qat": "google/gemma-4-E2B-it-qat-q4_0-gguf",
       "ollama": "gemma4:e2b",
-      "mlx": "mlx-community/gemma-4-E2B-it-qat-4bit"
+      "mlx": "mlx-community/gemma-4-E2B-it-qat-4bit",
+      "lmstudio": "google/gemma-4-e2b"
     },
     "inputs": [
       "text",
@@ -36,10 +37,11 @@ window.GEMMA_MODELS = {
       "hf": "google/gemma-4-E4B-it",
       "hf_base": "google/gemma-4-E4B",
       "hf_qat": "google/gemma-4-E4B-it-qat-w4a16-ct",
-      "gguf": "ggml-org/gemma-4-E4B-it-GGUF",
+      "gguf": "google/gemma-4-E4B-it-qat-q4_0-gguf",
       "gguf_qat": "google/gemma-4-E4B-it-qat-q4_0-gguf",
       "ollama": "gemma4:e4b",
-      "mlx": "mlx-community/gemma-4-E4B-it-qat-4bit"
+      "mlx": "mlx-community/gemma-4-E4B-it-qat-4bit",
+      "lmstudio": "google/gemma-4-e4b"
     },
     "inputs": [
       "text",
@@ -57,10 +59,11 @@ window.GEMMA_MODELS = {
       "hf": "google/gemma-4-12B-it",
       "hf_base": "google/gemma-4-12B",
       "hf_qat": "google/gemma-4-12B-it-qat-w4a16-ct",
-      "gguf": "ggml-org/gemma-4-12B-it-GGUF",
+      "gguf": "google/gemma-4-12B-it-qat-q4_0-gguf",
       "gguf_qat": "google/gemma-4-12B-it-qat-q4_0-gguf",
       "ollama": "gemma4:12b",
-      "mlx": "mlx-community/gemma-4-12B-it-qat-4bit"
+      "mlx": "mlx-community/gemma-4-12B-it-qat-4bit",
+      "lmstudio": "google/gemma-4-12b"
     },
     "inputs": [
       "text",
@@ -77,10 +80,11 @@ window.GEMMA_MODELS = {
     "ids": {
       "hf": "google/gemma-4-26B-A4B-it",
       "hf_base": "google/gemma-4-26B-A4B",
-      "gguf": "ggml-org/gemma-4-26B-A4B-it-GGUF",
+      "gguf": "google/gemma-4-26B-A4B-it-qat-q4_0-gguf",
       "gguf_qat": "google/gemma-4-26B-A4B-it-qat-q4_0-gguf",
       "ollama": "gemma4:26b",
-      "mlx": "mlx-community/gemma-4-26B-A4B-it-qat-4bit"
+      "mlx": "mlx-community/gemma-4-26B-A4B-it-qat-4bit",
+      "lmstudio": "google/gemma-4-26b-a4b"
     },
     "inputs": [
       "text",
@@ -97,10 +101,11 @@ window.GEMMA_MODELS = {
       "hf": "google/gemma-4-31B-it",
       "hf_base": "google/gemma-4-31B",
       "hf_qat": "google/gemma-4-31B-it-qat-w4a16-ct",
-      "gguf": "ggml-org/gemma-4-31B-it-GGUF",
+      "gguf": "google/gemma-4-31B-it-qat-q4_0-gguf",
       "gguf_qat": "google/gemma-4-31B-it-qat-q4_0-gguf",
       "ollama": "gemma4:31b",
-      "mlx": "mlx-community/gemma-4-31B-it-qat-4bit"
+      "mlx": "mlx-community/gemma-4-31B-it-qat-4bit",
+      "lmstudio": "google/gemma-4-31b"
     },
     "inputs": [
       "text",
