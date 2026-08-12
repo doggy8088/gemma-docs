@@ -2,7 +2,7 @@
 title: Quick Start
 description: The Gemma family of open models includes a range of model sizes, capabilities, and task-specialized variations to help you build custom generative solutions.
 models: [gemma-4]
-frameworks: [transformers, ollama, mlx]
+frameworks: [transformers, ollama, mlx, vllm, llamacpp]
 hide:
   - toc
 ---
@@ -24,22 +24,11 @@ The Gemma family of open models includes a range of model sizes, capabilities, a
 !!! tip "New to Gemma?"
     A good place to start is the Gemma 4 12B model, which can be used for many tasks and runs on laptop hardware.
 
-## Download models
-
-You can download Gemma models from:
-
-- [Kaggle](https://www.kaggle.com/models?query=gemma-4&publisher=google)
-- [Hugging Face](https://huggingface.co/collections/google/gemma-4)
 
 ## Run your first inference
 
 === "Hugging Face Transformers"
-
-    ```bash
-    pip install --upgrade transformers accelerate
-    ```
-
-    Then use:
+    Install [`transformers`](https://huggingface.co/docs/transformers/installation), then run:
 
     ```python { .model-swap }
     from transformers import pipeline
@@ -53,7 +42,15 @@ You can download Gemma models from:
     print(output[0]["generated_text"])
     ```
 
+=== "llama.cpp"
+    Install [`llama.cpp`](https://llama.app/), then run:
+
+    ```bash { .model-swap }
+    llama-cli -hf google/gemma-4-12B-it-qat-q4_0-gguf --prompt "Write a poem about the Kraken."
+    ```
+
 === "Ollama"
+    Install [`ollama`](https://ollama.com/download), then run:
 
     ```bash { .model-swap }
     ollama run gemma4:12b "Explain quantum computing simply:"
@@ -61,11 +58,28 @@ You can download Gemma models from:
 
 === "Apple MLX"
 
+    Install [`MLX LM`](https://github.com/ml-explore/mlx-lm), then run:
+
     ```bash { .model-swap }
-    pip install mlx-lm
     mlx_lm.generate --model mlx-community/gemma-4-12B-it-qat-4bit \
         --prompt "Explain quantum computing simply:"
     ```
+
+=== "vLLM"
+
+    Install [`vLLM`](https://docs.vllm.ai/en/latest/getting_started/installation/), then run:
+
+    ```bash { .model-swap }
+    vllm serve google/gemma-4-26B-A4B-it
+    ```
+
+=== "LMStudio"
+    Install [`LMStudio`](https://lmstudio.ai/), then run:
+
+    ```bash { .model-swap }
+    lms chat google/gemma-4-12b
+    ```
+
 
 !!! example "Using a coding agent?"
 
@@ -74,4 +88,3 @@ You can download Gemma models from:
     ```bash
     npx skills add google-gemma/gemma-skills --skill gemma-dev --global
     ```
-

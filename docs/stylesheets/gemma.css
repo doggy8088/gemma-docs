@@ -96,7 +96,7 @@
 
   /* Header: a near-white blue tint, not a slab of brand colour. The blue
      appears only on the active tab indicator, where 3:1 is sufficient. */
-  --gemma-header-bg: var(--gemma-n50);
+  --gemma-header-bg: var(--gemma-n100);
   --gemma-header-fg: var(--gemma-n700);
   --gemma-header-border: var(--gemma-n150);
 
