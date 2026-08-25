@@ -1,11 +1,11 @@
 ---
-title: Image Understanding
+title: Image understanding
 description: You can use Gemma 3 and later models to analyze and understand the content of images.
 models: [gemma-4, gemma-3]
 frameworks: [transformers]
 colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs/notebooks/image.ipynb
 ---
-# Image Understanding
+# Image understanding
 
 You can use Gemma 3 and later models to analyze and understand the content of images. This capability includes tasks like describing image content, identifying objects, recognizing scenes, and even inferring the context from visual information.
 
@@ -26,7 +26,7 @@ pip install "transformers>=5.10.1"
 
 ## Load Model
 
-Use `transformers` library to load the pipeline
+Use [`transformers`](https://huggingface.co/docs/transformers/installation) library to load the pipeline
 
 ```python { .notebook-cell .model-swap }
 MODEL_ID = "google/gemma-4-E2B-it"
@@ -331,16 +331,16 @@ output = vqa_pipe(messages, return_full_text=False, generate_kwargs=gen_kwargs)
 print(output[0]['generated_text'])
 
 draw_results(output[0]['generated_text'])
-```
+``` 
 
-````
+```{ .no-copy .output }
 ```json
 [
   {"box_2d": [243, 252, 956, 415], "label": "person"},
   {"box_2d": [356, 606, 654, 802], "label": "cat"}
 ]
 ```<turn|>
-````
+```
 
 ![png](../../assets/capabilities/output_b041486b_1.png)
 
@@ -420,14 +420,14 @@ print(output[0]['generated_text'])
 draw_results(output[0]['generated_text'])
 ```
 
-````
+```{ .no-copy .output }
 ```json
 [
   {"box_2d": [454, 871, 533, 923], "label": "person"},
   {"box_2d": [551, 316, 665, 628], "label": "car"}
 ]
 ```<turn|>
-````
+```
 
 ![png](../../assets/capabilities/output_bc2920e6_1.png)
 
@@ -517,7 +517,7 @@ plt.tight_layout()
 plt.show()
 ```
 
-````
+```{ .no-copy .output }
 Budget Size: 70
 # of Image Tokens: 64
 [transformers] You seem to be using the pipelines sequentially on GPU. In order to maximize efficiency please use a dataset
@@ -562,17 +562,29 @@ Budget Size: 560
   {"box_2d": [404, 867, 520, 925], "label": "person"}
 ]
 ```<turn|>
-````
+```
 
 ![png](../../assets/capabilities/output_76f17518_3.png)
 
 ## Summary
 
 In this guide, you learned how to use Gemma 4 models for image understanding tasks. The examples covered generating text from images, using prompt templates for visual QA, processing multiple images simultaneously, optical character recognition (OCR), object detection with bounding boxes, and managing variable resolutions using token budgets.
+## What's next
 
-<!-- TODO: Port over 
-### Next Steps
-
-- [Prompt and system instructions](../prompt-formatting.md)
-- [Function calling](function-calling.md)
-- [Run Gemma overview](../../deployment/index.md) -->
+<div class="card-grid">
+<a class="card" href="video.md">
+  <span class="card-icon">{{ icon('lucide/film') }}</span>
+  <div class="card-title">Video understanding</div>
+  <p class="card-desc">Pass video as frames and reason over what happens.</p>
+</a>
+<a class="card" href="audio.md">
+  <span class="card-icon">{{ icon('lucide/audio-lines') }}</span>
+  <div class="card-title">Audio understanding</div>
+  <p class="card-desc">Transcribe, translate and reason over speech.</p>
+</a>
+<a class="card" href="../prompt-formatting.md">
+  <span class="card-icon">{{ icon('lucide/braces') }}</span>
+  <div class="card-title">Prompt formatting</div>
+  <p class="card-desc">The control tokens that structure a Gemma prompt.</p>
+</a>
+</div>

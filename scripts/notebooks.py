@@ -11,6 +11,7 @@ from __future__ import annotations
 import argparse
 import json
 import re
+from functools import lru_cache
 from pathlib import Path
 
 import yaml
@@ -30,6 +31,8 @@ NOTEBOOKS = {
         REPO_ROOT / "docs" / "notebooks" / "video.ipynb",
     REPO_ROOT / "docs" / "get-started" / "capabilities" / "audio.md":
         REPO_ROOT / "docs" / "notebooks" / "audio.ipynb",
+    REPO_ROOT / "docs" / "get-started" / "capabilities" / "mtp.md":
+        REPO_ROOT / "docs" / "notebooks" / "mtp.ipynb",
     REPO_ROOT / "docs" / "tuning" / "qlora.md":
         REPO_ROOT / "docs" / "notebooks" / "qlora.ipynb",
     REPO_ROOT / "docs" / "tuning" / "full-finetune.md":
@@ -47,6 +50,29 @@ ADMONITION = re.compile(
     r"^!!!\s+(?P<label>[A-Za-z]+)(?:\s+\"[^\"]*\")?\n(?P<body>(?:[ \t]+.*(?:\n|$))*)",
     re.MULTILINE,
 )
+# `attr_list` attaches classes and attributes to inline spans -- `<|think|>`{.token-think}, or a
+# link followed by { data-model="gemma-4" }. Jupyter has no such extension and renders the braces
+# as literal text, so they are stripped on the way out: the site keeps the styling, the notebook
+# keeps the words. Anchored to the closing `, ) or ] so ordinary prose braces are left alone.
+ATTR_LIST = re.compile(r"(?<=[`)\]])[ \t]*\{[^}\n]*\}")
+# A card grid is site navigation: raw HTML, and `{{ icon(...) }}` calls that only the Jinja
+# preprocessor resolves. Both render as literal text in Jupyter, and a notebook has nowhere to
+# navigate to anyway, so the grid and the heading introducing it are dropped.
+#
+# `^</div>` anchors to a line that *starts* with the closing tag. Card titles are indented, so
+# this stops at the end of the grid rather than at the first `</div>` inside it.
+CARD_GRID = re.compile(
+    r"(?:^#{1,6}[^\n]*\n+)?^<div class=\"card-grid\">.*?^</div>[ \t]*$\n?",
+    re.DOTALL | re.MULTILINE,
+)
+# `--8<-- "glossary.md"` is a snippets include and `*[TERM]: ...` an abbreviation definition.
+# Neither is standard Markdown, so Jupyter would show both as literal text.
+SNIPPET_INCLUDE = re.compile(r'^-{2,}8<-{2,}[ \t]+"[^"]+"[ \t]*$\n?', re.MULTILINE)
+ABBR_DEF = re.compile(r"^\*\[[^\]]+\]:.*$\n?", re.MULTILINE)
+# Shared reference links resolve against snippets/links.md, which the site appends to every page
+# and a notebook never sees. Resolve them to ordinary inline links on the way out, so the export
+# carries real URLs instead of unresolved brackets.
+REFERENCE_LINK = re.compile(r"\[([^\]]+)\]\[([a-z0-9][a-z0-9-]*)\]")
 
 
 def split_frontmatter(text: str) -> tuple[dict, str]:
@@ -60,15 +86,31 @@ def split_frontmatter(text: str) -> tuple[dict, str]:
     raise ValueError("unterminated frontmatter")
 
 
+@lru_cache(maxsize=1)
+def shared_links() -> dict[str, str]:
+    data = yaml.safe_load((REPO_ROOT / "data" / "links.yml").read_text(encoding="utf-8"))
+    return {name: entry["url"] for name, entry in (data.get("links") or {}).items()}
+
+
 def notebook_markdown(text: str) -> str:
     text = SKIP_REGION.sub("", text)
+
+    def resolve_reference(match: re.Match) -> str:
+        url = shared_links().get(match.group(2))
+        return f"[{match.group(1)}]({url})" if url else match.group(0)
+
+    text = REFERENCE_LINK.sub(resolve_reference, text)
 
     def replace_admonition(match: re.Match) -> str:
         body = "\n".join(line.strip() for line in match.group("body").splitlines()).strip()
         quoted = "\n> ".join(body.splitlines())
         return f"> **{match.group('label').title()}:** {quoted}\n"
 
-    return ADMONITION.sub(replace_admonition, text).strip()
+    text = CARD_GRID.sub("", text)
+    text = SNIPPET_INCLUDE.sub("", text)
+    text = ABBR_DEF.sub("", text)
+    text = ADMONITION.sub(replace_admonition, text)
+    return ATTR_LIST.sub("", text).strip()
 
 
 def markdown_cell(source: str) -> dict | None:

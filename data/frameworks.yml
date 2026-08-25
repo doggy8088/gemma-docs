@@ -11,12 +11,16 @@
 # This list holds only what is in use. It is not a catalogue of everything that can run Gemma.
 #
 #   id    what frontmatter uses. Lowercase, kebab-case.
+#   pinned  the model generation this entry's `url` is hard-coded to. Set it whenever the URL
+#         embeds a version -- .../gemma-4-31b-it -- so `lint_docs.py --check pinned` can list
+#         every link that needs revisiting when a new generation ships. Omit for stable URLs.
 #   name  the canonical display name.
 #   short_name  optional compact label for dense UI such as the page context strip.
 #   url   the project's own home. Where one was already linked from a docs page, that URL is
 #         reused verbatim; the four marked `unverified` were not found anywhere in docs/ and
 #         should be confirmed before anyone relies on them.
-#   page  our page for it, where we have one.
+#   page  our page for it, where we have one. Entries without one are hosted endpoints: the
+#         grid links straight out to `url`.
 #
 # There is deliberately no `category`. The previous version had one and it was incoherent:
 # `local`/`serve` classify where something runs while `library`/`tuning`/`orchestration`
@@ -28,26 +32,39 @@ frameworks:
     name: Ollama
     url: https://ollama.com
     page: deployment/ollama.md
+    blurb: One command to pull and chat, locally.
+    mark: Ol
+    icon: simple/ollama
 
   - id: llamacpp
     name: llama.cpp
     url: https://github.com/ggml-org/llama.cpp
     page: deployment/llamacpp.md
+    blurb: Fast GGUF inference on CPU and Apple silicon.
+    mark: lc
 
   - id: lmstudio
     name: LM Studio
     url: https://lmstudio.ai
     page: deployment/lmstudio.md
+    blurb: Desktop chat app, no coding required.
+    mark: LM
+    icon: simple/lmstudio
 
   - id: mlx
     name: MLX
     url: https://github.com/ml-explore/mlx
     page: deployment/mlx.md
+    blurb: Native Apple silicon, no conversion step.
+    mark: MLX
+    icon: simple/apple
 
   - id: litert
     name: LiteRT
     url: https://ai.google.dev/edge/litert
     page: deployment/litert.md
+    blurb: On-device inference with CPU, GPU and NPU support.
+    mark: Li
 
   - id: webgpu
     name: WebGPU
@@ -58,27 +75,83 @@ frameworks:
     name: vLLM
     url: https://docs.vllm.ai
     page: deployment/vllm.md
+    blurb: High-throughput serving with an OpenAI-compatible API.
+    mark: vL
+    icon: simple/vllm
 
   - id: sglang
     name: SGLang
     url: https://docs.sglang.io
     page: deployment/sglang.md
+    blurb: High-performance serving for text and multimodal.
+    mark: SG
+
+  - id: gemini-api
+    name: Gemini API
+    short_name: Gemini API
+    url: https://ai.google.dev/gemini-api/docs
+    page: deployment/gemini-api.md
+    blurb: Hosted Gemma, no infrastructure to run.
+    mark: GA
+    icon: simple/googlegemini
 
   - id: google-cloud
     name: Google Cloud
     url: https://cloud.google.com          # unverified
     page: deployment/google-cloud.md
+    blurb: Cloud Run, GKE and Vertex for production scale.
+    mark: GC
+    icon: simple/googlecloud
+
+  # Hosted endpoints -- no install, no local page. Their URLs name a specific model, so each
+  # carries `pinned`.
+  - id: openrouter
+    name: OpenRouter
+    url: https://openrouter.ai/google/gemma-4-31b-it:free
+    pinned: gemma-4
+    blurb: Free hosted 31B through an OpenAI-compatible router.
+    mark: OR
+    icon: simple/openrouter
+
+  - id: cerebras
+    name: Cerebras
+    url: https://inference-docs.cerebras.ai/models/gemma-4-31b
+    pinned: gemma-4
+    blurb: Very high token throughput on Cerebras hardware.
+    mark: CB
+
+  - id: ai-studio
+    name: Google AI Studio
+    short_name: AI Studio
+    url: https://aistudio.google.com/prompts/new_chat?model=gemma-4-31b-it
+    pinned: gemma-4
+    blurb: Try Gemma in the browser, no key or setup.
+    mark: AI
+    icon: simple/google
 
   - id: transformers
     name: Hugging Face Transformers
     short_name: Transformers
     url: https://huggingface.co/docs/transformers
     page: deployment/huggingface.md
+    blurb: The standard Python path for building and training.
+    mark: HF
+    icon: simple/huggingface
+
+  - id: unsloth
+    name: Unsloth
+    url: https://unsloth.ai/docs
+    page: deployment/unsloth.md
+    blurb: Dynamic-quant GGUFs and 2x faster fine-tuning.
+    mark: Un
 
   - id: keras
     name: Keras
     url: https://keras.io
     page: deployment/keras.md
+    blurb: Multi-backend deep learning for research.
+    mark: Ke
+    icon: simple/keras
 
   - id: jax
     name: JAX
@@ -114,3 +187,84 @@ frameworks:
     name: iOS
     url: https://developer.apple.com/ios/  # unverified
     page: deployment/mobile.md
+
+# Tuning paths -- the routes shown on the fine-tuning overview. Kept separate from the list
+# above because the two do not map one-to-one: Keras offers both LoRA and distributed tuning,
+# Google Cloud offers both GKE and Vertex AI, and the target is a tuning guide rather than the
+# framework's own page. Several are archived cookbook notebooks for older generations; their
+# URLs say so, and `pinned` records it.
+#
+#   id         what the tuning page's grid refers to.
+#   framework  optional id from the list above, borrowed for the logo tile.
+#   label      what the card is called. Always set, so one framework's several paths stay
+#              distinguishable.
+#   page       our tuning guide, docs-relative. Mutually exclusive with `url`.
+#   url        external guide. Rendered as an outbound card.
+#   mark       monogram, for a path whose `framework` has no logo or no entry at all.
+#   blurb      one line describing the path, not the framework.
+#   pinned     the generation the URL is hard-coded to, same meaning as above.
+tuning_paths:
+  - id: keras-lora
+    framework: keras
+    label: Keras + LoRA
+    page: tuning/keras-lora.md
+    blurb: Parameter-efficient tuning with KerasHub.
+
+  - id: transformers-peft
+    framework: transformers
+    label: Transformers + PEFT
+    url: https://huggingface.co/blog/gemma-peft
+    blurb: LoRA and QLoRA with the Hugging Face stack.
+
+  - id: gemma-jax
+    framework: jax
+    label: Gemma library for JAX
+    mark: JX
+    url: https://gemma-llm.readthedocs.io/en/latest/colab_finetuning.html
+    blurb: The reference JAX implementation, with a tuning colab.
+
+  - id: unsloth-notebook
+    framework: unsloth
+    label: Unsloth
+    url: https://github.com/google-gemma/cookbook/blob/main/.archive/Gemma/%5BGemma_2%5DFinetune_with_Unsloth.ipynb
+    pinned: gemma-2
+    blurb: Cookbook notebook for single-GPU LoRA tuning.
+
+  - id: axolotl
+    label: Axolotl
+    mark: Ax
+    url: https://github.com/google-gemma/cookbook/blob/main/.archive/Gemma/%5BGemma_2%5DFinetune_with_Axolotl.ipynb
+    pinned: gemma-2
+    blurb: Cookbook notebook driven by a YAML config.
+
+  - id: llama-factory
+    label: LLaMA Factory
+    mark: LF
+    url: https://github.com/google-gemma/cookbook/blob/main/.archive/Gemma/%5BGemma_1%5DFinetune_with_LLaMA_Factory.ipynb
+    pinned: gemma-1
+    blurb: Cookbook notebook with a no-code tuning UI.
+
+  - id: xtuner
+    label: XTuner
+    mark: XT
+    url: https://github.com/google-gemma/cookbook/blob/main/.archive/Gemma/%5BGemma_1%5DFinetune_with_XTuner.ipynb
+    pinned: gemma-1
+    blurb: Cookbook notebook for the XTuner toolkit.
+
+  - id: keras-distributed
+    framework: keras
+    label: Keras distributed
+    page: tuning/distributed.md
+    blurb: Model-parallel tuning across TPU or GPU pods.
+
+  - id: gke
+    framework: google-cloud
+    label: Google Cloud GKE
+    url: https://cloud.google.com/kubernetes-engine/docs/tutorials/finetune-gemma-gpu
+    blurb: Multi-GPU tuning on Kubernetes with Transformers.
+
+  - id: vertex-ai
+    framework: google-cloud
+    label: Vertex AI
+    url: https://cloud.google.com/vertex-ai/generative-ai/docs/models/open-model-tuning
+    blurb: Managed tuning jobs, with no cluster to operate.

@@ -1,11 +1,11 @@
 ---
-title: Video Understanding
+title: Video understanding
 description: Video data is a rich source of information that can help you accomplish tasks and understand the world around you.
 models: [gemma-4]
 frameworks: [transformers]
 colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs/notebooks/video.ipynb
 ---
-# Video Understanding
+# Video understanding
 
 Video data is a rich source of information that can help you accomplish tasks and understand the world around you. Using Gemma with video data can help you understand spatial relationships, interpret human interactions, and assist with situational awareness. This tutorial shows you how to get started processing video data with Gemma using Hugging Face Transformers.
 
@@ -24,7 +24,7 @@ pip install "transformers>=5.10.1"
 
 ## Load Model
 
-Use the `transformers` libraries to create an instance of a `processor` and `model` using the `AutoProcessor` and `AutoModelForImageTextToText` classes as shown in the following code example:
+Use the [`transformers`](https://huggingface.co/docs/transformers/installation) libraries to create an instance of a `processor` and `model` using the `AutoProcessor` and `AutoModelForImageTextToText` classes as shown in the following code example:
 
 ```python { .notebook-cell .model-swap }
 MODEL_ID = "google/gemma-4-E2B-it"
@@ -98,10 +98,22 @@ Here's a breakdown of the key moments:
 ## Summary
 
 In this guide, you learned how to process video data using Gemma 4 models. The examples demonstrated how to use the `processor` to automatically process the input video and generate textual understanding of the video content.
+## What's next
 
-<!-- TODO: Port over
-### Next steps
-
-- [Prompt and system instructions](../prompt-formatting.md)
-- [Function calling](function-calling.md)
-- [Run Gemma overview](../../deployment/index.md) -->
+<div class="card-grid">
+<a class="card" href="audio.md">
+  <span class="card-icon">{{ icon('lucide/audio-lines') }}</span>
+  <div class="card-title">Audio understanding</div>
+  <p class="card-desc">Transcribe, translate and reason over speech.</p>
+</a>
+<a class="card" href="../prompt-formatting.md">
+  <span class="card-icon">{{ icon('lucide/braces') }}</span>
+  <div class="card-title">Prompt formatting</div>
+  <p class="card-desc">The control tokens that structure a Gemma prompt.</p>
+</a>
+<a class="card" href="../../deployment/index.md">
+  <span class="card-icon">{{ icon('lucide/play') }}</span>
+  <div class="card-title">Run Gemma</div>
+  <p class="card-desc">Every engine that runs Gemma, from a laptop to a cluster.</p>
+</a>
+</div>

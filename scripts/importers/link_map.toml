@@ -21,7 +21,7 @@
 "/core/huggingface_inference" = "deployment/huggingface.md"
 "/releases" = "models/releases.md"
 
-"/get_started" = "get-started/quickstart.md"
+"/get_started" = "get-started/index.md"
 "/capabilities/audio" = "get-started/capabilities/audio.md"
 "/capabilities/thinking" = "get-started/capabilities/thinking.md"
 "/capabilities/vision" = "get-started/capabilities/vision.md"
@@ -78,8 +78,8 @@
 "/integrations/llamacpp" = "deployment/llamacpp.md"
 "/integrations/lmstudio" = "deployment/lmstudio.md"
 "/integrations/mlx" = "deployment/mlx.md"
-"/integrations/web" = "deployment/web.md"
-"/integrations/mobile" = "deployment/mobile.md"
+"/integrations/web" = "deployment/ai-edge-gallery.md"
+"/integrations/mobile" = "deployment/ai-edge-gallery.md"
 "/integrations/langchain" = "deployment/langchain.md"
 "/integrations/google-cloud" = "deployment/google-cloud.md"
 "/core/gke" = "deployment/google-cloud.md"               # GKE folded into the Google Cloud page
@@ -89,7 +89,7 @@
 "/integrations/litert" = "deployment/litert.md"
 
 # Fine-tuning. Targets are existing stubs; Step 2.3 fills them in.
-"/tune" = "tuning/overview.md"
+"/tune" = "tuning/index.md"
 "/core/huggingface_text_finetune_qlora" = "tuning/qlora.md"
 "/core/huggingface_vision_finetune_qlora" = "tuning/vision-qlora.md"
 "/core/huggingface_text_full_finetune" = "tuning/full-finetune.md"
@@ -100,19 +100,19 @@
 "/spoken-language/task-specific-tuning" = "tuning/spoken-language.md"
 
 # Learn
-"/business-email-assistant" = "learn/business-email-assistant.md"
-"/personal-code-assistant" = "learn/personal-code-assistant.md"
+"/business-email-assistant" = "tuning/index.md"
+"/personal-code-assistant" = "tuning/index.md"
 
 # Now ported (were [planned] in Step 0.5)
-"/setup" = "get-started/quickstart.md"        # legacy setup page removed
-"/core/prompt-structure" = "get-started/prompt-structure.md"
+"/setup" = "get-started/index.md"        # legacy setup page removed
+"/core/prompt-structure" = "get-started/prompt-formatting.md"
 "/mtp/overview" = "get-started/capabilities/mtp.md"
 "/mtp/mtp" = "get-started/capabilities/mtp.md"
 
 # No such upstream page. Referenced from tuning docs about `start_of_turn`/`end_of_turn` tags
 # for core Gemma, so the core formatting page is the right target -- not paligemma/prompting.md,
 # which covers PaliGemma's task-specific syntax.
-"/core/prompt-system-instructions" = "get-started/prompt-structure.md"
+"/core/prompt-system-instructions" = "get-started/prompt-formatting.md"
 
 # ------------------------------------------------------------------------------------------
 # [planned] Page does not exist yet. Links point at the eventual path so the linter's
@@ -158,19 +158,15 @@
 "deployment/huggingface.md#vision" = "generate-text-from-image-data"
 "deployment/index.md#select-a-variant" = "select-a-gemma-variant"
 "deployment/index.md#run-generation" = "run-generation-and-inference-requests"
-"learn/business-email-assistant.md#compute_requirements" = "hardware-requirements"
-"learn/personal-code-assistant.md#compute_requirements" = "hardware-requirements"
-"learn/personal-code-assistant.md#extension" = "vs-code-extension-project"
-"learn/personal-code-assistant.md#web-service" = "gemma-web-service-project"
 "tuning/spoken-language.md#compute_requirements" = "hardware-requirements"
 # tuning/overview.md carries its own contents list using devsite's short anchors.
-"tuning/overview.md#choose-framework" = "choose-a-framework"
-"tuning/overview.md#tune-and-test" = "tune-and-test-the-model"
-"tuning/overview.md#deploy-model" = "deploy-the-model"
+"tuning/index.md#choose-framework" = "choose-a-framework"
+"tuning/index.md#tune-and-test" = "tune-and-test-the-model"
+"tuning/index.md#deploy-model" = "deploy-the-model"
 "models/gemma-4/index.md#sizes" = "parameter-sizes-and-quantization"
 "deployment/google-cloud.md#run" = "cloud-run"
 # The formatting guidance lives under this page's H1, not a section of its own.
-"get-started/prompt-structure.md#formatting-instruction" = "gemma-formatting-and-system-instructions"
+"get-started/prompt-formatting.md#formatting-instruction" = "gemma-13"
 # google-cloud.md opens with its own contents list, using devsite's short anchors.
 "deployment/google-cloud.md#model-garden" = "gemini-enterprise-agent-platform"
 "deployment/google-cloud.md#gke" = "google-kubernetes-engine-gke"

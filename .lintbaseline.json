@@ -2,6 +2,8 @@
   "_comment": "Known violations at baseline time. Shrink to zero; never grow. Regenerate with: uv run python scripts/lint_docs.py --write-baseline",
   "checks": [
     "links",
+    "references",
+    "icons",
     "images",
     "internal",
     "stubs",
@@ -15,13 +17,6 @@
     "css",
     "generated"
   ],
-  "count": 6,
-  "known": [
-    "stubs|docs/community/discord.md|stub: 46 chars of content (minimum 400)",
-    "stubs|docs/community/gemma-skills.md|stub: 62 chars of content (minimum 400)",
-    "stubs|docs/community/gemmaverse.md|placeholder link: example.com",
-    "stubs|docs/cookbook.md|stub: 395 chars of content (minimum 400)",
-    "stubs|docs/tools/index.md|stub: 144 chars of content (minimum 400)",
-    "stubs|docs/tools/model-selector.md|stub: 58 chars of content (minimum 400)"
-  ]
+  "count": 0,
+  "known": []
 }

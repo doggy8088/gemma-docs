@@ -9,10 +9,10 @@ source_url: https://newsletter.maartengrootendorst.com/p/a-visual-guide-to-gemma
 
 !!! note
     Originally published as part of
-    [A Visual Guide to Gemma 4](https://newsletter.maartengrootendorst.com/p/a-visual-guide-to-gemma-4) on Exploring Language Models.
+    [A Visual Guide to Gemma 4](https://newsletter.maartengrootendorst.com/p/a-visual-guide-to-gemma-4){ data-model="gemma-4" } on Exploring Language Models.
     For the rest of the architecture, see [A Visual Guide to Gemma 4](gemma-4.md).
 
-To improve the inference speed of the Gemma 4 models, a new series of autoregressive “**drafter**” models has been released alongside the main lineup ([E2B](https://huggingface.co/google/gemma-4-E2B-it-assistant), [E4B](https://huggingface.co/google/gemma-4-E4B-it-assistant), [31B](https://huggingface.co/google/gemma-4-31B-it-assistant), and [26B A4B](https://huggingface.co/google/gemma-4-26B-A4B-it-assistant)). Instead of solely relying on the primary Gemma 4 models (referred to as the “**target**” models), the draft model predicts several tokens in the time it takes the target model to process just one. This technique is also known as **speculative decoding**.
+To improve the inference speed of the Gemma 4 models, a new series of autoregressive “**drafter**” models has been released alongside the main lineup ([E2B](https://huggingface.co/google/gemma-4-E2B-it-assistant){ data-model="gemma-4" }, [E4B](https://huggingface.co/google/gemma-4-E4B-it-assistant){ data-model="gemma-4" }, [31B](https://huggingface.co/google/gemma-4-31B-it-assistant){ data-model="gemma-4" }, and [26B A4B](https://huggingface.co/google/gemma-4-26B-A4B-it-assistant){ data-model="gemma-4" }). Instead of solely relying on the primary Gemma 4 models (referred to as the “**target**” models), the draft model predicts several tokens in the time it takes the target model to process just one. This technique is also known as **speculative decoding**.
 
 After the drafter has predicted multiple draft tokens, the target model now only has to verify those suggested draft tokens. The verification is done in parallel thereby drastically speeding up inference. It reduces the number of forward passes the target model has to do for each token. Because our drafter generates a sequence of tokens for verification, we refer to it as the **Multi-Token Prediction** (MTP) head.
 
@@ -105,3 +105,17 @@ This new lookup table is then used in the LM Head where it is multiplied by the 
 ![](https://substackcdn.com/image/fetch/$s_!v7BV!,w_1456,c_limit,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F755089fb-51ad-4a4e-bfc1-16b1986f2c9d_812x1228.png)
 
 This computation is much easier and instead tells us that the next token is almost certainly in the chosen clusters. This efficient embedder allows for speeding up the draft model even more!
+## What's next
+
+<div class="card-grid">
+<a class="card" href="diffusiongemma.md">
+  <span class="card-icon">{{ icon('lucide/book-open') }}</span>
+  <div class="card-title">A Visual Guide to DiffusionGemma</div>
+  <p class="card-desc">How denoising produces text instead of pixels.</p>
+</a>
+<a class="card" href="../../resources/index.md">
+  <span class="card-icon">{{ icon('lucide/library') }}</span>
+  <div class="card-title">Resources</div>
+  <p class="card-desc">Demos, tools and the repositories worth bookmarking.</p>
+</a>
+</div>

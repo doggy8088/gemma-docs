@@ -10,11 +10,11 @@ source_url: "https://ai.google.dev/gemma/docs/functiongemma/model_card.md.txt"
 
 **Resources and Technical Documentation**:
 
-- [Responsible Generative AI Toolkit](https://ai.google.dev/responsible)
-- [FunctionGemma on Kaggle](https://www.kaggle.com/models/google/functiongemma/)
-- [FunctionGemma on Vertex Model Garden](https://console.cloud.google.com/vertex-ai/publishers/google/model-garden/functiongemma)
+- [Responsible Generative AI Toolkit][responsible-ai]
+- [FunctionGemma on Kaggle](https://www.kaggle.com/models/google/functiongemma/){ data-model="functiongemma" }
+- [FunctionGemma on Vertex Model Garden](https://console.cloud.google.com/vertex-ai/publishers/google/model-garden/functiongemma){ data-model="functiongemma" }
 
-**Terms of Use** : [Terms](https://ai.google.dev/gemma/terms)  
+**Terms of Use** : [Terms][gemma-terms]  
 
 **Authors**: Google DeepMind
 
@@ -58,7 +58,7 @@ the
 - **Mobile Actions:** To empower developers to build their own expert
   agents, we have published [a
   dataset](https://huggingface.co/datasets/google/mobile-actions) and
-  [fine-tuning recipe](https://github.com/google-gemma/cookbook/blob/main/.archive/FunctionGemma/%5BFunctionGemma%5DFinetune_FunctionGemma_270M_for_Mobile_Actions_with_Hugging_Face.ipynb)
+  [fine-tuning recipe](https://github.com/google-gemma/cookbook/blob/main/.archive/FunctionGemma/%5BFunctionGemma%5DFinetune_FunctionGemma_270M_for_Mobile_Actions_with_Hugging_Face.ipynb){ data-model="functiongemma" }
   to demonstrate fine-tuning FunctionGemma. It translates user inputs (e.g.,
   "Create a calendar event for lunch," "Turn on the flashlight") into
   function calls that trigger Android OS system tools. This interactive
@@ -157,7 +157,7 @@ Model evaluation metrics and results.
 To demonstrate the value of specialization for small language models, we
 compared the base FunctionGemma model against the fine-tuned model using the
 "Mobile Actions"
-[recipe](https://github.com/google-gemma/cookbook/blob/main/.archive/FunctionGemma/%5BFunctionGemma%5DFinetune_FunctionGemma_270M_for_Mobile_Actions_with_Hugging_Face.ipynb).
+[recipe](https://github.com/google-gemma/cookbook/blob/main/.archive/FunctionGemma/%5BFunctionGemma%5DFinetune_FunctionGemma_270M_for_Mobile_Actions_with_Hugging_Face.ipynb){ data-model="functiongemma" }.
 Fine-tuning significantly improved the base FunctionGemma model's ability to
 correctly identify and format mobile system calls.
 
@@ -260,7 +260,7 @@ following:
     - LLMs trained on large-scale, real-world text data can reflect socio-cultural biases embedded in the training material. These models underwent careful scrutiny, input data pre-processing described and posterior evaluations reported in this card.
 - Misinformation and Misuse
     - LLMs can be misused to generate text that is false, misleading, or harmful.
-    - Guidelines are provided for responsible use with the model, see the [Responsible Generative AI Toolkit](https://ai.google.dev/responsible).
+    - Guidelines are provided for responsible use with the model, see the [Responsible Generative AI Toolkit][responsible-ai].
 - Transparency and Accountability:
     - This model card summarizes details on the models' architecture, capabilities, limitations, and evaluation processes.
     - A responsibly developed open model offers the opportunity to share innovation by making LLM technology accessible to developers and researchers across the AI ecosystem.
@@ -269,7 +269,7 @@ Risks identified and mitigations:
 
 - Perpetuation of biases: It's encouraged to perform continuous monitoring (using evaluation metrics, human review) and the exploration of de-biasing techniques during model training, fine-tuning, and other use cases.
 - Generation of harmful content: Mechanisms and guidelines for content safety are essential. Developers are encouraged to exercise caution and implement appropriate content safety safeguards based on their specific product policies and application use cases.
-- Misuse for malicious purposes: Technical limitations and developer and end-user education can help mitigate against malicious applications of LLMs. Educational resources and reporting mechanisms for users to flag misuse are provided. Prohibited uses of Gemma models are outlined in the [Gemma Prohibited Use Policy](https://ai.google.dev/gemma/prohibited_use_policy)..
+- Misuse for malicious purposes: Technical limitations and developer and end-user education can help mitigate against malicious applications of LLMs. Educational resources and reporting mechanisms for users to flag misuse are provided. Prohibited uses of Gemma models are outlined in the [Gemma Prohibited Use Policy][prohibited-use]..
 - Privacy violations: Models were trained on data filtered for removal of PII (Personally Identifiable Information). Developers are encouraged to adhere to privacy regulations with privacy-preserving techniques.
 
 ### Benefits

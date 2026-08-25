@@ -39,10 +39,10 @@ is the right tool if:
 </a>
 </div>
 
-[Access it on Vertex](https://console.cloud.google.com/vertex-ai/publishers/google/model-garden/functiongemma)
+[Access it on Vertex](https://console.cloud.google.com/vertex-ai/publishers/google/model-garden/functiongemma){ data-model="functiongemma" }
 
 As with other Gemma models, FunctionGemma is provided with open weights and
-licensed for responsible [commercial use](https://ai.google.dev/gemma/terms), allowing you to
+licensed for responsible [commercial use][gemma-terms], allowing you to
 fine tune and deploy it in your own projects and applications.
 
 [Formatting and best practices](formatting.md)

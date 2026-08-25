@@ -22,10 +22,8 @@
 # Ported in Step 0.6 to resolve links that Step 0.5 pointed at planned paths. These pages are
 # not in the nav yet -- Step 2.1 places them.
 
-[[page]]
-path = "get-started/prompt-structure.md"
-source = "https://ai.google.dev/gemma/docs/core/prompt-structure.md.txt"
-frozen = true
+# get-started/prompt-structure.md was merged into prompt-formatting.md as its "Gemma 1-3"
+# section; the upstream page above lives on there, not at its own path.
 
 [[page]]
 path = "get-started/capabilities/vision.md"
@@ -35,6 +33,9 @@ frozen = true
 [[page]]
 path = "get-started/capabilities/mtp.md"
 source = "https://ai.google.dev/gemma/docs/mtp/overview.md.txt"
+# The "Run MTP with Transformers" section was appended by hand from a second upstream page,
+# https://ai.google.dev/gemma/docs/mtp/mtp.md.txt. The page therefore has two origins and
+# only ever the one on disk as its source of truth.
 frozen = true
 
 # --- Run --------------------------------------------------------------------------------------
@@ -56,16 +57,6 @@ source = "https://ai.google.dev/gemma/docs/core/keras_inference.md.txt"
 frozen = true
 
 [[page]]
-path = "deployment/mobile.md"
-source = "https://ai.google.dev/gemma/docs/integrations/mobile.md.txt"
-frozen = true
-
-[[page]]
-path = "deployment/web.md"
-source = "https://ai.google.dev/gemma/docs/integrations/web.md.txt"
-frozen = true
-
-[[page]]
 path = "deployment/google-cloud.md"
 source = "https://ai.google.dev/gemma/docs/integrations/google-cloud.md.txt"
 frozen = true
@@ -77,8 +68,19 @@ assets = "deployment"
 frozen = true
 
 [[page]]
+path = "deployment/gemini-api.md"
+source = "https://ai.google.dev/gemma/docs/core/gemma_on_gemini_api.md.txt"
+frozen = true
+
+# deployment/web.md and deployment/mobile.md were retired: both described the MediaPipe LLM
+# Inference path for Gemma 3, superseded by LiteRT-LM. Their on-device story now lives in
+# deployment/ai-edge-gallery.md, which is authored rather than ported.
+
+[[page]]
 path = "deployment/litert.md"
-source = "https://ai.google.dev/gemma/docs/conversions/hf-to-mediapipe-task.md.txt"
+# Rewritten around LiteRT-LM for Gemma 4; the MediaPipe Task conversion guide it was ported
+# from covered Gemma 3 only.
+source = "https://developers.google.com/edge/litert-lm/models/gemma-4"
 frozen = true
 
 [[page]]
@@ -89,7 +91,7 @@ frozen = true
 # --- Tuning / Learn ---------------------------------------------------------------------------
 
 [[page]]
-path = "tuning/overview.md"
+path = "tuning/index.md"
 source = "https://ai.google.dev/gemma/docs/tune.md.txt"
 frozen = true
 
@@ -129,17 +131,13 @@ source = "https://ai.google.dev/gemma/docs/spoken-language/task-specific-tuning.
 assets = "tuning"
 frozen = true
 
-[[page]]
-path = "learn/business-email-assistant.md"
-source = "https://ai.google.dev/gemma/docs/business-email-assistant.md.txt"
-assets = "learn"
-frozen = true
-
-[[page]]
-path = "learn/personal-code-assistant.md"
-source = "https://ai.google.dev/gemma/docs/personal-code-assistant.md.txt"
-assets = "learn"
-frozen = true
+# learn/business-email-assistant.md and learn/personal-code-assistant.md were retired: both were
+# Gemma 2 tutorials, superseded by the Fine-tune section. Their upstream sources were
+# .../business-email-assistant.md.txt and .../personal-code-assistant.md.txt if a Gemma 4
+# version is ever wanted.
+#
+# cookbook.md moved to resources/index.md; tools/index.md and tools/model-selector.md were
+# removed. All three were authored here, so none had a manifest entry.
 
 # --- Core -------------------------------------------------------------------------------------
 

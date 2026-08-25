@@ -13,9 +13,7 @@ body:has(.gemma-teaser) .md-main {
   scrollbar-width: none;
 }
 
-body:has(.gemma-teaser) * {
-  scrollbar-width: none;
-}
+body:has(.gemma-teaser) * { scrollbar-width: none; }
 
 body:has(.gemma-teaser) *::-webkit-scrollbar,
 html:has(.gemma-teaser)::-webkit-scrollbar {
@@ -195,10 +193,7 @@ body:has(.gemma-teaser) .md-header .md-search__input::placeholder {
   letter-spacing: 0.01em;
 }
 
-.gemma-actions {
-  display: flex;
-  justify-content: center;
-}
+.gemma-actions { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; }
 
 .gemma-btn {
   display: inline-flex;
@@ -206,10 +201,10 @@ body:has(.gemma-teaser) .md-header .md-search__input::placeholder {
   justify-content: center;
   padding: 0.95rem 2.8rem;
   color: var(--gemma-white) !important;
-  background-color: var(--gemma-blue);
+  background-color: var(--gemma-accent-fill);
   border: 1px solid color-mix(in srgb, var(--gemma-white) 15%, transparent);
   border-radius: var(--gemma-radius-md);
-  box-shadow: 0 6px 24px color-mix(in srgb, var(--gemma-blue) 40%, transparent);
+  box-shadow: 0 6px 24px color-mix(in srgb, var(--gemma-accent-fill) 40%, transparent);
   font-size: 1.22rem;
   font-weight: 700;
   text-decoration: none !important;
@@ -219,9 +214,13 @@ body:has(.gemma-teaser) .md-header .md-search__input::placeholder {
 .gemma-btn:hover {
   background-color: var(--gemma-blue-hover);
   border-color: var(--gemma-white);
-  box-shadow: 0 8px 32px color-mix(in srgb, var(--gemma-blue) 60%, transparent);
+  box-shadow: 0 8px 32px color-mix(in srgb, var(--gemma-accent-fill) 60%, transparent);
   transform: translateY(-2px);
 }
+
+/* Secondary hero action: white, so the blue primary stays the dominant call. */
+.gemma-btn--ghost { color: var(--gemma-ink) !important; background-color: var(--gemma-white); box-shadow: 0 6px 24px color-mix(in srgb, var(--gemma-ink) 30%, transparent); }
+.gemma-btn--ghost:hover { background-color: var(--gemma-white); border-color: var(--gemma-white); box-shadow: 0 8px 32px color-mix(in srgb, var(--gemma-ink) 45%, transparent); }
 
 @media (max-width: 48rem) {
   .gemma-name { font-size: clamp(1.8rem, 6vw, 2.6rem); }

@@ -18,16 +18,157 @@ writing new CSS — if something you need isn't here, add it to
 
 ## Colour tokens
 
+Brand blue has **one knob**. `--gemma-blue-seed` in `docs/stylesheets/gemma.css` is the only
+colour to change; every step, both schemes and every component follow from it:
+
+```css
+--gemma-blue-seed: #0B57D0;
+```
+
+The steps are the seed mixed with white (black at the dark end) in sRGB, so they stay on the
+seed's own hue. With the current seed:
+
+| Step | Hex | Contrast | Role |
+|---|---|---|---|
+| `--gemma-blue-50` / `-100` | `#EBF2FB` / `#CEDDF6` | — | Tints, hover washes. |
+| `--gemma-blue-300` | `#80A8E7` | 6.65:1 on ink | Dark-scheme text. |
+| `--gemma-blue-500` | `#417CDA` | 4.10:1 under white | **Decorative only** — gradients, 2px rules. |
+| `--gemma-blue-600` | `#2368D5` | 5.23:1 under white | Dark-scheme fills. |
+| `--gemma-blue-700` | `#0B57D0` | 6.39:1 both ways | The primary. |
+| `--gemma-blue-800` | `#0944A2` | 8.90:1 under white | Pressed / strong. |
+
+Before committing a new seed, check it:
+
+```bash
+uv run python scripts/check_contrast.py --seed "#RRGGBB"
+```
+
+It prints the derived ramp and exits non-zero if any step misses the threshold its role needs,
+so a colour change never silently breaks legibility.
+
+Use the semantic roles in components, not the ramp directly:
+
 | Token | Use |
 |---|---|
-| `--gemma-blue` | Fills: buttons, bars, icons, step markers. **Not body text** — 3.51:1 on white fails WCAG AA. |
-| `--gemma-blue-deep` | Text on light surfaces. 4.65:1 on white, passes AA. |
-| `--gemma-blue-light` | Text on dark surfaces. 5.98:1 on ink, passes AA. |
+| `--gemma-accent` | Brand colour that is **text-safe** in the current scheme. Prefer this. |
+| `--gemma-accent-fill` | A fill that **carries white text**. Never point it at a light step. |
 | `--gemma-white`, `--gemma-ink` | Surfaces. |
-| `--gemma-accent` | Whichever of the above is text-safe in the current scheme. **Prefer this.** |
-| `--gemma-accent-fill` | Scheme-aware fill colour. |
+| `--gemma-blue`, `-deep`, `-light` | Legacy aliases into the ramp. Prefer the roles above. |
+
+!!! warning "Contrast is symmetric"
+    A colour too light to read *on* white is also too light to sit *behind* white text — it is
+    the same ratio. The palette this replaced was built on `#3186FF` at 3.51:1, which failed
+    both ways; that is what made it read neon. Fills carrying white text come from 600 or 700.
 
 Scales: `--gemma-space-1…7`, `--gemma-radius-sm|md|lg|pill`, `--gemma-shadow-sm|md|lg`.
+
+## Shared links
+
+A URL used on more than one page goes in `data/links.yml`, never inline. `ai.google.dev/responsible`
+appears on 26 pages; when a URL like that moves, this is the one line that changes.
+
+```yaml
+hf-gemma4:
+  url: https://huggingface.co/collections/google/gemma-4
+  model: gemma-4        # only when the URL names a generation
+```
+
+Pages use it as an ordinary reference link — no URL, no attributes:
+
+```markdown
+Every checkpoint is in the [Hugging Face collection][hf-gemma4].
+```
+
+`scripts/generate_snippets.py` renders the definitions into `snippets/links.md`, which
+`pymdownx.snippets` appends to every page. A definition renders as nothing, so appending it
+everywhere is free.
+
+The `model:` key is what `pinned_links.py` reports, so a link's generation is declared **once**,
+beside the URL, instead of repeated at every use site.
+
+!!! warning "An unresolved reference fails silently"
+    `[text][typo]` renders as literal text — brackets and all — rather than erroring. The
+    `references` lint check catches it: every reference must resolve, either from
+    `data/links.yml` or from a definition on the page itself.
+
+## Glossary
+
+Terms go in `data/glossary.yml` and render as abbreviations with a hover definition. The theme
+gives them `cursor: help` and a dotted grey underline, so a term reads as a term and not as a
+link — a link is blue with a pointer cursor.
+
+Unlike shared links, the glossary is **opt-in per page**:
+
+```markdown
+--8<-- "glossary.md"
+```
+
+Python-Markdown marks up *every* occurrence of a term, so a global glossary would put eleven
+dotted underlines on the MTP page and forty-one on GGUF across the site. Include it where the
+acronyms are used but not explained; leave it off the page that is itself the explanation.
+
+## Icons
+
+Five icon sets ship with Zensical: **lucide** (line icons, the default here), **material**,
+**fontawesome**, **octicons**, and **simple** (brand logos). Project-specific icons go in
+`overrides/.icons/`.
+
+**In prose**, use the shortcode:
+
+```markdown
+Run it locally :lucide-rocket: and you are done.
+```
+
+**In markup** — any card, grid or generated block — use the `icon()` macro instead:
+
+```jinja
+{% raw %}<span class="card-icon">{{ icon('lucide/rocket') }}</span>
+{{ icon('simple/ollama', 'engine-logo') }}{% endraw %}
+```
+
+!!! warning "The shortcode does not work inside HTML"
+    `:lucide-rocket:` is an *inline Markdown* construct. Inside a raw HTML block — which every
+    card grid is — it stays literal text. Adding `markdown` to the block does render it, but
+    `md_in_html` then wraps each card in a `<p>` and the grid layout breaks. The `icon()` macro
+    runs in the Jinja preprocessor, before Markdown, so the SVG is already in place. It also
+    reaches the grids generated from `data/*.yml`, where a shortcode cannot go at all.
+
+Icons inherit `currentColor`, so set the colour on the parent and never on the SVG. Size comes
+from CSS in `icons.css`; the macro strips the file's own `width`/`height` so the sets cannot
+disagree.
+
+!!! danger "Do not use emoji shortcodes"
+    `:rocket:` renders as `<img src="https://cdn.jsdelivr.net/...twemoji...">` — an external CDN
+    request per emoji, which breaks offline viewing and adds a third-party dependency. Raw
+    Unicode emoji avoid the request but render in the system font, so they differ on every
+    platform and cannot be styled. Use an icon set.
+
+## Boxes
+
+Every bordered container on the site — cards, engine tiles, tree nodes, tables — uses one
+recipe. Only padding changes.
+
+```css
+background: var(--gemma-surface);
+border: 1px solid var(--gemma-border);
+border-radius: var(--gemma-radius-md);
+```
+
+```css
+/* Interactive boxes, on hover and focus */
+border-color: var(--gemma-accent);
+box-shadow: var(--gemma-shadow-sm);
+```
+
+| Density | Padding | Used by |
+|---|---|---|
+| Compact | `--gemma-space-2` / `-3` | Engine tiles, tree nodes |
+| Default | `--gemma-space-4` / `-5` | Cards |
+| Panel | `--gemma-space-3` / `-4` | Admonitions, on `--gemma-surface-sunken` with a rail |
+
+Do not reach for Material's `--md-default-fg-color--lighter` for a border. It is an 0.32-alpha
+black that draws a visibly heavier line than `--gemma-border`; cards used it for a long time,
+which is why they read as a different design language from everything around them.
 
 ## Cards
 
@@ -56,6 +197,56 @@ A grid of links. Used on the cookbook, model overviews and ecosystem pages.
 `.cookbook-grid` / `.cookbook-card` are aliases kept for converter output and existing pages.
 Use `.card-grid` / `.card` in anything new.
 
+## Ending a page
+
+Two headings, and only these two. Never `Summary and next steps`, never `Next steps`.
+
+**`## Summary`** is a prose recap of what the reader just did. Optional -- use it on a tutorial
+that walked through something, skip it on a reference page. No cards.
+
+**`## What's next`** is always a `.card-grid`, always with an icon, and always last. Two to
+four cards, and **every one must point forward** -- never back to a section the reader already
+passed through. Linking across sections is fine; a Get started page may point at Learn.
+
+```markdown
+## What's next
+
+<div class="card-grid">
+<a class="card" href="../tuning/index.md">
+  <span class="card-icon">{% raw %}{{ icon('lucide/graduation-cap') }}{% endraw %}</span>
+  <div class="card-title">Fine-tune Gemma</div>
+  <p class="card-desc">QLoRA, full fine-tunes and distributed training on your own data.</p>
+</a>
+</div>
+```
+
+A card pointing off-site takes the `↗` in its title and **no icon**, so the arrow stays the
+signal that you are leaving:
+
+```markdown
+<a class="card" href="https://…" target="_blank" rel="noopener" data-model="gemma-4">
+  <div class="card-title">Gemma on Vertex AI <span class="card-ext">↗</span></div>
+  <p class="card-desc">Use Gemma open models on Google Cloud.</p>
+</a>
+```
+
+Note `data-model` sits on the anchor as a plain attribute. `attr_list` syntax does not work
+inside an HTML block, and `scripts/pinned_links.py` reads both forms.
+
+Which pages get what:
+
+| Section | Ends with |
+|---|---|
+| Get started, Learn | `What's next` on every page |
+| Run, Fine-tune | `What's next` |
+| Models | `Summary` where a recap helps; `What's next` only where the page genuinely leads on. Model cards get neither -- a spec sheet ends. |
+
+!!! warning "Card grids are stripped from notebooks"
+    A grid is site navigation: raw HTML plus {% raw %}`{{ icon() }}`{% endraw %} calls that only the Jinja
+    preprocessor resolves, both of which render as literal text in Jupyter. `scripts/notebooks.py`
+    drops any `card-grid` block and the heading above it, so a page registered as a notebook
+    source needs no special handling.
+
 ## Badges
 
 Inline chips for model attributes. Drive them from `data/models.yml` so a badge can never
@@ -76,6 +267,55 @@ disagree with the tables.
 
 `--muted` is how the model switcher (Step 4.2) will show a capability the selected model does
 not have — struck through rather than hidden, so the reader learns the limitation.
+
+## Prompt tokens
+
+Gemma's control tokens are chips, not code. Colour carries the category, so a reader scanning
+`get-started/prompt-formatting.md` can tell a turn marker from a tool call without reading it.
+
+<p>
+  <code class="token-turn">&lt;|turn|&gt;</code>
+  <code class="token-role">system</code>
+  <code class="token-multi">&lt;|image|&gt;</code>
+  <code class="token-tool">&lt;|tool_call|&gt;</code>
+  <code class="token-think">&lt;|think|&gt;</code>
+</p>
+
+| Class | Category | Covers |
+|---|---|---|
+| `.token-turn` | Turn structure | <code class="token-turn">&lt;&#124;turn&#124;&gt;</code> <code class="token-turn">&lt;turn&#124;&gt;</code> <code class="token-turn">&lt;start_of_turn&gt;</code> <code class="token-turn">&lt;end_of_turn&gt;</code> |
+| `.token-role` | Roles | <code class="token-role">system</code> <code class="token-role">user</code> <code class="token-role">model</code> <code class="token-role">assistant</code> |
+| `.token-multi` | Modality placeholders | <code class="token-multi">&lt;&#124;image&#124;&gt;</code> <code class="token-multi">&lt;&#124;audio&#124;&gt;</code> |
+| `.token-tool` | Tool use | <code class="token-tool">&lt;&#124;tool&#124;&gt;</code> <code class="token-tool">&lt;&#124;tool_call&#124;&gt;</code> <code class="token-tool">&lt;&#124;tool_response&#124;&gt;</code> <code class="token-tool">&lt;&#124;"&#124;&gt;</code> |
+| `.token-think` | Reasoning | <code class="token-think">&lt;&#124;think&#124;&gt;</code> <code class="token-think">&lt;&#124;channel&gt;thought</code> <code class="token-think">&lt;channel&#124;&gt;</code> |
+
+**Inline**, in prose or a table cell, use `attr_list` on inline code:
+
+```markdown
+Token to indicate a system instruction: `system`{.token-role}
+Enable reasoning with `<|think|>`{.token-think}
+```
+
+**In an example dialogue**, use a `<pre><code>` block with spans, so the surrounding prompt text
+stays unstyled and line breaks are preserved. Escape the angle brackets:
+
+```html
+<pre><code><span class="token-turn">&lt;|turn&gt;</span><span class="token-role">user</span>
+Describe this image: <span class="token-multi">&lt;|image|&gt;</span><span class="token-turn">&lt;turn|&gt;</span></code></pre>
+```
+
+Which renders as:
+
+<pre><code><span class="token-turn">&lt;|turn&gt;</span><span class="token-role">user</span>
+Describe this image: <span class="token-multi">&lt;|image|&gt;</span><span class="token-turn">&lt;turn|&gt;</span></code></pre>
+
+Keep a token in one chip when the model treats it as one unit —
+<code class="token-think">&lt;|channel&gt;thought</code> is a single chip, not a chip followed by
+bare text. Do not use a fenced code block for a dialogue
+that needs tokens: syntax highlighting and these classes cannot both apply.
+
+Colours live in `gemma.css` as `--gemma-cat-*` triplets and are categorical on purpose — they
+stay distinct from each other rather than being derived from the brand blue.
 
 ## Page context strip
 
@@ -167,6 +407,102 @@ generate every registered notebook with `uv run python scripts/notebooks.py`; us
 during verification. Do not edit the generated `.ipynb`
 directly.
 
+## Engine grid
+
+The "run it your way" tiles on the quickstart. A compact relative of `.card` for when the reader
+is picking one of a dozen tools rather than reading about one.
+
+Generated from `data/frameworks.yml` — never hand-write the tiles. An engine appears once it has
+`page`, `blurb` and `mark` keys; the page chooses which ids to feature and in what order, since
+that is editorial rather than a fact about the framework.
+
+```jinja
+{% raw %}{% set featured = ["ollama", "llamacpp"] %}
+<ul class="engine-grid">
+{% for id in featured %}{% for fw in frameworkdata.frameworks if fw.id == id %}
+  <li><a class="engine" href="../{{ fw.page }}" title="{{ fw.blurb }}">
+    <span class="engine-mark" aria-hidden="true">{{ fw.mark }}</span>
+    <span class="engine-name">{{ fw.short_name | default(fw.name) }}</span>
+  </a></li>
+{% endfor %}{% endfor %}
+</ul>{% endraw %}
+```
+
+`mark` is a two- or three-character monogram standing in for a real vendor logo. Replacing
+`.engine-mark`'s text with an `<img>` needs no other markup change. Add `.engine--all` to a
+trailing tile to make it read as an action rather than another engine.
+
+Add `.engine-grid--detailed` to show each blurb on the card instead of behind a hover, and wrap
+the name and blurb in `.engine-body`. Use it where the grid *is* the page and the reader is
+deciding rather than recognising — the Run overview does — and the compact form where the grid
+is a shortcut past a list of names, as on the quickstart.
+
+An entry with no `page` is a hosted endpoint: link straight to its `url`, and mark it up as an
+external link.
+
+### Links pinned to a model generation
+
+Some external URLs name a generation — a Hugging Face collection, a provider's model page — and
+go stale when the next one ships. Tag them so they can be found later:
+
+```markdown
+[Hugging Face](https://huggingface.co/collections/google/gemma-4){ data-model="gemma-4" }
+```
+
+In `data/frameworks.yml` the equivalent is a `pinned:` key on the entry. Either way:
+
+```bash
+uv run python scripts/pinned_links.py --model gemma-4
+```
+
+lists every one of them. Tag only genuinely version-pinned URLs — a project's home page is not
+one, and marking it up would bury the links that do need revisiting.
+
+Two things the name alone will mislead you about. `paligemma-2` and `shieldgemma-2` are
+PaliGemma 2 and ShieldGemma 2, not Gemma 2; tag them `paligemma` and `shieldgemma`. And pages
+registered in `scripts/notebooks.py` are exported to Jupyter, which renders `attr_list` as
+literal text — leave those untagged.
+
+## Model family tree
+
+The lineage visual on the models overview. Generated from `data/models.yml` `families`:
+`generation` orders the mainline spine, and `based_on` attaches each variant to the generation
+its own model page names as its base.
+
+Interaction is pure CSS — hovering or keyboard-focusing one generation dims the others. The
+markup underneath is an ordered list of generations each containing a list of descendants, so it
+still reads correctly with no CSS at all.
+
+```html
+<div class="model-tree">
+<ol class="tree-spine">
+  <li class="tree-gen">
+    <a class="tree-node tree-node--gen" href="…">
+      <span class="tree-gen-name">Gemma 4</span>
+      <span class="tree-gen-note">One line about the generation.</span>
+    </a>
+    <ul class="tree-branch">
+      <li><a class="tree-node" href="…">
+        <span class="tree-name">DiffusionGemma</span>
+        <span class="tree-tagline">What it is for.</span>
+      </a></li>
+    </ul>
+  </li>
+</ol>
+<ul class="tree-aside">…</ul>   <!-- families with no Gemma generation as a base -->
+</div>
+```
+
+Never add a `based_on` a model's own page does not state, and never invent a release date to
+order the tree — the spine already orders it. A family whose page describes a non-Gemma
+architecture takes `based_on: null` and renders below the dashed rule.
+
+!!! warning "List containers need extra specificity"
+    The theme styles lists with `[dir="ltr"] .md-typeset ol li` (0,2,2) and
+    `.md-typeset ul:not([hidden])` (0,2,1). A plain `.md-typeset .my-grid` is only (0,2,0) and
+    silently loses, so `display: grid` never applies and items keep their `1.25em` indent.
+    Qualify the tag — `.md-typeset ul.my-grid:not([hidden])` — for any list-based component.
+
 ## Steps
 
 A numbered walkthrough. Built on an ordered list, so it still reads correctly without CSS.
@@ -196,6 +532,11 @@ Body content, including code blocks.
 
 The `markdown` attribute is required — it tells `md_in_html` to keep parsing Markdown inside
 the tag.
+
+!!! warning "Content tabs do not work inside a step"
+    `pymdownx.tabbed` is a block-level extension and does not run inside an `md_in_html` block,
+    so `=== "Label"` inside a `<li markdown>` renders as literal text above an un-tabbed code
+    block. Use labelled fences inside the step, or move the tabs outside the list.
 
 ## Figures
 
@@ -275,7 +616,9 @@ reload; hover effects should become instant.
 | `layout.css` | Page grid, sidebars, typography scale |
 | `nav.css` | Header, tabs, sidebars, table of contents |
 | `content.css` | Tables, admonitions, code, content tabs |
-| `components.css` | Everything on this page |
+| `components.css` | Cards, badges, figures, steps, embeds |
+| `engine-grid.css` | The quickstart's engine tiles |
+| `model-tree.css` | The model family lineage tree |
 | `page-context.css` | The applicability bar above every H1 |
 | `tokens.css` | Chat-token badges (`<start_of_turn>` etc.) |
 | `home.css` | Landing page: chrome, backdrop, hero |

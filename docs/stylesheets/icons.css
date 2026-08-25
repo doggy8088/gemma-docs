@@ -1,0 +1,76 @@
+/* ---------------------------------------------------------------------------
+   Icons.
+
+   Emitted by the `icon()` macro in main.py, which inlines an SVG from the sets
+   that ship with Zensical. Every one carries stroke="currentColor" or
+   fill="currentColor", so an icon takes the colour of whatever contains it --
+   never set a colour on the SVG itself, set it on the parent.
+
+   Sizing lives here rather than in the file because the shipped sets disagree
+   about their intrinsic dimensions; the macro strips width/height on the way in.
+   --------------------------------------------------------------------------- */
+
+.md-typeset .gemma-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  vertical-align: -0.2em;
+}
+
+/* -------------------------------------------------------------------
+   Card icons
+   A tile to the left of the title, matching `.engine-mark`, so both
+   grids read as one component. The card becomes a two-column grid to
+   place it -- see components.css.
+   ------------------------------------------------------------------- */
+.md-typeset .card-icon {
+  display: grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: var(--gemma-radius-md);
+  background: var(--gemma-icon-tile);
+  color: inherit;
+  line-height: 1;
+}
+
+.md-typeset .card-icon .gemma-icon {
+  width: 1.125rem;
+  height: 1.125rem;
+  vertical-align: baseline;
+}
+
+/* -------------------------------------------------------------------
+   Tile fill
+   Plain surface at rest -- white against the tinted card in light mode,
+   sunken against it in dark -- lifting to a pale accent tint on hover.
+   ------------------------------------------------------------------- */
+.md-typeset .card-icon,
+.md-typeset .engine-mark {
+  --gemma-icon-tile: var(--gemma-surface);
+}
+
+/* The glyph is body text colour and stays there in every state.
+   `color: inherit` is not enough: the theme's `.md-typeset a:hover`
+   recolours the whole anchor to the accent, and an inheriting icon rides
+   along and turns blue. Stating the colour here ends that inheritance,
+   so the icon reads as black on hover exactly as it does at rest. */
+.md-typeset .card-icon,
+.md-typeset .engine-mark,
+.md-typeset a.card:hover .card-icon,
+.md-typeset a.card:focus-visible .card-icon,
+.md-typeset a.engine:hover .engine-mark,
+.md-typeset a.engine:focus-visible .engine-mark {
+  color: var(--md-typeset-color);
+}
+
+[data-md-color-scheme="slate"] .md-typeset .card-icon,
+[data-md-color-scheme="slate"] .md-typeset .engine-mark {
+  --gemma-icon-tile: var(--gemma-surface-sunken);
+}
+
+.md-typeset a.card:hover .card-icon,
+.md-typeset a.card:focus-visible .card-icon,
+.md-typeset a.engine:hover .engine-mark,
+.md-typeset a.engine:focus-visible .engine-mark {
+  background: color-mix(in srgb, var(--gemma-accent) 18%, var(--gemma-surface));
+}

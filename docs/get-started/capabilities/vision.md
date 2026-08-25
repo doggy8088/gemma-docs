@@ -94,3 +94,22 @@ Here are some things to avoid when prompting Gemma with visual data.
   something based on this image", provide specific instructions to achieve
   intended outputs. Clearly define what "something" is. For example, a poem,
   recipe, or code snippet.
+## What's next
+
+<div class="card-grid">
+<a class="card" href="image.md">
+  <span class="card-icon">{{ icon('lucide/image') }}</span>
+  <div class="card-title">Image understanding</div>
+  <p class="card-desc">Analyse and describe the contents of an image.</p>
+</a>
+<a class="card" href="video.md">
+  <span class="card-icon">{{ icon('lucide/film') }}</span>
+  <div class="card-title">Video understanding</div>
+  <p class="card-desc">Pass video as frames and reason over what happens.</p>
+</a>
+<a class="card" href="../prompt-formatting.md">
+  <span class="card-icon">{{ icon('lucide/braces') }}</span>
+  <div class="card-title">Prompt formatting</div>
+  <p class="card-desc">The control tokens that structure a Gemma prompt.</p>
+</a>
+</div>

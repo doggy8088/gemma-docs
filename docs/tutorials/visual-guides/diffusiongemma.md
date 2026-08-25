@@ -9,9 +9,9 @@ source_url: https://newsletter.maartengrootendorst.com/p/a-visual-guide-to-diffu
 
 !!! note
     Originally published on
-    [Exploring Language Models](https://newsletter.maartengrootendorst.com/p/a-visual-guide-to-diffusiongemma).
+    [Exploring Language Models](https://newsletter.maartengrootendorst.com/p/a-visual-guide-to-diffusiongemma){ data-model="diffusiongemma" }.
 
-Following the release of [Gemma 4 12B](https://newsletter.maartengrootendorst.com/p/a-visual-guide-to-gemma-4-12b) there is yet another innovative model that I can introduce to you all, [DiffusionGemma](https://huggingface.co/google/diffusiongemma-26B-A4B-it)!
+Following the release of [Gemma 4 12B](https://newsletter.maartengrootendorst.com/p/a-visual-guide-to-gemma-4-12b){ data-model="gemma-4" } there is yet another innovative model that I can introduce to you all, [DiffusionGemma](https://huggingface.co/google/diffusiongemma-26B-A4B-it){ data-model="diffusiongemma" }!
 
 This is one I’m especially excited about because it’s a different way of approaching text generation, yet uses many of the great things we have with existing “regular” LLMs. We are going to explore the old, the new, and how they live side-by-side.
 
@@ -198,7 +198,7 @@ So how can we have the benefits of Uniform State Diffusion without the downsides
 ## Architecture of DiffusionGemma
 **DiffusionGemma** applies Uniform State Diffusion that we explore thus far. However, the downsides of training this entirely from scratch still remains. The solution was simply not to train from scratch but to use an existing checkpoint as a start instead, namely the Gemma 4 26B A4B model.
 
-Gemma 4 26B A4B, as covered in [A Visual Guide to Gemma 4](https://newsletter.maartengrootendorst.com/p/a-visual-guide-to-gemma-4), is a Mixture of Experts (MoE) model that already went through extensive training and has great performance. There is one problem though…
+Gemma 4 26B A4B, as covered in [A Visual Guide to Gemma 4](https://newsletter.maartengrootendorst.com/p/a-visual-guide-to-gemma-4){ data-model="gemma-4" }, is a Mixture of Experts (MoE) model that already went through extensive training and has great performance. There is one problem though…
 
 Gemma 4 26B A4B is a *decoder-only* model and meant to generate text one by one whilst diffusion generally needs an *encoder* and a *denoiser*. This is where an elegant solution comes in, the **Encoder-Denoiser** patch!
 
@@ -362,3 +362,17 @@ As such, the sampler only accepts a group of tokens when they are each individua
 Re-noising the canvas in the Entropy Bounded Sampler is quite straightforward, all rejected tokens are re-noised! That doesn’t mean though that the accepted tokens will always remain in place. In next denoising steps, the model may decide to give it a lower probability after generating updated context.
 
 ![](https://substackcdn.com/image/fetch/$s_!B6mT!,w_1456,c_limit,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F89e216c8-01b0-4505-82dd-283694fc0a4a_2048x1767.png)
+## What's next
+
+<div class="card-grid">
+<a class="card" href="../../resources/index.md">
+  <span class="card-icon">{{ icon('lucide/library') }}</span>
+  <div class="card-title">Resources</div>
+  <p class="card-desc">Demos, tools and the repositories worth bookmarking.</p>
+</a>
+<a class="card" href="../../resources/vision-token-budget.md">
+  <span class="card-icon">{{ icon('lucide/eye') }}</span>
+  <div class="card-title">Vision token budget</div>
+  <p class="card-desc">How Gemma 4 allocates image tokens across resolutions.</p>
+</a>
+</div>

@@ -10,7 +10,7 @@ source_url: "https://ai.google.dev/gemma/docs/core/keras_inference.md.txt"
 
 Generating content, summarizing, and analysing content are just some of the tasks you can accomplish with Gemma open models. This tutorial shows you how to get started running Gemma using Keras, including generating text content with text and image input. [Keras](https://keras.io/) provides implementations for running Gemma and other models using JAX, PyTorch, and TensorFlow. If you're new to Keras, you might want to read [Getting started with Keras](https://keras.io/getting_started/) before you begin.
 
-Gemma 3 and later models support text and image input. Earlier versions of Gemma only support text input, except for some variants, including [PaliGemma](../get-started/quickstart.md).
+Gemma 3 and later models support text and image input. Earlier versions of Gemma only support text input, except for some variants, including [PaliGemma](../get-started/index.md).
 !!! Note
     This notebook won't run on T4 if you try with Gemma 4. Use L4 or higher GPUs.
     
@@ -47,14 +47,21 @@ import keras_hub
 
 Keras provides implementations of many popular [model architectures](https://keras.io/api/keras_nlp/models/). Download and configure a Gemma model using the `Gemma4CausalLM` class to build an end-to-end, causal language modeling implementation for Gemma 4 models. Create the model using the `from_preset()` method, as shown in the following code example:
 
-```python
+```python { .model-swap }
 gemma_lm = keras_hub.models.Gemma4CausalLM.from_preset(
     "gemma4_instruct_2b",
     dtype="bfloat16",
 )
 ```
 
-The `Gemma4CausalLM.from_preset()` method instantiates the model from a preset architecture and weights. In the code above, the string `"gemma#_xxxxxxx"` specifies a preset version and parameter size for Gemma. You can find the code strings for Gemma models in their **Model Variation** listings on [Kaggle](https://www.kaggle.com/models/keras/gemma4).
+!!! note "Keras presets"
+    Presets are `gemma4_instruct_{SIZE}` for the instruction-tuned weights and `gemma4_{SIZE}`
+    for base. There is no 12B preset, so the selector above offers the four sizes KerasHub
+    publishes. Each instruction-tuned preset also has a `_assistant` MTP drafter — see
+    [Multi-Token Prediction](../get-started/capabilities/mtp.md) — which must never be loaded
+    on its own.
+
+The `Gemma4CausalLM.from_preset()` method instantiates the model from a preset architecture and weights. In the code above, the string `"gemma#_xxxxxxx"` specifies a preset version and parameter size for Gemma. You can find the code strings for Gemma models in their **Model Variation** listings on [Kaggle](https://www.kaggle.com/models/keras/gemma4){ data-model="gemma-4" }.
 
 Once you have the model downloaded, Use the `summary()` function to get more info about the model:
 
@@ -353,4 +360,4 @@ In this tutorial, you learned how to generate text using Keras and Gemma. Here a
 - Learn how to [finetune a Gemma model](../tuning/keras-lora.md).
 - Learn how to perform [distributed fine-tuning and inference on a Gemma model](../tuning/distributed.md).
 - Learn about [Gemma integration with Vertex AI](google-cloud.md)
-- Learn how to [use Gemma models with Vertex AI](https://cloud.google.com/vertex-ai/docs/generative-ai/open-models/use-gemma).
+- Learn how to [use Gemma models with Vertex AI][vertex-use-gemma].

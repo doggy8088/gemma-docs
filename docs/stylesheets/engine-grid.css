@@ -1,0 +1,116 @@
+/* ---------------------------------------------------------------------------
+   Engine grid -- the "run it with" tiles on the quickstart.
+
+   A denser, more scannable relative of `.card`: the reader is picking one of a
+   dozen tools, so each tile leads with the tool's name as a mark rather than a
+   sentence. Generated from data/frameworks.yml; see docs/contributing/components.md.
+
+   The monogram is a placeholder for a real vendor logo. Swapping `.engine-mark`
+   text for an <img> needs no other markup change.
+   --------------------------------------------------------------------------- */
+
+.md-typeset ul.engine-grid:not([hidden]) {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr));
+  gap: var(--gemma-space-3);
+  margin: var(--gemma-space-5) 0;
+  padding: 0;
+  list-style: none;
+}
+
+.md-typeset ul.engine-grid > li {
+  margin: 0;
+}
+
+.md-typeset a.engine {
+  display: flex;
+  gap: var(--gemma-space-2);
+  align-items: center;
+  height: 100%;
+  padding: var(--gemma-space-2) var(--gemma-space-3);
+  border: 1px solid var(--gemma-border);
+  border-radius: var(--gemma-radius-md);
+  background: var(--gemma-box-surface);
+  color: inherit;
+  text-decoration: none;
+}
+
+.md-typeset a.engine:hover,
+.md-typeset a.engine:focus-visible {
+  border-color: var(--gemma-accent);
+  box-shadow: var(--gemma-shadow-sm);
+}
+
+/* The mark tile: a brand logo where Simple Icons ships one, otherwise a two- or
+   three-character monogram. Both sit on the same tile so the grid stays even. */
+.md-typeset .engine-mark {
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: var(--gemma-radius-md);
+  background: var(--gemma-icon-tile);
+  color: inherit;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.md-typeset .engine-logo {
+  width: 1rem;
+  height: 1rem;
+}
+
+.md-typeset .engine-name {
+  min-width: 0;
+  overflow: hidden;
+  font-weight: 600;
+  font-size: 0.8125rem;
+  line-height: 1.3;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/* -------------------------------------------------------------------
+   Detailed variant. On the quickstart the grid is a shortcut past a
+   dozen names, so a tooltip is enough. On the Run overview the grid IS
+   the page, and the reader is deciding rather than recognising -- so
+   the blurb is on the card, not behind a hover.
+   ------------------------------------------------------------------- */
+.md-typeset ul.engine-grid--detailed:not([hidden]) {
+  grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+}
+
+.md-typeset .engine-grid--detailed a.engine {
+  align-items: flex-start;
+  padding: var(--gemma-space-3);
+}
+
+.md-typeset .engine-grid--detailed .engine-name {
+  white-space: normal;
+}
+
+.md-typeset .engine-blurb {
+  display: block;
+  margin-top: 0.15rem;
+  color: var(--gemma-text-muted);
+  font-size: 0.75rem;
+  line-height: 1.4;
+}
+
+/* The trailing "see everything" tile reads as an action, not another engine. */
+.md-typeset a.engine--all {
+  align-items: center;
+  justify-content: center;
+  border-style: dashed;
+  color: var(--gemma-accent);
+  font-weight: 600;
+  font-size: 0.8125rem;
+}
+
+@media screen and (max-width: 44.9375em) {
+  .md-typeset ul.engine-grid:not([hidden]) {
+    grid-template-columns: repeat(auto-fill, minmax(8rem, 1fr));
+  }
+}

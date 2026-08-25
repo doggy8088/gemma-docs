@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import argparse
 import re
+import sys
 import tomllib
 from pathlib import Path
 from typing import Iterable
@@ -21,6 +22,13 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 DOCS_DIR = REPO_ROOT / "docs"
 CONFIG_FILE = REPO_ROOT / "zensical.toml"
 MODELS_FILE = REPO_ROOT / "data" / "models.yml"
+FRAMEWORKS_FILE = REPO_ROOT / "data" / "frameworks.yml"
+
+# Pages call `icon()`; the macros extension provides it during a Zensical build, but these raw
+# routes are rendered here, in a Jinja environment of our own. Same source, same output.
+sys.path.insert(0, str(REPO_ROOT))
+from main import icon as _icon  # noqa: E402
+
 LLMS_TARGET = DOCS_DIR / "llms.txt"
 SITE_URL = "https://gemma.ai"
 
@@ -98,6 +106,10 @@ def model_data() -> dict:
     return yaml.safe_load(MODELS_FILE.read_text(encoding="utf-8"))
 
 
+def framework_data() -> dict:
+    return yaml.safe_load(FRAMEWORKS_FILE.read_text(encoding="utf-8"))
+
+
 def render_llms() -> str:
     pages = source_pages()
     data = model_data()
@@ -141,6 +153,8 @@ def render_raw(relative: str, metadata: dict, body: str) -> str:
     environment = Environment(undefined=StrictUndefined, autoescape=False, keep_trailing_newline=True)
     context = dict(metadata)
     context["modeldata"] = model_data()
+    context["frameworkdata"] = framework_data()
+    context["icon"] = _icon
     rendered = environment.from_string(body).render(**context).strip() + "\n"
     if not H1.search(rendered):
         rendered = f"# {metadata['title']}\n\n{rendered}"

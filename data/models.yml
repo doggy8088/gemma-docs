@@ -8,6 +8,10 @@
 #   - Global model/engine switcher (PLAN.md Step 4.2) -- `modalities` drives capability gating,
 #     so an audio example can never offer a model that cannot hear
 #
+# Not every engine publishes every size. Keras has no 12B preset and LiteRT-LM ships only E2B
+# and E4B; the switcher reads that absence and simply does not offer those sizes on those pages,
+# which is the intended behaviour. Do not invent an id to fill a gap.
+#
 # Hand-editing a model table in a page is a bug. Change it here instead.
 #
 # NOT generated from this file: the memory table in models/gemma-4/index.md. That page is a
@@ -24,66 +28,226 @@
 # Order is display order: current generation, variants, previous generations, research.
 # ---------------------------------------------------------------------------------------------
 
+# ---------------------------------------------------------------------------------------------
+# Families
+#
+# `id` matches a directory under docs/models/, which is what the `models` frontmatter key and
+# the page context header address. `name` is how the family is written in prose and in the UI;
+# `page` is the canonical local destination for that family in the context header.
+#
+# Order is display order: current generation, variants, previous generations, research.
+#
+# Lineage fields drive the family tree on models/index.md:
+#
+#   generation  present only on the mainline spine (Gemma 1 -> 2 -> 3 -> 4). Its value orders
+#               the spine. A family with `generation` is a generation; everything else branches.
+#   based_on    the family id a variant was built from. ONLY set where the model's own page
+#               states it -- the value is cited in the comment beside it. `null` means the page
+#               claims no Gemma base (RecurrentGemma is a Griffin model, not a derived Gemma).
+#   tagline     one short line for the tree card, taken from the page's own `description`.
+#
+# Release dates are deliberately absent. The spine already orders the tree, and no page in
+# docs/models/ states a date, so adding one would invent a fact this file is supposed to own.
+
 families:
   - id: gemma-4
     name: Gemma 4
     page: models/gemma-4/model-card.md
     group: current
+    generation: 4
+    tagline: Multimodal text, image and audio input across five sizes
 
   - id: gemma-3n
     name: Gemma 3n
     page: models/gemma-3n/model-card.md
     group: variant
+    based_on: gemma-3        # the on-device member of the Gemma 3 generation (MatFormer)
+    tagline: On-device models for phones, laptops and tablets
+    sizes:
+      - id: e2b
+        name: E2B
+        input: text, images, audio
+        platform: Mobile devices
+        parameters: 2B effective
+      - id: e4b
+        name: E4B
+        input: text, images, audio
+        platform: Mobile devices and laptops
+        parameters: 4B effective
   - id: diffusiongemma
     name: DiffusionGemma
     page: models/diffusiongemma/model-card.md
     group: variant
+    based_on: gemma-4        # "Based on the 26B (4B active) MoE Gemma 4 architecture"
+    tagline: Experimental text diffusion for exceptionally fast generation
+    sizes:
+      - id: 26b-a4b
+        name: 26B A4B
+        parameters: 26B (4B active)
+        hf: google/diffusiongemma-26B-A4B-it
   - id: functiongemma
     name: FunctionGemma
     page: models/functiongemma/model-card.md
     group: variant
+    based_on: gemma-3        # "a specialized version of our Gemma 3 270M model"
+    tagline: Gemma 3 270M tuned for function calling
+    sizes:
+      - id: 270m
+        name: 270M
+        hf: google/functiongemma-270m-it
   - id: embeddinggemma
     name: EmbeddingGemma
     page: models/embeddinggemma/model-card.md
     group: variant
+    based_on: gemma-3        # "a 308M parameter multilingual text embedding model based on Gemma 3"
+    tagline: 308M multilingual text embeddings
+    sizes:
+      - id: 300m
+        name: 300M
+        hf: google/embeddinggemma-300M
   - id: paligemma
     name: PaliGemma
     page: models/paligemma/model-card-v2.md
     group: variant
+    based_on: gemma-2        # "PaliGemma 2 ... based on Gemma 2"; PaliGemma 1 was built on Gemma
+    tagline: Vision-language models for captioning, VQA and detection
+    sizes:                             # PaliGemma 2; each built on the Gemma 2 size beside it
+      - id: 3b
+        name: 3B
+        based_on_size: 2B
+      - id: 10b
+        name: 10B
+        based_on_size: 9B
+      - id: 28b
+        name: 28B
+        based_on_size: 27B
   - id: shieldgemma
     name: ShieldGemma
     page: models/shieldgemma/model-card-v2.md
     group: variant
+    based_on: gemma-2        # "ShieldGemma 1 is built on Gemma 2". The page does not state a
+                             # base for the 4B ShieldGemma 2; do not guess one here.
+    tagline: Safety classification for text and image content
+    sizes:
+      - id: 2b
+        name: 2B                       # ShieldGemma 1, text
+      - id: 9b
+        name: 9B                       # ShieldGemma 1, text
+      - id: 27b
+        name: 27B                      # ShieldGemma 1, text
+      - id: 4b
+        name: 4B                       # ShieldGemma 2, image
+        hf: google/shieldgemma-2-4b-it
 
   - id: gemma-3
     name: Gemma 3
     page: models/gemma-3/index.md
     group: previous
+    generation: 3
+    tagline: Multimodal text and image models, 270M to 27B
+    sizes:
+      - id: 270m
+        name: 270M
+        input: text
+        platform: Mobile devices and single board computers
+        context: 32K
+      - id: 1b
+        name: 1B
+        input: text
+        platform: Mobile devices and single board computers
+        context: 32K
+      - id: 4b
+        name: 4B
+        input: text, images
+        platform: Desktop computers and small servers
+        context: 128K
+      - id: 12b
+        name: 12B
+        input: text, images
+        platform: Higher-end desktop computers and servers
+        context: 128K
+      - id: 27b
+        name: 27B
+        input: text, images
+        platform: Large servers or server clusters
+        context: 128K
   - id: gemma-2
     name: Gemma 2
     page: models/gemma-2/index.md
     group: previous
+    generation: 2
+    tagline: Text models in 2B, 9B and 27B
+    sizes:
+      - id: 2b
+        name: 2B
+        input: text
+        platform: Mobile devices and laptops
+      - id: 9b
+        name: 9B
+        input: text
+        platform: Higher-end desktop computers and servers
+      - id: 27b
+        name: 27B
+        input: text
+        platform: Large servers or server clusters
   - id: gemma-1
     name: Gemma
     page: models/gemma-1/index.md
     group: previous
+    generation: 1
+    tagline: The first generation of Gemma text models
+    sizes:
+      - id: 2b
+        name: 2B
+        input: text
+        platform: Mobile devices and laptops
+      - id: 7b
+        name: 7B
+        input: text
+        platform: Desktop computers and small servers
 
   - id: recurrentgemma
     name: RecurrentGemma
     page: models/recurrentgemma/model-card.md
     group: research
+    # No `based_on` at all, not even null: RecurrentGemma is a Griffin model rather than a
+    # derived Gemma, so it is left out of the family tree entirely instead of being drawn
+    # as an orphan beside it. It keeps its place in the nav and the model lists.
+    tagline: Griffin architecture mixing recurrences with local attention
+    sizes:
+      - id: 2b
+        name: 2B
+      - id: 9b
+        name: 9B
   - id: datagemma
     name: DataGemma
     page: models/datagemma/index.md
     group: research
+    based_on: gemma-2        # both RIG and RAG use "a variant of Gemma 2"
+    tagline: Grounding generation in Data Commons statistics
+    sizes:
+      - id: 27b
+        name: 27B
+        hf: google/datagemma-rig-27b-it   # RIG; the RAG build is datagemma-rag-27b-it
   - id: gemma-scope
     name: Gemma Scope
     page: models/gemma-scope/index.md
     group: research
+    based_on: gemma-3        # "Gemma Scope 2 ... designed for the Gemma 3 model collection"
+    tagline: Interpretability tools for inspecting model internals
   - id: gemma-aps
     name: Gemma APS
     page: models/gemma-aps/index.md
     group: research
+    based_on: gemma-1        # published as google/gemma-2b-aps-it and google/gemma-7b-aps-it
+    tagline: Segmenting text into individual propositions
+    sizes:
+      - id: 2b
+        name: 2B
+        hf: google/gemma-2b-aps-it
+      - id: 7b
+        name: 7B
+        hf: google/gemma-7b-aps-it
 
 gemma4:
   context_windows:
@@ -114,6 +278,10 @@ gemma4:
         ollama: gemma4:e2b
         mlx: mlx-community/gemma-4-E2B-it-qat-4bit
         lmstudio: google/gemma-4-e2b
+        keras: gemma4_instruct_2b
+        keras_base: gemma4_2b
+        keras_assistant: gemma4_instruct_2b_assistant
+        litert: litert-community/gemma-4-E2B-it-litert-lm
       memory:                          # GB, static weights + ~20% overhead
         bf16: 11.4
         sfp8: 5.7
@@ -141,6 +309,10 @@ gemma4:
         ollama: gemma4:e4b
         mlx: mlx-community/gemma-4-E4B-it-qat-4bit
         lmstudio: google/gemma-4-e4b
+        keras: gemma4_instruct_4b
+        keras_base: gemma4_4b
+        keras_assistant: gemma4_instruct_4b_assistant
+        litert: litert-community/gemma-4-E4B-it-litert-lm
       memory:
         bf16: 17.9
         sfp8: 8.9
@@ -193,6 +365,10 @@ gemma4:
         ollama: gemma4:26b
         mlx: mlx-community/gemma-4-26B-A4B-it-qat-4bit
         lmstudio: google/gemma-4-26b-a4b
+        gemini_api: gemma-4-26b-a4b-it
+        keras: gemma4_instruct_26b_a4b
+        keras_base: gemma4_26b_a4b
+        keras_assistant: gemma4_instruct_26b_a4b_assistant
       memory:
         bf16: 57.7
         sfp8: 28.8
@@ -218,6 +394,10 @@ gemma4:
         ollama: gemma4:31b
         mlx: mlx-community/gemma-4-31B-it-qat-4bit
         lmstudio: google/gemma-4-31b
+        gemini_api: gemma-4-31b-it
+        keras: gemma4_instruct_31b
+        keras_base: gemma4_31b
+        keras_assistant: gemma4_instruct_31b_assistant
       memory:
         bf16: 69.9
         sfp8: 34.9

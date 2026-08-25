@@ -9,9 +9,9 @@ source_url: https://newsletter.maartengrootendorst.com/p/a-visual-guide-to-gemma
 
 !!! note
     Originally published on
-    [Exploring Language Models](https://newsletter.maartengrootendorst.com/p/a-visual-guide-to-gemma-4-12b).
+    [Exploring Language Models](https://newsletter.maartengrootendorst.com/p/a-visual-guide-to-gemma-4-12b){ data-model="gemma-4" }.
 
-[A new Gemma 4 model](https://huggingface.co/google/gemma-4-12B-it) has been released and it’s an interesting one. There was an empty spot between the E4B and 26B A4B that needed to be filled and a 12B model fits nicely there. However, it wouldn’t be Google DeepMind without trying to do something special with that model and sharing it with the public.
+[A new Gemma 4 model](https://huggingface.co/google/gemma-4-12B-it){ data-model="gemma-4" } has been released and it’s an interesting one. There was an empty spot between the E4B and 26B A4B that needed to be filled and a 12B model fits nicely there. However, it wouldn’t be Google DeepMind without trying to do something special with that model and sharing it with the public.
 
 So what is different with Gemma 4 12B?
 
@@ -147,3 +147,22 @@ Looking at the picture below, there is a big difference in creating audio tokens
 ![](https://substackcdn.com/image/fetch/$s_!5OvL!,w_1456,c_limit,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Ffba73d61-baca-4a32-9f48-6116b4bdbfa3_4656x4864.png)
 
 Gemma 4 12B is not just a model that fits nicely between E4B and 26B A4B, it does something different and the way it does so is quite interesting!
+## What's next
+
+<div class="card-grid">
+<a class="card" href="mtp.md">
+  <span class="card-icon">{{ icon('lucide/book-open') }}</span>
+  <div class="card-title">A Visual Guide to MTP</div>
+  <p class="card-desc">Drafter models and speculative decoding, illustrated.</p>
+</a>
+<a class="card" href="diffusiongemma.md">
+  <span class="card-icon">{{ icon('lucide/book-open') }}</span>
+  <div class="card-title">A Visual Guide to DiffusionGemma</div>
+  <p class="card-desc">How denoising produces text instead of pixels.</p>
+</a>
+<a class="card" href="../../resources/index.md">
+  <span class="card-icon">{{ icon('lucide/library') }}</span>
+  <div class="card-title">Resources</div>
+  <p class="card-desc">Demos, tools and the repositories worth bookmarking.</p>
+</a>
+</div>

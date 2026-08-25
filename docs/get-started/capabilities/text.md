@@ -9,7 +9,7 @@ colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs
 
 Gemma is a family of lightweight, state-of-the-art open models built from the same research and technology used to create the [Gemini](https://deepmind.google/technologies/gemini/#introduction) models. Gemma 4 is designed to be the world's most efficient open-weight model family.
 
-This document provides a guide to performing basic text inference with Gemma 4 using the Hugging Face `transformers` library. It covers environment setup, model loading, and various text generation scenarios including single-turn prompts, structured multi-turn conversations, and applying system instructions.
+This document provides a guide to performing basic text inference with Gemma 4 using the Hugging Face [`transformers`](https://huggingface.co/docs/transformers/installation) library. It covers environment setup, model loading, and various text generation scenarios including single-turn prompts, structured multi-turn conversations, and applying system instructions.
 
 ## Install Python packages
 
@@ -23,7 +23,7 @@ pip install torch accelerate
 pip install "transformers>=5.10.1"
 ```
 
-[Dialog](https://github.com/google-deepmind/dialog) is a library to manipulate and display conversations.
+[`Dialog`](https://github.com/google-deepmind/dialog) is a library to manipulate and display conversations.
 
 ```bash { .notebook-cell }
 pip install dialog
@@ -31,7 +31,7 @@ pip install dialog
 
 ## Load Model
 
-Use `transformers` library to load the pipeline
+Use [`transformers`](https://huggingface.co/docs/transformers/installation) library to load the pipeline
 
 ```python { .notebook-cell .model-swap }
 MODEL_ID = "google/gemma-4-E2B-it"
@@ -131,7 +131,7 @@ Here are a few ways to complete the phrase "Roses are...":
 
 ## Use a prompt template
 
-When generating content with more complex prompting, use a prompt template to structure your request. A prompt template allows you to specify input from specific roles, such as `user` or `model`, and is a required format for managing multi-turn chat interactions with Gemma models. The following example code shows how to construct a prompt template for Gemma:
+When generating content with more complex prompting, use a prompt template to structure your request. A prompt template allows you to specify input from specific roles, such as `user`{.token-role} or `model`{.token-role}, and is a required format for managing multi-turn chat interactions with Gemma models. The following example code shows how to construct a prompt template for Gemma:
 
 ```python { .notebook-cell }
 from transformers import GenerationConfig
@@ -165,7 +165,7 @@ A primal fear, a dark design.
 
 ## Multi-turn conversation
 
-In a multi-turn setup, the conversation history is preserved as a sequence of alternating `user` and `model` roles. This cumulative list serves as the model's memory, ensuring that each new output is informed by the preceding dialogue.
+In a multi-turn setup, the conversation history is preserved as a sequence of alternating `user`{.token-role} and `model`{.token-role} roles. This cumulative list serves as the model's memory, ensuring that each new output is informed by the preceding dialogue.
 
 ```python { .notebook-cell }
 import dialog
@@ -261,7 +261,7 @@ That breaks the sailor's guarded heart.<turn|>
 
 ## System instructions
 
-Use the `system` role to provide the system-level instructions.
+Use the `system`{.token-role} role to provide the system-level instructions.
 
 ```python { .notebook-cell }
 import dialog
@@ -307,13 +307,25 @@ In this guide, you learned how to perform basic text inference with Gemma 4 usin
 1. **Environment**: Setting up the environment and installing dependencies.
 2. **Loading the model**: Using the `pipeline` abstraction.
 3. **Inference**: Running basic text generation.
-4. **Conversation**: Using the `dialog` library for conversation tracking.
+4. **Conversation**: Using the [`dialog`](https://github.com/google-deepmind/dialog) library for conversation tracking.
 5. **Multi-turn conversations**: Multi-turn conversations and applying system instructions.
 
+## What's next
 
-<!-- TODO: Port over
-### Next Steps
-
-- [Prompt and system instructions](../prompt-formatting.md)
-- [Function calling](function-calling.md)
-- [Run Gemma overview](../../deployment/index.md) -->
+<div class="card-grid">
+<a class="card" href="../prompt-formatting.md">
+  <span class="card-icon">{{ icon('lucide/braces') }}</span>
+  <div class="card-title">Prompt formatting</div>
+  <p class="card-desc">The control tokens that structure a Gemma prompt.</p>
+</a>
+<a class="card" href="function-calling.md">
+  <span class="card-icon">{{ icon('lucide/wrench') }}</span>
+  <div class="card-title">Tool calling</div>
+  <p class="card-desc">Give Gemma functions to call and feed the results back.</p>
+</a>
+<a class="card" href="../../deployment/index.md">
+  <span class="card-icon">{{ icon('lucide/play') }}</span>
+  <div class="card-title">Run Gemma</div>
+  <p class="card-desc">Every engine that runs Gemma, from a laptop to a cluster.</p>
+</a>
+</div>

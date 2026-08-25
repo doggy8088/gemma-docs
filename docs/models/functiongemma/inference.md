@@ -16,7 +16,7 @@ This guide shows the process of using FunctionGemma within the Hugging Face ecos
 
 Before starting this tutorial, complete the following steps:
 
-- Get access to FunctionGemma by logging into [Hugging Face](https://huggingface.co/google/functiongemma-270m-it) and selecting **Acknowledge license** for a FunctionGemma model.
+- Get access to FunctionGemma by logging into [Hugging Face](https://huggingface.co/google/functiongemma-270m-it){ data-model="functiongemma" } and selecting **Acknowledge license** for a FunctionGemma model.
 - Generate a Hugging Face [Access Token](https://huggingface.co/docs/hub/en/security-tokens#how-to-manage-user-access-token) and add it to your Colab environment.
 
 
@@ -252,14 +252,24 @@ print(json.dumps(update_config_schema, indent=2))
 }
 ```
 
-## Summary and next steps
+## Summary
 
 Now you understand function calling with FunctionGemma. Key takeaways from this include:
 
 - **Defining Tools**: You can define tools using two methods: creating a manual JSON schema or passing raw Python functions, where the system parses type hints and docstrings.
 - **Schema Caveats**: While automatic conversion works for simple types, it struggles with complex custom objects. In these cases, manual JSON schema definition is required to ensure nested properties are visible to the model.
 
-Check out the following docs next:
+## What's next
 
-- [Full function calling sequence with FunctionGemma](full-sequence.md)
-- [Fine-tuning with FunctionGemma](fine-tuning.md)
+<div class="card-grid">
+<a class="card" href="full-sequence.md">
+  <span class="card-icon">{{ icon('lucide/split') }}</span>
+  <div class="card-title">Full calling sequence</div>
+  <p class="card-desc">The complete cycle, from the model's call to the final answer.</p>
+</a>
+<a class="card" href="fine-tuning.md">
+  <span class="card-icon">{{ icon('lucide/graduation-cap') }}</span>
+  <div class="card-title">Fine-tune FunctionGemma</div>
+  <p class="card-desc">Teach it to pick the right tool for your policies.</p>
+</a>
+</div>

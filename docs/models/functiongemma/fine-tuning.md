@@ -42,7 +42,7 @@ The first step is to install Hugging Face Libraries, including TRL, and datasets
     If you are using a GPU with Ampere architecture (such as NVIDIA L4) or newer, you can use Flash attention. Flash Attention is a method that significantly speeds computations up and reduces memory usage from quadratic to linear in sequence length, leading to accelerating training up to 3x. Learn more at [FlashAttention](https://github.com/Dao-AILab/flash-attention/tree/main).*
 
 
-Before you can start training, you have to make sure that you accepted the terms of use for Gemma. You can accept the license on [Hugging Face](http://huggingface.co/google/functiongemma-270m-it) by clicking on the **Agree** and access repository button on the model page at: <http://huggingface.co/google/functiongemma-270m-it>
+Before you can start training, you have to make sure that you accepted the terms of use for Gemma. You can accept the license on [Hugging Face](http://huggingface.co/google/functiongemma-270m-it){ data-model="functiongemma" } by clicking on the **Agree** and access repository button on the model page at: <http://huggingface.co/google/functiongemma-270m-it>
 
 After you have accepted the license, you need a valid Hugging Face Token to access the model. If you are running inside a Google Colab, you can securely use your Hugging Face Token using the Colab secrets otherwise you can set the token as directly in the `login` method. Make sure your token has write access too, as you push your model to Hugging Face Hub after fine-tuning.
 
@@ -598,7 +598,7 @@ check_success_rate()
 Success : 16 / 20
 ```
 
-## Summary and next steps
+## Summary
 
 You learned how to fine-tune FunctionGemma to resolve **tool selection ambiguity** , a scenario where a model must choose between overlapping tools (e.g., internal vs. external search) based on specific enterprise policies. By utilizing the **Hugging Face TRL library** and `SFTTrainer`, the tutorial walked through the process of preparing a dataset, configuring hyperparameters, and executing a supervised fine-tuning loop.
 
@@ -611,8 +611,21 @@ Now that you have a fine-tuned model, consider the following steps to move towar
 
 - **Expand the Dataset**: The current dataset was a small, synthetic split (50/50) used for demonstration. For a robust enterprise application, curate a larger, more diverse dataset that covers edge cases and rare policy exceptions.
 - **Evaluation with RAG** : Integrate the fine-tuned model into a Retrieval Augmented Generation (RAG) pipeline to verify that the `search_knowledge_base` tool calls actually retrieve relevant documents and result in accurate final answers.
+## What's next
 
-Check out the following docs next:
-
-- [Full function calling sequence with FunctionGemma](full-sequence.md)
-- [Fine-tune FunctionGemma for Mobile Actions](https://github.com/google-gemma/cookbook/blob/main/FunctionGemma/%5BFunctionGemma%5DFinetune_FunctionGemma_270M_for_Mobile_Actions_with_Hugging_Face.ipynb) in the Gemma Cookbook
+<div class="card-grid">
+<a class="card" href="../../deployment/index.md">
+  <span class="card-icon">{{ icon('lucide/play') }}</span>
+  <div class="card-title">Run Gemma</div>
+  <p class="card-desc">Serve your tuned model with any of the supported engines.</p>
+</a>
+<a class="card" href="../../tuning/index.md">
+  <span class="card-icon">{{ icon('lucide/graduation-cap') }}</span>
+  <div class="card-title">Fine-tune Gemma</div>
+  <p class="card-desc">QLoRA, full fine-tunes and distributed training.</p>
+</a>
+<a class="card" href="https://github.com/google-gemma/cookbook/blob/main/FunctionGemma/%5BFunctionGemma%5DFinetune_FunctionGemma_270M_for_Mobile_Actions_with_Hugging_Face.ipynb" target="_blank" rel="noopener" data-model="functiongemma">
+  <div class="card-title">Mobile Actions notebook <span class="card-ext">↗</span></div>
+  <p class="card-desc">Fine-tune FunctionGemma 270M for on-device actions.</p>
+</a>
+</div>

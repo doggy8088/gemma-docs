@@ -11,22 +11,35 @@
 
 :root {
   /* -----------------------------------------------------------------
-     Brand palette (official Gemma colours)
+     Brand blue.
 
-     Contrast, measured against #FFFFFF and #202124:
+     ONE KNOB: change --gemma-blue-seed and the whole ramp, both colour
+     schemes and every component follow. Check a new seed first with
+     `uv run python scripts/check_contrast.py --seed "#RRGGBB"`, and see
+     "Colour tokens" in docs/contributing/components.md for the derived
+     values and each step's role.
 
-       blue        #3186FF   3.51:1 on white  -- large text / fills only
-       blue-deep   #346BF1   4.65:1 on white  -- PASSES AA for body text
-       blue-light  #4FA0FF   5.98:1 on ink    -- PASSES AA in dark mode
-
-     So --gemma-blue is a *fill* colour: buttons, bars, icons, headings.
-     Text on a light surface uses --gemma-blue-deep; text on a dark
-     surface uses --gemma-blue-light. Do not link body text in plain
-     --gemma-blue -- it fails WCAG AA.
+     Steps are the seed mixed with white (black at the dark end) in sRGB,
+     so they stay on the seed's own hue. Contrast is symmetric: a colour
+     too light to read *on* white is also too light to sit *behind* white
+     text. Fills carrying white text use 600/700, never 300/500 -- 500 is
+     decorative only.
      ----------------------------------------------------------------- */
-  --gemma-blue: #3186FF;
-  --gemma-blue-deep: #346BF1;
-  --gemma-blue-light: #4FA0FF;
+  --gemma-blue-seed: #0B57D0;
+
+  --gemma-blue-50: color-mix(in srgb, var(--gemma-blue-seed) 8%, #FFFFFF);
+  --gemma-blue-100: color-mix(in srgb, var(--gemma-blue-seed) 20%, #FFFFFF);
+  --gemma-blue-300: color-mix(in srgb, var(--gemma-blue-seed) 52%, #FFFFFF);
+  --gemma-blue-500: color-mix(in srgb, var(--gemma-blue-seed) 78%, #FFFFFF);
+  --gemma-blue-600: color-mix(in srgb, var(--gemma-blue-seed) 90%, #FFFFFF);
+  --gemma-blue-700: var(--gemma-blue-seed);
+  --gemma-blue-800: color-mix(in srgb, var(--gemma-blue-seed) 78%, #000000);
+
+  /* Legacy aliases. Kept so nav/content/home keep resolving; each now
+     points into the ramp rather than carrying its own hex. */
+  --gemma-blue: var(--gemma-blue-500);
+  --gemma-blue-deep: var(--gemma-blue-700);
+  --gemma-blue-light: var(--gemma-blue-300);
   --gemma-white: #FFFFFF;
   --gemma-ink: #202124;
 
@@ -39,14 +52,14 @@
   --gemma-home-bg-raised: #07152f;
   --gemma-home-bg-mid: #040c1e;
   --gemma-home-bg-deep: #020712;
-  --gemma-blue-strong: #1A4BD6;
-  --gemma-blue-hover: #2563eb;
+  --gemma-blue-strong: var(--gemma-blue-800);
+  --gemma-blue-hover: var(--gemma-blue-600);
 
   /* -----------------------------------------------------------------
      Semantic roles — remapped per colour scheme further down.
      ----------------------------------------------------------------- */
-  --gemma-accent: var(--gemma-blue-deep);   /* text-safe brand colour   */
-  --gemma-accent-fill: var(--gemma-blue);   /* backgrounds, bars, icons */
+  --gemma-accent: var(--gemma-blue-700);      /* text-safe brand colour     */
+  --gemma-accent-fill: var(--gemma-blue-700); /* fills that carry white text */
 
   /* -----------------------------------------------------------------
      Neutral ramp
@@ -71,6 +84,7 @@
   /* Semantic surfaces, remapped for dark mode below. */
   --gemma-surface: var(--gemma-n0);
   --gemma-surface-sunken: var(--gemma-n50);
+  --gemma-box-surface: var(--gemma-n50);   /* bordered boxes: tinted here, raised in dark */
   --gemma-border: var(--gemma-n150);
   /* One step darker than the hairline. Separators inside a row have to out-read the rule
      that closes the row, or the row looks like a grid. */
@@ -85,7 +99,7 @@
 
   /* Brand blue for small text on the tinted header/table surfaces. Plain blue-deep measures
      4.41:1 there -- fine on white, under AA on the tint. */
-  --gemma-accent-on-tint: #2F63E6;
+  --gemma-accent-on-tint: var(--gemma-blue-700);
 
   /* Status accents for admonition rails. Categorical, so not derived
      from the brand blue -- they have to stay distinguishable. */
@@ -160,17 +174,19 @@
    =================================================================== */
 [data-md-color-scheme="slate"][data-md-color-primary],
 [data-md-color-scheme="slate"] {
-  --gemma-accent: var(--gemma-blue-light);
-  --gemma-accent-fill: var(--gemma-blue-light);
+  --gemma-accent: var(--gemma-blue-300);
+  /* NOT blue-300: this fill carries white text, and white on #71A4DF is 2.60:1. */
+  --gemma-accent-fill: var(--gemma-blue-600);
 
   --gemma-surface: #1c1d21;
   --gemma-surface-sunken: #17181c;
+  --gemma-box-surface: #1c1d21;
   --gemma-border: #303239;
   --gemma-border-strong: #454852;
   --gemma-text-muted: var(--gemma-n300);
   --gemma-text-secondary: var(--gemma-n200);
 
-  --gemma-accent-on-tint: var(--gemma-blue-light);
+  --gemma-accent-on-tint: var(--gemma-blue-300);
   --gemma-header-bg: #17181c;
   --gemma-header-fg: var(--gemma-n200);
   --gemma-header-border: #303239;

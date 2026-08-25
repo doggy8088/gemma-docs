@@ -74,7 +74,7 @@ This page documents releases for the Gemma family of models.
 
 ## October 16, 2024
 
-- Release of [Personal AI code assistant](../learn/personal-code-assistant.md) developer guide.
+- Release of the Personal AI code assistant developer guide.
 
 ## October 15, 2024
 
@@ -82,11 +82,11 @@ This page documents releases for the Gemma family of models.
 
 ## October 8, 2024
 
-- Release of [Business email assistant](../learn/business-email-assistant.md) developer guide.
+- Release of the Business email assistant developer guide.
 
 ## October 3, 2024
 
-- Release of [Gemma 2 JPN](https://www.kaggle.com/models/google/gemma-2-2b-jpn-it) in 2B size.
+- Release of [Gemma 2 JPN](https://www.kaggle.com/models/google/gemma-2-2b-jpn-it){ data-model="gemma-2" } in 2B size.
 - Release of [Spoken language tasks](../tuning/spoken-language.md) developer guide.
 
 ## September 12, 2024

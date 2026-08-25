@@ -19,6 +19,9 @@ extra_css = [
   "stylesheets/nav.css",         # header, tabs, sidebar, table of contents
   "stylesheets/content.css",     # tables, admonitions, code, tabs
   "stylesheets/components.css",  # cards, badges, figures, steps, embeds
+  "stylesheets/icons.css",       # inlined icon-set SVGs and card icons
+  "stylesheets/engine-grid.css", # quickstart: the "run it with" engine grid
+  "stylesheets/model-tree.css",  # models overview: the family lineage tree
   "stylesheets/embeds.css",      # external interactive demos
   "stylesheets/page-context.css",# the applicability bar above every H1
   "stylesheets/tokens.css",      # chat-token badges
@@ -34,7 +37,7 @@ extra_javascript = [
 # every page carries a `models:` frontmatter key, and page metadata shadows a macros variable
 # of the same name -- which silently broke both generated tables. See data/models.yml
 # for what reads it. Hand-editing a model table in a page is a bug; change the data file.
-plugins = { macros = { enabled = true, include_yaml = { modeldata = "data/models.yml" } } }
+plugins = { macros = { enabled = true, include_yaml = { modeldata = "data/models.yml", frameworkdata = "data/frameworks.yml" } } }
 
 # ============================================================================
 # NAVIGATION
@@ -47,7 +50,8 @@ nav = [
   # capabilities and belong where the full picture is visible at once.
   # ---------------------------------------------------------------------------
   { "Get started" = [
-    "get-started/quickstart.md",
+    { "Quickstart" = "get-started/index.md" },
+    { "Best practices" = "get-started/best-practices.md" },
     { "Text" = [
       "get-started/capabilities/text.md",
       "get-started/capabilities/thinking.md",
@@ -59,12 +63,13 @@ nav = [
       "get-started/capabilities/video.md",
       "get-started/capabilities/audio.md",
     ]},
-    # MTP and the prompt-format references sit here so the main list stays the
-    # three things a newcomer needs: quickstart, text, multimodal.
+    # Advanced holds the tuning-and-internals material -- MTP, QAT and the
+    # prompt-format references -- so the main list stays what a newcomer needs
+    # first: how to run it and how to run it well, then the capability groups.
     { "Advanced" = [
+      { "Prompt formatting" = "get-started/prompt-formatting.md" },
       { "Multi-Token Prediction" = "get-started/capabilities/mtp.md" },
-      "get-started/prompt-formatting.md",
-      { "Prompt structure (Gemma 1-3)" = "get-started/prompt-structure.md" },
+      { "Quantization-Aware Training" = "get-started/qat.md" },
     ]},
   ]},
 
@@ -78,6 +83,11 @@ nav = [
     { "Gemma 4" = [
       { "Overview" = "models/gemma-4/index.md" },
       { "Model card" = "models/gemma-4/model-card.md" },
+    ]},
+    { "Previous generations" = [
+      { "Gemma 3" = "models/gemma-3/index.md" },
+      { "Gemma 2" = "models/gemma-2/index.md" },
+      { "Gemma" = "models/gemma-1/index.md" },
     ]},
     { "Variants" = [
       { "Gemma 3n" = [
@@ -118,11 +128,6 @@ nav = [
         { "ShieldGemma 2 model card" = "models/shieldgemma/model-card-v2.md" },
       ]},
     ]},
-    { "Previous generations" = [
-      { "Gemma 3" = "models/gemma-3/index.md" },
-      { "Gemma 2" = "models/gemma-2/index.md" },
-      { "Gemma" = "models/gemma-1/index.md" },
-    ]},
     { "Research" = [
       { "RecurrentGemma" = [
         { "Overview" = "models/recurrentgemma/index.md" },
@@ -151,23 +156,23 @@ nav = [
       { "MLX" = "deployment/mlx.md" },
       { "Hugging Face Transformers" = "deployment/huggingface.md" },
       { "Keras" = "deployment/keras.md" },
-      { "LiteRT" = "deployment/litert.md" },
-      { "Web browsers" = "deployment/web.md" },
-      { "Mobile" = "deployment/mobile.md" },
+      { "LiteRT-LM" = "deployment/litert.md" },
+      { "AI Edge Gallery" = "deployment/ai-edge-gallery.md" },
     ]},
     { "Serve" = [
       { "vLLM" = "deployment/vllm.md" },
       { "SGLang" = "deployment/sglang.md" },
+      { "Gemini API" = "deployment/gemini-api.md" },
       { "Google Cloud" = "deployment/google-cloud.md" },
     ]},
     { "Frameworks" = [
       { "LangChain" = "deployment/langchain.md" },
+      { "Unsloth" = "deployment/unsloth.md" },
     ]},
-    { "Quantization & QAT" = "deployment/qat.md" },
   ]},
 
   { "Fine-tune" = [
-    { "Overview" = "tuning/overview.md" },
+    { "Overview" = "tuning/index.md" },
     { "Guides" = [
     { "QLoRA" = "tuning/qlora.md" },
     { "Full fine-tune" = "tuning/full-finetune.md" },
@@ -187,34 +192,51 @@ nav = [
       { "Multi-Token Prediction" = "tutorials/visual-guides/mtp.md" },
       { "DiffusionGemma" = "tutorials/visual-guides/diffusiongemma.md" },
     ]},
-    { "Tutorials" = [
-      "learn/business-email-assistant.md",
-      "learn/personal-code-assistant.md",
-    ]},
-    { "Notebooks & resources" = "cookbook.md" },
   ]},
 
   # ---------------------------------------------------------------------------
-  # Absorbs the old Tools tab: things we built, plus things we embed.
+  # One tab for everything that sits beside the documentation: the old Demos and
+  # Ecosystem tabs, plus the notebook and external-link directory. Its index is
+  # card-driven so a new demo or link is one entry, not a new nav level.
   # ---------------------------------------------------------------------------
-  { "Demos" = [
-    { "Interactive tools" = [
-      { "Overview" = "tools/index.md" },
-      "tools/vram-calculator.md",
-      "tools/model-selector.md",
+  { "Resources" = [
+    { "Overview" = "resources/index.md" },
+    { "Demos & tools" = [
+      { "Gemma Skills" = "resources/gemma-skills.md" },
+      { "Vision token budget" = "resources/vision-token-budget.md" },
     ]},
-    { "Apps & Spaces" = [
-      { "Vision token budget" = "demos/vision-token-budget.md" },
+    { "Contribute" = [
+      { "Components" = "contributing/components.md" },
+      { "Conventions" = "contributing/conventions.md" },
     ]},
-  ]},
-
-  { "Ecosystem" = [
-    "community/gemmaverse.md",
-    "community/discord.md",
-    "community/gemma-skills.md",
-    { "Contribute" = "contributing/components.md" },
   ]},
 ]
+
+# ============================================================================
+# FOOTER
+# ============================================================================
+# Rendered by the theme's footer as icon links. Every icon below ships with
+# Zensical (.icons/fontawesome/brands/), so none of these need a vendored SVG.
+
+[[project.extra.social]]
+icon = "fontawesome/brands/x-twitter"
+link = "https://x.com/googlegemma"
+name = "Gemma on X"
+
+[[project.extra.social]]
+icon = "fontawesome/brands/github"
+link = "https://github.com/google-gemma"
+name = "Gemma on GitHub"
+
+[[project.extra.social]]
+icon = "fontawesome/brands/hugging-face"
+link = "https://huggingface.co/collections/google/gemma-4"
+name = "Gemma 4 on Hugging Face"
+
+[[project.extra.social]]
+icon = "fontawesome/brands/kaggle"
+link = "https://www.kaggle.com/models/google/gemma-4"
+name = "Gemma 4 on Kaggle"
 
 # ============================================================================
 # THEME
@@ -287,6 +309,15 @@ pygments_lang_class = true
 [project.markdown_extensions.pymdownx.keys]
 [project.markdown_extensions.pymdownx.magiclink]
 [project.markdown_extensions.pymdownx.mark]
+# Shared reference-link and glossary definitions, generated into snippets/ from
+# data/links.yml and data/glossary.yml. links.md is appended to every page because a reference
+# definition renders as nothing; glossary.md is opt-in per page, since `abbr` marks up every
+# occurrence of a term and a global glossary would be noise.
+[project.markdown_extensions.pymdownx.snippets]
+base_path = ["snippets"]
+auto_append = ["links.md"]
+check_paths = true
+
 [project.markdown_extensions.pymdownx.smartsymbols]
 [project.markdown_extensions.pymdownx.superfences]
 custom_fences = [

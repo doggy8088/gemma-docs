@@ -1,0 +1,61 @@
+---
+title: Resources
+description: Demos, tools, community projects and the external repositories and collections worth knowing about.
+cards:
+  - title: "Gemma Cookbook"
+    desc: "Official Jupyter notebooks covering inference, fine-tuning, RAG and function calling."
+    url: "https://github.com/google-gemma/gemma-cookbook"
+    icon: lucide/notebook-pen
+  - title: "google-gemma on GitHub"
+    desc: "The organization behind these docs: every repository, tool and community project."
+    url: "https://github.com/google-gemma"
+    icon: simple/github
+  - title: "Gemma 4 on Hugging Face"
+    desc: "Every Gemma 4 checkpoint, including the QAT and GGUF collections."
+    url: "https://huggingface.co/collections/google/gemma-4"
+    model: gemma-4
+    icon: simple/huggingface
+---
+
+# Resources
+
+Everything that sits alongside the documentation: things you can try in the browser, projects
+the community has built, and the repositories worth bookmarking.
+
+## Demos and tools
+
+<div class="card-grid">
+<a class="card" href="vision-token-budget.md">
+  <span class="card-icon">{{ icon('lucide/eye') }}</span>
+  <div class="card-title">Vision token budget</div>
+  <p class="card-desc">How Gemma 4 allocates image tokens across resolutions and aspect ratios.</p>
+</a>
+<a class="card" href="gemma-skills.md">
+  <span class="card-icon">{{ icon('lucide/wrench') }}</span>
+  <div class="card-title">Gemma Skills</div>
+  <p class="card-desc">Agent skills for building with Gemma and for fine-tuning it.</p>
+</a>
+</div>
+
+## Elsewhere
+
+<div class="card-grid">
+{% for card in cards %}
+<a class="card" href="{{ card.url }}" target="_blank" rel="noopener">
+  <span class="card-icon">{{ icon(card.icon | default('lucide/external-link')) }}</span>
+  <div class="card-title">{{ card.title }} <span class="card-ext">↗</span></div>
+  <p class="card-desc">{{ card.desc }}</p>
+</a>
+{% endfor %}
+</div>
+
+!!! tip "Adding to this page"
+    The **Elsewhere** cards come from the `cards:` list in this page's frontmatter — add a
+    title, description, URL and `icon` and it appears. Demos and tools get their own page under
+    `docs/resources/` and a card in the grid above.
+
+## Contribute
+
+The [component catalogue](../contributing/components.md) documents every building block these
+pages are made from, the design tokens behind them, and the conventions to follow when adding
+a page.
