@@ -120,3 +120,6 @@ demanding tasks.
 Ready to start building?
 [Get started](../../get-started/index.md)
 with Gemma models!
+
+--8<-- "glossary.md"
+

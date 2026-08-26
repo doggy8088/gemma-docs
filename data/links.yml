@@ -31,6 +31,9 @@ links:
   hf-gemma4:
     url: https://huggingface.co/collections/google/gemma-4
     model: gemma-4
+  gemma4-hf-collection:
+    url: https://huggingface.co/collections/google/gemma-4
+    model: gemma-4
   kaggle-gemma4:
     url: https://www.kaggle.com/models/google/gemma-4
     model: gemma-4
@@ -40,15 +43,92 @@ links:
   hf-gemma4-qat-q40:
     url: https://huggingface.co/collections/google/gemma-4-qat-q4-0
     model: gemma-4
+  gemma4-qat-q40-hf-collection:
+    url: https://huggingface.co/collections/google/gemma-4-qat-q4-0
+    model: gemma-4
   hf-gemma4-qat-mobile:
     url: https://huggingface.co/collections/google/gemma-4-qat-mobile
     model: gemma-4
+  gemma4-qat-mobile-hf-collection:
+    url: https://huggingface.co/collections/google/gemma-4-qat-mobile
+    model: gemma-4
 
-  # --- Ecosystem -------------------------------------------------------------------------
+  # --- Hugging Face Release Collections --------------------------------------------------
+  gemma-3-release-hf-collection:
+    url: https://huggingface.co/collections/google/gemma-3-release
+    model: gemma-3
+  gemma-3n-hf-collection:
+    url: https://huggingface.co/collections/google/gemma-3n
+    model: gemma-3n
+  gemma-2-release-hf-collection:
+    url: https://huggingface.co/collections/google/gemma-2-release
+    model: gemma-2
+  gemma-2-2b-release-hf-collection:
+    url: https://huggingface.co/collections/google/gemma-2-2b-release
+    model: gemma-2
+  gemma-release-hf-collection:
+    url: https://huggingface.co/collections/google/gemma-release
+    model: gemma-1
+  medgemma-release-hf-collection:
+    url: https://huggingface.co/collections/google/medgemma-release
+  translategemma-hf-collection:
+    url: https://huggingface.co/collections/google/translategemma
+  diffusiongemma-hf-collection:
+    url: https://huggingface.co/collections/google/diffusiongemma
+    model: diffusiongemma
+  gemma-scope-2-hf-collection:
+    url: https://huggingface.co/collections/google/gemma-scope-2
+    model: gemma-scope
+  gemma-scope-release-hf-collection:
+    url: https://huggingface.co/collections/google/gemma-scope-release
+    model: gemma-scope
+  t5gemma-hf-collection:
+    url: https://huggingface.co/collections/google/t5gemma
+  t5gemma-2-hf-collection:
+    url: https://huggingface.co/collections/google/t5gemma-2
+  functiongemma-hf-collection:
+    url: https://huggingface.co/collections/google/functiongemma
+    model: functiongemma
+  embeddinggemma-hf-collection:
+    url: https://huggingface.co/collections/google/embeddinggemma
+    model: embeddinggemma
+  txgemma-release-hf-collection:
+    url: https://huggingface.co/collections/google/txgemma-release
+  shieldgemma-hf-collection:
+    url: https://huggingface.co/collections/google/shieldgemma
+    model: shieldgemma
+  shieldgemma-release-hf-collection:
+    url: https://huggingface.co/collections/google/shieldgemma-release
+    model: shieldgemma
+  paligemma-release-hf-collection:
+    url: https://huggingface.co/collections/google/paligemma-release
+    model: paligemma
+  paligemma-2-release-hf-collection:
+    url: https://huggingface.co/collections/google/paligemma-2-release
+    model: paligemma
+  gemma-aps-release-hf-collection:
+    url: https://huggingface.co/collections/google/gemma-aps-release
+    model: gemma-aps
+  datagemma-release-hf-collection:
+    url: https://huggingface.co/collections/google/datagemma-release
+    model: datagemma
+  recurrentgemma-release-hf-collection:
+    url: https://huggingface.co/collections/google/recurrentgemma-release
+    model: recurrentgemma
+  codegemma-release-hf-collection:
+    url: https://huggingface.co/collections/google/codegemma-release
+
+  # --- Ecosystem & Portals ---------------------------------------------------------------
+  gemmaverse:
+    url: https://deepmind.google/models/gemma/gemmaverse/
   gemma-cookbook:
     url: https://github.com/google-gemma/gemma-cookbook
   gemma-skills-repo:
     url: https://github.com/google-gemma/gemma-skills
+  awesome-gemma:
+    url: https://github.com/google-gemma/awesome-gemma
+  gemma-translator:
+    url: https://github.com/google-gemma/gemma-translator
   gemma-github:
     url: https://github.com/google-gemma
   vertex-use-gemma:

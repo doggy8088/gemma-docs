@@ -62,3 +62,5 @@ Fine-tune a PaliGemma model with image data using JAX in Colab.
 ### [View on Kaggle](https://www.kaggle.com/models/google/paligemma-2){ data-model="paligemma" }
 
 View more code, Colab notebooks, information, and discussions about PaliGemma on Kaggle.
+
+--8<-- "glossary.md"

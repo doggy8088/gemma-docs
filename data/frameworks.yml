@@ -68,8 +68,7 @@ frameworks:
 
   - id: webgpu
     name: WebGPU
-    url: https://www.w3.org/TR/webgpu/     # unverified
-    page: deployment/web.md
+    url: https://www.w3.org/TR/webgpu/
 
   - id: vllm
     name: vLLM
@@ -178,15 +177,21 @@ frameworks:
     url: https://python.langchain.com
     page: deployment/langchain.md
 
+  - id: ai-edge-gallery
+    name: AI Edge Gallery
+    short_name: Edge Gallery
+    url: https://github.com/google-ai-edge/gallery
+    page: deployment/ai-edge-gallery.md
+    blurb: On-device mobile app for Android and iOS, no coding required.
+    mark: EG
+
   - id: android
     name: Android
     url: https://developer.android.com
-    page: deployment/mobile.md
 
   - id: ios
     name: iOS
-    url: https://developer.apple.com/ios/  # unverified
-    page: deployment/mobile.md
+    url: https://developer.apple.com/ios/
 
 # Tuning paths -- the routes shown on the fine-tuning overview. Kept separate from the list
 # above because the two do not map one-to-one: Keras offers both LoRA and distributed tuning,

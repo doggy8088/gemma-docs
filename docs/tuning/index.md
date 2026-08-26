@@ -16,30 +16,30 @@ follows:
 
 <ol class="steps" markdown>
 <li markdown>
-**[Choose a framework](index.md#choose-a-framework)**
+**[Choose a framework](index.md#1-choose-a-framework)**
 
 Each one is tied to a model format and to how much hardware you have. Pick before you
 prepare data, because the format follows from it.
 </li>
 <li markdown>
-**[Collect data](index.md#collect-data)**
+**[Collect data](index.md#2-collect-data)**
 
 Pairs of input and expected response. Start small — as few as 20 pairs can shift behaviour.
 </li>
 <li markdown>
-**[Tune and test the model](index.md#tune-and-test-the-model)**
+**[Tune and test the model](index.md#3-tune-and-test-the-model)**
 
 Choose between full fine-tuning and a parameter-efficient method such as LoRA, then test
 against success, failure and boundary cases.
 </li>
 <li markdown>
-**[Deploy the model](index.md#deploy-the-model)**
+**[Deploy the model](index.md#4-deploy-the-model)**
 
 Ship the tuned weights — and for LoRA, the base model alongside its adapter.
 </li>
 </ol>
 
-## Choose a framework
+## 1. Choose a framework
 
 Gemma models are compatible with a variety of AI tuning frameworks. Each is tied to a
 particular model format and to how much hardware you need, so this is the decision that shapes
@@ -91,7 +91,7 @@ For runs that outgrow a single machine, or that you would rather not operate you
 !!! note
     The JAX fine-tuning guide has been replaced by the [Gemma library fine-tuning](https://gemma-llm.readthedocs.io/en/latest/colab_sampling.html) guide.
 
-## Collect data
+## 2. Collect data
 
 Model tuning requires data. Tuning data typically consists of pairs of input
 data with the expected response. There are many public datasets available online
@@ -121,7 +121,7 @@ influence the behavior of a Gemma model with as few as 20 prompt and response
 pairs. For more details, see
 [Tasks in spoken languages with Gemma](spoken-language.md).
 
-## Tune and test the model
+## 3. Tune and test the model
 
 Once you have a tuning framework and tuning data in place, you can begin the
 Gemma model tuning process. When performing tuning, you have some options in how
@@ -162,13 +162,15 @@ When testing failure or boundary conditions for your generative AI application,
 you should also apply generative AI safety approaches, techniques, and tools as
 described in the [Responsible Generative AI Toolkit][responsible-ai].
 
-## Deploy the model
+## 4. Deploy the model
 
 After completing your tuning and successful completion of your testing, it's
 time to deploy your model. You can typically refer to the documentation for your
-[chosen framework](index.md#choose-a-framework) for how to deploy a tuned
+[chosen framework](index.md#1-choose-a-framework) for how to deploy a tuned
 model.
 
 If you are deploying a model with LoRA tuned weights, note that with this
 technique you typically deploy *both* the original model and its weights with
 the LoRA weights as an additional calculation layer for the model.
+
+--8<-- "glossary.md"

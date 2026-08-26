@@ -69,3 +69,6 @@ allowing you to deploy it in your own projects and applications.
 
 [Fine-tune DiffusionGemma](https://github.com/google/hackable_diffusion)
 [Deploy DiffusionGemma](https://docs.cloud.google.com/kubernetes-engine/docs/tutorials/serve-gemma-gpu-vllm)
+
+--8<-- "glossary.md"
+

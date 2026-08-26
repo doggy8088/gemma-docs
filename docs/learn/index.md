@@ -35,3 +35,6 @@ Read them in any order. Nothing here is a prerequisite for using Gemma.
   <p class="card-desc">How denoising produces text instead of pixels.</p>
 </a>
 </div>
+
+--8<-- "glossary.md"
+

@@ -127,3 +127,6 @@ This page documents releases for the Gemma family of models.
 ## February 21, 2024
 
 - Initial release of [Gemma](gemma-1/index.md) in 2B and 7B sizes.
+
+--8<-- "glossary.md"
+

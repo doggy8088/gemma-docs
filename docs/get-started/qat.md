@@ -86,3 +86,6 @@ Context (KV cache) is on top of this, and grows with prompt and generation lengt
   <p class="card-desc">Every engine that runs Gemma, from a laptop to a cluster.</p>
 </a>
 </div>
+
+--8<-- "glossary.md"
+

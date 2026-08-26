@@ -360,3 +360,6 @@ responsible AI development compared to similarly sized models.
 Using the benchmark evaluation metrics described in this document, these models
 have shown to provide superior performance to other, comparably-sized open model
 alternatives.
+
+--8<-- "glossary.md"
+

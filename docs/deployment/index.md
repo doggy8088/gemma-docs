@@ -14,25 +14,25 @@ models. The general steps for running a Gemma model are as follows:
 
 <ol class="steps" markdown>
 <li markdown>
-**[Choose a framework](index.md#choose-a-framework)**
+**[Choose a framework](index.md#1-choose-a-framework)**
 
 Pick the runtime that matches your hardware — a hosted endpoint, a desktop app, a Python
 library or an inference server.
 </li>
 <li markdown>
-**[Select a Gemma variant](index.md#select-a-gemma-variant)**
+**[Select a Gemma variant](index.md#2-select-a-gemma-variant)**
 
 Decide on a family, a size and a quantization level. Start with the smallest
 instruction-tuned core model that could work.
 </li>
 <li markdown>
-**[Run generation and inference requests](index.md#run-generation-and-inference-requests)**
+**[Run generation and inference requests](index.md#3-run-generation-and-inference-requests)**
 
 Follow your framework's guide, and format prompts the way the variant expects.
 </li>
 </ol>
 
-## Choose a framework
+## 1. Choose a framework
 
 Gemma runs on a wide range of ecosystem tools. Which one suits you depends on your hardware —
 cloud GPUs or a laptop — and whether you want to write Python or open an application. Every
@@ -91,7 +91,7 @@ For enterprise deployments, Google Cloud also offers the
 Make sure your intended model format — Keras built-in, Safetensors, or GGUF — is supported by
 the framework you pick.
 
-## Select a Gemma variant
+## 2. Select a Gemma variant
 
 Gemma models are available in several variants and sizes, including the
 foundation or [core](../models/gemma-4/index.md) Gemma models, and more
@@ -109,7 +109,7 @@ requiring additional development.
 
 Consider the following factors when choosing a Gemma variant:
 
-- **Gemma core, and other variant families such as PaliGemma, CodeGemma** : *Recommend Gemma (core).* Gemma variants beyond the core version have the same architecture as the core model, and are trained to perform better at specific tasks. Unless your application or goals align with the specialization of a specific Gemma variant, it is best to start with a Gemma core, or base, model.
+- **Gemma core, and other variant families such as PaliGemma and EmbeddingGemma** : *Recommend Gemma (core).* Gemma variants beyond the core version have the same architecture as the core model, and are trained to perform better at specific tasks. Unless your application or goals align with the specialization of a specific Gemma variant, it is best to start with a Gemma core, or base, model.
 - **Instruction-tuned (IT), pre-trained (PT), fine-tuned (FT), mixed
   (mix)** : *Recommend IT.*
     - *Instruction-tuned* (IT) Gemma variants are models that have been trained to respond to a variety of instructions or requests in human language. These model variants are the best place to start because they can respond to prompts without further model training.
@@ -123,12 +123,12 @@ Consider the following factors when choosing a Gemma variant:
 For a list of key, Google-published Gemma models, see the
 [Getting started with Gemma models](../get-started/index.md), Gemma model list.
 
-## Run generation and inference requests
+## 3. Run generation and inference requests
 
 After you have selected an AI execution framework and a Gemma variant, you can
 start running the model, and prompting it to generate content or complete tasks.
 For more information on how to run Gemma with a specific framework, see the
-guides linked in the [Choose a framework](index.md#choose-a-framework) section.
+guides linked in the [Choose a framework](index.md#1-choose-a-framework) section.
 
 ### Prompt formatting
 

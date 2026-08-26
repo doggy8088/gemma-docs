@@ -1,61 +1,64 @@
 ---
 title: Resources
 description: Demos, tools, community projects and the external repositories and collections worth knowing about.
-cards:
-  - title: "Gemma Cookbook"
-    desc: "Official Jupyter notebooks covering inference, fine-tuning, RAG and function calling."
-    url: "https://github.com/google-gemma/gemma-cookbook"
-    icon: lucide/notebook-pen
-  - title: "google-gemma on GitHub"
-    desc: "The organization behind these docs: every repository, tool and community project."
-    url: "https://github.com/google-gemma"
-    icon: simple/github
-  - title: "Gemma 4 on Hugging Face"
-    desc: "Every Gemma 4 checkpoint, including the QAT and GGUF collections."
-    url: "https://huggingface.co/collections/google/gemma-4"
-    model: gemma-4
-    icon: simple/huggingface
 ---
 
 # Resources
 
-Everything that sits alongside the documentation: things you can try in the browser, projects
-the community has built, and the repositories worth bookmarking.
-
-## Demos and tools
+Everything that sits alongside the documentation: interactive platforms, community projects,
+and the model collections worth bookmarking.
 
 <div class="card-grid">
-<a class="card" href="vision-token-budget.md">
-  <span class="card-icon">{{ icon('lucide/eye') }}</span>
-  <div class="card-title">Vision token budget</div>
-  <p class="card-desc">How Gemma 4 allocates image tokens across resolutions and aspect ratios.</p>
+<a class="card" href="https://deepmind.google/models/gemma/gemmaverse/" target="_blank" rel="noopener">
+  <span class="card-icon">{{ icon('lucide/sparkles') }}</span>
+  <div class="card-title">Gemmaverse <span class="card-ext">↗</span></div>
+  <p class="card-desc">Explore the interactive ecosystem of Gemma models, visual explainers, and research.</p>
 </a>
-<a class="card" href="gemma-skills.md">
-  <span class="card-icon">{{ icon('lucide/wrench') }}</span>
-  <div class="card-title">Gemma Skills</div>
-  <p class="card-desc">Agent skills for building with Gemma and for fine-tuning it.</p>
+<a class="card" href="https://github.com/google-gemma/gemma-cookbook" target="_blank" rel="noopener">
+  <span class="card-icon">{{ icon('lucide/notebook-pen') }}</span>
+  <div class="card-title">Gemma Cookbook <span class="card-ext">↗</span></div>
+  <p class="card-desc">Official Jupyter notebooks covering inference, fine-tuning, RAG and function calling.</p>
 </a>
 </div>
 
-## Elsewhere
+## Ecosystem & Projects
 
 <div class="card-grid">
-{% for card in cards %}
-<a class="card" href="{{ card.url }}" target="_blank" rel="noopener">
-  <span class="card-icon">{{ icon(card.icon | default('lucide/external-link')) }}</span>
-  <div class="card-title">{{ card.title }} <span class="card-ext">↗</span></div>
-  <p class="card-desc">{{ card.desc }}</p>
+<a class="card" href="https://github.com/google-gemma/awesome-gemma" target="_blank" rel="noopener">
+  <span class="card-icon">{{ icon('lucide/library') }}</span>
+  <div class="card-title">Awesome Gemma <span class="card-ext">↗</span></div>
+  <p class="card-desc">Curated community list of Gemma fine-tunes, tools, tutorials, and libraries.</p>
 </a>
-{% endfor %}
+<a class="card" href="https://github.com/google-gemma/gemma-translator" target="_blank" rel="noopener">
+  <span class="card-icon">{{ icon('lucide/languages') }}</span>
+  <div class="card-title">Gemma Translator <span class="card-ext">↗</span></div>
+  <p class="card-desc">End-to-end spoken and text translation system powered by Gemma models.</p>
+</a>
+<a class="card" href="https://github.com/google-gemma" target="_blank" rel="noopener">
+  <span class="card-icon">{{ icon('simple/github') }}</span>
+  <div class="card-title">google-gemma on GitHub <span class="card-ext">↗</span></div>
+  <p class="card-desc">The organization behind these docs: every repository, tool and community project.</p>
+</a>
 </div>
 
-!!! tip "Adding to this page"
-    The **Elsewhere** cards come from the `cards:` list in this page's frontmatter — add a
-    title, description, URL and `icon` and it appears. Demos and tools get their own page under
-    `docs/resources/` and a card in the grid above.
+## Models
 
-## Contribute
+<div class="card-grid">
+<a class="card" href="https://huggingface.co/collections/google/gemma-4" target="_blank" rel="noopener">
+  <span class="card-icon">{{ icon('simple/huggingface') }}</span>
+  <div class="card-title">Gemma 4 on Hugging Face <span class="card-ext">↗</span></div>
+  <p class="card-desc">Every Gemma 4 checkpoint, including base, instruction-tuned, and quantized models.</p>
+</a>
+<a class="card" href="https://www.kaggle.com/models/google/gemma-4" target="_blank" rel="noopener">
+  <span class="card-icon">{{ icon('simple/kaggle') }}</span>
+  <div class="card-title">Gemma 4 on Kaggle <span class="card-ext">↗</span></div>
+  <p class="card-desc">Run Gemma 4 models in Kaggle notebooks with free GPU accelerators.</p>
+</a>
+<a class="card" href="https://huggingface.co/collections/google/gemma-4-qat-mobile" target="_blank" rel="noopener">
+  <span class="card-icon">{{ icon('simple/huggingface') }}</span>
+  <div class="card-title">Gemma 4 QAT Collections <span class="card-ext">↗</span></div>
+  <p class="card-desc">Quantization-Aware Training checkpoints for 4-bit edge and mobile deployment.</p>
+</a>
+</div>
 
-The [component catalogue](../contributing/components.md) documents every building block these
-pages are made from, the design tokens behind them, and the conventions to follow when adding
-a page.
+--8<-- "glossary.md"
