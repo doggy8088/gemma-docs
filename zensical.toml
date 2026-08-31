@@ -203,6 +203,7 @@ nav = [
     { "Overview" = "resources/index.md" },
     { "Demos & tools" = [
       { "Gemma Skills" = "resources/gemma-skills.md" },
+      { "AIventure" = "resources/aiventure.md" },
       { "Vision token budget" = "resources/vision-token-budget.md" },
     ]},
     { "Contribute" = [
