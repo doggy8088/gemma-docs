@@ -210,6 +210,12 @@ nav = [
       { "Components" = "contributing/components.md" },
       { "Conventions" = "contributing/conventions.md" },
     ]},
+    { "Legal" = [
+      { "Terms of use" = "resources/terms.md" },
+      { "Gemma 4 license" = "resources/apache-2.md" },
+      { "Prohibited use" = "resources/prohibited-use.md" },
+      { "Intended use statement" = "resources/intended-use.md" },
+    ]},
   ]},
 ]
 

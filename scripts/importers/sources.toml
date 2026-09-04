@@ -377,3 +377,26 @@ path = "tutorials/visual-guides/diffusiongemma.md"
 source = "https://newsletter.maartengrootendorst.com/p/a-visual-guide-to-diffusiongemma"
 importer = "import_newsletter"
 frozen = true
+
+# --- Legal --------------------------------------------------------------------------------
+
+[[page]]
+path = "resources/terms.md"
+source = "https://ai.google.dev/gemma/terms.md.txt"
+frozen = true
+
+[[page]]
+path = "resources/apache-2.md"
+source = "https://ai.google.dev/gemma/apache_2.md.txt"
+frozen = true
+
+[[page]]
+path = "resources/prohibited-use.md"
+source = "https://ai.google.dev/gemma/prohibited_use_policy.md.txt"
+frozen = true
+
+[[page]]
+path = "resources/intended-use.md"
+source = "https://ai.google.dev/gemma/intended_use_statement.md.txt"
+frozen = true
+
