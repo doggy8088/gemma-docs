@@ -53,7 +53,9 @@ def _load_icon(name: str, css_class: str) -> str:
     for root in _icon_roots():
         path = root.joinpath(*name.split("/")).with_suffix(".svg")
         if path.is_file():
-            svg = SIZING_ATTR.sub("", path.read_text(encoding="utf-8").strip())
+            ROOT_SVG = re.compile(r"<svg\b[^>]*>", re.DOTALL)
+            svg = path.read_text(encoding="utf-8").strip()
+            svg = ROOT_SVG.sub(lambda m: SIZING_ATTR.sub("", m.group(0)), svg, count=1)
             if SVG_CLASS.search(svg):
                 svg = SVG_CLASS.sub(rf'\g<1> class="\g<2> {css_class}"', svg, count=1)
             else:
