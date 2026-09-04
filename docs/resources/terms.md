@@ -28,7 +28,7 @@ or other sharing of Gemma or Model Derivatives to a third party, including by
 providing or making Gemma or its functionality available as a hosted service via
 API, web access, or any other electronic or remote means ("**Hosted Service**").
 
-(c) "**Gemma** " means the set of machine learning language models, trained model
+\(c) "**Gemma** " means the set of machine learning language models, trained model
 weights and parameters identified in the [Appendix](#appendix),
 regardless of the source that you obtained it from.
 
@@ -60,7 +60,7 @@ Agreement (including being of sufficient age of consent). If you are accessing
 or using any of the Gemma Services for or on behalf of a legal entity, (a) you
 are entering into this Agreement on behalf of yourself and that legal entity,
 (b) you represent and warrant that you have the authority to act on behalf of
-and bind that entity to this Agreement and (c) references to "**you** " or
+and bind that entity to this Agreement and \(c) references to "**you** " or
 "**your**" in the remainder of this Agreement refers to both you (as an
 individual) and that entity.
 
