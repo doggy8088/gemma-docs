@@ -21,7 +21,7 @@ tokenizer.
 - Token to indicate a system instruction: `system`{.token-role}
 - Token to indicate a user turn: `user`{.token-role}
 - Token to indicate a model turn: `model`{.token-role}
-- Token to indicate the beginning of a dialogue turn: `<|turn|>`{.token-turn}
+- Token to indicate the beginning of a dialogue turn: `<|turn>`{.token-turn}
 - Token to indicate the end of a dialogue turn: `<turn|>`{.token-turn}
 
 Here's an example dialogue:
@@ -36,8 +36,8 @@ Hello.<span class="token-turn">&lt;turn|&gt;</span></code></pre>
 
 | Multimodal Token | Purpose |
 |---|---|
-| `<|image|>`{.token-multi} `<image|>`{.token-multi} | Indicate image embeddings |
-| `<|audio|>`{.token-multi} `<audio|>`{.token-multi} | Indicate audio embeddings |
+| `<|image>`{.token-multi} `<image|>`{.token-multi} | Indicate image embeddings |
+| `<|audio>`{.token-multi} `<audio|>`{.token-multi} | Indicate audio embeddings |
 | `<|image|>`{.token-multi} `<|audio|>`{.token-multi} | Special placeholder tokens |
 
 We use two special placeholder tokens (`<|image|>`{.token-multi} and `<|audio|>`{.token-multi}) to specify
@@ -89,11 +89,11 @@ Gemma 4 is trained on six special tokens to manage the "tool use" lifecycle.
 | Token Pair | Purpose |
 |---|---|
 | `<|tool|>`{.token-tool} `<tool|>`{.token-tool} | Defines a tool |
-| `<|tool_call|>`{.token-tool} `<tool_call|>`{.token-tool} | Indicates a model's request to use a tool. |
-| `<|tool_response|>`{.token-tool} `<tool_response|>`{.token-tool} | Provides a tool's execution result back to the model. |
+| `<|tool_call>`{.token-tool} `<tool_call|>`{.token-tool} | Indicates a model's request to use a tool. |
+| `<|tool_response>`{.token-tool} `<tool_response|>`{.token-tool} | Provides a tool's execution result back to the model. |
 
 !!! Note
-    `<|tool_response|>`{.token-tool} acts as an additional stop sequence for the inference engine.
+    `<|tool_response>`{.token-tool} acts as an additional stop sequence for the inference engine.
 
 **Delimiter for String Values: `<|"|>`{.token-tool}**
 
@@ -111,10 +111,10 @@ system instruction.
 | Control Token | Purpose |
 |---|---|
 | `<|think|>`{.token-think} | Activates thinking mode |
-| `<|channel|>`{.token-think} `<channel|>`{.token-think} | Indicates a model's internal process. |
+| `<|channel>`{.token-think} `<channel|>`{.token-think} | Indicates a model's internal process. |
 
 !!! Note
-    `<|channel|>`{.token-think} is always followed by the word `thought`{.token-think} when thinking mode is active.
+    `<|channel>`{.token-think} is always followed by the word `thought`{.token-think} when thinking mode is active.
 
 Here is an example dialogue:
 
