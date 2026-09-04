@@ -2,7 +2,6 @@
 title: Best practices
 description: Sampling parameters, thinking-mode tokens, modality order and image token budgets that get the best results out of Gemma 4.
 models: [gemma-4]
-frameworks: [transformers]
 ---
 
 # Best practices
