@@ -107,11 +107,21 @@ families:
         hf: google/embeddinggemma-300M
   - id: paligemma
     name: PaliGemma
+    page: models/paligemma/model-card-v1.md
+    group: variant
+    based_on: gemma-1
+    tagline: Vision-language models for captioning, VQA and detection
+    sizes:
+      - id: 3b
+        name: 3B
+        based_on_size: 2B
+  - id: paligemma-2
+    name: PaliGemma 2
     page: models/paligemma/model-card-v2.md
     group: variant
-    based_on: gemma-2        # "PaliGemma 2 ... based on Gemma 2"; PaliGemma 1 was built on Gemma
+    based_on: gemma-2
     tagline: Vision-language models for captioning, VQA and detection
-    sizes:                             # PaliGemma 2; each built on the Gemma 2 size beside it
+    sizes:
       - id: 3b
         name: 3B
         based_on_size: 2B
@@ -123,22 +133,30 @@ families:
         based_on_size: 27B
   - id: shieldgemma
     name: ShieldGemma
-    page: models/shieldgemma/model-card-v2.md
+    page: models/shieldgemma/model-card-v1.md
     group: variant
-    based_on: gemma-2        # "ShieldGemma 1 is built on Gemma 2". The page does not state a
-                             # base for the 4B ShieldGemma 2; do not guess one here.
+    based_on: gemma-2
     tagline: Safety classification for text and image content
     sizes:
       - id: 2b
-        name: 2B                       # ShieldGemma 1, text
+        name: 2B
+        hf: google/shieldgemma-2b
       - id: 9b
-        name: 9B                       # ShieldGemma 1, text
+        name: 9B
+        hf: google/shieldgemma-9b
       - id: 27b
-        name: 27B                      # ShieldGemma 1, text
+        name: 27B
+        hf: google/shieldgemma-27b
+  - id: shieldgemma-2
+    name: ShieldGemma 2
+    page: models/shieldgemma/model-card-v2.md
+    group: variant
+    based_on: gemma-3
+    tagline: Safety classification for text and image content
+    sizes:
       - id: 4b
-        name: 4B                       # ShieldGemma 2, image
+        name: 4B
         hf: google/shieldgemma-2-4b-it
-
   - id: gemma-3
     name: Gemma 3
     page: models/gemma-3/index.md
@@ -226,9 +244,12 @@ families:
     based_on: gemma-2        # both RIG and RAG use "a variant of Gemma 2"
     tagline: Grounding generation in Data Commons statistics
     sizes:
-      - id: 27b
-        name: 27B
-        hf: google/datagemma-rig-27b-it   # RIG; the RAG build is datagemma-rag-27b-it
+      - id: 27b-rig
+        name: 27B RIG
+        hf: google/datagemma-rig-27b-it
+      - id: 27b-rag
+        name: 27B RAG
+        hf: google/datagemma-rag-27b-it
   - id: gemma-scope
     name: Gemma Scope
     page: models/gemma-scope/index.md
