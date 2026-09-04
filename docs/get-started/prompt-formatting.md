@@ -281,10 +281,8 @@ Gemma<span class="token-turn">&lt;end_of_turn&gt;</span>
 <span class="token-turn">&lt;start_of_turn&gt;</span><span class="token-role">model</span>
 Gemma who?<span class="token-turn">&lt;end_of_turn&gt;</span></code></pre>
 
-The token `"<end_of_turn>
-"`{.token-turn} is the turn separator, and the prompt prefix is
-`"<start_of_turn>model
-"`. This means that if you'd like to prompt the model
+The token `"<end_of_turn>\n"`{.token-turn} is the turn separator, and the prompt prefix is
+`"<start_of_turn>model\n"`{.token-turn}. This means that if you'd like to prompt the model
 with a question like, "What is Cramer's Rule?", you should instead feed the
 model as follows:
 
