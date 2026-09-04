@@ -62,16 +62,20 @@ use a basic `transcribe the audio` prompt.
 
 - **Audio Speech Recognition (ASR)**
 
-    Transcribe the following speech segment in {LANGUAGE} into {LANGUAGE} text.
+```text
+Transcribe the following speech segment in {LANGUAGE} into {LANGUAGE} text.
 
-    Follow these specific instructions for formatting the answer:
-    *   Only output the transcription, with no newlines.
-    *   When transcribing numbers, write the digits, i.e. write 1.7 and not one point seven, and write 3 instead of three.
+Follow these specific instructions for formatting the answer:
+*   Only output the transcription, with no newlines.
+*   When transcribing numbers, write the digits, i.e. write 1.7 and not one point seven, and write 3 instead of three.
+```
 
 - **Automatic Speech Translation (AST)**
 
-    Transcribe the following speech segment in {SOURCE_LANGUAGE}, then translate it into {TARGET_LANGUAGE}.
-    When formatting the answer, first output the transcription in {SOURCE_LANGUAGE}, then one newline, then output the string '{TARGET_LANGUAGE}: ', then the translation in {TARGET_LANGUAGE}.
+```text
+Transcribe the following speech segment in {SOURCE_LANGUAGE}, then translate it into {TARGET_LANGUAGE}.
+When formatting the answer, first output the transcription in {SOURCE_LANGUAGE}, then one newline, then output the string '{TARGET_LANGUAGE}: ', then the translation in {TARGET_LANGUAGE}.
+```
 
 But just `transcribe the audio` should work too.
 
