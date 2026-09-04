@@ -632,7 +632,7 @@ You have established how to build an application that can call functions with Ge
 <div class="card-grid">
 <a class="card" href="vision.md">
   <span class="card-icon">{{ icon('lucide/eye') }}</span>
-  <div class="card-title">Vision understanding</div>
+  <div class="card-title">Vision overview</div>
   <p class="card-desc">Detection, OCR, visual question answering and captioning.</p>
 </a>
 <a class="card" href="audio.md">

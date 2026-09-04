@@ -13,7 +13,7 @@ Follow the Markdown links below to read canonical page content without cloning t
 - [Inference](https://gemma.ai/get-started/capabilities/text.md): Basic text inference with Gemma 4 in Hugging Face Transformers: single-turn prompts, multi-turn conversations, and system instructions.
 - [Reasoning](https://gemma.ai/get-started/capabilities/thinking.md): Use Gemma 4's thinking mode to reason before answering, for text and image prompts, and parse the reasoning apart from the answer.
 - [Tool calling](https://gemma.ai/get-started/capabilities/function-calling.md): When using a generative artificial intelligence (AI) model such as Gemma, you may want to use the model to operate programming interfaces in order to complete tasks or answer questions.
-- [Vision understanding](https://gemma.ai/get-started/capabilities/vision.md): Prepare and pass visual data to Gemma 4 for object detection, OCR, visual question answering, captioning, and multi-image reasoning.
+- [Vision overview](https://gemma.ai/get-started/capabilities/vision.md): Prepare and pass visual data to Gemma 4 for object detection, OCR, visual question answering, captioning, and multi-image reasoning.
 - [Image understanding](https://gemma.ai/get-started/capabilities/image.md): You can use Gemma 3 and later models to analyze and understand the content of images.
 - [Video understanding](https://gemma.ai/get-started/capabilities/video.md): Video data is a rich source of information that can help you accomplish tasks and understand the world around you.
 - [Audio understanding](https://gemma.ai/get-started/capabilities/audio.md): Starting with Gemma 3n, you can use audio directly into your prompts and workflows.

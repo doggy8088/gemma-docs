@@ -115,7 +115,7 @@ a maximum of 60 seconds assuming the images are processed at one frame per secon
 </a>
 <a class="card" href="capabilities/vision.md">
   <span class="card-icon">{{ icon('lucide/eye') }}</span>
-  <div class="card-title">Vision understanding</div>
+  <div class="card-title">Vision overview</div>
   <p class="card-desc">Detection, OCR, visual question answering and captioning.</p>
 </a>
 </div>
