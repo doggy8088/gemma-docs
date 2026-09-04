@@ -40,6 +40,9 @@
   vertical-align: baseline;
 }
 
+.md-typeset .card-icon .gemma-icon.lucide {
+  fill: none;
+}
 /* -------------------------------------------------------------------
    Tile fill
    Plain surface at rest -- white against the tinted card in light mode,
