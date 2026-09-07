@@ -4,7 +4,7 @@ description: In Gemma 4, Multi-Token Prediction (MTP) is the specific architectu
 models: [gemma-4]
 source_url: "https://ai.google.dev/gemma/docs/mtp/overview.md.txt"
 frameworks: [transformers]
-colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs/notebooks/mtp.ipynb
+colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs/notebooks/mtp-gemma-4-e2b-it.ipynb
 ---
 # Speed-up Gemma 4 with Multi-Token Prediction
 
@@ -90,8 +90,8 @@ model in choosing which tokens to predict.
 Use the `transformers` libraries to create an instance of a `processor` and `model` using the
 `AutoProcessor` and `AutoModelForCausalLM` classes as shown in the following code example:
 
-```python { .notebook-cell }
-TARGET_MODEL_ID = "google/gemma-4-E2B-it" # @param ["google/gemma-4-E2B-it", "google/gemma-4-E4B-it", "google/gemma-4-12B-it", "google/gemma-4-31B-it", "google/gemma-4-26B-A4B-it"]
+```python { .notebook-cell .model-swap }
+TARGET_MODEL_ID = "google/gemma-4-E2B-it"
 ASSISTANT_MODEL_ID = TARGET_MODEL_ID + "-assistant"
 
 import torch

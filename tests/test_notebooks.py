@@ -73,7 +73,7 @@ print(42)
 
     def test_registered_notebooks_have_unique_outputs_and_code_cells(self):
         self.assertEqual(len(notebooks.SOURCES), 10)
-        self.assertEqual(len(notebooks.NOTEBOOKS), 40)
+        self.assertEqual(len(notebooks.NOTEBOOKS), 44)
         self.assertEqual(len(set(notebooks.NOTEBOOKS.values())), len(notebooks.NOTEBOOKS))
         for (source, model), target in notebooks.NOTEBOOKS.items():
             with self.subTest(target=target.name):
@@ -119,7 +119,7 @@ print(MODEL_ID)
         self.assertEqual(notebooks.infer_model("thinking-gemma-4-e2b-it.ipynb"), "gemma-4/e2b")
         self.assertEqual(notebooks.infer_model("thinking-gemma-4-26b-a4b-it.ipynb"), "gemma-4/26b-a4b")
         self.assertEqual(notebooks.infer_model("thinking-gemma-4-e2b.ipynb"), "gemma-4/e2b")
-        self.assertIsNone(notebooks.infer_model("mtp.ipynb"))
+        self.assertEqual(notebooks.infer_model("mtp-gemma-4-e2b-it.ipynb"), "gemma-4/e2b")
         self.assertIsNone(notebooks.infer_model("full-finetune.ipynb"))
 
 
