@@ -178,6 +178,7 @@ The model processes the user's request and the tool definition. It determines it
 needs to call the `get_current_weather` function and outputs the following turn.
 
 <pre><code>
+<span class="token-turn">&lt;start_of_turn&gt;</span><span class="token-role">model</span>
 <span class="token-tool">&lt;start_function_call&gt;</span>call:get_current_weather{location:<span class="token-tool">&lt;escape&gt;</span>Tokyo, Japan<span class="token-tool">&lt;escape&gt;</span>}<span class="token-tool">&lt;end_function_call&gt;</span>
 </code></pre>
 
