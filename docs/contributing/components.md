@@ -326,6 +326,7 @@ The quiet band under every H1. You never write this markup; it is rendered from 
 models: [gemma-4]        # what the page is about
 frameworks: [ollama]     # primary tools the page teaches, linked to their home pages
 requires: audio          # narrows the selector to models that accept audio
+colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs/notebooks/tutorial-gemma-4-e2b-it.ipynb # opens in Colab
 ```
 
 Two kinds of item sit on the line, and keeping them apart is the design:
@@ -335,6 +336,7 @@ Two kinds of item sit on the line, and keeping them apart is the design:
 | `Models` | `models` frontmatter | What the page is **about**. Links to the local model page. |
 | `Uses` | `frameworks` frontmatter | Primary tools the page teaches. Links out to each project. |
 | `Examples` | the page's own code | What **you** want the commands to target. A preference. |
+| `Colab` | `colab` frontmatter | Direct link to Colab notebook; dynamically updates to target the selected model. |
 
 Pairs are separated by a 1px rule, values all share one weight, and labels are muted — 16px of
 space alone was not enough to stop `Frameworks Sentence Transformers` reading as a single run
@@ -367,6 +369,8 @@ every tag while the `pull` command above it follows the selector.
 
 A model is only offered if it has a published id for **every** engine appearing in the page's
 marked blocks, so switching can never rewrite some snippets and silently leave others behind.
+If a page specifies a `requires:` modality in frontmatter (such as `requires: audio`), the picker
+and exported notebooks are additionally filtered to models supporting that modality.
 If an intentionally separate example lacks one size—such as a QAT checkpoint—mark it
 `{ .model-fixed }` and explain the limitation beside it instead of unnecessarily narrowing the
 page's primary examples.
@@ -389,23 +393,32 @@ should become executable cells in the generated notebook:
 
 ````markdown
 ```python { .notebook-cell .model-swap }
-print("This becomes a code cell; the authored model is retained.")
+model_id = "google/gemma-4-E2B-it"
 ```
 ````
 
 Unmarked fences remain part of a Markdown cell, and `{ .output }` blocks are omitted because a
-notebook recreates them when it runs. Add the generated notebook's Colab URL to frontmatter to
-show a quiet, accessible Colab icon in the page context strip:
+notebook recreates them when it runs.
+
+When a tutorial uses `{ .model-swap }`, `scripts/notebooks.py` exports separate model-specific
+notebooks named `<page>-gemma-4-<size>-it.ipynb` (e.g., `thinking-gemma-4-e2b-it.ipynb`,
+`thinking-gemma-4-12b-it.ipynb`) for every candidate model supported by the page's engines and
+`requires:` modality constraint. Tutorials without `.model-swap` export a single `<page>.ipynb`.
+
+Add the default model notebook's Colab URL to frontmatter to show a quiet, accessible Colab icon
+in the page context strip:
 
 ```yaml
-colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs/notebooks/tutorial.ipynb
+colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs/notebooks/tutorial-gemma-4-e2b-it.ipynb
 ```
 
+When readers select another model in the page context dropdown, the model switcher dynamically
+updates the Colab button's destination to match the selected model notebook.
+
 Wrap any other site-only controls in `<!-- notebook:skip-start -->` and
-`<!-- notebook:skip-end -->`. Register the source and output in `scripts/notebooks.py`, then
+`<!-- notebook:skip-end -->`. Register the source page in `SOURCES` in `scripts/notebooks.py`, then
 generate every registered notebook with `uv run python scripts/notebooks.py`; use `--check`
-during verification. Do not edit the generated `.ipynb`
-directly.
+during verification. Do not edit the generated `.ipynb` directly.
 
 ## Engine grid
 

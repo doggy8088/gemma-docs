@@ -57,7 +57,7 @@ This skill guides coding agents and contributors in maintaining and authoring do
 
 | Data File | Governs | Generator / Consumer |
 |---|---|---|
-| `data/models.yml` | Model families, parameter sizes, context lengths, memory requirements, framework-specific checkpoint IDs | `scripts/generate_model_names.py` -> `docs/javascripts/model-data.js` and `overrides/partials/model-names.html` |
+| `data/models.yml` | Model families, parameter sizes, context lengths, memory requirements, framework-specific checkpoint IDs | `scripts/generate_model_names.py` -> `docs/javascripts/model-data.js` and `overrides/partials/model-names.html`; `scripts/notebooks.py` -> `docs/notebooks/*.ipynb` |
 | `data/frameworks.yml` | Engine metadata, blurbs, icons, URLs, `tuning_paths` | Rendered by Jinja macros (`{{ engines(...) }}`, `{{ paths(...) }}`) in pages |
 | `data/links.yml` | URLs used on more than one page, model version tags | `scripts/generate_snippets.py` -> `snippets/links.md` (auto-appended to all pages) |
 | `data/glossary.yml` | Acronyms and term definitions | `scripts/generate_snippets.py` -> `snippets/glossary.md` (opt-in via `--8<-- "glossary.md"`) |
@@ -68,6 +68,7 @@ Whenever editing files in `data/`, run:
 uv run --frozen python scripts/generate_model_names.py
 uv run --frozen python scripts/generate_snippets.py
 uv run --frozen python scripts/agent_docs.py
+uv run --frozen python scripts/notebooks.py
 ```
 `scripts/lint_docs.py --check generated` will fail if generated files are out of sync with `data/`.
 
@@ -83,7 +84,9 @@ Every page must have valid YAML frontmatter matching `scripts/frontmatter_schema
 title: Page Title
 description: Concise 1-2 sentence description for search and previews.
 models: [gemma-4]          # Optional: list of relevant model family IDs
-frameworks: [ollama, vllm] # Optional: list of relevant framework IDs
+frameworks: [transformers] # Optional: list of relevant framework IDs
+requires: audio            # Optional: required input modality (e.g. audio, vision)
+colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs/notebooks/tutorial-gemma-4-e2b-it.ipynb # Optional: Colab link
 prerequisites:             # Optional: list of prerequisite topics
   - get-started/index.md
 source_url: "https://..."  # Mandatory on imported pages; omitted on original pages
@@ -91,6 +94,8 @@ source_url: "https://..."  # Mandatory on imported pages; omitted on original pa
 ```
 - **Authored keys only**: Do NOT add computed keys (e.g. token counts).
 - **Vocabularies**: Model and framework identifiers must exist in `data/models.yml` and `data/frameworks.yml`.
+- **Modality gating**: Use `requires:` to restrict model selection and notebook export to models supporting that modality (e.g., `audio` excludes 26B/31B).
+- **Colab link**: For swappable tutorials, link to the default model notebook (`-gemma-4-e2b-it.ipynb`). The model switcher updates the link dynamically when readers select other models.
 
 ### Headings and Anchor Links
 - Use standard markdown headings (`# H1`, `## 1. Step`, `### Substep`).
@@ -101,7 +106,7 @@ source_url: "https://..."  # Mandatory on imported pages; omitted on original pa
 To enable interactive model switching in code examples:
 ```python { .model-swap }
 # Use default model name in authoring; the JS switcher replaces it dynamically:
-model_id = "google/gemma-4-it"
+model_id = "google/gemma-4-E2B-it"
 ```
 
 ### Shared Links & Citations
@@ -124,16 +129,24 @@ To create or edit a tutorial that exports to a Jupyter notebook:
    from transformers import AutoModelForCausalLM
    ```
    ````
-2. **Display-Only Code**: Normal fences (without `.notebook-cell`) stay in Markdown and become text cells in notebooks.
-3. **Outputs**: Fences marked `{ .output }` are omitted during notebook export.
-4. **Site-Only Blocks**: Wrap web-only elements (such as interactive widgets or card grids) in skip comments:
+2. **Model-Swappable Cells**: Combine with `{ .model-swap }` to export multi-model notebooks:
+   ````markdown
+   ```python { .notebook-cell .model-swap }
+   model_id = "google/gemma-4-E2B-it"
+   ```
+   ````
+   During export, `scripts/notebooks.py` detects swappable engines in marked blocks and candidate models matching any `requires:` frontmatter. For swappable tutorials, it generates model-specific notebooks named `<stem>-gemma-4-<size>-it.ipynb` (e.g., `thinking-gemma-4-e2b-it.ipynb`, `thinking-gemma-4-12b-it.ipynb`). Non-swappable tutorials generate a single `<stem>.ipynb`.
+3. **Display-Only Code**: Normal fences (without `.notebook-cell`) stay in Markdown and become text cells in notebooks.
+4. **Outputs**: Fences marked `{ .output }` are omitted during notebook export.
+5. **Site-Only Blocks**: Wrap web-only elements (such as interactive widgets or card grids) in skip comments:
    ```markdown
    <!-- notebook:skip-start -->
    {{ engines(["ollama", "vllm"]) }}
    <!-- notebook:skip-end -->
    ```
-5. **Registration**: Register new notebook tutorials in `NOTEBOOKS` in `scripts/notebooks.py`.
-6. **Export**: Run `uv run --frozen python scripts/notebooks.py` to regenerate `docs/notebooks/*.ipynb`.
+6. **Registration**: Register new notebook source tutorials in `SOURCES` in `scripts/notebooks.py`.
+7. **Colab Link**: For swappable tutorials, add the default model notebook's Colab URL to frontmatter (`colab: .../<stem>-gemma-4-e2b-it.ipynb`). The page context switcher dynamically updates the link when readers select a different model.
+8. **Export & Verify**: Run `uv run --frozen python scripts/notebooks.py` to regenerate `docs/notebooks/*.ipynb`, and verify with `uv run --frozen python scripts/notebooks.py --check`.
 
 ---
 

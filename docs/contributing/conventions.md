@@ -45,7 +45,7 @@ Nothing in this list should ever be edited by hand. Each has a generator, and
 | `docs/javascripts/model-data.js` | `generate_model_names.py` | `models.yml`, `frameworks.yml` |
 | `snippets/links.md`, `snippets/glossary.md` | `generate_snippets.py` | `links.yml`, `glossary.yml` |
 | `docs/llms.txt` and the raw `.md` routes | `agent_docs.py` | Page frontmatter and the nav |
-| `docs/notebooks/*.ipynb` | `notebooks.py` | The ten registered tutorial pages |
+| `docs/notebooks/*.ipynb` | `notebooks.py` | Registered tutorial pages (model-adapted variants for swappable pages) |
 | `overrides/.icons/**.svg` | `vendor_icons.py` | The icons pages actually reference |
 
 Icons are the one entry checked by `--check icons` rather than `--check generated`, because
@@ -75,7 +75,7 @@ upstream source is still findable.
 distinction it draws matters:
 
 - **Authored** keys are facts only a person knows — `title`, `description`, `models`,
-  `frameworks`, `prerequisites`.
+  `frameworks`, `prerequisites`, `requires` (modality constraints), `colab` (direct notebook link).
 - **Computed** keys are derivable from the file. Writing one by hand is an *error*, because a
   hand-written token count is wrong the moment the page is edited.
 
@@ -110,13 +110,22 @@ one, and marking it up buries the links that do need revisiting.
 
 ## Markdown is the source, notebooks are output
 
-Ten pages are exported to Jupyter. Markdown owns every subsequent edit; the `.ipynb` is a build
-artifact.
+Ten tutorial pages in `SOURCES` are exported to Jupyter. Markdown owns every subsequent edit; the
+`.ipynb` files are build artifacts.
 
-Only fences marked `.notebook-cell` become executable cells. Everything else in the page is
-site chrome, and `notebooks.py` strips what Jupyter cannot render — `attr_list` annotations,
-card grids, snippet includes and abbreviation definitions. **Anything added to the authoring
-vocabulary needs a matching strip**, or it lands in the notebook as literal text.
+Only fences marked `.notebook-cell` become executable cells. When a tutorial contains
+`{ .model-swap }` code blocks, `notebooks.py` exports separate model-specific notebooks named
+`<stem>-gemma-4-<size>-it.ipynb` (e.g., `thinking-gemma-4-e2b-it.ipynb`) for all candidate models
+matching the tutorial's engines and `requires:` modality constraint. Non-swappable tutorials
+export a single `<stem>.ipynb`.
+
+For swappable tutorials, frontmatter specifies the default model notebook in `colab:`, and the
+page context switcher dynamically updates the link when readers select a different model.
+
+Everything else in the page is site chrome, and `notebooks.py` strips what Jupyter cannot render —
+`attr_list` annotations, card grids, `{ .output }` blocks, snippet includes, abbreviation definitions,
+and skip blocks (`<!-- notebook:skip-start -->` ... `<!-- notebook:skip-end -->`). **Anything added
+to the authoring vocabulary needs a matching strip**, or it lands in the notebook as literal text.
 
 ## Verification
 
