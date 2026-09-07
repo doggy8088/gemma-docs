@@ -81,12 +81,6 @@ import kagglehub
 kagglehub.login()
 ```
 
-``` { .no-copy .output }
-VBox(children=(HTML(value='<center> <img\nsrc=https://www.kaggle.com/static/images/site-logo.png\nalt=\'Kaggle…
-Kaggle credentials set.
-Kaggle credentials successfully validated.
-```
-
 ### Fetch the `big_vision` repository and install related dependencies
 
 Download the `big_vision` repository to your Colab notebook from GitHub and install dependencies related to `big_vision` by running the following code.
@@ -111,10 +105,6 @@ if "big_vision_repo" not in sys.path:
 
 # Install missing dependencies. Assume jax~=0.4.25 with GPU available.
 !pip3 install -q "overrides" "ml_collections" "einops~=0.7" "sentencepiece"
-```
-
-``` { .no-copy .output }
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 76.7/76.7 kB 2.8 MB/s eta 0:00:00
 ```
 
 ### Import JAX and other dependencies
@@ -513,34 +503,6 @@ print("Training examples")
 display(HTML(html_out))
 ```
 
-``` { .no-copy .output }
-Training examples
-```
-![](../../assets/paligemma/fine-tuning-01.jpg)
-
-a car is parked in front of a building with a green umbrella. the building has a green and white sign, a green and white umbrella, and a white sign with black lettering. there is a tall palm tree and a tall tree. the car is parked next to a yellow car and a black car. the road is grey and the sky is white.
-![](../../assets/paligemma/fine-tuning-02.jpg)
-
-a blue bicycle is parked next to awooden fence. the bike has a black seat, a black kickstand, and a black tire. the fence is brown and the grass is green. there is a small green bush and a small green tree in the background. the bike has a light on the front and a light on the back. the front tire of the bike is on the ground and the back tire is on the fence. the bike has a black pedal and a black pedal on the bike. the bike has a black seat and a black seat on the bike. the bike has a black kickstand and a
-![](../../assets/paligemma/fine-tuning-03.jpg)
-
-a plate of waffles with blueberries and syrup. the waffle is brown. the blueberries are black and are on top of the waffle. the syrup is pouring onto the plate. the plate is white and has a brown rim. the table is white and has a brown wooden fence in the background.
-![](../../assets/paligemma/fine-tuning-04.jpg)
-
-a person holds a badminton racket with a shuttlecock attached to it. the racket has a black design, with a white handle and a black net. the shuttlecock is white and red. the person's hand is holding the shuttlecock, and their fingers are gripping the handle. the racket is in the person's hand, and the shuttlecock is in their racket. the person is wearing blue shorts and a red shirt. the background is blurry.
-![](../../assets/paligemma/fine-tuning-05.jpg)
-
-a field of sunflowers with a cloudy sky in the background. the sky is blue with white clouds. the flowers are yellow and green, with green leaves on the stems. the sunflower is large and has a yellow center.the flower is in bloom and the petals are yellow.
-![](../../assets/paligemma/fine-tuning-06.jpg)
-
-a purple building with a row of chairs outside. the building has a purple door and a purple window. there is a potted plant in the window and a flower pot on the window sill. the chairs are brown and the table is made of wood. there is a flower box on the wall and a flower pot on the window sill. the street is wet and there is a light on the wall. the sign on the building is orange and the sign on the window is purple. the flowers in the pot are pink and yellow.
-![](../../assets/paligemma/fine-tuning-07.jpg)
-
-a plate of colorful desserts and a cup of coffee. the plate features a variety of sweet treats, including a macaron with a bite taken out, a green macaron, a pink macaron, and a white macaron. the plate is adorned with a white flower on a tree branch and a green leaf on a plant. the coffee cup has a white handle. the table is covered in a white and gold tablecloth.
-![](../../assets/paligemma/fine-tuning-08.jpg)
-
-cinque terre city perched on the side of a towering cliff, overlooking the serene ocean. the sky above is adorned with fluffy white clouds, while the water below mirrors the sky in its tranquility. the buildings below are painted in vibrant hues, ranging from yellow to orange to pink. the hillside is adorned with lush greenery, and the rocky shore provides a picturesque backdrop. the overall atmosphere is serene and captivating, offering a glimpse into the heart of this idyllic town.
-
 ### Define the training and evaluation loops
 
 Define the training loop to train the model on the provided dataset, and the evaluation loop to look at all of the examples in the validation dataset and make its predictions.
@@ -690,139 +652,6 @@ for step in range(1, TRAIN_STEPS+1):
     display(HTML(html_out))
 ```
 
-``` { .no-copy .output }
-step:  1/64   lr: 0.00500   loss: 3.6567
-step:  2/64   lr: 0.01000   loss: 1.9762
-step:  3/64   lr: 0.01500   loss: 1.6299
-step:  4/64   lr: 0.02000   loss: 1.5651
-step:  5/64   lr: 0.02500   loss: 1.9813
-step:  6/64   lr: 0.03000   loss: 1.9996
-step:  7/64   lr: 0.02998   loss: 1.8595
-step:  8/64   lr: 0.02992   loss: 1.6479
-step:  9/64   lr: 0.02981   loss: 1.3693
-step: 10/64   lr: 0.02966   loss: 1.3423
-step: 11/64   lr: 0.02947   loss: 1.2122
-step: 12/64   lr: 0.02924   loss: 1.0602
-step: 13/64   lr: 0.02897   loss: 1.1314
-step: 14/64   lr: 0.02866   loss: 1.2612
-step: 15/64   lr: 0.02831   loss: 1.0132
-step: 16/64   lr: 0.02792   loss: 1.2126
-Model predictions at step 16
-```
-![](../../assets/paligemma/fine-tuning-09.jpg)
-
-a woman's hand rests on a white wall, while her hand is on a white wall. the woman's hand is on the wall, and her hand is on the wall. the woman's hand is on the wall, and her hand is on the wall. the woman's hand is on the wall, and her hand is on the wall. the woman's hand is on the wall, and her hand is on the wall. the woman's hand is on the wall, and her hand is on the wall. the woman's hand is on the wall, and her hand is on the wall.
-![](../../assets/paligemma/fine-tuning-10.jpg)
-
-a woman in a white dress with a red rose on it stands on a white wall with a white bag on the wall. the woman is wearing a white bag on the wall and a white bag on the wall. the woman is wearing a white bag on the wall and a white bag on the wall. the woman is wearing a white bag on the wall and a white bag on the wall. the woman is wearing a white bag on the wall and a white bag on the wall. the woman is wearing a white bag on the wall and a white bag on the wall. the woman is wearing a white bag on the wall and a white
-![](../../assets/paligemma/fine-tuning-11.jpg)
-
-a person wearing a red blazer with a black belt and a black skirt. the person is wearing a black shirt with a white zipper and a black belt with a white zipper. the person is also wearing a black pants with a white zipper and a black belt with a white zipper. the person is wearing a black shirt with a white zipper and a black belt with a white zipper. the person is wearing a black pants with a white zipper and a black belt with a white zipper. the person is wearing a black shirt with a white zipper and a black belt with a white zipper. the person is wearing a black shirt with a white zipper and
-![](../../assets/paligemma/fine-tuning-12.jpg)
-
-a woman wearing a pink shirt and a pink bag with a white belt. the woman is standing on a gray concrete wall with a gray concrete wall behind her. the woman is wearing a white belt and a white belt on her jeans. the woman is wearing a white belt on her jeans and a white belt on her shirt. the woman is wearing a white belt on her jeans and a white belt on her shirt. the woman is wearing a white belt on her jeans and a white belt on her shirt. the woman is wearing a white belt on her jeans and a white belt on her shirt. the woman is wearing a white belt on her
-
-``` { .no-copy .output }
-step: 17/64   lr: 0.02750   loss: 1.0986
-step: 18/64   lr: 0.02704   loss: 0.9461
-step: 19/64   lr: 0.02655   loss: 1.2098
-step: 20/64   lr: 0.02602   loss: 1.0513
-step: 21/64   lr: 0.02546   loss: 1.0979
-step: 22/64   lr: 0.02488   loss: 0.9739
-step: 23/64   lr: 0.02426   loss: 0.9589
-step: 24/64   lr: 0.02362   loss: 0.7053
-step: 25/64   lr: 0.02296   loss: 0.7347
-step: 26/64   lr: 0.02227   loss: 0.6990
-step: 27/64   lr: 0.02156   loss: 0.6736
-step: 28/64   lr: 0.02083   loss: 0.6642
-step: 29/64   lr: 0.02009   loss: 0.6908
-step: 30/64   lr: 0.01933   loss: 0.7257
-step: 31/64   lr: 0.01856   loss: 0.6902
-step: 32/64   lr: 0.01778   loss: 0.7054
-Model predictions at step 32
-```
-![](../../assets/paligemma/fine-tuning-13.jpg)
-
-a woman in a pink dress leans against a white wall, her hand on the wall. the dress is flowing and the sleeves are gathered. the woman's hand is on the wall. the dress is pink and the sleeves are gathered. the woman is wearing a bracelet and a watch. the dress is long and the sleeves are long. the woman is standing next to the wall.
-![](../../assets/paligemma/fine-tuning-14.jpg)
-
-a woman in a white dress with red flowers stands on a pier overlooking the ocean. the dress is long and has a slit in the front. the woman is wearing a straw hat and has a white bag on her shoulder. the dress has a floral pattern and a tie on the front. the woman is standing on the pier and is holding her dress. the dress is flowing in the wind. the woman is wearing a belt on her dress and has a belt on her bag. the dress has a tie on the front and a floral pattern on the front. the woman is wearing a white bag on her shoulder and a white belt on her
-![](../../assets/paligemma/fine-tuning-15.jpg)
-
-a person wears a red blazer with a black belt and a black bag. the bag has a zipper and a silver zipper pull. the person wears a black bra and a black belt. the blazer has a button and a single button. the person wears a black pants and a black bag. the bag has a zipper and a silver zipper pull. the person wears a black belt and a silver zipper pull. the blazer has a single button and a single button. the person wears a black bra and a black belt. the bag has a zipper and a silver zipper pull. the person wears a black pants and a black bag. the bag has
-![](../../assets/paligemma/fine-tuning-16.jpg)
-
-a woman stands on a stone staircase, her hand on the railing. her jeans are blue, and her shirt is pink. her bag is pink and has a strap. her bracelet is silver and has a silver buckle. her shoes are silver and have a silver buckle.
-
-``` { .no-copy .output }
-step: 33/64   lr: 0.01699   loss: 0.7709
-step: 34/64   lr: 0.01620   loss: 0.6653
-step: 35/64   lr: 0.01540   loss: 0.3811
-step: 36/64   lr: 0.01460   loss: 0.3104
-step: 37/64   lr: 0.01380   loss: 0.4042
-step: 38/64   lr: 0.01301   loss: 0.3904
-step: 39/64   lr: 0.01222   loss: 0.3339
-step: 40/64   lr: 0.01144   loss: 0.4156
-step: 41/64   lr: 0.01067   loss: 0.4085
-step: 42/64   lr: 0.00991   loss: 0.3083
-step: 43/64   lr: 0.00917   loss: 0.3757
-step: 44/64   lr: 0.00844   loss: 0.3813
-step: 45/64   lr: 0.00773   loss: 0.3381
-step: 46/64   lr: 0.00704   loss: 0.2057
-step: 47/64   lr: 0.00638   loss: 0.1287
-step: 48/64   lr: 0.00574   loss: 0.1711
-Model predictions at step 48
-```
-![](../../assets/paligemma/fine-tuning-17.jpg)
-
-a woman in a pink dress leans against a white wall, her hand on the wall. the dress is flowing and the fabric is sheer. her hand is gripping the wall. the wall is white and has a shadow on it. the woman is wearing a bracelet and a watch.
-![](../../assets/paligemma/fine-tuning-18.jpg)
-
-a woman in a long white floral dress stands on a pier overlooking the ocean. the dress is long and flowing, with a deep v neckline and a slit in the fabric. the woman holds a white woven bag and wears a straw hat. the sky is clear and blue, with a few clouds. the water is calm and blue, with a few waves. the woman's hair is blonde and her nails are painted white.
-![](../../assets/paligemma/fine-tuning-19.jpg)
-
-a person wears a red blazer with a black belt and a black skirt. the blazer has a single button on the front. the person wears a white tank top and has their hand in their pocket. the belt is black and has a silver zipper. the bag is a fanny pack and has a zipper on the front. the bag is black and has a zipper on the front. the person is standing next to a green plant.
-![](../../assets/paligemma/fine-tuning-20.jpg)
-
-a woman stands on a stone staircase, her hand on her purse. the jeans are blue, and the shirt is pink. the bag is pink and has a strap. the stairs are made of stone, and the wall is made of concrete. the woman is wearing a white cardigan and has a bracelet on her arm. the bag is on her shoulder, and the strap is on her arm. the jeans are ripped, and the knee is on the bag. the woman is standing on a stone staircase.
-
-``` { .no-copy .output }
-step: 49/64   lr: 0.00512   loss: 0.1183
-step: 50/64   lr: 0.00454   loss: 0.1154
-step: 51/64   lr: 0.00398   loss: 0.1967
-step: 52/64   lr: 0.00345   loss: 0.1497
-step: 53/64   lr: 0.00296   loss: 0.1688
-step: 54/64   lr: 0.00250   loss: 0.1878
-step: 55/64   lr: 0.00208   loss: 0.1865
-step: 56/64   lr: 0.00169   loss: 0.1655
-step: 57/64   lr: 0.00134   loss: 0.0911
-step: 58/64   lr: 0.00103   loss: 0.1836
-step: 59/64   lr: 0.00076   loss: 0.1242
-step: 60/64   lr: 0.00053   loss: 0.0814
-step: 61/64   lr: 0.00034   loss: 0.0866
-step: 62/64   lr: 0.00019   loss: 0.1295
-step: 63/64   lr: 0.00008   loss: 0.1053
-step: 64/64   lr: 0.00002   loss: 0.0730
-Model predictions at step 64
-```
-![](../../assets/paligemma/fine-tuning-21.jpg)
-
-a woman in a pink dress leans against a white wall, her hand gripping the edge. the dress is flowing and sheer, with long, puffy sleeves. her hand is gripping the wall, and her fingers are curled. the wall is white and has a shadow on it. the woman is standing outside, and the sun is shining on her.
-![](../../assets/paligemma/fine-tuning-22.jpg)
-
-a woman in a long white floral dress stands on a pier overlooking the ocean. the dress is long and flowing, with a deep v neckline and a slit in the fabric. the woman holds a white woven bag and wears a bracelet on her wrist. the sky is clear and blue, with a few clouds. the water is calm and blue, with a few waves. the woman's hair is blonde and her nails are painted white.
-![](../../assets/paligemma/fine-tuning-23.jpg)
-
-a person wears a red blazer with a black belt and a black skirt. the blazer has a single button on the front. the person wears a white tank top and has their hand in their pocket. the belt is black and has a silver zipper. the bag is a fanny pack and has a zipper on the front. the bag is black and has a zipper on the front. the person is standing next to a green plant.
-![](../../assets/paligemma/fine-tuning-24.jpg)
-
-a woman stands on a stone staircase, her hand on her purse. the jeans are blue, and the fabric is ripped. the shirt is pink, and the buttons are silver. the bag is pink and has a strap. the woman is wearing a white cardigan and a silver bracelet on her left arm. the stairs are made of stone, and the wall is made of concrete. the woman is standing on a step, and the bag is on her arm.
-
-``` { .no-copy .output }
-CPU times: user 2min 18s, sys: 8.98 s, total: 2min 27s
-Wall time: 15min 45s
-```
-
 ## Output
 
 The validation data for this notebook consists of just 10 images. In normal code, you would likely have many more data points for validation, but for this notebook, run the following code to generate descriptions for all 10 images. After tuning the model, these descriptions should be very similar in form and content coverage to the descriptions included with the training data that you looked at earlier in this notebook.
@@ -839,43 +668,4 @@ html_out = ""
 for image, caption in make_predictions(validation_data_iterator(), batch_size=4):
   html_out += render_example(image, caption)
 display(HTML(html_out))
-```
-
-``` { .no-copy .output }
-Model predictions
-```
-![](../../assets/paligemma/fine-tuning-25.jpg)
-
-a woman in a pink dress leans against a white wall, her hand gripping the edge. the dress is flowing and sheer, with long, puffy sleeves. her hand is gripping the wall, and her fingers are curled. the wall is white and has a shadow on it. the woman is standing outside, and the sun is shining on her.
-![](../../assets/paligemma/fine-tuning-26.jpg)
-
-a woman in a long white floral dress stands on a pier overlooking the ocean. the dress is long and flowing, with a deep v neckline and a slit in the fabric. the woman holds a white woven bag and wears a bracelet on her wrist. the sky is clear and blue, with a few clouds. the water is calm and blue, with a few waves. the woman's hair is blonde and her nails are painted white.
-![](../../assets/paligemma/fine-tuning-27.jpg)
-
-a person wears a red blazer with a black belt and a black skirt. the blazer has a single button on the front. the person wears a white tank top and has their hand in their pocket. the belt is black and has a silver zipper. the bag is a fanny pack and has a zipper on the front. the bag is black and has a zipper on the front. the person is standing next to a green plant.
-![](../../assets/paligemma/fine-tuning-28.jpg)
-
-a woman stands on a stone staircase, her hand on her purse. the jeans are blue, and the fabric is ripped. the shirt is pink, and the buttons are silver. the bag is pink and has a strap. the woman is wearing a white cardigan and a silver bracelet on her left arm. the stairs are made of stone, and the wall is made of concrete. the woman is standing on a step, and the bag is on her arm.
-![](../../assets/paligemma/fine-tuning-29.jpg)
-
-a person lies on a white bed, wearing a pink sweater with the words "love will save us" written on the front. the sweater is long-sleeved and has a crew neckline. the person's hand is on the bed, and their shoes are white. the jeans are blue and have a belt loop. the blanket is gray.
-![](../../assets/paligemma/fine-tuning-30.jpg)
-
-a man stands against a pink wall, his hand on his face. the man has long blonde hair and a black sweater. the wall is pink.
-![](../../assets/paligemma/fine-tuning-31.jpg)
-
-a row of white hangers hang on a white metal bar. the hangers have silver hooks and silver metal bars on them. the bar is white and has a silver metal screw on the end of it. the wall is white and has a gray shadow on it. the hanger on the bar has a silver hook and a silver metal bar on it.
-![](../../assets/paligemma/fine-tuning-32.jpg)
-
-a white hoodie and white pants hang on a black metal bar. the hoodie has a white drawstring and a white drawstring on the pants. the pants have a white drawstring on the waistband and a white drawstring on the hem. the hanger on the bar is made of wood. the wall has a black circle on it.
-![](../../assets/paligemma/fine-tuning-33.jpg)
-
-a woman stands in front of a gray wall, wearing a pair of blue jeans and a black bag. the bag is black and has a silver chain on the handle. the woman's boots are black and are knee-high. the jeans are blue and have a small hole in them. the woman's hand is on the bag. the wall is gray and the concrete is gray.
-![](../../assets/paligemma/fine-tuning-34.jpg)
-
-a man stands on a path, wearing a denim jacket, a white t-shirt, and a pair of brown pants. the jacket is open, and the shirt is tucked in. his shoes are white and his pants are brown. the man has his hands in his pockets, and his eyes are closed. the jacket is on the tree.
-
-``` { .no-copy .output }
-CPU times: user 1.87 s, sys: 283 ms, total: 2.15 s
-Wall time: 39.3 s
 ```
