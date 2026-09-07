@@ -44,17 +44,6 @@ pipe = pipeline(
 )
 ```
 
-``` { .no-copy .output }
-config.json:   0%|          | 0.00/4.95k [00:00<?, ?B/s]
-model.safetensors:   0%|          | 0.00/10.2G [00:00<?, ?B/s]
-Loading weights:   0%|          | 0/1951 [00:00<?, ?it/s]
-generation_config.json:   0%|          | 0.00/208 [00:00<?, ?B/s]
-processor_config.json:   0%|          | 0.00/1.69k [00:00<?, ?B/s]
-chat_template.jinja:   0%|          | 0.00/17.3k [00:00<?, ?B/s]
-tokenizer_config.json:   0%|          | 0.00/2.10k [00:00<?, ?B/s]
-tokenizer.json:   0%|          | 0.00/32.2M [00:00<?, ?B/s]
-```
-
 ## Audio data
 
 Digital audio data can come in many formats and levels of resolution. The actual audio formats you can use with Gemma, such as MP3 and WAV formats, are determined by the framework you choose to convert sound data into tensors. Here are some specific considerations for preparing audio data for processing with Gemma:
@@ -229,10 +218,6 @@ from ipywebrtc import AudioRecorder, CameraStream
 camera = CameraStream(constraints={'audio': True,'video':False})
 recorder = AudioRecorder(stream=camera)
 recorder
-```
-
-``` { .no-copy .output }
-AudioRecorder(audio=Audio(value=b'', format='webm'), stream=CameraStream(constraints={'audio': True, 'video': …
 ```
 
 Convert webm file to wav format that PyTorch can understand.
