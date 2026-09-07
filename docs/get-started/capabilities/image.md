@@ -3,7 +3,7 @@ title: Image understanding
 description: You can use Gemma 3 and later models to analyze and understand the content of images.
 models: [gemma-4, gemma-3]
 frameworks: [transformers]
-colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs/notebooks/image.ipynb
+colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs/notebooks/image-gemma-4-e2b-it.ipynb
 ---
 # Image understanding
 

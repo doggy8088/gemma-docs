@@ -4,7 +4,7 @@ description: Starting with Gemma 3n, you can use audio directly into your prompt
 models: [gemma-4]
 requires: audio
 frameworks: [transformers]
-colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs/notebooks/audio.ipynb
+colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs/notebooks/audio-gemma-4-e2b-it.ipynb
 ---
 
 # Audio understanding

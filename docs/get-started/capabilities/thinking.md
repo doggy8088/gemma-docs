@@ -3,7 +3,7 @@ title: Reasoning
 description: Use Gemma 4's thinking mode to reason before answering, for text and image prompts, and parse the reasoning apart from the answer.
 models: [gemma-4]
 frameworks: [transformers]
-colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs/notebooks/thinking.ipynb
+colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs/notebooks/thinking-gemma-4-e2b-it.ipynb
 ---
 # Reasoning
 

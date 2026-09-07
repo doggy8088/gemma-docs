@@ -4,6 +4,8 @@
 This is intentionally a narrow exporter. Markdown remains canonical; only fences carrying the
 `.notebook-cell` class become executable cells. Site-only regions can be wrapped in
 `<!-- notebook:skip-start -->` and `<!-- notebook:skip-end -->` comments.
+Tutorials supporting model switching (.model-swap) export multiple notebooks, one per supported
+Gemma 4 model size (e.g. thinking-gemma-4-e2b.ipynb).
 """
 
 from __future__ import annotations
@@ -17,29 +19,25 @@ from pathlib import Path
 import yaml
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
+NOTEBOOKS_DIR = REPO_ROOT / "docs" / "notebooks"
+MODELS_DATA = REPO_ROOT / "data" / "models.yml"
+
 DEFAULT_SOURCE = REPO_ROOT / "docs" / "get-started" / "capabilities" / "thinking.md"
-DEFAULT_TARGET = REPO_ROOT / "docs" / "notebooks" / "thinking.ipynb"
-NOTEBOOKS = {
-    DEFAULT_SOURCE: DEFAULT_TARGET,
-    REPO_ROOT / "docs" / "get-started" / "capabilities" / "text.md":
-        REPO_ROOT / "docs" / "notebooks" / "text.ipynb",
-    REPO_ROOT / "docs" / "get-started" / "capabilities" / "function-calling.md":
-        REPO_ROOT / "docs" / "notebooks" / "function-calling.ipynb",
-    REPO_ROOT / "docs" / "get-started" / "capabilities" / "image.md":
-        REPO_ROOT / "docs" / "notebooks" / "image.ipynb",
-    REPO_ROOT / "docs" / "get-started" / "capabilities" / "video.md":
-        REPO_ROOT / "docs" / "notebooks" / "video.ipynb",
-    REPO_ROOT / "docs" / "get-started" / "capabilities" / "audio.md":
-        REPO_ROOT / "docs" / "notebooks" / "audio.ipynb",
-    REPO_ROOT / "docs" / "get-started" / "capabilities" / "mtp.md":
-        REPO_ROOT / "docs" / "notebooks" / "mtp.ipynb",
-    REPO_ROOT / "docs" / "tuning" / "qlora.md":
-        REPO_ROOT / "docs" / "notebooks" / "qlora.ipynb",
-    REPO_ROOT / "docs" / "tuning" / "full-finetune.md":
-        REPO_ROOT / "docs" / "notebooks" / "full-finetune.ipynb",
-    REPO_ROOT / "docs" / "tuning" / "vision-qlora.md":
-        REPO_ROOT / "docs" / "notebooks" / "vision-qlora.ipynb",
-}
+DEFAULT_TARGET = REPO_ROOT / "docs" / "notebooks" / "thinking-gemma-4-e2b-it.ipynb"
+DEFAULT_MODEL = "gemma-4/e2b"
+
+SOURCES = (
+    DEFAULT_SOURCE,
+    REPO_ROOT / "docs" / "get-started" / "capabilities" / "text.md",
+    REPO_ROOT / "docs" / "get-started" / "capabilities" / "function-calling.md",
+    REPO_ROOT / "docs" / "get-started" / "capabilities" / "image.md",
+    REPO_ROOT / "docs" / "get-started" / "capabilities" / "video.md",
+    REPO_ROOT / "docs" / "get-started" / "capabilities" / "audio.md",
+    REPO_ROOT / "docs" / "get-started" / "capabilities" / "mtp.md",
+    REPO_ROOT / "docs" / "tuning" / "qlora.md",
+    REPO_ROOT / "docs" / "tuning" / "full-finetune.md",
+    REPO_ROOT / "docs" / "tuning" / "vision-qlora.md",
+)
 
 FENCE_OPEN = re.compile(r"^(?P<fence>`{3,})(?P<language>[\w+-]*)(?P<attributes>.*)$")
 SKIP_REGION = re.compile(
@@ -92,6 +90,102 @@ def shared_links() -> dict[str, str]:
     return {name: entry["url"] for name, entry in (data.get("links") or {}).items()}
 
 
+@lru_cache(maxsize=1)
+def load_models_data() -> dict:
+    return yaml.safe_load(MODELS_DATA.read_text(encoding="utf-8"))
+
+
+def get_gemma4_models() -> dict[str, dict]:
+    data = load_models_data()
+    models = {}
+    for size in data.get("gemma4", {}).get("sizes", []):
+        mid = f"gemma-4/{size['id']}"
+        models[mid] = {
+            "name": size["name"],
+            "fullName": size.get("full_name", size["name"]),
+            "ids": size.get("ids", {}),
+            "inputs": size.get("modalities", {}).get("input", []),
+        }
+    return models
+
+
+@lru_cache(maxsize=1)
+def get_model_index() -> list[tuple[str, str, str]]:
+    """Return list of (identifier_text, engine, model_id) sorted by length descending."""
+    models = get_gemma4_models()
+    index = []
+    for mid, model in models.items():
+        for engine, value in (model.get("ids") or {}).items():
+            index.append((str(value), str(engine), mid))
+    index.sort(key=lambda x: len(x[0]), reverse=True)
+    return index
+
+
+def extract_swappable_blocks(body: str) -> list[str]:
+    lines = body.splitlines()
+    blocks = []
+    index = 0
+    while index < len(lines):
+        match = FENCE_OPEN.match(lines[index].rstrip("\r\n"))
+        if not match:
+            index += 1
+            continue
+        closing = index + 1
+        while closing < len(lines) and lines[closing].strip() != match.group("fence"):
+            closing += 1
+        if closing == len(lines):
+            break
+        attributes = match.group("attributes")
+        if ".model-swap" in attributes:
+            blocks.append("".join(lines[index + 1 : closing]))
+        index = closing + 1
+    return blocks
+
+
+def detect_engines_in_use(body: str) -> set[str]:
+    index = get_model_index()
+    blocks = extract_swappable_blocks(body)
+    engines = set()
+    for block in blocks:
+        for text, engine, _ in index:
+            if text in block:
+                engines.add(engine)
+    return engines
+
+
+def candidate_models(source: Path) -> list[str]:
+    metadata, body = split_frontmatter(source.read_text(encoding="utf-8"))
+    engines = detect_engines_in_use(body)
+    if not engines:
+        return []
+    models = get_gemma4_models()
+    requires = metadata.get("requires", "")
+    candidates = []
+    for mid, model in models.items():
+        if requires and requires not in (model.get("inputs") or []):
+            continue
+        if all(engine in model.get("ids", {}) for engine in engines):
+            candidates.append(mid)
+    return candidates
+
+
+def rewrite_block(block: str, target_model: str) -> str:
+    models = get_gemma4_models()
+    target_ids = models.get(target_model, {}).get("ids", {})
+    index = get_model_index()
+    text_to_engine = {text: engine for text, engine, _ in index}
+    pattern = re.compile("|".join(re.escape(text) for text, _, _ in index))
+
+    def repl(match: re.Match) -> str:
+        text = match.group(0)
+        engine = text_to_engine.get(text)
+        if engine and engine in target_ids:
+            return target_ids[engine]
+        return text
+
+    return pattern.sub(repl, block)
+
+
 def notebook_markdown(text: str) -> str:
     text = SKIP_REGION.sub("", text)
 
@@ -133,7 +227,7 @@ def code_cell(language: str, source: str) -> dict:
     }
 
 
-def export_cells(body: str) -> list[dict]:
+def export_cells(body: str, model: str | None = None) -> list[dict]:
     body = SKIP_REGION.sub("", body)
     lines = body.splitlines(keepends=True)
     cells: list[dict] = []
@@ -154,6 +248,9 @@ def export_cells(body: str) -> list[dict]:
 
         attributes = match.group("attributes")
         block = "".join(lines[index + 1 : closing])
+        if model and ".model-swap" in attributes:
+            block = rewrite_block(block, model)
+
         if ".notebook-cell" in attributes:
             pending = markdown_cell("".join(prose))
             if pending:
@@ -161,7 +258,12 @@ def export_cells(body: str) -> list[dict]:
             prose = []
             cells.append(code_cell(match.group("language"), block))
         elif ".output" not in attributes:
-            prose.extend(lines[index : closing + 1])
+            if model and ".model-swap" in attributes:
+                prose.append(lines[index])
+                prose.append(block)
+                prose.append(lines[closing])
+            else:
+                prose.extend(lines[index : closing + 1])
         index = closing + 1
 
     pending = markdown_cell("".join(prose))
@@ -170,16 +272,27 @@ def export_cells(body: str) -> list[dict]:
     return cells
 
 
-def render(source: Path = DEFAULT_SOURCE) -> str:
+def render(
+    source: Path = DEFAULT_SOURCE,
+    model: str | None = None,
+    target_name: str | None = None,
+) -> str:
     metadata, body = split_frontmatter(source.read_text(encoding="utf-8"))
     try:
         canonical_source = source.resolve().relative_to(REPO_ROOT).as_posix()
     except ValueError:
         canonical_source = source.name
+
+    if target_name is None:
+        if model:
+            target_name = f"{source.stem}-{model.replace('/', '-')}-it.ipynb"
+        else:
+            target_name = f"{source.stem}.ipynb"
+
     notebook = {
-        "cells": export_cells(body),
+        "cells": export_cells(body, model=model),
         "metadata": {
-            "colab": {"name": f"{source.stem}.ipynb", "provenance": []},
+            "colab": {"name": target_name, "provenance": []},
             "kernelspec": {"display_name": "Python 3", "language": "python", "name": "python3"},
             "language_info": {"name": "python", "version": "3"},
             "gemma_docs": {
@@ -193,27 +306,59 @@ def render(source: Path = DEFAULT_SOURCE) -> str:
     return json.dumps(notebook, indent=1, ensure_ascii=False) + "\n"
 
 
+def infer_model(name: str) -> str | None:
+    match = re.search(r"-gemma-4-([a-z0-9-]+?)(?:-it)?\.ipynb$", name)
+    if match:
+        return f"gemma-4/{match.group(1)}"
+    return None
+
+
+def build_notebook_map(
+    sources: tuple[Path, ...] = SOURCES,
+) -> dict[tuple[Path, str | None], Path]:
+    mapping: dict[tuple[Path, str | None], Path] = {}
+    for source in sources:
+        candidates = candidate_models(source)
+        if candidates:
+            for mid in candidates:
+                slug = f"{mid.replace('/', '-')}-it"
+                target = NOTEBOOKS_DIR / f"{source.stem}-{slug}.ipynb"
+                mapping[(source, mid)] = target
+        else:
+            target = NOTEBOOKS_DIR / f"{source.stem}.ipynb"
+            mapping[(source, None)] = target
+    return mapping
+
+
+NOTEBOOKS = build_notebook_map()
+
+
 def generated_outputs() -> tuple[tuple[Path, str], ...]:
     """Return every registered output and its canonical rendered contents."""
-    return tuple((target, render(source)) for source, target in NOTEBOOKS.items())
+    return tuple(
+        (target, render(source, model=model, target_name=target.name))
+        for (source, model), target in NOTEBOOKS.items()
+    )
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--source", type=Path)
     parser.add_argument("--output", type=Path)
+    parser.add_argument("--model", type=str, help="target Gemma model (e.g. gemma-4/e2b)")
     parser.add_argument("--check", action="store_true")
     args = parser.parse_args()
     if bool(args.source) != bool(args.output):
         parser.error("--source and --output must be provided together")
-    outputs = (
-        ((args.output, render(args.source)),)
-        if args.source
-        else generated_outputs()
-    )
+    if args.source:
+        model = args.model or infer_model(args.output.name)
+        outputs = ((args.output, render(args.source, model=model, target_name=args.output.name)),)
+    else:
+        outputs = generated_outputs()
     if args.check:
         stale = [
-            target for target, expected in outputs
+            target
+            for target, expected in outputs
             if not target.exists() or target.read_text(encoding="utf-8") != expected
         ]
         for target in stale:

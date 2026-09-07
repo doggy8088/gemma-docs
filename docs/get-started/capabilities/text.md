@@ -3,7 +3,7 @@ title: Inference
 description: "Basic text inference with Gemma 4 in Hugging Face Transformers: single-turn prompts, multi-turn conversations, and system instructions."
 models: [gemma-4]
 frameworks: [transformers]
-colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs/notebooks/text.ipynb
+colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs/notebooks/text-gemma-4-e2b-it.ipynb
 ---
 # Inference
 

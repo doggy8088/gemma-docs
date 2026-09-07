@@ -3,7 +3,7 @@ title: Tool calling
 description: When using a generative artificial intelligence (AI) model such as Gemma, you may want to use the model to operate programming interfaces in order to complete tasks or answer questions.
 models: [gemma-4]
 frameworks: [transformers]
-colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs/notebooks/function-calling.ipynb
+colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs/notebooks/function-calling-gemma-4-e2b-it.ipynb
 ---
 <!-- TODO: Rename this to "tool calling"? -->
 # Tool calling

@@ -72,15 +72,55 @@ print(42)
             self.assertEqual(payload["cells"][1]["cell_type"], "code")
 
     def test_registered_notebooks_have_unique_outputs_and_code_cells(self):
-        self.assertEqual(len(notebooks.NOTEBOOKS), 10)
+        self.assertEqual(len(notebooks.SOURCES), 10)
+        self.assertEqual(len(notebooks.NOTEBOOKS), 40)
         self.assertEqual(len(set(notebooks.NOTEBOOKS.values())), len(notebooks.NOTEBOOKS))
-        for source, target in notebooks.NOTEBOOKS.items():
+        for (source, model), target in notebooks.NOTEBOOKS.items():
             with self.subTest(target=target.name):
-                payload = json.loads(notebooks.render(source))
+                payload = json.loads(notebooks.render(source, model=model, target_name=target.name))
                 self.assertTrue(
                     any(cell["cell_type"] == "code" for cell in payload["cells"]),
-                    f"{source} exports no executable cells",
+                    f"{target} exports no executable cells",
                 )
+                self.assertEqual(payload["metadata"]["colab"]["name"], target.name)
+
+    def test_model_swap_rewrites_code_cells(self):
+        body = """---
+title: Guide
+---
+# Guide
+
+```python { .notebook-cell .model-swap }
+MODEL_ID = "google/gemma-4-E2B-it"
+```
+
+```python { .notebook-cell }
+# Unswapped cell
+print(MODEL_ID)
+```
+"""
+        with tempfile.TemporaryDirectory() as directory:
+            source = Path(directory) / "guide.md"
+            source.write_text(body, encoding="utf-8")
+            payload = json.loads(notebooks.render(source, model="gemma-4/12b"))
+            code_cells = [c for c in payload["cells"] if c["cell_type"] == "code"]
+            self.assertEqual(len(code_cells), 2)
+            self.assertIn('MODEL_ID = "google/gemma-4-12B-it"', "".join(code_cells[0]["source"]))
+            self.assertIn("# Unswapped cell", "".join(code_cells[1]["source"]))
+
+    def test_audio_tutorial_filters_models(self):
+        audio_source = notebooks.REPO_ROOT / "docs" / "get-started" / "capabilities" / "audio.md"
+        candidates = notebooks.candidate_models(audio_source)
+        self.assertEqual(candidates, ["gemma-4/e2b", "gemma-4/e4b", "gemma-4/12b"])
+        self.assertNotIn("gemma-4/26b-a4b", candidates)
+        self.assertNotIn("gemma-4/31b", candidates)
+
+    def test_infer_model_from_output_filename(self):
+        self.assertEqual(notebooks.infer_model("thinking-gemma-4-e2b-it.ipynb"), "gemma-4/e2b")
+        self.assertEqual(notebooks.infer_model("thinking-gemma-4-26b-a4b-it.ipynb"), "gemma-4/26b-a4b")
+        self.assertEqual(notebooks.infer_model("thinking-gemma-4-e2b.ipynb"), "gemma-4/e2b")
+        self.assertIsNone(notebooks.infer_model("mtp.ipynb"))
+        self.assertIsNone(notebooks.infer_model("full-finetune.ipynb"))
 
 
 if __name__ == "__main__":

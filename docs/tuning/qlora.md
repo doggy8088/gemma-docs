@@ -4,7 +4,7 @@ description: This guide walks you through how to fine-tune Gemma on a custom tex
 models: [gemma-4]
 frameworks: [transformers, peft, trl]
 source_url: "https://ai.google.dev/gemma/docs/core/huggingface_text_finetune_qlora.md.txt"
-colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs/notebooks/qlora.ipynb
+colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs/notebooks/qlora-gemma-4-e2b-it.ipynb
 ---
 # Fine-Tune Gemma using Hugging Face Transformers and QloRA
 

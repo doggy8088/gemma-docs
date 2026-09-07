@@ -99,6 +99,13 @@
     if (returnFocus) trigger.focus();
   };
 
+  const updateColab = (target) => {
+    const colabLink = document.querySelector(".page-context__colab");
+    if (!colabLink) return;
+    const slug = `${target.replace("/", "-")}-it`;
+    colabLink.href = colabLink.href.replace(/-gemma-4-[a-z0-9-]+-it\.ipynb/, `-${slug}.ipynb`);
+  };
+
   const choose = (picker, target) => {
     const trigger = picker.querySelector(".page-context__picker-trigger");
     trigger.querySelector(".page-context__picker-name").textContent = displayName(target);
@@ -107,6 +114,7 @@
     for (const option of picker.querySelectorAll("[role=option]")) {
       option.setAttribute("aria-selected", String(option.dataset.value === target));
     }
+    updateColab(target);
   };
 
   const buildControl = (strip, available, initial, unavailable) => {
@@ -216,7 +224,10 @@
 
     const available = candidates(strip.dataset.requires || "");
     if (available.length < 2) {
-      if (requested && available.includes(requested)) apply(requested);
+      if (requested && available.includes(requested)) {
+        apply(requested);
+        updateColab(requested);
+      }
       return;
     }
 
