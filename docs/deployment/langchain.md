@@ -382,6 +382,5 @@ content='I can help you with anything.\n<end_of_turn>\n<end_of_turn>\n'
 
 ## What's next
 
-- Learn how to [finetune a Gemma model](../tuning/keras-lora.md).
-- Learn how to perform [distributed fine-tuning and inference on a Gemma model](../tuning/distributed.md).
+- Learn how to [finetune a Gemma model](../tuning/qlora.md).
 - Learn how to [use Gemma models with Vertex AI][vertex-use-gemma].

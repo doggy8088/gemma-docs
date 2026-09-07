@@ -469,6 +469,5 @@ This tutorial covered how to fine-tune a Gemma model for vision tasks using TRL 
 - Learn how to [generate text with a Gemma model](../get-started/index.md).
 - Learn how to [fine-tune Gemma for text tasks using Hugging Face Transformers](qlora.md).
 - Learn how to [full model fine-tune using Hugging Face Transformers](full-finetune.md).
-- Learn how to perform [distributed fine-tuning and inference on a Gemma model](distributed.md).
 - Learn how to [use Gemma open models with Vertex AI][vertex-use-gemma].
 - Learn how to [fine-tune Gemma using KerasNLP and deploy to Vertex AI](https://github.com/GoogleCloudPlatform/vertex-ai-samples/blob/main/notebooks/community/model_garden/model_garden_gemma_kerasnlp_to_vertexai.ipynb).

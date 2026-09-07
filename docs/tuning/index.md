@@ -119,7 +119,7 @@ adjust training parameters, and add data until you achieve the task performance
 that meets your needs. Some of our example applications show that you can
 influence the behavior of a Gemma model with as few as 20 prompt and response
 pairs. For more details, see
-[Tasks in spoken languages with Gemma](spoken-language.md).
+[Full Model Fine-Tune using Hugging Face Transformers](full-finetune.md).
 
 ## 3. Tune and test the model
 
@@ -141,8 +141,7 @@ these calculations for billions of parameters. Using less resource intensive
 tuning approaches, called *parameter efficient fine-tuning (PEFT)* , including
 techniques like Low Rank Adapter (LoRA) tuning can produce similar results with
 less compute resources. For details on how to perform tuning with less resources
-using LoRA, see [Fine-tune Gemma models in Keras using
-LoRA](keras-lora.md) and [Fine-Tuning Gemma Models in Hugging
+using LoRA, see [Fine-Tune Gemma using Hugging Face Transformers and QloRA](qlora.md) and [Fine-Tuning Gemma Models in Hugging
 Face](https://huggingface.co/blog/gemma-peft).
 
 ### Testing tuned models

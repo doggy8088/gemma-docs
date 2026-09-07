@@ -357,7 +357,6 @@ Photo B is a close-up portrait of a **cat** with black and white markings and st
 
 In this tutorial, you learned how to generate text using Keras and Gemma. Here are a few suggestions for what to learn next:
 
-- Learn how to [finetune a Gemma model](../tuning/keras-lora.md).
-- Learn how to perform [distributed fine-tuning and inference on a Gemma model](../tuning/distributed.md).
+- Learn how to [finetune a Gemma model](../tuning/qlora.md).
 - Learn about [Gemma integration with Vertex AI](google-cloud.md)
 - Learn how to [use Gemma models with Vertex AI][vertex-use-gemma].

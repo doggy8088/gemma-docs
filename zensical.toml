@@ -174,14 +174,10 @@ nav = [
   { "Fine-tune" = [
     { "Overview" = "tuning/index.md" },
     { "Guides" = [
-    { "QLoRA" = "tuning/qlora.md" },
-    { "Full fine-tune" = "tuning/full-finetune.md" },
-    { "Vision QLoRA" = "tuning/vision-qlora.md" },
-    { "LoRA with Keras" = "tuning/keras-lora.md" },
-    { "Distributed" = "tuning/distributed.md" },
-    { "Spoken language" = "tuning/spoken-language.md" },
-    { "Mobile actions" = "tuning/mobile-actions.md" },
-  ]},
+      { "QLoRA" = "tuning/qlora.md" },
+      { "Vision QLoRA" = "tuning/vision-qlora.md" },
+      { "Full fine-tune" = "tuning/full-finetune.md" },
+    ]},
   ]},
 
   { "Learn" = [
