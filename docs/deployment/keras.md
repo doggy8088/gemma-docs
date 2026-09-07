@@ -4,6 +4,7 @@ description: Generating content, summarizing, and analysing content are just som
 models: [gemma-4]
 frameworks: [keras]
 source_url: "https://ai.google.dev/gemma/docs/core/keras_inference.md.txt"
+colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs/notebooks/run-gemma-with-keras-gemma-4-e2b-it.ipynb
 ---
 # Run Gemma with Keras
 
@@ -19,7 +20,7 @@ Gemma 3 and later models support text and image input. Earlier versions of Gemma
 
 Install the Keras and KerasHub Python packages.
 
-```bash
+```bash { .notebook-cell }
 pip install -q -U keras keras-hub keras-nlp
 ```
 
@@ -27,7 +28,7 @@ pip install -q -U keras keras-hub keras-nlp
 
 Keras is a high-level, multi-framework deep learning API designed for simplicity and ease of use. [Keras 3](https://keras.io/keras_3) lets you choose the backend: TensorFlow, JAX, or PyTorch. All three will work for this tutorial. For this tutorial, configure the backend for JAX as it typically provides the better performance.
 
-```python
+```python { .notebook-cell }
 import os
 
 os.environ["KERAS_BACKEND"] = "jax"  # Or "tensorflow" or "torch".
@@ -38,7 +39,7 @@ os.environ["XLA_PYTHON_CLIENT_MEM_FRACTION"] = "1.00"
 
 Import the Keras and KerasHub packages.
 
-```python
+```python { .notebook-cell }
 import keras
 import keras_hub
 ```
@@ -47,7 +48,7 @@ import keras_hub
 
 Keras provides implementations of many popular [model architectures](https://keras.io/api/keras_nlp/models/). Download and configure a Gemma model using the `Gemma4CausalLM` class to build an end-to-end, causal language modeling implementation for Gemma 4 models. Create the model using the `from_preset()` method, as shown in the following code example:
 
-```python { .model-swap }
+```python { .notebook-cell .model-swap }
 gemma_lm = keras_hub.models.Gemma4CausalLM.from_preset(
     "gemma4_instruct_2b",
     dtype="bfloat16",
@@ -65,8 +66,11 @@ The `Gemma4CausalLM.from_preset()` method instantiates the model from a preset a
 
 Once you have the model downloaded, Use the `summary()` function to get more info about the model:
 
-```python
+```python { .notebook-cell }
 gemma_lm.summary()
+```
+
+``` { .no-copy .output }
 Preprocessor: "gemma4_causal_lm_preprocessor"
 ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
 ┃ Layer (type)                                                  ┃                                   Config ┃
@@ -145,9 +149,12 @@ For purposes of naming the model, the embedding layer is not counted against the
 
 Generate text with a text prompt with using `generate()` method of the Gemma model object you configured in the previous steps. The optional `max_length` argument specifies the maximum length of the generated sequence. The following code examples shows a few ways to prompt the model.
 
-```python
+```python { .notebook-cell }
 output = gemma_lm.generate("what is keras in 3 bullet points?", max_length=64)
 print(output)
+```
+
+``` { .no-copy .output }
 what is keras in 3 bullet points?
 
 * **A Deep Learning Framework:** Keras is a high-level API that makes it easy to build and train deep learning models by providing a user-friendly interface.
@@ -156,7 +163,7 @@ what is keras in 3 bullet points?
 
 You can also provide batched prompts using a list as input:
 
-```python
+```python { .notebook-cell }
 output = gemma_lm.generate(
     ["what is keras in 3 bullet points?",
      "The universe is"],
@@ -164,6 +171,9 @@ output = gemma_lm.generate(
 for item in output:
     print(item)
     print("-"*80)
+```
+
+``` { .no-copy .output }
 what is keras in 3 bullet points?
 
 * **A Deep Learning Framework:** Keras is a high-level API that makes it easy to build and train deep learning models by providing a user-friendly interface.
@@ -181,7 +191,7 @@ If you're running on JAX or TensorFlow backends, you should notice that the seco
 
 When building more complex requests or multi-turn chat interactions use a prompt template to structure your request. The following code creates a standard template for Gemma prompts:
 
-```python
+```python { .notebook-cell }
 PROMPT_TEMPLATE = """<|turn>user
 {question}
 <turn|>
@@ -191,11 +201,14 @@ PROMPT_TEMPLATE = """<|turn>user
 
 The following code shows how to use the template to format a simple request:
 
-```python
+```python { .notebook-cell }
 question = """what is keras in 3 bullet points?"""
 prompt = PROMPT_TEMPLATE.format(question=question)
 output = gemma_lm.generate(prompt)
 print(output)
+```
+
+``` { .no-copy .output }
 <|turn>user
 what is keras in 3 bullet points?
 <turn|>
@@ -211,10 +224,13 @@ Here are three bullet points explaining what Keras is:
 
 You can control the generation strategy for model object by setting the `sampler` argument on `compile()`. By default, [`"greedy"`](https://keras.io/api/keras_nlp/samplers/greedy_sampler/#greedysampler-class) sampling will be used. As an experiment, try setting a [`"top_k"`](https://keras.io/api/keras_nlp/samplers/top_k_sampler/) strategy:
 
-```python
+```python { .notebook-cell }
 gemma_lm.compile(sampler="top_k")
 output = gemma_lm.generate("The universe is", max_length=64)
 print(output)
+```
+
+``` { .no-copy .output }
 The universe is vast.
 
 The stars glitter like scattered diamonds on a black velvet canvas. Nebulae swirl in vibrant hues, painting cosmic masterpieces, whispering tales of ancient creation. Galaxies spin in majestic dances, their arms reaching out into the void, a breathtaking spectacle for the eyes.
@@ -232,7 +248,7 @@ With Gemma 3 and later models, you can use images as part of a prompt to generat
 
 The following function loads an image file from a URL and tokenizes it for use in Gemma prompt:
 
-```python
+```python { .notebook-cell }
 import numpy as np
 import PIL
 
@@ -249,13 +265,16 @@ def read_image(url):
 
 Load the image and format the data so the model can process it. Use `read_image()` function defined in the previous section, as shown in the example code below:
 
-```python
+```python { .notebook-cell }
 from matplotlib import pyplot as plt
 
 image = read_image(
     "https://ai.google.dev/gemma/docs/images/thali-indian-plate.jpg"
 )
 plt.imshow(image)
+```
+
+``` { .no-copy .output }
 <matplotlib.image.AxesImage at 0x7ebbf41738f0>
 ```
 
@@ -269,7 +288,7 @@ plt.imshow(image)
 
 When prompting the Gemma 4 model with image content, you use a specific string sequence, `<|image|>`, within your prompt to include the image as part of the prompt. Use a prompt template, such as the `PROMPT_TEMPLATE` string defined previously, to format your request as shown in the following prompt code:
 
-```python
+```python { .notebook-cell }
 question = """Which cuisine is this: <|image|>?
 Identify the food items present. Which macros is the meal
 high and low on? Keep your answer short.
@@ -282,6 +301,9 @@ output = gemma_lm.generate(
     },
 )
 print(output)
+```
+
+``` { .no-copy .output }
 <|turn>user
 Which cuisine is this: <|image>?
 Identify the food items present. Which macros is the meal
@@ -308,7 +330,7 @@ The food items strongly suggest **Indian cuisine** or South Asian cuisine.
 
 If you are using a smaller GPU, and encountering out of memory (OOM) errors, you can set `max_images_per_prompt` and `sequence_length` to smaller values. The following code shows how to reduce sequence length to 768.
 
-```python
+```python { .notebook-cell }
 gemma_lm.preprocessor.max_images_per_prompt = 2
 gemma_lm.preprocessor.sequence_length = 768
 ```
@@ -317,7 +339,7 @@ gemma_lm.preprocessor.sequence_length = 768
 
 When using more than one image in a prompt, use multiple `<|image|>` tokens for each provided image, as shown in the following example:
 
-```python
+```python { .notebook-cell }
 photo_a = read_image("https://raw.githubusercontent.com/google-gemma/cookbook/refs/heads/main/apps/sample-data/GoldenGate.png")
 photo_b = read_image("https://raw.githubusercontent.com/google-gemma/cookbook/refs/heads/main/apps/sample-data/surprise.png")
 
@@ -337,6 +359,9 @@ output = gemma_lm.generate(
     },
 )
 print(output)
+```
+
+``` { .no-copy .output }
 <|turn>user
 I have two images:
 

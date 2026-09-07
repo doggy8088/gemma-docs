@@ -4,6 +4,7 @@ description: Generating text, summarizing, and analysing content are just some o
 models: [gemma-4, gemma-3, gemma-3n]
 frameworks: [transformers]
 source_url: "https://ai.google.dev/gemma/docs/core/huggingface_inference.md.txt"
+colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs/notebooks/run-gemma-with-hf-gemma-4-e2b-it.ipynb
 ---
 # Run Gemma with Hugging Face Transformers
 
@@ -18,7 +19,7 @@ Generating text, summarizing, and analysing content are just some of the tasks y
 
 Install the Hugging Face libraries required for running the Gemma model and making requests.
 
-```python
+```python { .notebook-cell }
 # Install Pytorch
 %pip install torch
 
@@ -34,7 +35,7 @@ Prompting a Gemma model with text to get a text response is the simplest way to 
 
 Use the `torch` and `transformers` libraries to create an instance of a model execution `pipeline` class with Gemma. When using a model for generating output or following directions, select an instruction tuned (IT) model, which typically has `it` in the model ID string. Using the `pipeline` object, you specify the Gemma variant you want to use, the type of task you want to perform, specifically `"any-to-any"` for multimodal generation, as shown in the following code example:
 
-```python { .model-swap }
+```python { .notebook-cell .model-swap }
 from transformers import pipeline
 
 MODEL_ID = "google/gemma-4-E2B-it"
@@ -45,6 +46,9 @@ pipe = pipeline(
     device_map="auto",
     dtype="auto"
 )
+```
+
+``` { .no-copy .output }
 config.json:   0%|          | 0.00/4.95k [00:00<?, ?B/s]
 model.safetensors:   0%|          | 0.00/10.2G [00:00<?, ?B/s]
 Loading weights:   0%|          | 0/1951 [00:00<?, ?it/s]
@@ -61,8 +65,11 @@ Gemma supports only a few `task` settings for generation. For more information o
 
 Once you have the Gemma model loaded and configured in a `pipeline` object, you can send prompts to the model. The following example code shows a basic request using the [`text`](https://www.tensorflow.org/text/api_docs/python/text) parameter:
 
-```python
+```python { .notebook-cell }
 pipe(text="<|turn>user\nroses are red<turn|>\n<|turn>model\n")
+```
+
+``` { .no-copy .output }
 [transformers] The input data was not formatted as a chat with dicts containing 'role' and 'content' keys, even though this model supports chat. Consider using the chat format for better results. For more information, see https://huggingface.co/docs/transformers/en/chat_templating
 [transformers] Keyword argument `video` is not a valid argument for this processor and will be ignored.
 [transformers] Both `max_new_tokens` (=256) and `max_length`(=20) seem to have been set. `max_new_tokens` will take precedence. Please refer to the documentation for more information. (https://huggingface.co/docs/transformers/main/en/main_classes/text_generation)
@@ -74,7 +81,7 @@ pipe(text="<|turn>user\nroses are red<turn|>\n<|turn>model\n")
 
 When generating content with more complex prompting, use a prompt template to structure your request. A prompt template allows you to specify input from specific roles, such as `user` or `model`, and is a required format for managing multi-turn chat interactions with Gemma models. The following example code shows how to constuct a prompt template for Gemma:
 
-```python
+```python { .notebook-cell }
 from transformers import GenerationConfig
 config = GenerationConfig.from_pretrained(MODEL_ID)
 config.max_new_tokens = 512
@@ -92,6 +99,9 @@ messages = [
 ]
 
 pipe(messages, return_full_text=False, generate_kwargs=gen_kwargs)
+```
+
+``` { .no-copy .output }
 [{'input_text': [{'role': 'system',
     'content': [{'type': 'text', 'text': 'You are a helpful assistant.'}]},
    {'role': 'user',
@@ -107,7 +117,7 @@ Starting with Gemma 3, for model sizes 4B and higher, you can use image data as 
 
 When generating content with more complex prompting, use a prompt template to structure your request. A prompt template allows you to specify input from specific roles, such as `user` or `model`, and is a required format for managing multi-turn chat interactions with Gemma models. The following example code shows how to constuct a prompt template for Gemma:
 
-```python
+```python { .notebook-cell }
 from transformers import GenerationConfig
 config = GenerationConfig.from_pretrained(MODEL_ID)
 config.max_new_tokens = 512
@@ -130,6 +140,9 @@ messages = [
 ]
 
 pipe(text=messages, return_full_text=False, generate_kwargs=gen_kwargs)
+```
+
+``` { .no-copy .output }
 [{'input_text': [{'role': 'user',
     'content': [{'type': 'image',
       'url': 'https://ai.google.dev/static/gemma/docs/images/thali-indian-plate.jpg'},
@@ -152,7 +165,7 @@ With [Gemma 4](../models/gemma-4/index.md) and [Gemma 3n](../models/gemma-3n/ind
 
 When generating content with audio, use a prompt template to structure your request. A prompt template allows you to specify input from specific roles, such as `user` or `model`, and is a required format for managing multi-turn chat interactions with Gemma models. The following example code shows how to constuct a prompt template for Gemma with audio data input:
 
-```python
+```python { .notebook-cell }
 from transformers import GenerationConfig
 config = GenerationConfig.from_pretrained(MODEL_ID)
 config.max_new_tokens = 512
@@ -169,6 +182,9 @@ messages = [
 ]
 
 pipe(text=messages, return_full_text=False, generate_kwargs=gen_kwargs)
+```
+
+``` { .no-copy .output }
 [{'input_text': [{'role': 'user',
     'content': [{'type': 'text',
       'text': 'Transcribe the following speech segment in its original language. Follow these specific instructions for formatting the answer:\n* Only output the transcription, with no newlines.\n* When transcribing numbers, write the digits, i.e. write 1.7 and not one point seven, and write 3 instead of three.'},

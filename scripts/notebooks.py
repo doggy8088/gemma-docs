@@ -43,6 +43,8 @@ SOURCES: tuple[Path | tuple[Path, str], ...] = (
     (REPO_ROOT / "docs" / "models" / "paligemma" / "fine-tuning.md", "paligemma-fine-tuning"),
     (REPO_ROOT / "docs" / "models" / "recurrentgemma" / "inference.md", "recurrentgemma-inference"),
     (REPO_ROOT / "docs" / "models" / "recurrentgemma" / "fine-tuning.md", "recurrentgemma-fine-tuning"),
+    (REPO_ROOT / "docs" / "deployment" / "huggingface.md", "run-gemma-with-hf"),
+    (REPO_ROOT / "docs" / "deployment" / "keras.md", "run-gemma-with-keras"),
     REPO_ROOT / "docs" / "tuning" / "qlora.md",
     REPO_ROOT / "docs" / "tuning" / "full-finetune.md",
     REPO_ROOT / "docs" / "tuning" / "vision-qlora.md",
