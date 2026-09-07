@@ -18,8 +18,8 @@ results.
 ## Base Prompt Structure
 
 FunctionGemma builds on the [Gemma prompt structure](../../get-started/prompt-formatting.md), using
-`<start_of_turn>role` and `<end_of_turn>` to describe conversational turns.
-The `role` is typically `user` or `model` (and sometimes `developer` for
+`<start_of_turn>role`{.token-turn} and `<end_of_turn>`{.token-turn} to describe conversational turns.
+The `role`{.token-role} is typically `user`{.token-role} or `model`{.token-role} (and sometimes `developer`{.token-role} for
 providing initial context, as seen below).
 
 The function-specific tokens are used *within* these turns to structure the
@@ -32,22 +32,22 @@ lifecycle.
 
 | Token Pair | Purpose |
 |---|---|
-| `<start_function_declaration>` `<end_function_declaration>` | Defines a tool. |
-| `<start_function_call>` `<end_function_call>` | Indicates a model's request to use a tool. |
-| `<start_function_response>` `<end_function_response>` | Provides a tool's result back to the model. |
+| `<start_function_declaration>`{.token-tool} `<end_function_declaration>`{.token-tool} | Defines a tool. |
+| `<start_function_call>`{.token-tool} `<end_function_call>`{.token-tool} | Indicates a model's request to use a tool. |
+| `<start_function_response>`{.token-tool} `<end_function_response>`{.token-tool} | Provides a tool's result back to the model. |
 
 !!! Note
-    `<start_function_response>` is an additional stop sequence for the
+    `<start_function_response>`{.token-tool} is an additional stop sequence for the
     inference engine.
 
 
-### Delimiter for String Values: `<escape>`
+### Delimiter for String Values: `<escape>`{.token-tool}
 
-A single token, `<escape>`, is used as a delimiter for **all string values**
+A single token, `<escape>`{.token-tool}, is used as a delimiter for **all string values**
 within the structured data blocks.
 
 - **Purpose:** This token ensures that any special characters (like `{`, `}`, `,`, or quotes) inside a string are treated as literal text and not as part of the data structure's syntax.
-- **Usage:** All string literals in your function declarations, calls, and responses must be enclosed, like: `key:<escape>string value<escape>`.
+- **Usage:** All string literals in your function declarations, calls, and responses must be enclosed, like: <code>key:<span class="token-tool">&lt;escape&gt;</span>string value<span class="token-tool">&lt;escape&gt;</span></code>.
 
 ## Training Scope and Limitations
 
@@ -137,7 +137,7 @@ include: `Get the current temperature at a location. This function can be used
 to determine if the weather is hot or cold in a given location.`, the model
 successfully makes the connection:  
 
-`<start_function_call>call:get_current_temperature{location:<escape>Paris<escape>,unit:<escape>celsius<escape>}<end_function_call>`
+<code><span class="token-tool">&lt;start_function_call&gt;</span>call:get_current_temperature{location:<span class="token-tool">&lt;escape&gt;</span>Paris<span class="token-tool">&lt;escape&gt;</span>,unit:<span class="token-tool">&lt;escape&gt;</span>celsius<span class="token-tool">&lt;escape&gt;</span>}<span class="token-tool">&lt;end_function_call&gt;</span></code>
 
 ## Example: Weather Tool Flow
 
@@ -158,28 +158,28 @@ function calling with the following functions` to enable the model to call
 tools. This phrase acts as a prompt-based trigger to switch between tooling
 capability and general conversation.
 
-``` { .no-copy .output }
-<start_of_turn>developer
-You are a model that can do function calling with the following functions<start_function_declaration>declaration:get_current_weather{description:<escape>Gets the current weather in a given location.<escape>,parameters:{properties:{location:{description:<escape>The city and state, e.g. "San Francisco, CA" or "Tokyo, JP"<escape>,type:<escape>STRING<escape>},unit:{description:<escape>The unit to return the temperature in.<escape>,enum:[<escape>celsius<escape>,<escape>fahrenheit<escape>],type:<escape>STRING<escape>}},required:[<escape>location<escape>],type:<escape>OBJECT<escape>}}<end_function_declaration><end_of_turn>
-```
+<pre><code>
+<span class="token-turn">&lt;start_of_turn&gt;</span><span class="token-role">developer</span>
+You are a model that can do function calling with the following functions<span class="token-tool">&lt;start_function_declaration&gt;</span>declaration:get_current_weather{description:<span class="token-tool">&lt;escape&gt;</span>Gets the current weather in a given location.<span class="token-tool">&lt;escape&gt;</span>,parameters:{properties:{location:{description:<span class="token-tool">&lt;escape&gt;</span>The city and state, e.g. "San Francisco, CA" or "Tokyo, JP"<span class="token-tool">&lt;escape&gt;</span>,type:<span class="token-tool">&lt;escape&gt;</span>STRING<span class="token-tool">&lt;escape&gt;</span>},unit:{description:<span class="token-tool">&lt;escape&gt;</span>The unit to return the temperature in.<span class="token-tool">&lt;escape&gt;</span>,enum:[<span class="token-tool">&lt;escape&gt;</span>celsius<span class="token-tool">&lt;escape&gt;</span>,<span class="token-tool">&lt;escape&gt;</span>fahrenheit<span class="token-tool">&lt;escape&gt;</span>],type:<span class="token-tool">&lt;escape&gt;</span>STRING<span class="token-tool">&lt;escape&gt;</span>}},required:[<span class="token-tool">&lt;escape&gt;</span>location<span class="token-tool">&lt;escape&gt;</span>],type:<span class="token-tool">&lt;escape&gt;</span>OBJECT<span class="token-tool">&lt;escape&gt;</span>}<span class="token-tool">&lt;end_function_declaration&gt;</span><span class="token-turn">&lt;end_of_turn&gt;</span>
+</code></pre>
 
 ### Turn 2: User Prompt (User)
 
 Next, the user asks a question that requires the tool you just defined.
 
-```text
-<start_of_turn>user
-Hey, what's the weather in Tokyo right now?<end_of_turn>
-```
+<pre><code>
+<span class="token-turn">&lt;start_of_turn&gt;</span><span class="token-role">user</span>
+Hey, what's the weather in Tokyo right now?<span class="token-turn">&lt;end_of_turn&gt;</span>
+</code></pre>
 
 ### Turn 3: Model Issues Function Call (Model)
 
 The model processes the user's request and the tool definition. It determines it
 needs to call the `get_current_weather` function and outputs the following turn.
 
-```text
-<start_function_call>call:get_current_weather{location:<escape>Tokyo, Japan<escape>}<end_function_call>
-```
+<pre><code>
+<span class="token-tool">&lt;start_function_call&gt;</span>call:get_current_weather{location:<span class="token-tool">&lt;escape&gt;</span>Tokyo, Japan<span class="token-tool">&lt;escape&gt;</span>}<span class="token-tool">&lt;end_function_call&gt;</span>
+</code></pre>
 
 > **Application Logic:** At this point, your application must intercept this output. Instead of displaying it to the user, you parse the function call (e.g., `get_current_weather(location="Tokyo, Japan")`), execute this function in your own code, and get the result (e.g., a JSON object).
 
@@ -188,9 +188,9 @@ needs to call the `get_current_weather` function and outputs the following turn.
 You now send the return value from your function back to the model. This turn
 uses the function response tokens.
 
-```text
-<start_function_response>response:get_current_weather{temperature:15,weather:<escape>sunny<escape>}<end_function_response>
-```
+<pre><code>
+<span class="token-tool">&lt;start_function_response&gt;</span>response:get_current_weather{temperature:15,weather:<span class="token-tool">&lt;escape&gt;</span>sunny<span class="token-tool">&lt;escape&gt;</span>}<span class="token-tool">&lt;end_function_response&gt;</span>
+</code></pre>
 
 ### Turn 5: Model Generates Final Answer (Model)
 
@@ -198,9 +198,9 @@ The model receives the function's result from Turn 4. It now has all the
 information needed to answer the user's original question from Turn 2. It
 processes this new context and generates the final, natural language response.
 
-```text
-The current weather in Tokyo is sunny with a temperature of 15 degrees Celsius.<end_of_turn>
-```
+<pre><code>
+The current weather in Tokyo is sunny with a temperature of 15 degrees Celsius.<span class="token-turn">&lt;end_of_turn&gt;</span>
+</code></pre>
 
 You can see more complete version of this example in the
 [Full function calling sequence with FunctionGemma](full-sequence.md)
