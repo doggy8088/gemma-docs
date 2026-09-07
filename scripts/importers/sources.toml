@@ -83,11 +83,6 @@ path = "deployment/litert.md"
 source = "https://developers.google.com/edge/litert-lm/models/gemma-4"
 frozen = true
 
-[[page]]
-path = "tuning/mobile-actions.md"
-source = "https://ai.google.dev/gemma/docs/mobile-actions.md.txt"
-frozen = true
-
 # --- Tuning / Learn ---------------------------------------------------------------------------
 
 [[page]]
@@ -102,32 +97,14 @@ assets = "tuning"
 frozen = true
 
 [[page]]
-path = "tuning/full-finetune.md"
-source = "https://ai.google.dev/gemma/docs/core/huggingface_text_full_finetune.md.txt"
-assets = "tuning"
-frozen = true
-
-[[page]]
 path = "tuning/vision-qlora.md"
 source = "https://ai.google.dev/gemma/docs/core/huggingface_vision_finetune_qlora.md.txt"
 assets = "tuning"
 frozen = true
 
 [[page]]
-path = "tuning/keras-lora.md"
-source = "https://ai.google.dev/gemma/docs/core/lora_tuning.md.txt"
-assets = "tuning"
-frozen = true
-
-[[page]]
-path = "tuning/distributed.md"
-source = "https://ai.google.dev/gemma/docs/core/distributed_tuning.md.txt"
-assets = "tuning"
-frozen = true
-
-[[page]]
-path = "tuning/spoken-language.md"
-source = "https://ai.google.dev/gemma/docs/spoken-language/task-specific-tuning.md.txt"
+path = "tuning/full-finetune.md"
+source = "https://ai.google.dev/gemma/docs/core/huggingface_text_full_finetune.md.txt"
 assets = "tuning"
 frozen = true
 
