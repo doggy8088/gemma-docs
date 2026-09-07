@@ -3,6 +3,7 @@ title: Fine-tune EmbeddingGemma
 description: Fine-tuning helps close the gap between a model's general-purpose understanding and the specialized, high-performance accuracy that your application requires.
 models: [embeddinggemma]
 frameworks: [sentence-transformers, transformers]
+colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs/notebooks/embeddinggemma-fine-tuning.ipynb
 source_url: "https://ai.google.dev/gemma/docs/embeddinggemma/fine-tuning-embeddinggemma-with-sentence-transformers.md.txt"
 ---
 # Fine-tune EmbeddingGemma
@@ -24,13 +25,13 @@ Before starting this tutorial, complete the following steps:
 
 Install the libraries required for running the EmbeddingGemma model and generating embeddings. Sentence Transformers is a Python framework for text and image embeddings. For more information, see the [Sentence Transformers](https://www.sbert.net/) documentation.
 
-```bash
+```bash { .notebook-cell }
 pip install -U sentence-transformers git+https://github.com/huggingface/transformers@v4.56.0-Embedding-Gemma-preview
 ```
 
 After you have accepted the license, you need a valid Hugging Face Token to access the model.
 
-```python
+```python { .notebook-cell }
 # Login into Hugging Face Hub
 from huggingface_hub import login
 login()
@@ -40,7 +41,7 @@ login()
 
 Use the `sentence-transformers` libraries to create an instance of a model class with EmbeddingGemma.
 
-```python
+```python { .notebook-cell }
 import torch
 from sentence_transformers import SentenceTransformer
 
@@ -76,7 +77,7 @@ This is the most crucial part. You need to create a dataset that teaches the mod
 
 In this example, we only prepared 3 triplets, but for a real application, you would need a much larger dataset to perform well.
 
-```python
+```python { .notebook-cell }
 from datasets import Dataset
 
 dataset = [
@@ -112,7 +113,7 @@ A search for "tax-free investment" might have given the following results, with 
     To generate optimal embeddings with EmbeddingGemma, you should add an "instructional prompt" or "task" to the beginning of your input text. You will use `STS` for sentence similarity. For details on all available EmbeddingGemma prompts, see the [model card](model-card.md#prompt-instructions).
     
 
-```python
+```python { .notebook-cell }
 task_name = "STS"
 
 def get_scores(query, documents):
@@ -142,7 +143,7 @@ Document:  Home Loan Application Guide -> 🤖 Score:  0.4406476
 
 Using a framework like `sentence-transformers` in Python, the base model gradually learns the subtle distinctions in your financial vocabulary.
 
-```python
+```python { .notebook-cell }
 from sentence_transformers import SentenceTransformerTrainer, SentenceTransformerTrainingArguments
 from sentence_transformers.losses import MultipleNegativesRankingLoss
 from transformers import TrainerCallback
@@ -231,21 +232,21 @@ The same search now yields much clearer results:
 2. Document: Opening a Regular Saving Account (Score: 0.34) \<- *Clearly less relevant*
 3. Document: Home Loan Application Guide (Score: 0.47)
 
-   ```python
-   get_scores(query, documents)
-   ```
+```python { .notebook-cell }
+get_scores(query, documents)
+```
 
-   ``` { .no-copy .output }
-   Document:  Opening a NISA Account -> 🤖 Score:  0.73378766
-   Document:  Opening a Regular Savings Account -> 🤖 Score:  0.34055778
-   Document:  Home Loan Application Guide -> 🤖 Score:  0.47503752
-   ```
+``` { .no-copy .output }
+Document:  Opening a NISA Account -> 🤖 Score:  0.73378766
+Document:  Opening a Regular Savings Account -> 🤖 Score:  0.34055778
+Document:  Home Loan Application Guide -> 🤖 Score:  0.47503752
+```
 
 To upload your model to the Hugging Face Hub, you can use the `push_to_hub` method from the Sentence Transformers library.
 
 Uploading your model makes it easy to access for inference directly from the Hub, share with others, and version your work. Once uploaded, anyone can load your model with a single line of code, simply by referencing its unique model ID `<username>/my-embedding-gemma`
 
-```python
+```python { .notebook-cell }
 # Push to Hub
 model.push_to_hub("my-embedding-gemma")
 ```

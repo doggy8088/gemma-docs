@@ -3,6 +3,7 @@ title: Fine-tuning using JAX and Flax
 description: Fine-tune RecurrentGemma 2B Instruct for English-French translation using JAX, Flax, and the MTNT noisy-text dataset.
 models: [recurrentgemma]
 frameworks: [jax]
+colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs/notebooks/recurrentgemma-fine-tuning.ipynb
 source_url: "https://ai.google.dev/gemma/docs/recurrentgemma/recurrentgemma_jax_finetune.md.txt"
 ---
 # Fine-tuning using JAX and Flax
@@ -31,7 +32,7 @@ After you've completed the RecurrentGemma setup, move on to the next section, wh
 
 Set environment variables for `KAGGLE_USERNAME` and `KAGGLE_KEY`. When prompted with the "Grant access?" messages, agree to provide secret access.
 
-```python
+```python { .notebook-cell }
 import os
 from google.colab import userdata # `userdata` is a Colab API.
 
@@ -49,7 +50,7 @@ Next, you need to install the Google DeepMind `recurrentgemma` library from [`gi
     By installing `recurrentgemma`, you will also install [`flax`](https://flax.readthedocs.io), core [`jax`](https://jax.readthedocs.io), [`optax`](https://optax.readthedocs.io/en/latest/) (the JAX-based gradient processing and optimization library), [`orbax`](https://orbax.readthedocs.io/), and [`sentencepiece`](https://github.com/google/sentencepiece).
 
 
-```bash
+```bash { .notebook-cell }
 pip install -q git+https://github.com/google-deepmind/recurrentgemma.git
 ```
 
@@ -57,7 +58,7 @@ pip install -q git+https://github.com/google-deepmind/recurrentgemma.git
 
 This notebook uses [Flax](https://flax.readthedocs.io) (for neural networks), core [JAX](https://jax.readthedocs.io), [SentencePiece](https://github.com/google/sentencepiece) (for tokenization), [Chex](https://chex.readthedocs.io/en/latest/) (a library of utilities for writing reliable JAX code), [Optax](https://optax.readthedocs.io/en/latest/) (the gradient processing and optimization library), and TensorFlow Datasets.
 
-```python
+```python { .notebook-cell }
 import pathlib
 from typing import Any, Mapping, Iterator
 import enum
@@ -88,7 +89,7 @@ from recurrentgemma import jax as recurrentgemma
     Be mindful that the RecurrentGemma 2B (IT) model is around 3.85Gb in size.
 
 
-```python
+```python { .notebook-cell }
 RECURRENTGEMMA_VARIANT = '2b-it' # @param ['2b', '2b-it'] {type:"string"}
 
 import kagglehub
@@ -102,7 +103,7 @@ Downloading from https://www.kaggle.com/api/v1/models/google/recurrentgemma/flax
 Extracting model files...
 ```
 
-```python
+```python { .notebook-cell }
 print('RECURRENTGEMMA_VARIANT:', RECURRENTGEMMA_VARIANT)
 ```
 
@@ -119,17 +120,17 @@ RECURRENTGEMMA_VARIANT: 2b-it
 - The `tokenizer.model` file will be in `/LOCAL/PATH/TO/recurrentgemma/flax/2b-it/1`).
 - The model checkpoint will be in `/LOCAL/PATH/TO/recurrentgemma/flax/2b-it/1/2b-it`).
 
-  ```python
-  CKPT_PATH = os.path.join(RECURRENTGEMMA_PATH, RECURRENTGEMMA_VARIANT)
-  TOKENIZER_PATH = os.path.join(RECURRENTGEMMA_PATH, 'tokenizer.model')
-  print('CKPT_PATH:', CKPT_PATH)
-  print('TOKENIZER_PATH:', TOKENIZER_PATH)
-  ```
+```python { .notebook-cell }
+CKPT_PATH = os.path.join(RECURRENTGEMMA_PATH, RECURRENTGEMMA_VARIANT)
+TOKENIZER_PATH = os.path.join(RECURRENTGEMMA_PATH, 'tokenizer.model')
+print('CKPT_PATH:', CKPT_PATH)
+print('TOKENIZER_PATH:', TOKENIZER_PATH)
+```
 
-  ``` { .no-copy .output }
-  CKPT_PATH: /root/.cache/kagglehub/models/google/recurrentgemma/flax/2b-it/1/2b-it
-  TOKENIZER_PATH: /root/.cache/kagglehub/models/google/recurrentgemma/flax/2b-it/1/tokenizer.model
-  ```
+``` { .no-copy .output }
+CKPT_PATH: /root/.cache/kagglehub/models/google/recurrentgemma/flax/2b-it/1/2b-it
+TOKENIZER_PATH: /root/.cache/kagglehub/models/google/recurrentgemma/flax/2b-it/1/tokenizer.model
+```
 
 ## Load and prepare the MTNT dataset and the Gemma tokenizer
 
@@ -137,7 +138,7 @@ You will use the [MTNT (Machine Translation of Noisy Text)](https://arxiv.org/ab
 
 Download the English-to-French dataset portion of the MTNT dataset, and then sample two examples. Each sample in the dataset contains two entries: `src`: the original English sentence; and `dst`: the corresponding French translation.
 
-```python
+```python { .notebook-cell }
 ds = tfds.load("mtnt/en-fr", split="train")
 
 ds = ds.take(2)
@@ -174,7 +175,7 @@ src: b'Is Kameron a Little Salty About Her Lack of Air Time?'
 
 Load the Gemma tokenizer, constructed using [`sentencepiece.SentencePieceProcessor`](https://github.com/google/sentencepiece/blob/4d6a1f41069c4636c51a5590f7578a0dbed83450/python/src/sentencepiece/__init__.py#L423):
 
-```python
+```python { .notebook-cell }
 vocab = spm.SentencePieceProcessor()
 vocab.Load(TOKENIZER_PATH)
 ```
@@ -193,7 +194,7 @@ Customize the[`SentencePieceProcessor`](https://github.com/google/sentencepiece/
 
 Build a custom wrapper around the `SentencePieceProcessor` as follows:
 
-```python
+```python { .notebook-cell }
 class GriffinTokenizer:
   """A custom wrapper around a SentencePieceProcessor."""
 
@@ -253,7 +254,7 @@ class GriffinTokenizer:
 
 Try it out by instantiating your new custom `GriffinTokenizer`, and then applying it on a small sample of the MTNT dataset:
 
-```python
+```python { .notebook-cell }
 def tokenize_source(tokenizer, example: tf.Tensor):
   return tokenizer.tokenize_tf_op(
       example,
@@ -302,7 +303,7 @@ dst: [     2 213606    477   1455 235290   3510    748   8268 191017   2809
 
 Build a data loader for the entire MTNT dataset:
 
-```python
+```python { .notebook-cell }
 @chex.dataclass(frozen=True)
 class TrainingInput:
   # Input tokens provided to the model.
@@ -432,7 +433,7 @@ class MTNTDatasetBuilder:
 
 Try the `MTNTDatasetBuilder` out by instantiating the custom `GriffinTokenizer` again, then applying it on the MTNT dataset, and sampling two examples:
 
-```python
+```python { .notebook-cell }
 dataset_builder = MTNTDatasetBuilder(tokenizer, max_seq_len=20)
 ds = dataset_builder.get_train_dataset(3, 1)
 ds = ds.take(2)
@@ -484,25 +485,25 @@ Before you begin fine-tuning the Gemma model, you need to configure it.
 
 Load the RecurrentGemma (Griffin) model checkpoint with the [`recurrentgemma.jax.utils.load_parameters`](https://github.com/google-deepmind/recurrentgemma/blob/e4939f9b7edf8baa1d512fb86bfc2e206044d66b/recurrentgemma/jax/utils.py#L31){ data-model="recurrentgemma" } method:
 
-```python
+```python { .notebook-cell }
 params =  recurrentgemma.load_parameters(CKPT_PATH, "single_device")
 ```
 
 To automatically load the correct configuration from the RecurrentGemma model checkpoint, use [`recurrentgemma.GriffinConfig.from_flax_params_or_variables`](https://github.com/google-deepmind/recurrentgemma/blob/e4939f9b7edf8baa1d512fb86bfc2e206044d66b/recurrentgemma/common.py#L128){ data-model="recurrentgemma" }:
 
-```python
+```python { .notebook-cell }
 config = recurrentgemma.GriffinConfig.from_flax_params_or_variables(params)
 ```
 
 Instantiate the [Griffin](https://arxiv.org/abs/2402.19427) model with [`recurrentgemma.jax.Griffin`](https://github.com/google-deepmind/recurrentgemma/blob/e4939f9b7edf8baa1d512fb86bfc2e206044d66b/recurrentgemma/jax/griffin.py#L29){ data-model="recurrentgemma" }:
 
-```python
+```python { .notebook-cell }
 model = recurrentgemma.Griffin(config)
 ```
 
 Create a `sampler` with [`recurrentgemma.jax.Sampler`](https://github.com/google-deepmind/recurrentgemma/blob/e4939f9b7edf8baa1d512fb86bfc2e206044d66b/recurrentgemma/jax/sampler.py#L74){ data-model="recurrentgemma" } on top of the RecurrentGemma model checkpoint/weights and the tokenizer to check if your model can perform translation:
 
-```python
+```python { .notebook-cell }
 sampler = recurrentgemma.Sampler(model=model, vocab=vocab, params=params)
 ```
 
@@ -525,7 +526,7 @@ class. The RecurrentGemma `Griffin` inherits from [`flax.linen.Module`](https://
 
 Since you are working with pre-trained Gemma weights, you don't need to use the `init` function.
 
-```python
+```python { .notebook-cell }
 def forward_and_loss_fn(
     params,
     *,
@@ -579,65 +580,65 @@ Build the `train_step` function that performs the backward pass and updates the 
 - [`jax.value_and_grad`](https://jax.readthedocs.io/en/latest/_autosummary/jax.value_and_grad.html) is for evaluating the loss function and gradients during the forward and backward passes.
 - [`optax.apply_updates`](https://optax.readthedocs.io/en/latest/api/apply_updates.html#optax.apply_updates) is for updating the parameters.
 
-  ```python
-  Params = Mapping[str, Any]
+```python { .notebook-cell }
+Params = Mapping[str, Any]
 
-  def get_positions(example: jax.Array, pad_id : int) -> jax.Array:
-    """Builds the position vector from the given tokens."""
-    pad_mask = example != pad_id
-    positions = jnp.cumsum(pad_mask, axis=-1)
-    # Subtract one for all positions from the first valid one as they are
-    # 0-indexed
-    positions = positions - (positions >= 1)
-    return positions
+def get_positions(example: jax.Array, pad_id : int) -> jax.Array:
+  """Builds the position vector from the given tokens."""
+  pad_mask = example != pad_id
+  positions = jnp.cumsum(pad_mask, axis=-1)
+  # Subtract one for all positions from the first valid one as they are
+  # 0-indexed
+  positions = positions - (positions >= 1)
+  return positions
 
-  @functools.partial(
-      jax.jit,
-      static_argnames=['model', 'optimizer'],
-      donate_argnames=['params', 'opt_state'],
+@functools.partial(
+    jax.jit,
+    static_argnames=['model', 'optimizer'],
+    donate_argnames=['params', 'opt_state'],
+)
+def train_step(
+    model: recurrentgemma.Griffin,
+    params: Params,
+    optimizer: optax.GradientTransformation,
+    opt_state: optax.OptState,
+    pad_id: int,
+    example: TrainingInput,
+) -> tuple[jax.Array, Params, optax.OptState]:
+  """The train step.
+
+  Args:
+    model: The RecurrentGemma (Griffin) model.
+    params: The model's input parameters.
+    optimizer: The Optax optimizer to use.
+    opt_state: The input optimizer's state.
+    pad_id: The ID of the pad token.
+    example: The input batch.
+
+  Returns:
+    Training loss, updated parameters, updated optimizer state.
+  """
+
+  positions = get_positions(example.input_tokens, pad_id)
+
+  # Forward and backward passes.
+  train_loss, grads = jax.value_and_grad(forward_and_loss_fn)(
+      params,
+      model=model,
+      input_tokens=example.input_tokens,
+      input_mask=example.target_mask,
+      positions=positions,
   )
-  def train_step(
-      model: recurrentgemma.Griffin,
-      params: Params,
-      optimizer: optax.GradientTransformation,
-      opt_state: optax.OptState,
-      pad_id: int,
-      example: TrainingInput,
-  ) -> tuple[jax.Array, Params, optax.OptState]:
-    """The train step.
+  # Update the parameters.
+  updates, opt_state = optimizer.update(grads, opt_state, params)
+  params = optax.apply_updates(params, updates)
 
-    Args:
-      model: The RecurrentGemma (Griffin) model.
-      params: The model's input parameters.
-      optimizer: The Optax optimizer to use.
-      opt_state: The input optimizer's state.
-      pad_id: The ID of the pad token.
-      example: The input batch.
-
-    Returns:
-      Training loss, updated parameters, updated optimizer state.
-    """
-
-    positions = get_positions(example.input_tokens, pad_id)
-
-    # Forward and backward passes.
-    train_loss, grads = jax.value_and_grad(forward_and_loss_fn)(
-        params,
-        model=model,
-        input_tokens=example.input_tokens,
-        input_mask=example.target_mask,
-        positions=positions,
-    )
-    # Update the parameters.
-    updates, opt_state = optimizer.update(grads, opt_state, params)
-    params = optax.apply_updates(params, updates)
-
-    return train_loss, params, opt_state
-  ```
+  return train_loss, params, opt_state
+```
 
 Build the `validation_step` function without the backward pass:
 
-```python
+```python { .notebook-cell }
 @functools.partial(jax.jit, static_argnames=['model'])
 def validation_step(
     model: recurrentgemma.Griffin,
@@ -656,7 +657,7 @@ def validation_step(
 
 Define the training loop:
 
-```python
+```python { .notebook-cell }
 def train_loop(
     model: recurrentgemma.Griffin,
     params: Params,
@@ -717,7 +718,7 @@ def train_loop(
 
 Here you have to choose an (Optax) optimizer. For devices with smaller memory, you should use SGD, as it has a much lower memory footprint. To achieve best fine-tuning performance, try Adam-W. The optimal hyperparameters for each optimizer for the particular task in this notebook are provided in this example for the `2b-it` checkpoint.
 
-```python
+```python { .notebook-cell }
 def griffin_weight_decay_mask(params_like: optax.Params) -> Any:
   # Don't put weight decay on the RGLRU, the embeddings and any biases
   def enable_weight_decay(path: list[Any], _: Any) -> bool:
@@ -752,7 +753,7 @@ else:
 
 Prepare the training and validation datasets:
 
-```python
+```python { .notebook-cell }
 # Choose a small sequence length size, so that everything fits in memory.
 num_epochs = 1
 batch_size = 1
@@ -776,7 +777,7 @@ validation_ds = dataset_builder.get_validation_dataset(
 
 Begin fine-tuning the RecurrentGemma (Griffin) model on a limited number of steps (`num_steps`):
 
-```python
+```python { .notebook-cell }
 trained_params = train_loop(
     model=model,
     params=params,
@@ -813,7 +814,7 @@ Both the training loss and the validation loss should have gone down with each s
 
 To ensure your input matches the training format, remember to use the prefix `Translate this into French:\n` and a newline character at the end. This signals the model to begin translation.
 
-```python
+```python { .notebook-cell }
 sampler.params = trained_params
 output = sampler(
     ["Translate this into French:\nHello, my name is Morgane.\n"],

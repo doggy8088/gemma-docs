@@ -3,6 +3,7 @@ title: Inference with RecurrentGemma using JAX and Flax
 description: Run sampling and inference with RecurrentGemma 2B Instruct using Google DeepMind's recurrentgemma library and JAX.
 models: [recurrentgemma]
 frameworks: [jax]
+colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs/notebooks/recurrentgemma-inference.ipynb
 source_url: "https://ai.google.dev/gemma/docs/recurrentgemma/recurrentgemma_jax_inference.md.txt"
 ---
 # Inference with RecurrentGemma using JAX and Flax
@@ -30,7 +31,7 @@ After you've completed the RecurrentGemma setup, move on to the next section, wh
 
 Set environment variables for `KAGGLE_USERNAME` and `KAGGLE_KEY`. When prompted with the "Grant access?" messages, agree to provide secret access.
 
-```python
+```python { .notebook-cell }
 import os
 from google.colab import userdata # `userdata` is a Colab API.
 
@@ -48,7 +49,7 @@ Next, you need to install the Google DeepMind `recurrentgemma` library from [`gi
     By installing `recurrentgemma`, you will also install [`flax`](https://flax.readthedocs.io), core [`jax`](https://jax.readthedocs.io), [`optax`](https://optax.readthedocs.io/en/latest/) (the JAX-based gradient processing and optimization library), [`orbax`](https://orbax.readthedocs.io/), and [`sentencepiece`](https://github.com/google/sentencepiece).
 
 
-```bash
+```bash { .notebook-cell }
 pip install git+https://github.com/google-deepmind/recurrentgemma.git
 ```
 
@@ -64,7 +65,7 @@ pip install git+https://github.com/google-deepmind/recurrentgemma.git
     Be mindful that the `recurrentgemma-2b-it` model is around 3.85Gb in size.
 
 
-```python
+```python { .notebook-cell }
 RECURRENTGEMMA_VARIANT = '2b-it' # @param ['2b', '2b-it'] {type:"string"}
 
 import kagglehub
@@ -78,7 +79,7 @@ Downloading from https://www.kaggle.com/api/v1/models/google/recurrentgemma/flax
 Extracting model files...
 ```
 
-```python
+```python { .notebook-cell }
 print('RECURRENTGEMMA_PATH:', RECURRENTGEMMA_PATH)
 ```
 
@@ -95,60 +96,60 @@ RECURRENTGEMMA_PATH: /root/.cache/kagglehub/models/google/recurrentgemma/flax/2b
 - The `tokenizer.model` file will be in `/LOCAL/PATH/TO/recurrentgemma/flax/2b-it/1`).
 - The model checkpoint will be in `/LOCAL/PATH/TO/recurrentgemma/flax/2b-it/1/2b-it`).
 
-  ```python
-  CKPT_PATH = os.path.join(RECURRENTGEMMA_PATH, RECURRENTGEMMA_VARIANT)
-  TOKENIZER_PATH = os.path.join(RECURRENTGEMMA_PATH, 'tokenizer.model')
-  print('CKPT_PATH:', CKPT_PATH)
-  print('TOKENIZER_PATH:', TOKENIZER_PATH)
-  ```
+```python { .notebook-cell }
+CKPT_PATH = os.path.join(RECURRENTGEMMA_PATH, RECURRENTGEMMA_VARIANT)
+TOKENIZER_PATH = os.path.join(RECURRENTGEMMA_PATH, 'tokenizer.model')
+print('CKPT_PATH:', CKPT_PATH)
+print('TOKENIZER_PATH:', TOKENIZER_PATH)
+```
 
-  ``` { .no-copy .output }
-  CKPT_PATH: /root/.cache/kagglehub/models/google/recurrentgemma/flax/2b-it/1/2b-it
-  TOKENIZER_PATH: /root/.cache/kagglehub/models/google/recurrentgemma/flax/2b-it/1/tokenizer.model
-  ```
+``` { .no-copy .output }
+CKPT_PATH: /root/.cache/kagglehub/models/google/recurrentgemma/flax/2b-it/1/2b-it
+TOKENIZER_PATH: /root/.cache/kagglehub/models/google/recurrentgemma/flax/2b-it/1/tokenizer.model
+```
 
 ## Perform sampling/inference
 
 1. Load the RecurrentGemma model checkpoint with the [`recurrentgemma.jax.load_parameters`](https://github.com/google-deepmind/recurrentgemma/blob/e4939f9b7edf8baa1d512fb86bfc2e206044d66b/recurrentgemma/jax/utils.py#L31){ data-model="recurrentgemma" } method. The `sharding` argument set to `"single_device"` loads all model parameters on a single device.
 
-   ```python
-   import recurrentgemma
-   from recurrentgemma import jax as recurrentgemma
+```python { .notebook-cell }
+import recurrentgemma
+from recurrentgemma import jax as recurrentgemma
 
-   params = recurrentgemma.load_parameters(checkpoint_path=CKPT_PATH, sharding="single_device")
-   ```
+params = recurrentgemma.load_parameters(checkpoint_path=CKPT_PATH, sharding="single_device")
+```
 
 1. Load the RecurrentGemma model tokenizer, constructed using [`sentencepiece.SentencePieceProcessor`](https://github.com/google/sentencepiece/blob/4d6a1f41069c4636c51a5590f7578a0dbed83450/python/src/sentencepiece/__init__.py#L423):
 
-   ```python
-   import sentencepiece as spm
+```python { .notebook-cell }
+import sentencepiece as spm
 
-   vocab = spm.SentencePieceProcessor()
-   vocab.Load(TOKENIZER_PATH)
-   ```
+vocab = spm.SentencePieceProcessor()
+vocab.Load(TOKENIZER_PATH)
+```
 
-   ``` { .no-copy .output }
-   True
-   ```
+``` { .no-copy .output }
+True
+```
 
 1. To automatically load the correct configuration from the RecurrentGemma model checkpoint, use [`recurrentgemma.GriffinConfig.from_flax_params_or_variables`](https://github.com/google-deepmind/recurrentgemma/blob/e4939f9b7edf8baa1d512fb86bfc2e206044d66b/recurrentgemma/common.py#L128){ data-model="recurrentgemma" }. Then, instantiate the [Griffin](https://arxiv.org/abs/2402.19427) model with [`recurrentgemma.jax.Griffin`](https://github.com/google-deepmind/recurrentgemma/blob/e4939f9b7edf8baa1d512fb86bfc2e206044d66b/recurrentgemma/jax/griffin.py#L29){ data-model="recurrentgemma" }.
 
-   ```python
-   model_config = recurrentgemma.GriffinConfig.from_flax_params_or_variables(
-       flax_params_or_variables=params)
+```python { .notebook-cell }
+model_config = recurrentgemma.GriffinConfig.from_flax_params_or_variables(
+    flax_params_or_variables=params)
 
-   model = recurrentgemma.Griffin(model_config)
-   ```
+model = recurrentgemma.Griffin(model_config)
+```
 
 1. Create a `sampler` with [`recurrentgemma.jax.Sampler`](https://github.com/google-deepmind/recurrentgemma/blob/e4939f9b7edf8baa1d512fb86bfc2e206044d66b/recurrentgemma/jax/sampler.py#L74){ data-model="recurrentgemma" } on top of the RecurrentGemma model checkpoint/weights and the tokenizer:
 
-   ```python
-   sampler = recurrentgemma.Sampler(
-       model=model,
-       vocab=vocab,
-       params=params,
-   )
-   ```
+```python { .notebook-cell }
+sampler = recurrentgemma.Sampler(
+    model=model,
+    vocab=vocab,
+    params=params,
+)
+```
 
 1. Write a prompt in `prompt` and perform inference. You can tweak `total_generation_steps` (the number of steps performed when generating a response --- this example uses `50` to preserve host memory).
 
@@ -156,7 +157,7 @@ RECURRENTGEMMA_PATH: /root/.cache/kagglehub/models/google/recurrentgemma/flax/2b
     If you run out of memory, click on **Runtime** \> **Disconnect and delete runtime** , and then **Runtime** \> **Run all**.
 
 
-```python
+```python { .notebook-cell }
 prompt = [
     "\n# 5+9=?",
 ]

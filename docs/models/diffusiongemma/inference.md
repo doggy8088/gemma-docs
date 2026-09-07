@@ -3,6 +3,7 @@ title: Generate output
 description: Generate text with DiffusionGemma using Hugging Face Transformers, including the GPU memory the model requires.
 models: [diffusiongemma]
 frameworks: [transformers]
+colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs/notebooks/diffusiongemma-inference.ipynb
 source_url: "https://ai.google.dev/gemma/docs/diffusiongemma/inference-diffusiongemma-with-hf.md.txt"
 ---
 
@@ -16,7 +17,7 @@ DiffusionGemma is an experimental open model that explores text diffusion, an ex
 
 Install the Hugging Face libraries required for running the DiffusionGemma model and making requests.
 
-```bash
+```bash { .notebook-cell }
 # Install PyTorch & other libraries
 pip install torch accelerate
 
@@ -28,7 +29,7 @@ pip install "transformers>=5.11.0"
 
 Use `transformers` library to load the model.
 
-```python
+```python { .notebook-cell }
 from transformers import DiffusionGemmaForBlockDiffusion, AutoProcessor
 
 MODEL_ID = "google/diffusiongemma-26B-A4B-it"
@@ -54,7 +55,7 @@ tokenizer.json:   0%|          | 0.00/32.2M [00:00<?, ?B/s]
 
 Use a prompt template to structure your request. A prompt template allows you to specify input from specific roles, such as `user` or `model`, and is a required format for managing multi-turn chat interactions with Gemma models.
 
-```python
+```python { .notebook-cell }
 message = [
     {"role": "user", "content": "Why is the sky blue?"}
 ]
@@ -104,7 +105,7 @@ When the sun is setting, the light has to travel through much more of the Earth'
 
 Use `TextDiffusionStreamer` to see the intermediate state of diffusion process.
 
-```python
+```python { .notebook-cell }
 from transformers import TextDiffusionStreamer
 
 streamer = TextDiffusionStreamer(tokenizer=processor.tokenizer)
@@ -470,7 +471,7 @@ When the sun is setting, the light has to travel through much more of the Earth'
 
 Use the `system` role to provide the system-level instructions.
 
-```python
+```python { .notebook-cell }
 message = [
     {"role": "system", "content": "Speak like a pirate."},
     {"role": "user", "content": "Why is the sky blue?"}
@@ -505,7 +506,7 @@ So, when ye look up from the deck, yer eyes be catchin' all that blue light that
 
 To generate a response using the model's thinking capabilities, pass `enable_thinking=True`, the processor will insert the correct thinking tokens into the prompt, instructing the model to think before responding.
 
-```python
+```python { .notebook-cell }
 message = [
     {"role": "user", "content": "What is the water formula?"}
 ]
@@ -546,7 +547,7 @@ This means that each molecule of water is made of:
 
 The following example shows how to provide an image and ask question about it.
 
-```python
+```python { .notebook-cell }
 from PIL import Image
 from IPython.display import display
 import requests

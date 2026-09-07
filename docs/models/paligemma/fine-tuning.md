@@ -3,6 +3,7 @@ title: Fine-tune PaliGemma with JAX and Flax
 description: This notebook shows how to fine-tune PaliGemma on a vision-language task with JAX.
 models: [paligemma]
 frameworks: [jax]
+colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs/notebooks/paligemma-fine-tuning.ipynb
 source_url: "https://ai.google.dev/gemma/docs/paligemma/fine-tuning-paligemma.md.txt"
 ---
 # Fine-tune PaliGemma with JAX and Flax
@@ -61,7 +62,7 @@ To complete this tutorial, you'll need to have a Colab runtime with sufficient r
 
 Run the below cell to install KaggleHub.
 
-```bash
+```bash { .notebook-cell }
 pip install -U -q kagglehub
 ```
 
@@ -69,7 +70,7 @@ pip install -U -q kagglehub
 
 Set the environment variables and Kaggle login.
 
-```python
+```python { .notebook-cell }
 import os
 # The T4 runtime is tight on memory to finetune this model. Preallocate
 # all memory ahead of time to avoid out-of-memory due to fragmentation.
@@ -90,7 +91,7 @@ Kaggle credentials successfully validated.
 
 Download the `big_vision` repository to your Colab notebook from GitHub and install dependencies related to `big_vision` by running the following code.
 
-```python
+```python { .notebook-cell }
 import os
 import sys
 
@@ -120,7 +121,7 @@ if "big_vision_repo" not in sys.path:
 
 Import JAX and other dependencies required for PaliGemma, like TensorFlow and NumPy.
 
-```python
+```python { .notebook-cell }
 import base64
 import functools
 import html
@@ -174,7 +175,7 @@ PaliGemma includes several model variations. For this tutorial, you'll use the b
 
 Download the model checkpoint from Kaggle by running the following code. This process takes several minutes to complete.
 
-```python
+```python { .notebook-cell }
 import os
 import kagglehub
 
@@ -238,7 +239,7 @@ In order to configure your model, you need to:
 
 This code in this cell takes about a minute to run to completion.
 
-```python
+```python { .notebook-cell }
 # Define model
 
 # IMPORTANT: Gemma-2 has a "final_logits_softcap" property. Set it to 0.0
@@ -264,7 +265,7 @@ Now you need to move the model parameters into GPU/TPU memory. First, shard the 
 
 Finally, print out all of the parameters to see what type each individual parameter is cast to. Frozen parameters are kept as `float16`, while the trainable parameters are cast to `float32`. When you inspect the list, you'll see that most of the parameters have been frozen and are `float16`.
 
-```python
+```python { .notebook-cell }
 # Create a pytree mask of the trainable params.
 def is_trainable_param(name, param):  # pylint: disable=unused-argument
   if name.startswith("llm/layers/attn/"):  return True
@@ -367,54 +368,54 @@ The code below defines three functions that you'll use in the next step create t
 - **`preprocess_tokens`:** Splits the tokens up and adds flags to mark whether a token is a prefix or suffix token. These flags will be used later on in the code, during the training step and the evaluation loop.
 - **`postprocess_tokens`:** Removes any tokens left at and/or after the end-of-sequence (EOS) token and returns the remaining decoded tokens.
 
-  ```python
-  def preprocess_image(image, size=224):
-    # Model has been trained to handle images of different aspects ratios
-    # resized to 224x224 in the range [-1, 1]. Bilinear and antialias resize
-    # options are helpful to improve quality in some tasks.
-    image = np.asarray(image)
-    if image.ndim == 2:  # Convert image without last channel into greyscale.
-      image = np.stack((image,)*3, axis=-1)
-    image = image[..., :3]  # Remove alpha layer.
-    assert image.shape[-1] == 3
+```python { .notebook-cell }
+def preprocess_image(image, size=224):
+  # Model has been trained to handle images of different aspects ratios
+  # resized to 224x224 in the range [-1, 1]. Bilinear and antialias resize
+  # options are helpful to improve quality in some tasks.
+  image = np.asarray(image)
+  if image.ndim == 2:  # Convert image without last channel into greyscale.
+    image = np.stack((image,)*3, axis=-1)
+  image = image[..., :3]  # Remove alpha layer.
+  assert image.shape[-1] == 3
 
-    image = tf.constant(image)
-    image = tf.image.resize(image, (size, size), method='bilinear', antialias=True)
-    return image.numpy() / 127.5 - 1.0  # [0, 255]->[-1,1]
+  image = tf.constant(image)
+  image = tf.image.resize(image, (size, size), method='bilinear', antialias=True)
+  return image.numpy() / 127.5 - 1.0  # [0, 255]->[-1,1]
 
-  def preprocess_tokens(prefix, suffix=None, seqlen=None):
-    # Model has been trained to handle tokenized text composed of a prefix with
-    # full attention and a suffix with causal attention.
-    separator = "\n"
-    tokens = tokenizer.encode(prefix, add_bos=True) + tokenizer.encode(separator)
-    mask_ar = [0] * len(tokens)    # 0 to use full attention for prefix.
-    mask_loss = [0] * len(tokens)  # 0 to not use prefix tokens in the loss.
+def preprocess_tokens(prefix, suffix=None, seqlen=None):
+  # Model has been trained to handle tokenized text composed of a prefix with
+  # full attention and a suffix with causal attention.
+  separator = "\n"
+  tokens = tokenizer.encode(prefix, add_bos=True) + tokenizer.encode(separator)
+  mask_ar = [0] * len(tokens)    # 0 to use full attention for prefix.
+  mask_loss = [0] * len(tokens)  # 0 to not use prefix tokens in the loss.
 
-    if suffix:
-      suffix = tokenizer.encode(suffix, add_eos=True)
-      tokens += suffix
-      mask_ar += [1] * len(suffix)    # 1 to use causal attention for suffix.
-      mask_loss += [1] * len(suffix)  # 1 to use suffix tokens in the loss.
+  if suffix:
+    suffix = tokenizer.encode(suffix, add_eos=True)
+    tokens += suffix
+    mask_ar += [1] * len(suffix)    # 1 to use causal attention for suffix.
+    mask_loss += [1] * len(suffix)  # 1 to use suffix tokens in the loss.
 
-    mask_input = [1] * len(tokens)    # 1 if it's a token, 0 if padding.
-    if seqlen:
-      padding = [0] * max(0, seqlen - len(tokens))
-      tokens = tokens[:seqlen] + padding
-      mask_ar = mask_ar[:seqlen] + padding
-      mask_loss = mask_loss[:seqlen] + padding
-      mask_input = mask_input[:seqlen] + padding
+  mask_input = [1] * len(tokens)    # 1 if it's a token, 0 if padding.
+  if seqlen:
+    padding = [0] * max(0, seqlen - len(tokens))
+    tokens = tokens[:seqlen] + padding
+    mask_ar = mask_ar[:seqlen] + padding
+    mask_loss = mask_loss[:seqlen] + padding
+    mask_input = mask_input[:seqlen] + padding
 
-    return jax.tree.map(np.array, (tokens, mask_ar, mask_loss, mask_input))
+  return jax.tree.map(np.array, (tokens, mask_ar, mask_loss, mask_input))
 
-  def postprocess_tokens(tokens):
-    tokens = tokens.tolist()  # np.array to list[int]
-    try:  # Remove tokens at and after EOS if any.
-      eos_pos = tokens.index(tokenizer.eos_id())
-      tokens = tokens[:eos_pos]
-    except ValueError:
-      pass
-    return tokenizer.decode(tokens)
-  ```
+def postprocess_tokens(tokens):
+  tokens = tokens.tolist()  # np.array to list[int]
+  try:  # Remove tokens at and after EOS if any.
+    eos_pos = tokens.index(tokenizer.eos_id())
+    tokens = tokens[:eos_pos]
+  except ValueError:
+    pass
+  return tokenizer.decode(tokens)
+```
 
 ### Create the training and validation iterators
 
@@ -424,54 +425,54 @@ Create two iterators:
     - This allows you to do some data pre-processing before use
 - A **validation iterator** that allows the training process to iterate over the validation dataset to see how well the tuned model aligned with the provided results
 
-  ```python
-  SEQLEN = 128
+```python { .notebook-cell }
+SEQLEN = 128
 
-  train_dataset = big_vision.datasets.jsonl.DataSource(
-      os.path.join(DATA_DIR, "data_train90.jsonl"),
-      fopen_keys={"image": DATA_DIR})
+train_dataset = big_vision.datasets.jsonl.DataSource(
+    os.path.join(DATA_DIR, "data_train90.jsonl"),
+    fopen_keys={"image": DATA_DIR})
 
-  val_dataset = big_vision.datasets.jsonl.DataSource(
-      os.path.join(DATA_DIR, "data_val10.jsonl"),
-      fopen_keys={"image": DATA_DIR})
-
-
-  def train_data_iterator():
-    """Never ending iterator over training examples."""
-    # Shuffle examples and repeat so one can train for many epochs.
-    dataset = train_dataset.get_tfdata().shuffle(1_000).repeat()
-    for example in dataset.as_numpy_iterator():
-      image = Image.open(io.BytesIO(example["image"]))
-      image = preprocess_image(image)
-
-      prefix = "caption en"  # Could also be a different prefix per example.
-      suffix = example["suffix"].decode().lower()
-      tokens, mask_ar, mask_loss, _ = preprocess_tokens(prefix, suffix, SEQLEN)
-
-      yield {
-          "image": np.asarray(image),
-          "text": np.asarray(tokens),
-          "mask_ar": np.asarray(mask_ar),
-          "mask_loss": np.asarray(mask_loss),
-      }
+val_dataset = big_vision.datasets.jsonl.DataSource(
+    os.path.join(DATA_DIR, "data_val10.jsonl"),
+    fopen_keys={"image": DATA_DIR})
 
 
-  def validation_data_iterator():
-    """Single iterator over validation examples."""
-    for example in val_dataset.get_tfdata(ordered=True).as_numpy_iterator():
-      image = Image.open(io.BytesIO(example["image"]))
-      image = preprocess_image(image)
+def train_data_iterator():
+  """Never ending iterator over training examples."""
+  # Shuffle examples and repeat so one can train for many epochs.
+  dataset = train_dataset.get_tfdata().shuffle(1_000).repeat()
+  for example in dataset.as_numpy_iterator():
+    image = Image.open(io.BytesIO(example["image"]))
+    image = preprocess_image(image)
 
-      prefix = "caption en"  # Could also be a different prefix per example.
-      tokens, mask_ar, _, mask_input = preprocess_tokens(prefix, seqlen=SEQLEN)
+    prefix = "caption en"  # Could also be a different prefix per example.
+    suffix = example["suffix"].decode().lower()
+    tokens, mask_ar, mask_loss, _ = preprocess_tokens(prefix, suffix, SEQLEN)
 
-      yield {
-          "image": np.asarray(image),
-          "text": np.asarray(tokens),
-          "mask_ar": np.asarray(mask_ar),
-          "mask_input": np.asarray(mask_input),
-      }
-  ```
+    yield {
+        "image": np.asarray(image),
+        "text": np.asarray(tokens),
+        "mask_ar": np.asarray(mask_ar),
+        "mask_loss": np.asarray(mask_loss),
+    }
+
+
+def validation_data_iterator():
+  """Single iterator over validation examples."""
+  for example in val_dataset.get_tfdata(ordered=True).as_numpy_iterator():
+    image = Image.open(io.BytesIO(example["image"]))
+    image = preprocess_image(image)
+
+    prefix = "caption en"  # Could also be a different prefix per example.
+    tokens, mask_ar, _, mask_input = preprocess_tokens(prefix, seqlen=SEQLEN)
+
+    yield {
+        "image": np.asarray(image),
+        "text": np.asarray(tokens),
+        "mask_ar": np.asarray(mask_ar),
+        "mask_input": np.asarray(mask_input),
+    }
+```
 
 ### View training examples
 
@@ -483,7 +484,7 @@ In this notebook, the training data contains 90 images that are paired with long
 
 The code below prints a random selection of images with their descriptions from the training data set so that you can see what the images and descriptions your model is trained on looks like. Each image is displayed in as a 128x128 pixel JPEG, with the description printed next to the image to the right.
 
-```python
+```python { .notebook-cell }
 def render_inline(image, resize=(128, 128)):
   """Convert image into inline html."""
   image = Image.fromarray(image)
@@ -558,7 +559,7 @@ The `make_predictions` function is your evaluation loop. The evaluation loop is 
 
 To make sure that your evaluation loop only counts actual examples and not the padded examples, you have to apply a mask to the padded examples that excludes them from the output.
 
-```python
+```python { .notebook-cell }
 # The main update_fn using a simple stochastic gradient descent (SGD).
 @functools.partial(jax.jit, donate_argnums=(0,))
 def update_fn(params, batch, learning_rate):
@@ -644,7 +645,7 @@ At earlier steps in the training, there's likely issues with the descriptions, s
 
 This process takes around 15 minutes to complete on T4 TPUs.
 
-```python
+```python { .notebook-cell }
 # Run a short training loop with cosine learning rate schedule.
 #
 # Note: the first step can be quite slow on some machines (up to several minutes)
@@ -828,7 +829,7 @@ The validation data for this notebook consists of just 10 images. In normal code
 
 Run the below code to generate descriptions for the validation data set.
 
-```python
+```python { .notebook-cell }
 # The validation data consists of 10 images in a different domain than training
 # data.
 %%time

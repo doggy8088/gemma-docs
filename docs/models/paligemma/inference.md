@@ -3,6 +3,7 @@ title: Generate PaliGemma output with Keras
 description: PaliGemma models have multimodal capabilities, allowing you to generate output using both text and image input data.
 models: [paligemma]
 frameworks: [keras]
+colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs/notebooks/paligemma-inference.ipynb
 source_url: "https://ai.google.dev/gemma/docs/paligemma/inference-with-keras.md.txt"
 ---
 # Generate PaliGemma output with Keras
@@ -54,7 +55,7 @@ To complete this tutorial, you'll need to have a Colab runtime with sufficient r
 
 Set the environment variables for `KAGGLE_USERNAME`, `KAGGLE_KEY`, and `KERAS_BACKEND`.
 
-```python
+```python { .notebook-cell }
 import os
 from google.colab import userdata
 
@@ -68,7 +69,7 @@ os.environ["KERAS_BACKEND"] = "jax"
 
 Run the below cell to install Keras.
 
-```bash
+```bash { .notebook-cell }
 pip install -U -q keras-nlp keras-hub kagglehub
 ```
 
@@ -76,7 +77,7 @@ pip install -U -q keras-nlp keras-hub kagglehub
 
 Install the dependencies needed for this notebook and configure Keras' backend. You'll also set Keras to use `bfloat16` so that the framework uses less memory.
 
-```python
+```python { .notebook-cell }
 import keras
 import keras_hub
 import numpy as np
@@ -99,7 +100,7 @@ In this step, you download a model using `PaliGemmaCausalLM` from Keras Hub. Thi
 
 Create the model using the `from_preset` method and print its summary. This process will take about a minute to complete.
 
-```python
+```python { .notebook-cell }
 paligemma = keras_hub.models.PaliGemmaCausalLM.from_preset("kaggle://keras/paligemma2/keras/pali_gemma2_mix_3b_224")
 paligemma.summary()
 ```
@@ -114,7 +115,7 @@ To help you generate responses from your model, create two utility methods:
 
 You'll use `read_img_from_url` in the next step of this notebook.
 
-```python
+```python { .notebook-cell }
 def crop_and_resize(image, target_size):
     width, height = image.size
     source_size = min(image.size)
@@ -217,7 +218,7 @@ After loading the model and creating utility methods, you can prompt the model w
 
 Prepare an image for use in a generation prompt by using the following code to load a test image into an object:
 
-```python
+```python { .notebook-cell }
 target_size = (224, 224)
 image_url = 'https://storage.googleapis.com/keras-cv/models/paligemma/cow_beach_1.png'
 cow_image = read_image(image_url, target_size)
@@ -228,7 +229,7 @@ matplotlib.pyplot.imshow(cow_image)
 
 The following example code shows how to prompt the PaliGemma model for information about an object appearing in a provided image. This example uses the `answer {lang}` syntax and shows additional questions in other languages:
 
-```python
+```python { .notebook-cell }
 prompt = 'answer en where is the cow standing?\n'
 # prompt = 'svar no hvor står kuen?\n'
 # prompt = 'answer fr quelle couleur est le ciel?\n'
@@ -251,7 +252,7 @@ print(output)
 
 The following example code uses the `detect` prompt syntax to locate an object in the provided image. The code uses the previously defined `parse_bbox_and_labels()` and `display_boxes()` functions to interpret the model output and display the generated bounding boxes.
 
-```python
+```python { .notebook-cell }
 prompt = 'detect cow\n'
 output = paligemma.generate(
     inputs={
@@ -269,7 +270,7 @@ The following example code uses the `segment` prompt syntax to locate the area o
 
 Before getting started, install the `big_vision` library and its dependencies, as shown in this code example:
 
-```python
+```python { .notebook-cell }
 import os
 import sys
 
@@ -294,14 +295,14 @@ if "big_vision_repo" not in sys.path:
 
 For this segmentation example, load and prepare a different image that includes a cat.
 
-```python
+```python { .notebook-cell }
 cat = read_image('https://big-vision-paligemma.hf.space/file=examples/barsik.jpg', target_size)
 matplotlib.pyplot.imshow(cat)
 ```
 
 Here is a function to help parse the segment output from PaliGemma
 
-```python
+```python { .notebook-cell }
 import  big_vision.evaluators.proj.paligemma.transfers.segmentation as segeval
 reconstruct_masks = segeval.get_reconstruct_masks('oi')
 def parse_segments(detokenized_output: str) -> tuple[np.ndarray, np.ndarray]:
@@ -321,7 +322,7 @@ def parse_segments(detokenized_output: str) -> tuple[np.ndarray, np.ndarray]:
 
 Query PaliGemma to segment the cat in the image
 
-```python
+```python { .notebook-cell }
 prompt = 'segment cat\n'
 output = paligemma.generate(
     inputs={
@@ -333,7 +334,7 @@ output = paligemma.generate(
 
 Visualize the generated mask from PaliGemma
 
-```python
+```python { .notebook-cell }
 bboxes, seg_masks = parse_segments(output)
 display_segment_output(cat, bboxes, seg_masks, target_size)
 ```
@@ -346,7 +347,7 @@ You can provide more than one prompt command within a single prompt as a batch o
     Each prompt command must end with an "\\n" character, as shown.
 
 
-```python
+```python { .notebook-cell }
 prompts = [
     'answer en where is the cow standing?\n',
     'answer en what color is the cow?\n',

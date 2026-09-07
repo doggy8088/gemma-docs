@@ -23,10 +23,9 @@ NOTEBOOKS_DIR = REPO_ROOT / "docs" / "notebooks"
 MODELS_DATA = REPO_ROOT / "data" / "models.yml"
 
 DEFAULT_SOURCE = REPO_ROOT / "docs" / "get-started" / "capabilities" / "thinking.md"
-DEFAULT_TARGET = REPO_ROOT / "docs" / "notebooks" / "thinking-gemma-4-e2b-it.ipynb"
 DEFAULT_MODEL = "gemma-4/e2b"
 
-SOURCES = (
+SOURCES: tuple[Path | tuple[Path, str], ...] = (
     DEFAULT_SOURCE,
     REPO_ROOT / "docs" / "get-started" / "capabilities" / "text.md",
     REPO_ROOT / "docs" / "get-started" / "capabilities" / "function-calling.md",
@@ -34,6 +33,16 @@ SOURCES = (
     REPO_ROOT / "docs" / "get-started" / "capabilities" / "video.md",
     REPO_ROOT / "docs" / "get-started" / "capabilities" / "audio.md",
     REPO_ROOT / "docs" / "get-started" / "capabilities" / "mtp.md",
+    (REPO_ROOT / "docs" / "models" / "diffusiongemma" / "inference.md", "diffusiongemma-inference"),
+    (REPO_ROOT / "docs" / "models" / "functiongemma" / "inference.md", "functiongemma-inference"),
+    (REPO_ROOT / "docs" / "models" / "functiongemma" / "full-sequence.md", "functiongemma-full-sequence"),
+    (REPO_ROOT / "docs" / "models" / "functiongemma" / "fine-tuning.md", "functiongemma-fine-tuning"),
+    (REPO_ROOT / "docs" / "models" / "embeddinggemma" / "inference.md", "embeddinggemma-inference"),
+    (REPO_ROOT / "docs" / "models" / "embeddinggemma" / "fine-tuning.md", "embeddinggemma-fine-tuning"),
+    (REPO_ROOT / "docs" / "models" / "paligemma" / "inference.md", "paligemma-inference"),
+    (REPO_ROOT / "docs" / "models" / "paligemma" / "fine-tuning.md", "paligemma-fine-tuning"),
+    (REPO_ROOT / "docs" / "models" / "recurrentgemma" / "inference.md", "recurrentgemma-inference"),
+    (REPO_ROOT / "docs" / "models" / "recurrentgemma" / "fine-tuning.md", "recurrentgemma-fine-tuning"),
     REPO_ROOT / "docs" / "tuning" / "qlora.md",
     REPO_ROOT / "docs" / "tuning" / "full-finetune.md",
     REPO_ROOT / "docs" / "tuning" / "vision-qlora.md",
@@ -272,6 +281,12 @@ def export_cells(body: str, model: str | None = None) -> list[dict]:
     return cells
 
 
+def default_stem(source: Path) -> str:
+    if source.parent.parent.name == "models" or source.stem in {"inference", "fine-tuning", "index"}:
+        return f"{source.parent.name}-{source.stem}"
+    return source.stem
+
+
 def render(
     source: Path = DEFAULT_SOURCE,
     model: str | None = None,
@@ -284,10 +299,11 @@ def render(
         canonical_source = source.name
 
     if target_name is None:
+        stem = default_stem(source)
         if model:
-            target_name = f"{source.stem}-{model.replace('/', '-')}-it.ipynb"
+            target_name = f"{stem}-{model.replace('/', '-')}-it.ipynb"
         else:
-            target_name = f"{source.stem}.ipynb"
+            target_name = f"{stem}.ipynb"
 
     notebook = {
         "cells": export_cells(body, model=model),
@@ -314,18 +330,24 @@ def infer_model(name: str) -> str | None:
 
 
 def build_notebook_map(
-    sources: tuple[Path, ...] = SOURCES,
+    sources: tuple[Path | tuple[Path, str], ...] = SOURCES,
 ) -> dict[tuple[Path, str | None], Path]:
     mapping: dict[tuple[Path, str | None], Path] = {}
-    for source in sources:
+    for entry in sources:
+        if isinstance(entry, tuple):
+            source, stem = entry
+            stem = stem.removesuffix(".ipynb")
+        else:
+            source = entry
+            stem = default_stem(source)
         candidates = candidate_models(source)
         if candidates:
             for mid in candidates:
                 slug = f"{mid.replace('/', '-')}-it"
-                target = NOTEBOOKS_DIR / f"{source.stem}-{slug}.ipynb"
+                target = NOTEBOOKS_DIR / f"{stem}-{slug}.ipynb"
                 mapping[(source, mid)] = target
         else:
-            target = NOTEBOOKS_DIR / f"{source.stem}.ipynb"
+            target = NOTEBOOKS_DIR / f"{stem}.ipynb"
             mapping[(source, None)] = target
     return mapping
 

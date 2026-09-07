@@ -3,6 +3,7 @@ title: Fine-tuning with FunctionGemma
 description: This guide demonstrates how to fine-tune FunctionGemma for tool calling.
 models: [functiongemma]
 frameworks: [transformers, peft, trl]
+colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs/notebooks/functiongemma-fine-tuning.ipynb
 source_url: "https://ai.google.dev/gemma/docs/functiongemma/finetuning-with-functiongemma.md.txt"
 ---
 # Fine-tuning with FunctionGemma
@@ -27,7 +28,7 @@ In this example, we will focus specifically on managing tool selection ambiguity
 
 The first step is to install Hugging Face Libraries, including TRL, and datasets to fine-tune open model, including different RLHF and alignment techniques.
 
-```python
+```python { .notebook-cell }
 # Install Pytorch & other libraries
 %pip install torch tensorboard
 
@@ -46,7 +47,7 @@ Before you can start training, you have to make sure that you accepted the terms
 
 After you have accepted the license, you need a valid Hugging Face Token to access the model. If you are running inside a Google Colab, you can securely use your Hugging Face Token using the Colab secrets otherwise you can set the token as directly in the `login` method. Make sure your token has write access too, as you push your model to Hugging Face Hub after fine-tuning.
 
-```python
+```python { .notebook-cell }
 # Login into Hugging Face Hub
 from huggingface_hub import login
 login()
@@ -56,7 +57,7 @@ You can keep the results on Colab's local virtual machine. However, it is highly
 
 Also, adjust the checkpoint directory and the learning rate.
 
-```python
+```python { .notebook-cell }
 from google.colab import drive
 
 mount_google_drive = False
@@ -86,7 +87,7 @@ You will use the following example dataset, which contains sample conversations 
 <button type="button" class="button-red button expand-control">Toggle code</button>
 
 
-```python
+```python { .notebook-cell }
 simple_tool_calling = [
   {"user_content":"What is the reimbursement limit for travel meals?","tool_name":"search_knowledge_base","tool_arguments":"{\"query\": \"travel meal reimbursement limit policy\"}"},
   {"user_content":"What is the current stock price of Google?","tool_name":"search_google","tool_arguments":"{\"query\": \"current Google stock price\"}"},
@@ -138,7 +139,7 @@ The appropriate tool depends entirely on your specific policy. While a generic m
 
 **Note on Data Splitting**: For this demonstration, you will use a 50/50 train-test split. While an 80/20 split is standard for production workflows, this equal division is chosen specifically to highlight the model's performance improvement on unseen data.
 
-```python
+```python { .notebook-cell }
 import json
 from datasets import Dataset
 from transformers.utils import get_json_schema
@@ -202,7 +203,7 @@ You are now ready to fine-tune your model. Hugging Face TRL [SFTTrainer](https:/
 
 The following code loads the FunctionGemma model and tokenizer from Hugging Face.
 
-```python
+```python { .notebook-cell }
 import torch
 from transformers import AutoTokenizer, AutoModelForCausalLM
 
@@ -318,7 +319,7 @@ What is the reimbursement limit for travel meals?<end_of_turn>
 
 The output below shows that the out-of-the-box capabilities may not be good enough for this use case.
 
-```python
+```python { .notebook-cell }
 def check_success_rate():
   success_count = 0
   for idx, item in enumerate(dataset['test']):
@@ -422,7 +423,7 @@ Success : 2 / 20
 
 Before you can start your training, you need to define the hyperparameters you want to use in a `SFTConfig` instance.
 
-```python
+```python { .notebook-cell }
 from trl import SFTConfig
 
 torch_dtype = model.dtype
@@ -449,7 +450,7 @@ args = SFTConfig(
 
 You now have every building block you need to create your `SFTTrainer` to start the training of your model.
 
-```python
+```python { .notebook-cell }
 from trl import SFTTrainer
 
 # Create Trainer object
@@ -472,7 +473,7 @@ The model is already on multiple devices. Skipping the move to device specified 
 
 Start training by calling the `train()` method.
 
-```python
+```python { .notebook-cell }
 # Start training, the model will be automatically saved to the Hub and the output directory
 trainer.train()
 
@@ -501,7 +502,7 @@ To plot the training and validation losses, you would typically extract these va
 
 Libraries like Matplotlib can then be used to visualize these values over training steps or epochs. The x-axis would represent the training steps or epochs, and the y-axis would represent the corresponding loss values.
 
-```python
+```python { .notebook-cell }
 import matplotlib.pyplot as plt
 
 # Access the log history
@@ -530,7 +531,7 @@ plt.show()
 
 After the training is done, you'll want to evaluate and test your model. You can load different samples from the test dataset and evaluate the model on those samples.
 
-```python
+```python { .notebook-cell }
 check_success_rate()
 ```
 

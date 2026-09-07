@@ -3,6 +3,7 @@ title: Generate Embeddings with Sentence Transformers
 description: EmbeddingGemma is a lightweight, open embedding model designed for fast, high-quality retrieval on everyday devices like mobile phones.
 models: [embeddinggemma]
 frameworks: [sentence-transformers, transformers]
+colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs/notebooks/embeddinggemma-inference.ipynb
 source_url: "https://ai.google.dev/gemma/docs/embeddinggemma/inference-embeddinggemma-with-sentence-transformers.md.txt"
 ---
 # Generate Embeddings with Sentence Transformers
@@ -22,13 +23,13 @@ Before starting this tutorial, complete the following steps:
 
 Install the libraries required for running the EmbeddingGemma model and generating embeddings. Sentence Transformers is a Python framework for text and image embeddings. For more information, see the [Sentence Transformers](https://www.sbert.net/) documentation.
 
-```bash
+```bash { .notebook-cell }
 pip install -U sentence-transformers git+https://github.com/huggingface/transformers@v4.56.0-Embedding-Gemma-preview
 ```
 
 After you have accepted the license, you need a valid Hugging Face Token to access the model.
 
-```python
+```python { .notebook-cell }
 # Login into Hugging Face Hub
 from huggingface_hub import login
 login()
@@ -38,7 +39,7 @@ login()
 
 Use the `sentence-transformers` libraries to create an instance of a model class with EmbeddingGemma.
 
-```python
+```python { .notebook-cell }
 import torch
 from sentence_transformers import SentenceTransformer
 
@@ -72,7 +73,7 @@ Let's see how EmbeddingGemma would process three different words `["apple", "ban
 
 EmbeddingGemma has been trained on vast amounts of text and has learned the relationships between words and concepts.
 
-```python
+```python { .notebook-cell }
 words = ["apple", "banana", "car"]
 
 # Calculate embeddings by calling model.encode()
@@ -116,28 +117,28 @@ In this section, we use embeddings to determine how sementically similar differe
     - Sentence B: "I need to buy groceries for the week."
     - Reasoning: The two sentences are on completely unrelated topics and share no semantic overlap.
 
-      ```python
-      # The sentences to encode
-      sentence_high = [
-          "The chef prepared a delicious meal for the guests.",
-          "A tasty dinner was cooked by the chef for the visitors."
-      ]
-      sentence_medium = [
-          "She is an expert in machine learning.",
-          "He has a deep interest in artificial intelligence."
-      ]
-      sentence_low = [
-          "The weather in Tokyo is sunny today.",
-          "I need to buy groceries for the week."
-      ]
+```python { .notebook-cell }
+# The sentences to encode
+sentence_high = [
+    "The chef prepared a delicious meal for the guests.",
+    "A tasty dinner was cooked by the chef for the visitors."
+]
+sentence_medium = [
+    "She is an expert in machine learning.",
+    "He has a deep interest in artificial intelligence."
+]
+sentence_low = [
+    "The weather in Tokyo is sunny today.",
+    "I need to buy groceries for the week."
+]
 
-      for sentence in [sentence_high, sentence_medium, sentence_low]:
-        print("🙋‍♂️")
-        print(sentence)
-        embeddings = model.encode(sentence)
-        similarities = model.similarity(embeddings[0], embeddings[1])
-        print("`-> 🤖 score: ", similarities.numpy()[0][0])
-      ```
+for sentence in [sentence_high, sentence_medium, sentence_low]:
+  print("🙋‍♂️")
+  print(sentence)
+  embeddings = model.encode(sentence)
+  similarities = model.similarity(embeddings[0], embeddings[1])
+  print("`-> 🤖 score: ", similarities.numpy()[0][0])
+```
 
 ``` { .no-copy .output }
 🙋‍♂️
@@ -182,49 +183,49 @@ You can apply a prompt during inference in three ways.
 
    If you don't specify either `prompt` or `prompt_name`, the system will automatically use the prompt set as `default_prompt_name`, if no default is set, then no prompt is applied.
 
-   ```python
-      embeddings = model.encode(sentence)
+```python { .notebook-cell }
+embeddings = model.encode(sentence)
 
-   print("Available tasks:")
-   for name, prefix in model.prompts.items():
-     print(f" {name}: \"{prefix}\"")
-   print("-"*80)
+print("Available tasks:")
+for name, prefix in model.prompts.items():
+  print(f" {name}: \"{prefix}\"")
+print("-"*80)
 
-   for sentence in [sentence_high, sentence_medium, sentence_low]:
-     print("🙋‍♂️")
-     print(sentence)
-     embeddings = model.encode(sentence, prompt_name="STS")
-     similarities = model.similarity(embeddings[0], embeddings[1])
-     print("`-> 🤖 score: ", similarities.numpy()[0][0])
-   ```
+for sentence in [sentence_high, sentence_medium, sentence_low]:
+  print("🙋‍♂️")
+  print(sentence)
+  embeddings = model.encode(sentence, prompt_name="STS")
+  similarities = model.similarity(embeddings[0], embeddings[1])
+  print("`-> 🤖 score: ", similarities.numpy()[0][0])
+```
 
-   ``` { .no-copy .output }
-   Available tasks:
-    query: "task: search result | query: "
-    document: "title: none | text: "
-    BitextMining: "task: search result | query: "
-    Clustering: "task: clustering | query: "
-    Classification: "task: classification | query: "
-    InstructionRetrieval: "task: code retrieval | query: "
-    MultilabelClassification: "task: classification | query: "
-    PairClassification: "task: sentence similarity | query: "
-    Reranking: "task: search result | query: "
-    Retrieval: "task: search result | query: "
-    Retrieval-query: "task: search result | query: "
-    Retrieval-document: "title: none | text: "
-    STS: "task: sentence similarity | query: "
-    Summarization: "task: summarization | query: "
-   ---
-   🙋‍♂️
-   ['The chef prepared a delicious meal for the guests.', 'A tasty dinner was cooked by the chef for the visitors.']
-   `-> 🤖 score:  0.9363755
-   🙋‍♂️
-   ['She is an expert in machine learning.', 'He has a deep interest in artificial intelligence.']
-   `-> 🤖 score:  0.6425841
-   🙋‍♂️
-   ['The weather in Tokyo is sunny today.', 'I need to buy groceries for the week.']
-   `-> 🤖 score:  0.38587403
-   ```
+``` { .no-copy .output }
+Available tasks:
+ query: "task: search result | query: "
+ document: "title: none | text: "
+ BitextMining: "task: search result | query: "
+ Clustering: "task: clustering | query: "
+ Classification: "task: classification | query: "
+ InstructionRetrieval: "task: code retrieval | query: "
+ MultilabelClassification: "task: classification | query: "
+ PairClassification: "task: sentence similarity | query: "
+ Reranking: "task: search result | query: "
+ Retrieval: "task: search result | query: "
+ Retrieval-query: "task: search result | query: "
+ Retrieval-document: "title: none | text: "
+ STS: "task: sentence similarity | query: "
+ Summarization: "task: summarization | query: "
+---
+🙋‍♂️
+['The chef prepared a delicious meal for the guests.', 'A tasty dinner was cooked by the chef for the visitors.']
+`-> 🤖 score:  0.9363755
+🙋‍♂️
+['She is an expert in machine learning.', 'He has a deep interest in artificial intelligence.']
+`-> 🤖 score:  0.6425841
+🙋‍♂️
+['The weather in Tokyo is sunny today.', 'I need to buy groceries for the week.']
+`-> 🤖 score:  0.38587403
+```
 
 #### Use Case: Retrieval-Augmented Generation (RAG)
 
@@ -270,7 +271,7 @@ Classification is the task of assigning a piece of text to one or more predefine
 
 A practical application of text classification is customer support ticket routing. This process automatically directs customer queries to the correct department, saving time and reducing manual work.
 
-```python
+```python { .notebook-cell }
 labels = ["Billing Issue", "Technical Support", "Sales Inquiry"]
 
 sentence = [
@@ -309,7 +310,7 @@ This means you can get a smaller but still very useful embedding by simply takin
 
 Let's use three words `["apple", "banana", "car"]` and create simplified embeddings to see how MRL works.
 
-```python
+```python { .notebook-cell }
 def check_word_similarities():
   # Calculate the embedding similarities
   print("similarity function: ", model.similarity_fn_name)
@@ -334,7 +335,7 @@ tensor([[0.7510, 0.6685]])
 
 Now, for a faster application, you don't need a new model. Simply **truncate** the full embeddings to the first **512 dimensions** . For optimal results, it is also recommended to set `normalize_embeddings=True`, which scales the vectors to a unit length of 1.
 
-```python
+```python { .notebook-cell }
 embeddings = model.encode(words, truncate_dim=512, normalize_embeddings=True)
 
 for idx, embedding in enumerate(embeddings):
@@ -357,7 +358,7 @@ tensor([[0.7674, 0.7041]])
 
 In extremely constrained environments, you can further shorten the embeddings to just **256 dimensions** . You can also use the more efficient **dot-product** for similarity calculations instead of the standard **cosine** similarity.
 
-```python
+```python { .notebook-cell }
 model = SentenceTransformer(model_id, truncate_dim=256, similarity_fn_name="dot").to(device=device)
 embeddings = model.encode(words, prompt_name="STS", normalize_embeddings=True)
 

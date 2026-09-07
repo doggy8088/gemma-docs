@@ -3,6 +3,7 @@ title: Full function calling sequence with FunctionGemma
 description: "The complete FunctionGemma tool-calling cycle: the model's call, the developer's execution, and the final response built from the tool's output."
 models: [functiongemma]
 frameworks: [transformers]
+colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs/notebooks/functiongemma-full-sequence.ipynb
 source_url: "https://ai.google.dev/gemma/docs/functiongemma/full-function-calling-sequence-with-functiongemma.md.txt"
 ---
 # Full function calling sequence with FunctionGemma
@@ -24,7 +25,7 @@ Before starting this tutorial, complete the following steps:
 
 Install the Hugging Face libraries required for running the FunctionGemma model and making requests.
 
-```bash
+```bash { .notebook-cell }
 # Install PyTorch & other libraries
 pip install torch
 
@@ -34,7 +35,7 @@ pip install transformers
 
 After you have accepted the license, you need a valid Hugging Face Token to access the model.
 
-```python
+```python { .notebook-cell }
 # Login into Hugging Face Hub
 from huggingface_hub import login
 login()
@@ -44,7 +45,7 @@ login()
 
 Use the `torch` and `transformers` libraries to create an instance of a `processor` and `model` using the `AutoProcessor` and `AutoModelForCausalLM` classes as shown in the following code example:
 
-```python
+```python { .notebook-cell }
 from transformers import AutoProcessor, AutoModelForCausalLM
 
 GEMMA_MODEL_ID = "google/functiongemma-270m-it"
@@ -72,7 +73,7 @@ The core of function calling involves a four-step process:
 
 Let's simulate this process.
 
-```python
+```python { .notebook-cell }
 # Define a function that our model can use.
 def get_current_weather(location: str, unit: str = "celsius"):
     """
@@ -93,7 +94,7 @@ def get_current_weather(location: str, unit: str = "celsius"):
 
 Here's the user prompt `"Hey, what's the weather in Tokyo right now?"`, and the tool `[get_current_weather]`. FunctionGemma generates a function call object as follows.
 
-```python
+```python { .notebook-cell }
 prompt = "Hey, what's the weather in Tokyo right now?"
 tools = [get_current_weather]
 
@@ -141,7 +142,7 @@ Your application should parse the model's response to extract function name and 
     Always validate function names and arguments before execution.
     
 
-```python
+```python { .notebook-cell }
 import re
 
 def extract_tool_calls(text):
@@ -227,7 +228,7 @@ message.append({
 
 Finally, FunctionGemma reads the tool response and reply to the user.
 
-```python
+```python { .notebook-cell }
 inputs = processor.apply_chat_template(message, tools=tools, add_generation_prompt=True, return_dict=True, return_tensors="pt")
 out = model.generate(**inputs.to(model.device), pad_token_id=processor.eos_token_id, max_new_tokens=128)
 generated_tokens = out[0][len(inputs["input_ids"][0]):]
@@ -242,7 +243,7 @@ Output: The current weather in Tokyo is sunny with a temperature of 15 degrees C
 
 You can see the full chat history below.
 
-```python
+```python { .notebook-cell }
 # full history
 for item in message:
   print(item)
