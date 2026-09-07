@@ -82,12 +82,8 @@ Follow the Markdown links below to read canonical page content without cloning t
 ## Fine-tune
 - [Gemma model fine-tuning](https://gemma.ai/tuning.md): Fine-tuning a generative artificial intelligence (AI) model such as Gemma modifies the behavior of the model.
 - [Fine-Tune Gemma using Hugging Face Transformers and QloRA](https://gemma.ai/tuning/qlora.md): This guide walks you through how to fine-tune Gemma on a custom text-to-sql dataset using Hugging Face Transformers and TRL.
-- [Full Model Fine-Tune using Hugging Face Transformers](https://gemma.ai/tuning/full-finetune.md): This guide walks you through how to fine-tune Gemma on a mobile game NPC dataset using Hugging Face Transformers and TRL.
 - [Fine-Tune Gemma for Vision Tasks using Hugging Face Transformers and QLoRA](https://gemma.ai/tuning/vision-qlora.md): This guide walks you through how to fine-tune Gemma on a custom image and text dataset for a vision task (generating product descriptions) using Hugging Face Transformers and TRL.
-- [Fine-tune Gemma in Keras using LoRA](https://gemma.ai/tuning/keras-lora.md): Generative artificial intelligent (AI) models like Gemma are effective at a variety of tasks.
-- [Distributed tuning with Gemma using Keras](https://gemma.ai/tuning/distributed.md): Gemma is a family of lightweight, state-of-the-art open models built from research and technology used to create Google Gemini models.
-- [Tasks in spoken languages with Gemma](https://gemma.ai/tuning/spoken-language.md): Using artificial intelligence (AI) technology in a specific spoken language is a critical need for many businesses to be able to use it effectively.
-- [Fine-tune FunctionGemma 270M for Mobile Actions](https://gemma.ai/tuning/mobile-actions.md): Mobile Actions is a demo app where users can trigger actions on their device from voice or text input.
+- [Full Model Fine-Tune using Hugging Face Transformers](https://gemma.ai/tuning/full-finetune.md): This guide walks you through how to fine-tune Gemma on a mobile game NPC dataset using Hugging Face Transformers and TRL.
 
 ## Learn
 - [Learn](https://gemma.ai/learn.md): Illustrated walkthroughs of how the Gemma models work, from the architecture down to individual mechanisms.
