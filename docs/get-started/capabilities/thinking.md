@@ -37,17 +37,6 @@ model = AutoModelForMultimodalLM.from_pretrained(MODEL_ID, dtype="auto", device_
 processor = AutoProcessor.from_pretrained(MODEL_ID)
 ```
 
-``` { .no-copy .output }
-config.json:   0%|          | 0.00/4.95k [00:00<?, ?B/s]
-model.safetensors:   0%|          | 0.00/10.2G [00:00<?, ?B/s]
-Loading weights:   0%|          | 0/1951 [00:00<?, ?it/s]
-generation_config.json:   0%|          | 0.00/208 [00:00<?, ?B/s]
-processor_config.json:   0%|          | 0.00/1.69k [00:00<?, ?B/s]
-chat_template.jinja:   0%|          | 0.00/17.3k [00:00<?, ?B/s]
-tokenizer_config.json:   0%|          | 0.00/2.10k [00:00<?, ?B/s]
-tokenizer.json:   0%|          | 0.00/32.2M [00:00<?, ?B/s]
-```
-
 ## A single text inference with Thinking
 
 To generate a response using the model's thinking capabilities, pass `enable_thinking=True`, the processor will insert the correct thinking tokens into the prompt, instructing the model to think before responding.

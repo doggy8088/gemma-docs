@@ -82,6 +82,11 @@ ABBR_DEF = re.compile(r"^\*\[[^\]]+\]:.*$\n?", re.MULTILINE)
 # and a notebook never sees. Resolve them to ordinary inline links on the way out, so the export
 # carries real URLs instead of unresolved brackets.
 REFERENCE_LINK = re.compile(r"\[([^\]]+)\]\[([a-z0-9][a-z0-9-]*)\]")
+OUTPUT_IMAGE = re.compile(r"!\[[^\]]*\]\((?:[^)\n]*/)?output_[^/)\n]*\)[ \t]*\n?")
+# In Markdown tables, Jupyter/Colab table parsers split cells on unescaped `|` even inside inline
+# code spans (`<|turn>`). Escaping `|` as `\|` inside inline code spans on table rows keeps table
+# cells intact.
+INLINE_CODE = re.compile(r"(`+)([^`\n]+?)\1")
 
 
 def split_frontmatter(text: str) -> tuple[dict, str]:
@@ -215,7 +220,17 @@ def notebook_markdown(text: str) -> str:
     text = SNIPPET_INCLUDE.sub("", text)
     text = ABBR_DEF.sub("", text)
     text = ADMONITION.sub(replace_admonition, text)
-    return ATTR_LIST.sub("", text).strip()
+    text = ATTR_LIST.sub("", text)
+    text = OUTPUT_IMAGE.sub("", text)
+    lines = []
+    for line in text.splitlines(keepends=True):
+        if line.lstrip().startswith("|"):
+            line = INLINE_CODE.sub(
+                lambda m: m.group(1) + re.sub(r"(?<!\\)\|", r"\|", m.group(2)) + m.group(1),
+                line,
+            )
+        lines.append(line)
+    return "".join(lines).strip()
 
 
 def markdown_cell(source: str) -> dict | None:

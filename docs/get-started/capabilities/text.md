@@ -57,7 +57,6 @@ print(output[0]['generated_text'].removesuffix("<turn|>"))
 ```
 
 ``` { .no-copy .output }
-[transformers] Both `max_new_tokens` (=256) and `max_length`(=20) seem to have been set. `max_new_tokens` will take precedence. Please refer to the documentation for more information. (https://huggingface.co/docs/transformers/main/en/main_classes/text_generation)
 <|turn>user
 Roses are..<turn|>
 <|turn>model
@@ -126,7 +125,6 @@ Here are a few ways to complete the phrase "Roses are...":
 **If you want a simple, classic answer, I recommend:**
 
 **"Roses are beautiful."** or **"Roses are a symbol of love."**
-<dialog._src.widget.Conversation object at 0x7957faa35ac0>
 ```
 
 ## Use a prompt template
@@ -194,7 +192,6 @@ conv.show()
 ```
 
 ``` { .no-copy .output }
-[transformers] You seem to be using the pipelines sequentially on GPU. In order to maximize efficiency please use a dataset
 <|turn>user
 Write a short poem about the Kraken.<turn|>
 <|turn>model
@@ -215,7 +212,6 @@ With eyes of emerald, deep and wide,
 She lures the sailor to the tide.
 A siren's kiss, a deadly art,
 That breaks the sailor's guarded heart.
-<dialog._src.widget.Conversation object at 0x7955701cc0e0>
 ```
 
 And here's the conversation exported as text.
@@ -250,8 +246,7 @@ With eyes of emerald, deep and wide,
 She lures the sailor to the tide.
 A siren's kiss, a deadly art,
 That breaks the sailor's guarded heart.<turn|>
----
-<dialog._src.widget.ConversationStr object at 0x7957e64d30e0>
+--------------------------------------------------------------------------------
 ```
 
 
@@ -298,7 +293,6 @@ Of all the colors in the sunlight—red, orange, yellow, green, blue, indigo—t
 So, next time ye look up, ye can tell the secret: it be the **sunlight** bein' **scattered** by the **air**!
 
 **Shiver me timbers!** That's the pirate explanation!
-<dialog._src.widget.Conversation object at 0x7957ec8ed2b0>
 ```
 
 ## Summary

@@ -45,10 +45,6 @@ model = AutoModelForMultimodalLM.from_pretrained(MODEL_ID, dtype="auto", device_
 processor = AutoProcessor.from_pretrained(MODEL_ID)
 ```
 
-``` { .no-copy .output }
-Loading weights:   0%|          | 0/1951 [00:00<?, ?it/s]
-```
-
 ## Passing Tools
 
 You can pass tools to the model using the `apply_chat_template()` function via the `tools` argument. There are two methods for defining these tools:
@@ -355,7 +351,7 @@ print(f"Output: {output}")
     "content": "The current weather in Tokyo is 15 degrees Celsius and sunny."
   }
 ]
----
+--------------------------------------------------------------------------------
 Output: <bos><|turn>system
 You are a helpful assistant.<|tool>declaration:get_current_weather{description:<|"|>Gets the current weather in a given location.<|"|>,parameters:{properties:{location:{description:<|"|>The city and state, e.g. "San Francisco, CA" or "Tokyo, JP"<|"|>,type:<|"|>STRING<|"|>},unit:{description:<|"|>The unit to return the temperature in.<|"|>,enum:[<|"|>celsius<|"|>,<|"|>fahrenheit<|"|>],type:<|"|>STRING<|"|>} },required:[<|"|>location<|"|>],type:<|"|>OBJECT<|"|>} }<tool|><turn|>
 <|turn>user
@@ -475,9 +471,9 @@ print(json.dumps(message, indent=2))
 
 ``` { .no-copy .output }
 Output: The current weather in Seoul is 15 degrees Celsius and sunny. That sounds like great weather for running!
----
+--------------------------------------------------------------------------------
 Full History
----
+--------------------------------------------------------------------------------
 [
   {
     "role": "system",
