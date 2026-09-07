@@ -187,6 +187,7 @@ trainer = SentenceTransformerTrainer(
 trainer.train()
 ```
 
+``` { .no-copy .output }
 | Step | Training Loss |
 |---|---|
 | 3 | 0.048300 |
@@ -195,8 +196,6 @@ trainer.train()
 | 12 | 0.000000 |
 | 15 | 0.000000 |
 
-
-``` { .no-copy .output }
 Step 3 finished. Running evaluation:
 Document:  Opening a NISA Account -> 🤖 Score:  0.6459116
 Document:  Opening a Regular Savings Account -> 🤖 Score:  0.42690125
