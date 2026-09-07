@@ -83,10 +83,6 @@ You will use the following example dataset, which contains sample conversations 
 
 ### Simple tool calling dataset
 
-
-<button type="button" class="button-red button expand-control">Toggle code</button>
-
-
 ```python { .notebook-cell }
 simple_tool_calling = [
   {"user_content":"What is the reimbursement limit for travel meals?","tool_name":"search_knowledge_base","tool_arguments":"{\"query\": \"travel meal reimbursement limit policy\"}"},
@@ -483,8 +479,8 @@ trainer.save_model()
 
 ``` { .no-copy .output }
 The tokenizer has new PAD/BOS/EOS tokens that differ from the model config and generation config. The model config and generation config were aligned accordingly, being updated with the tokenizer's values. Updated tokens: {'bos_token_id': 2, 'pad_token_id': 0}.
-```
-\[40/40 01:02, Epoch 8/8\]
+
+[40/40 01:02, Epoch 8/8]
 
 | Epoch | Training Loss | Validation Loss | Entropy | Num Tokens | Mean Token Accuracy |
 |---|---|---|---|---|---|
@@ -496,7 +492,7 @@ The tokenizer has new PAD/BOS/EOS tokens that differ from the model config and g
 | 6 | 0.054400 | 0.489788 | 0.119700 | 19446.000000 | 0.940793 |
 | 7 | 0.035100 | 0.498824 | 0.083078 | 22687.000000 | 0.944682 |
 | 8 | 0.036200 | 0.502200 | 0.093177 | 25928.000000 | 0.944957 |
-
+```
 
 To plot the training and validation losses, you would typically extract these values from the `TrainerState` object or the logs generated during training.
 

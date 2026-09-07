@@ -259,7 +259,7 @@ print(f"Output: {output}")
 {'role': 'assistant', 'tool_calls': [{'type': 'function', 'function': {'name': 'get_current_weather', 'arguments': {'location': 'Tokyo, Japan'} } }]}
 {'role': 'tool', 'content': [{'name': 'get_current_weather', 'response': {'temperature': 15, 'weather': 'sunny'} }]}
 {'role': 'assistant', 'content': 'The current weather in Tokyo is sunny with a temperature of 15 degrees Celsius.'}
----
+--------------------------------------------------------------------------------
 Output: <bos><start_of_turn>developer
 You are a model that can do function calling with the following functions<start_function_declaration>declaration:get_current_weather{description:<escape>Gets the current weather in a given location.<escape>,parameters:{properties:{location:{description:<escape>The city and state, e.g. "San Francisco, CA" or "Tokyo, JP"<escape>,type:<escape>STRING<escape>},unit:{description:<escape>The unit to return the temperature in.<escape>,enum:[<escape>celsius<escape>,<escape>fahrenheit<escape>],type:<escape>STRING<escape>} },required:[<escape>location<escape>],type:<escape>OBJECT<escape>} }<end_function_declaration><end_of_turn>
 <start_of_turn>user
