@@ -112,11 +112,11 @@ This page documents releases for the Gemma family of models.
 
 ## May 3, 2024
 
-- Release of CodeGemma v1.1.
+- Release of [CodeGemma](https://www.kaggle.com/models/google/codegemma) v1.1.
 
 ## April 9, 2024
 
-- Initial release of CodeGemma.
+- Initial release of [CodeGemma](https://www.kaggle.com/models/google/codegemma).
 - Initial release of [RecurrentGemma](recurrentgemma/index.md).
 
 ## April 5, 2024
