@@ -188,6 +188,14 @@ nav = [
       { "Multi-Token Prediction" = "tutorials/visual-guides/mtp.md" },
       { "DiffusionGemma" = "tutorials/visual-guides/diffusiongemma.md" },
     ]},
+    { "Gemma explained" = [
+      { "Overview" = "tutorials/gemma-explained/overview.md" },
+      { "What's new in Gemma 2" = "tutorials/gemma-explained/gemma-2.md" },
+      { "RecurrentGemma" = "tutorials/gemma-explained/recurrentgemma.md" },
+      { "PaliGemma" = "tutorials/gemma-explained/paligemma.md" },
+      { "What's new in Gemma 3" = "tutorials/gemma-explained/gemma-3.md" },
+      { "EmbeddingGemma" = "tutorials/gemma-explained/embeddinggemma.md" },
+    ]},
   ]},
 
   # ---------------------------------------------------------------------------

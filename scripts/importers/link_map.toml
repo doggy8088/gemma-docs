@@ -189,4 +189,5 @@ paths = [
   "/codegemma/keras_quickstart",
   "/codegemma/code_assist_keras",
   "/codegemma/codegemma_flax_inference",
+  "/meme-generator",
 ]

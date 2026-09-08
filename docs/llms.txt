@@ -91,6 +91,12 @@ Follow the Markdown links below to read canonical page content without cloning t
 - [A Visual Guide to Gemma 4 12B](https://gemma.ai/tutorials/visual-guides/gemma-4-12b.md): A Visual Guide to Gemma 4 12B — a visual walkthrough.
 - [A Visual Guide to MTP](https://gemma.ai/tutorials/visual-guides/mtp.md): How multi-token prediction and speculative decoding make Gemma 4 faster — drafter models, shared KV cache, and the clustered LM head.
 - [A Visual Guide to DiffusionGemma](https://gemma.ai/tutorials/visual-guides/diffusiongemma.md): A Visual Guide to DiffusionGemma — a visual walkthrough.
+- [Overview of Gemma Architectures](https://gemma.ai/tutorials/gemma-explained/overview.md): Text-to-text models and specialization for coding.
+- [What’s New in Gemma 2](https://gemma.ai/tutorials/gemma-explained/gemma-2.md): Updated architecture with knowledge distillation for 2B and 9B models.
+- [RecurrentGemma Architecture](https://gemma.ai/tutorials/gemma-explained/recurrentgemma.md): The Griffin architecture mixing local attention and linear recurrences for fast long-sequence inference.
+- [PaliGemma Architecture](https://gemma.ai/tutorials/gemma-explained/paligemma.md): Vision-language model that takes text and images as input to generate text outputs.
+- [What’s New in Gemma 3](https://gemma.ai/tutorials/gemma-explained/gemma-3.md): Updated vision-language model with 5-to-1 interleaved attention and 128k context handling.
+- [EmbeddingGemma Architecture](https://gemma.ai/tutorials/gemma-explained/embeddinggemma.md): Text embedding model for search and retrieval.
 
 ## Resources
 - [Resources](https://gemma.ai/resources.md): Demos, tools, community projects and the external repositories and collections worth knowing about.

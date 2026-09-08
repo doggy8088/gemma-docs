@@ -39,34 +39,34 @@ Read them in any order. Nothing here is a prerequisite for using Gemma.
 ## Previous Gemma Explained Series
 
 <div class="card-grid">
-<a class="card" href="https://developers.googleblog.com/gemma-explained-overview-gemma-model-family-architectures" target="_blank" rel="noopener">
+<a class="card" href="../tutorials/gemma-explained/overview.md">
   <span class="card-icon">{{ icon('lucide/book-open') }}</span>
-  <div class="card-title">Overview of Gemma Architectures <span class="card-ext">↗</span></div>
+  <div class="card-title">Overview of Gemma Architectures</div>
   <p class="card-desc">Text-to-text models and specialization for coding.</p>
 </a>
-<a class="card" href="https://developers.googleblog.com/gemma-explained-new-in-gemma-2/" target="_blank" rel="noopener">
+<a class="card" href="../tutorials/gemma-explained/gemma-2.md">
   <span class="card-icon">{{ icon('lucide/book-open') }}</span>
-  <div class="card-title">What’s New in Gemma 2 <span class="card-ext">↗</span></div>
+  <div class="card-title">What’s New in Gemma 2</div>
   <p class="card-desc">Updated architecture with knowledge distillation for 2B and 9B models.</p>
 </a>
-<a class="card" href="https://developers.googleblog.com/gemma-explained-recurrentgemma-architecture/" target="_blank" rel="noopener">
+<a class="card" href="../tutorials/gemma-explained/recurrentgemma.md">
   <span class="card-icon">{{ icon('lucide/book-open') }}</span>
-  <div class="card-title">RecurrentGemma Architecture <span class="card-ext">↗</span></div>
+  <div class="card-title">RecurrentGemma Architecture</div>
   <p class="card-desc">The Griffin architecture mixing local attention and linear recurrences for fast long-sequence inference.</p>
 </a>
-<a class="card" href="https://developers.googleblog.com/gemma-explained-paligemma-architecture/" target="_blank" rel="noopener">
+<a class="card" href="../tutorials/gemma-explained/paligemma.md">
   <span class="card-icon">{{ icon('lucide/book-open') }}</span>
-  <div class="card-title">PaliGemma Architecture <span class="card-ext">↗</span></div>
+  <div class="card-title">PaliGemma Architecture</div>
   <p class="card-desc">Vision-language model that takes text and images as input to generate text outputs.</p>
 </a>
-<a class="card" href="https://developers.googleblog.com/gemma-explained-whats-new-in-gemma-3/" target="_blank" rel="noopener">
+<a class="card" href="../tutorials/gemma-explained/gemma-3.md">
   <span class="card-icon">{{ icon('lucide/book-open') }}</span>
-  <div class="card-title">What’s New in Gemma 3 <span class="card-ext">↗</span></div>
+  <div class="card-title">What’s New in Gemma 3</div>
   <p class="card-desc">Updated vision-language model with 5-to-1 interleaved attention and 128k context handling.</p>
 </a>
-<a class="card" href="https://developers.googleblog.com/gemma-explained-embeddinggemma-architecture-and-recipe/" target="_blank" rel="noopener">
+<a class="card" href="../tutorials/gemma-explained/embeddinggemma.md">
   <span class="card-icon">{{ icon('lucide/book-open') }}</span>
-  <div class="card-title">EmbeddingGemma Architecture <span class="card-ext">↗</span></div>
+  <div class="card-title">EmbeddingGemma Architecture</div>
   <p class="card-desc">Text embedding model for search and retrieval.</p>
 </a>
 </div>

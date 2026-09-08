@@ -355,6 +355,38 @@ source = "https://newsletter.maartengrootendorst.com/p/a-visual-guide-to-diffusi
 importer = "import_newsletter"
 frozen = true
 
+# --- Gemma explained ----------------------------------------------------------------------
+
+[[page]]
+path = "tutorials/gemma-explained/overview.md"
+source = "https://developers.googleblog.com/gemma-explained-overview-gemma-model-family-architectures"
+frozen = true
+
+[[page]]
+path = "tutorials/gemma-explained/gemma-2.md"
+source = "https://developers.googleblog.com/gemma-explained-new-in-gemma-2/"
+frozen = true
+
+[[page]]
+path = "tutorials/gemma-explained/recurrentgemma.md"
+source = "https://developers.googleblog.com/gemma-explained-recurrentgemma-architecture/"
+frozen = true
+
+[[page]]
+path = "tutorials/gemma-explained/paligemma.md"
+source = "https://developers.googleblog.com/gemma-explained-paligemma-architecture/"
+frozen = true
+
+[[page]]
+path = "tutorials/gemma-explained/gemma-3.md"
+source = "https://developers.googleblog.com/gemma-explained-whats-new-in-gemma-3/"
+frozen = true
+
+[[page]]
+path = "tutorials/gemma-explained/embeddinggemma.md"
+source = "https://developers.googleblog.com/gemma-explained-embeddinggemma-architecture-and-recipe/"
+frozen = true
+
 # --- Legal --------------------------------------------------------------------------------
 
 [[page]]
