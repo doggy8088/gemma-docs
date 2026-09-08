@@ -286,7 +286,7 @@ plt.imshow(image)
 
 ### Run request with an image
 
-When prompting the Gemma 4 model with image content, you use a specific string sequence, `<|image|>`, within your prompt to include the image as part of the prompt. Use a prompt template, such as the `PROMPT_TEMPLATE` string defined previously, to format your request as shown in the following prompt code:
+When prompting the Gemma 4 model with image content, you use a specific string sequence, `<|image|>`{.token-multi}, within your prompt to include the image as part of the prompt. Use a prompt template, such as the `PROMPT_TEMPLATE` string defined previously, to format your request as shown in the following prompt code:
 
 ```python { .notebook-cell }
 question = """Which cuisine is this: <|image|>?
@@ -337,7 +337,7 @@ gemma_lm.preprocessor.sequence_length = 768
 
 ### Run requests with multiple images
 
-When using more than one image in a prompt, use multiple `<|image|>` tokens for each provided image, as shown in the following example:
+When using more than one image in a prompt, use multiple `<|image|>`{.token-multi} tokens for each provided image, as shown in the following example:
 
 ```python { .notebook-cell }
 photo_a = read_image("https://raw.githubusercontent.com/google-gemma/cookbook/refs/heads/main/apps/sample-data/GoldenGate.png")

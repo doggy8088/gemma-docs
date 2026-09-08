@@ -48,38 +48,24 @@ pipe = pipeline(
 )
 ```
 
-``` { .no-copy .output }
-config.json:   0%|          | 0.00/4.95k [00:00<?, ?B/s]
-model.safetensors:   0%|          | 0.00/10.2G [00:00<?, ?B/s]
-Loading weights:   0%|          | 0/1951 [00:00<?, ?it/s]
-generation_config.json:   0%|          | 0.00/208 [00:00<?, ?B/s]
-processor_config.json:   0%|          | 0.00/1.69k [00:00<?, ?B/s]
-chat_template.jinja:   0%|          | 0.00/17.3k [00:00<?, ?B/s]
-tokenizer_config.json:   0%|          | 0.00/2.10k [00:00<?, ?B/s]
-tokenizer.json:   0%|          | 0.00/32.2M [00:00<?, ?B/s]
-```
-
 Gemma supports only a few `task` settings for generation. For more information on the available `task` settings, see the Hugging Face Pipelines [task()](https://huggingface.co/docs/transformers/main/en/main_classes/pipelines#transformers.pipeline.task) documentation. For more information about using the Pipeline class, see the Hugging Face [Pipelines](https://huggingface.co/docs/transformers/main/en/main_classes/pipelines) documentation.
 
 ### Run text generation
 
-Once you have the Gemma model loaded and configured in a `pipeline` object, you can send prompts to the model. The following example code shows a basic request using the [`text`](https://www.tensorflow.org/text/api_docs/python/text) parameter:
+Once you have the Gemma model loaded and configured in a `pipeline` object, you can send prompts to the model. The following example code shows a basic request using the `text` parameter:
 
 ```python { .notebook-cell }
 pipe(text="<|turn>user\nroses are red<turn|>\n<|turn>model\n")
 ```
 
 ``` { .no-copy .output }
-[transformers] The input data was not formatted as a chat with dicts containing 'role' and 'content' keys, even though this model supports chat. Consider using the chat format for better results. For more information, see https://huggingface.co/docs/transformers/en/chat_templating
-[transformers] Keyword argument `video` is not a valid argument for this processor and will be ignored.
-[transformers] Both `max_new_tokens` (=256) and `max_length`(=20) seem to have been set. `max_new_tokens` will take precedence. Please refer to the documentation for more information. (https://huggingface.co/docs/transformers/main/en/main_classes/text_generation)
 [{'input_text': '<|turn>user\nroses are red<turn|>\n<|turn>model\n',
   'generated_text': "<|turn>user\nroses are red<turn|>\n<|turn>model\nThat's a classic rhyme! It immediately brings up the image of **roses and the color red**.\n\nIs there anything else you'd like to talk about, or perhaps another rhyme you'd like to try? 😊<turn|>"}]
 ```
 
 ### Use a prompt template
 
-When generating content with more complex prompting, use a prompt template to structure your request. A prompt template allows you to specify input from specific roles, such as `user` or `model`, and is a required format for managing multi-turn chat interactions with Gemma models. The following example code shows how to constuct a prompt template for Gemma:
+When generating content with more complex prompting, use a prompt template to structure your request. A prompt template allows you to specify input from specific roles, such as `user`{.token-role} or `model`{.token-role}, and is a required format for managing multi-turn chat interactions with Gemma models. The following example code shows how to constuct a prompt template for Gemma:
 
 ```python { .notebook-cell }
 from transformers import GenerationConfig
@@ -115,7 +101,7 @@ Starting with Gemma 3, for model sizes 4B and higher, you can use image data as 
 
 ### Use a prompt template
 
-When generating content with more complex prompting, use a prompt template to structure your request. A prompt template allows you to specify input from specific roles, such as `user` or `model`, and is a required format for managing multi-turn chat interactions with Gemma models. The following example code shows how to constuct a prompt template for Gemma:
+When generating content with more complex prompting, use a prompt template to structure your request. A prompt template allows you to specify input from specific roles, such as `user`{.token-role} or `model`{.token-role}, and is a required format for managing multi-turn chat interactions with Gemma models. The following example code shows how to constuct a prompt template for Gemma:
 
 ```python { .notebook-cell }
 from transformers import GenerationConfig
@@ -154,7 +140,7 @@ pipe(text=messages, return_full_text=False, generate_kwargs=gen_kwargs)
 
 You can include multiple images in your prompt by including additional `"type": "image",` entries in the `content` list.
 !!! Note
-    Do not use `<|image|>`, `<start_of_image>` or `<image_soft_token>` tokens in text portion of a prompt template as this approach creates redundant tokens and processing errors.
+    Do not use `<|image|>`{.token-multi}, `<start_of_image>`{.token-multi} or `<image_soft_token>`{.token-multi} tokens in text portion of a prompt template as this approach creates redundant tokens and processing errors.
     
 
 ## Generate text from audio data
@@ -163,7 +149,7 @@ With [Gemma 4](../models/gemma-4/index.md) and [Gemma 3n](../models/gemma-3n/ind
 
 ### Use a prompt template
 
-When generating content with audio, use a prompt template to structure your request. A prompt template allows you to specify input from specific roles, such as `user` or `model`, and is a required format for managing multi-turn chat interactions with Gemma models. The following example code shows how to constuct a prompt template for Gemma with audio data input:
+When generating content with audio, use a prompt template to structure your request. A prompt template allows you to specify input from specific roles, such as `user`{.token-role} or `model`{.token-role}, and is a required format for managing multi-turn chat interactions with Gemma models. The following example code shows how to constuct a prompt template for Gemma with audio data input:
 
 ```python { .notebook-cell }
 from transformers import GenerationConfig
@@ -195,7 +181,7 @@ pipe(text=messages, return_full_text=False, generate_kwargs=gen_kwargs)
 
 You can include multiple audio files in your prompt by including additional `"type": "audio",` entries in the `content` list.
 !!! Note
-    Do not use `<|audio|>` or `<audio_soft_token>` tokens in text portion of a prompt template as this approach creates redundant tokens and processing errors.
+    Do not use `<|audio|>`{.token-multi} or `<audio_soft_token>`{.token-multi} tokens in text portion of a prompt template as this approach creates redundant tokens and processing errors.
     
 
 ## Next steps
