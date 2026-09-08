@@ -100,6 +100,9 @@ This dataset demonstrates a key principle for fine-tuning: the required dataset 
 
   # Print formatted user prompt
   print(dataset["train"][0]["messages"])
+  ```
+
+  ```{ .no-copy .output }
   README.md:   0%|          | 0.00/141 [00:00<?, ?B/s]
   martian.csv: 0.00B [00:00, ?B/s]
   Generating train split:   0%|          | 0/25 [00:00<?, ? examples/s]
@@ -128,6 +131,9 @@ tokenizer = AutoTokenizer.from_pretrained(base_model)
 
 print(f"Device: {model.device}")
 print(f"DType: {model.dtype}")
+```
+
+```{ .no-copy .output }
 Device: cuda:0
 DType: torch.bfloat16
 ```
@@ -157,6 +163,9 @@ outputs = pipe(prompt, max_new_tokens=256, disable_compile=True)
 print(f"Question:\n{test_sample['messages'][0]['content']}\n")
 print(f"Original Answer:\n{test_sample['messages'][1]['content']}\n")
 print(f"Generated Answer (base model):\n{outputs[0]['generated_text'][len(prompt):].strip()}")
+```
+
+```{ .no-copy .output }
 Device set to use cuda:0
 Question:
 What do you think of my outfit?
@@ -175,6 +184,9 @@ The goal is to see if the model can stay in character rather than answering the 
 ```python { .notebook-cell }
 outputs = pipe([{"role": "user", "content": "Sorry, you are a game NPC."}], max_new_tokens=256, disable_compile=True)
 print(outputs[0]['generated_text'][1]['content'])
+```
+
+```{ .no-copy .output }
 Okay, I'm ready. Let's begin!
 ```
 
@@ -204,6 +216,9 @@ outputs = pipe(message, max_new_tokens=256, disable_compile=True)
 print(outputs[0]['generated_text'])
 print("-"*80)
 print(outputs[0]['generated_text'][-1]['content'])
+```
+
+```{ .no-copy .output }
 [{'role': 'system', 'content': "You are a Martian NPC with a unique speaking style. Use an accent that replaces 's' sounds with 'z', uses 'da' for 'the', 'diz' for 'this', and includes occasional clicks like *k'tak*."}, {'role': 'user', 'content': 'Do you know any jokes?'}, {'role': 'assistant', 'content': "A joke? k'tak Yez. A Terran, a Glarzon, and a pile of nutrient-pazte walk into a bar... Narg, I forget da rezt. Da punch-line waz zarcaztic."}, {'role': 'user', 'content': '(Stands idle for too long)'}, {'role': 'assistant', 'content': "You'z broken, Terran? Or iz diz... 'meditation'? You look like you're trying to lay an egg."}, {'role': 'user', 'content': 'What do you think of my outfit?'}, {'role': 'assistant', 'content': 'Iz very... pointy. Are you expecting to be attacked by zky-eelz? On Marz, dat would be zenzible.'}, {'role': 'user', 'content': "It's raining."}, {'role': 'assistant', 'content': 'Gah! Da zky iz leaking again! Zorp will be in da zhelter until it ztopz being zo... wet. Diz iz no good for my jointz.'}, {'role': 'user', 'content': 'I brought you a gift.'}, {'role': 'assistant', 'content': "A gift? For Zorp? k'tak It iz... a small rock. Very... rock-like. Zorp will put it with da other rockz. Thank you for da thought, Terran."}, {'role': 'user', 'content': 'What is this place?'}, {'role': 'assistant', 'content': "This is a cave. It's made of rock and dust.\n"}]
 ---
 This is a cave. It's made of rock and dust.
@@ -255,6 +270,9 @@ trainer = SFTTrainer(
     eval_dataset=dataset['test'],
     processing_class=tokenizer,
 )
+```
+
+```{ .no-copy .output }
 Tokenizing train dataset:   0%|          | 0/20 [00:00<?, ? examples/s]
 Truncating train dataset:   0%|          | 0/20 [00:00<?, ? examples/s]
 Tokenizing eval dataset:   0%|          | 0/5 [00:00<?, ? examples/s]
@@ -271,7 +289,8 @@ trainer.train()
 trainer.save_model()
 ```
 
-\[25/25 04:13, Epoch 5/5\]
+```{ .no-copy .output }
+[25/25 04:13, Epoch 5/5]
 
 | Epoch | Training Loss | Validation Loss |
 |---|---|---|
@@ -280,7 +299,7 @@ trainer.save_model()
 | 3 | 1.747000 | 3.666415 |
 | 4 | 0.779900 | 4.499709 |
 | 5 | 0.449600 | 5.471325 |
-
+```
 
 To plot the training and validation losses, you would typically extract these values from the `TrainerState` object or the logs generated during training.
 
@@ -363,6 +382,9 @@ def test(test_sample):
 # Test with an unseen dataset
 for item in dataset['test']:
   test(item)
+```
+
+```{ .no-copy .output }
 Device set to use cuda:0
 Question:
 Do you know any jokes?
@@ -406,6 +428,9 @@ If you try our original generalist prompt, you can see that the model still atte
 ```python { .notebook-cell }
 outputs = pipe([{"role": "user", "content": "Sorry, you are a game NPC."}], max_new_tokens=256, disable_compile=True)
 print(outputs[0]['generated_text'][1]['content'])
+```
+
+```{ .no-copy .output }
 Nameless. You... you z-mell like... wet plantz. Why you wear shiny piecez on your head?
 ```
 

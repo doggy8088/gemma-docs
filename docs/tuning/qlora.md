@@ -125,6 +125,9 @@ dataset = dataset.train_test_split(test_size=0.2, shuffle=False)
 # Print formatted user prompt
 for item in dataset["train"][0]["messages"]:
   print(item)
+```
+
+```{ .no-copy .output }
 {'role': 'system', 'content': 'You are a text to SQL query translator. Users will ask you questions in English and you will generate a SQL query based on the provided SCHEMA.'}
 {'role': 'user', 'content': "Given the <USER_QUERY> and the <SCHEMA>, generate the corresponding SQL command to retrieve the desired data, considering the query's syntax, semantics, and schema constraints.\n\n<SCHEMA>\nCREATE TABLE salesperson (salesperson_id INT, name TEXT, region TEXT); INSERT INTO salesperson (salesperson_id, name, region) VALUES (1, 'John Doe', 'North'), (2, 'Jane Smith', 'South'); CREATE TABLE timber_sales (sales_id INT, salesperson_id INT, volume REAL, sale_date DATE); INSERT INTO timber_sales (sales_id, salesperson_id, volume, sale_date) VALUES (1, 1, 120, '2021-01-01'), (2, 1, 150, '2021-02-01'), (3, 2, 180, '2021-01-01');\n</SCHEMA>\n\n<USER_QUERY>\nWhat is the total volume of timber sold by each salesperson, sorted by salesperson?\n</USER_QUERY>\n"}
 {'role': 'assistant', 'content': 'SELECT salesperson_id, name, SUM(volume) as total_volume FROM timber_sales JOIN salesperson ON timber_sales.salesperson_id = salesperson.salesperson_id GROUP BY salesperson_id, name ORDER BY total_volume DESC;'}
@@ -179,11 +182,6 @@ processor = AutoProcessor.from_pretrained("google/gemma-4-E2B-it") # Load the In
 # On T4, we are skipping this step purely due to VRAM limitation and for a quick demonstration.
 if (torch.cuda.get_device_properties(0).total_memory/1024**3) > 16:
     model = prepare_model_for_kbit_training(model)
-WARNING:torchao:Failed to load /usr/local/lib/python3.12/dist-packages/torchao/_C_mxfp8.cpython-310-x86_64-linux-gnu.so: Could not load this library: /usr/local/lib/python3.12/dist-packages/torchao/_C_mxfp8.cpython-310-x86_64-linux-gnu.so
-WARNING:torchao:Failed to load /usr/local/lib/python3.12/dist-packages/torchao/_C_cutlass_90a.abi3.so: Could not load this library: /usr/local/lib/python3.12/dist-packages/torchao/_C_cutlass_90a.abi3.so
-Loading weights:   0%|          | 0/1951 [00:00<?, ?it/s]
-/usr/local/lib/python3.12/dist-packages/bitsandbytes/backends/cuda/ops.py:213: FutureWarning: _check_is_size will be removed in a future PyTorch release along with guard_size_oblivious.     Use _check(i >= 0) instead.
-  torch._check_is_size(blocksize)
 ```
 
 The `SFTTrainer` supports a built-in integration with `peft`, which makes it straightforward to efficiently tune LLMs using QLoRA. You only need to create a `LoraConfig` and provide it to the trainer.
@@ -297,8 +295,6 @@ def collate_fn(examples):
 
     batch["labels"] = labels
     return batch
-/tmp/ipykernel_164873/3952412390.py:4: FutureWarning: The default `loss_type` will change from `'nll'` to `'chunked_nll'` in TRL 1.7. For standard models this is transparent (same math, lower memory) and no action is needed — you'll get the new default automatically on upgrade. If you use a custom model, check ahead of time that `loss_type='chunked_nll'` runs and yields the same loss as `'nll'`; if it doesn't, pin `loss_type='nll'` to keep the current behavior and please open an issue at https://github.com/huggingface/trl/issues so we can address the edge case.
-  args = SFTConfig(
 ```
 
 You now have every building block you need to create your `SFTTrainer` to start the training of your model.
@@ -326,29 +322,16 @@ trainer.train()
 
 # Save the final model again to the Hugging Face Hub
 trainer.save_model()
-[transformers] The tokenizer has new PAD/BOS/EOS tokens that differ from the model config and generation config. The model config and generation config were aligned accordingly, being updated with the tokenizer's values. Updated tokens: {'eos_token_id': 1, 'bos_token_id': 2, 'pad_token_id': 0}.
 ```
-\[3000/3000 1:51:30, Epoch 3/3\]
+
+```{ .no-copy .output }
+[3000/3000 1:51:30, Epoch 3/3]
 
 | Epoch | Training Loss | Validation Loss | Entropy | Mean Token Accuracy | Num Tokens |
 |---|---|---|---|---|---|
 | 1 | 0.315478 | 0.267880 | 0.204330 | 0.927141 | 246435.000000 |
 | 2 | 0.139383 | 0.297303 | 0.131811 | 0.929568 | 492870.000000 |
 | 3 | 0.150697 | 0.315715 | 0.110690 | 0.927032 | 739305.000000 |
-
-
-``` { .no-copy .output }
-Processing Files (0 / 0)      : |          |  0.00B /  0.00B
-New Data Upload               : |          |  0.00B /  0.00B
-...adapter_model.safetensors:   3%|3         | 56.0MB / 1.62GB
-...154.ffa1dd7a1058.125401.0: 100%|##########|  126kB /  126kB
-...268.ffa1dd7a1058.112980.0: 100%|##########| 47.9kB / 47.9kB
-...-to-sql/training_args.bin: 100%|##########| 5.65kB / 5.65kB
-...482.ffa1dd7a1058.164873.0: 100%|##########|  126kB /  126kB
-...ext-to-sql/tokenizer.json: 100%|##########| 32.2MB / 32.2MB
-...039.ffa1dd7a1058.109416.0: 100%|##########| 8.28kB / 8.28kB
-No files have been modified since last commit. Skipping to prevent empty commit.
-WARNING:huggingface_hub.hf_api:No files have been modified since last commit. Skipping to prevent empty commit.
 ```
 
 Before you can test your model, make sure to free the memory.
@@ -380,6 +363,9 @@ merged_model.save_pretrained("merged_model", safe_serialization=True, max_shard_
 
 processor = AutoProcessor.from_pretrained("google/gemma-4-E2B-it")
 processor.save_pretrained("merged_model")
+```
+
+```{ .no-copy .output }
 Loading weights:   0%|          | 0/1951 [00:00<?, ?it/s]
 Writing model shards:   0%|          | 0/4 [00:00<?, ?it/s]
 ['merged_model/processor_config.json']
@@ -405,6 +391,9 @@ model = AutoModelForMultimodalLM.from_pretrained(
   dtype="auto",
 )
 processor = AutoProcessor.from_pretrained(model_id)
+```
+
+```{ .no-copy .output }
 Loading weights:   0%|          | 0/1951 [00:00<?, ?it/s]
 ```
 
@@ -438,6 +427,9 @@ print(f"Context:\n", re.search(r'<SCHEMA>\n(.*?)\n</SCHEMA>', test_sample['messa
 print(f"Query:\n", re.search(r'<USER_QUERY>\n(.*?)\n</USER_QUERY>', test_sample['messages'][1]['content'], re.DOTALL).group(1).strip())
 print(f"Original Answer:\n{test_sample['messages'][2]['content']}")
 print(f"Generated Answer:\n{outputs[0]['generated_text'][len(prompt):].strip().removesuffix("<turn|>")}")
+```
+
+```{ .no-copy .output }
 <bos><|turn>system
 You are a text to SQL query translator. Users will ask you questions in English and you will generate a SQL query based on the provided SCHEMA.<turn|>
 <|turn>user

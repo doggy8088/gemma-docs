@@ -158,6 +158,9 @@ dataset_train = [format_data(sample) for sample in dataset["train"]]
 dataset_test = [format_data(sample) for sample in dataset["test"]]
 
 print(dataset_train[345]["messages"])
+```
+
+```{ .no-copy .output }
 [{'role': 'system', 'content': 'You are an expert product description writer for Amazon.'}, {'role': 'user', 'content': [{'type': 'text', 'text': 'Create a Short Product description based on the provided <PRODUCT> and <CATEGORY> and image.\nOnly return description. The description should be SEO optimized and for a better mobile search experience.\n\n<PRODUCT>\nBachmann Trains inches 6 inches Pine Trees with Snow 6 Per Box\n</PRODUCT>\n\n<CATEGORY>\nToys & Games | Hobbies | Trains & Accessories | Accessories | Scenery\n</CATEGORY>\n'}, {'type': 'image', 'image': <PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=173x500 at 0x7ED5E4422C00>}]}, {'role': 'assistant', 'content': [{'type': 'text', 'text': 'Enhance your model train landscape with these realistic Bachmann Trains 6-inch pine trees, flocked with snow.  Six highly detailed trees per box, perfect for adding winter charm to your HO scale layout.  Create a captivating snowy scene!'}]}]
 ```
 
@@ -208,9 +211,6 @@ processor = AutoProcessor.from_pretrained("google/gemma-4-E2B-it") # Load the In
 
 # Prepare model for QLoRA training
 model = prepare_model_for_kbit_training(model)
-Loading weights:   0%|          | 0/1951 [00:00<?, ?it/s]
-/usr/local/lib/python3.12/dist-packages/bitsandbytes/backends/cuda/ops.py:213: FutureWarning: _check_is_size will be removed in a future PyTorch release along with guard_size_oblivious.     Use _check(i >= 0) instead.
-  torch._check_is_size(blocksize)
 ```
 
 The `SFTTrainer` supports a built-in integration with `peft`, which makes it straightforward to efficiently tune LLMs using QLoRA. You only need to create a `LoraConfig` and provide it to the trainer.
@@ -281,8 +281,6 @@ def collate_fn(examples):
 
     batch["labels"] = labels
     return batch
-/tmp/ipykernel_26645/1232990497.py:3: FutureWarning: The default `loss_type` will change from `'nll'` to `'chunked_nll'` in TRL 1.7. For standard models this is transparent (same math, lower memory) and no action is needed — you'll get the new default automatically on upgrade. If you use a custom model, check ahead of time that `loss_type='chunked_nll'` runs and yields the same loss as `'nll'`; if it doesn't, pin `loss_type='nll'` to keep the current behavior and please open an issue at https://github.com/huggingface/trl/issues so we can address the edge case.
-  args = SFTConfig(
 ```
 
 You now have every building block you need to create your `SFTTrainer` to start the training of your model.
@@ -310,27 +308,16 @@ trainer.train()
 
 # Save the final model again to the Hugging Face Hub
 trainer.save_model()
-[transformers] The tokenizer has new PAD/BOS/EOS tokens that differ from the model config and generation config. The model config and generation config were aligned accordingly, being updated with the tokenizer's values. Updated tokens: {'eos_token_id': 1, 'bos_token_id': 2, 'pad_token_id': 0}.
 ```
-\[3630/3630 57:38, Epoch 3/3\]
+
+```{ .no-copy .output }
+[3630/3630 57:38, Epoch 3/3]
 
 | Epoch | Training Loss | Validation Loss | Entropy | Mean Token Accuracy | Num Tokens |
 |---|---|---|---|---|---|
 | 1 | 0.835934 | 0.844098 | 0.735220 | 0.818571 | 521741.000000 |
 | 2 | 0.411868 | 0.886929 | 0.548703 | 0.822062 | 1043482.000000 |
 | 3 | 0.488929 | 1.007192 | 0.417825 | 0.822075 | 1565223.000000 |
-
-
-``` { .no-copy .output }
-Processing Files (0 / 0)      : |          |  0.00B /  0.00B
-New Data Upload               : |          |  0.00B /  0.00B
-...34898.c7e1d0064144.7818.0: 100%|##########| 43.2kB / 43.2kB
-...escription/tokenizer.json: 100%|##########| 32.2MB / 32.2MB
-...adapter_model.safetensors:   5%|4         | 80.0MB / 1.62GB
-...5378.c7e1d0064144.10487.0: 100%|##########|  289kB /  289kB
-...ription/training_args.bin: 100%|##########| 5.71kB / 5.71kB
-No files have been modified since last commit. Skipping to prevent empty commit.
-WARNING:huggingface_hub.hf_api:No files have been modified since last commit. Skipping to prevent empty commit.
 ```
 
 Before you can test your model, make sure to free the memory.
@@ -362,6 +349,9 @@ merged_model.save_pretrained("merged_model", safe_serialization=True, max_shard_
 
 processor = AutoProcessor.from_pretrained(args.output_dir)
 processor.save_pretrained("merged_model")
+```
+
+```{ .no-copy .output }
 Loading weights:   0%|          | 0/1951 [00:00<?, ?it/s]
 Writing model shards:   0%|          | 0/4 [00:00<?, ?it/s]
 ['merged_model/processor_config.json']
@@ -387,6 +377,9 @@ model = AutoModelForMultimodalLM.from_pretrained(
   dtype="auto",
 )
 processor = AutoProcessor.from_pretrained(model_id)
+```
+
+```{ .no-copy .output }
 Loading weights:   0%|          | 0/1951 [00:00<?, ?it/s]
 ```
 
@@ -442,6 +435,9 @@ def generate_description(sample, model, processor):
 description = generate_description(sample, model, processor)
 print("MODEL OUTPUT>> \n")
 print(description)
+```
+
+```{ .no-copy .output }
 <bos><|turn>system
 You are an expert product description writer for Amazon.<turn|>
 <|turn>user
