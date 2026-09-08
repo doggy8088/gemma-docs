@@ -133,3 +133,7 @@ links:
     url: https://github.com/google-gemma
   vertex-use-gemma:
     url: https://cloud.google.com/vertex-ai/docs/generative-ai/open-models/use-gemma
+
+  # --- Old Documents ---------------------------------------------------------------------
+  legacy-gemma-setup:
+    url: https://ai.google.dev/gemma/docs/setup

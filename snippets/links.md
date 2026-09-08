@@ -41,3 +41,4 @@
 [gemma-translator]: https://github.com/google-gemma/gemma-translator
 [gemma-github]: https://github.com/google-gemma
 [vertex-use-gemma]: https://cloud.google.com/vertex-ai/docs/generative-ai/open-models/use-gemma
+[legacy-gemma-setup]: https://ai.google.dev/gemma/docs/setup

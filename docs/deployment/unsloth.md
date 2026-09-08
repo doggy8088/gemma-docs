@@ -101,6 +101,24 @@ cp llama.cpp/build/bin/llama-* llama.cpp
 Then pull and run a model straight from Hugging Face. There is no need to set a context length —
 llama.cpp uses exactly what is required.
 
+=== "E2B"
+
+    ```bash
+    export LLAMA_CACHE="unsloth/gemma-4-E2B-it-GGUF"
+    ./llama.cpp/llama-cli \
+        -hf unsloth/gemma-4-E2B-it-GGUF:Q8_0 \
+        --temp 1.0 --top-p 0.95 --top-k 64
+    ```
+
+=== "E4B"
+
+    ```bash
+    export LLAMA_CACHE="unsloth/gemma-4-E4B-it-GGUF"
+    ./llama.cpp/llama-cli \
+        -hf unsloth/gemma-4-E4B-it-GGUF:Q8_0 \
+        --temp 1.0 --top-p 0.95 --top-k 64
+    ```
+
 === "12B"
 
     ```bash
@@ -125,24 +143,6 @@ llama.cpp uses exactly what is required.
     export LLAMA_CACHE="unsloth/gemma-4-31B-it-GGUF"
     ./llama.cpp/llama-cli \
         -hf unsloth/gemma-4-31B-it-GGUF:UD-Q4_K_XL \
-        --temp 1.0 --top-p 0.95 --top-k 64
-    ```
-
-=== "E4B"
-
-    ```bash
-    export LLAMA_CACHE="unsloth/gemma-4-E4B-it-GGUF"
-    ./llama.cpp/llama-cli \
-        -hf unsloth/gemma-4-E4B-it-GGUF:Q8_0 \
-        --temp 1.0 --top-p 0.95 --top-k 64
-    ```
-
-=== "E2B"
-
-    ```bash
-    export LLAMA_CACHE="unsloth/gemma-4-E2B-it-GGUF"
-    ./llama.cpp/llama-cli \
-        -hf unsloth/gemma-4-E2B-it-GGUF:Q8_0 \
         --temp 1.0 --top-p 0.95 --top-k 64
     ```
 

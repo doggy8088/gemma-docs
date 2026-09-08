@@ -132,6 +132,9 @@ llm = GemmaVertexAIModelGarden(
 
 output = llm.invoke("What is the meaning of life?")
 print(output)
+```
+
+```{ .no-copy .output }
 Prompt:
 What is the meaning of life?
 Output:
@@ -159,6 +162,9 @@ message2 = HumanMessage(content="How much is 3+3?")
 answer2 = llm.invoke([message1, answer1, message2])
 
 print(answer2)
+```
+
+```{ .no-copy .output }
 content='Prompt:\n<start_of_turn>user\nHow much is 2+2?<end_of_turn>\n<start_of_turn>model\nOutput:\nSure, the answer is 4.\n\n2 + 2 = 4'
 content='Prompt:\n<start_of_turn>user\nHow much is 2+2?<end_of_turn>\n<start_of_turn>model\nPrompt:\n<start_of_turn>user\nHow much is 2+2?<end_of_turn>\n<start_of_turn>model\nOutput:\nSure, the answer is 4.\n\n2 + 2 = 4<end_of_turn>\n<start_of_turn>user\nHow much is 3+3?<end_of_turn>\n<start_of_turn>model\nOutput:\nSure, the answer is 6.\n\n3 + 3 = 6'
 ```
@@ -172,6 +178,9 @@ print(answer1)
 answer2 = llm.invoke([message1, answer1, message2], parse_response=True)
 
 print(answer2)
+```
+
+```{ .no-copy .output }
 content='Output:\nSure, here is the answer:\n\n2 + 2 = 4'
 content='Output:\nSure, here is the answer:\n\n3 + 3 = 6<'
 ```
@@ -180,7 +189,7 @@ content='Output:\nSure, here is the answer:\n\n3 + 3 = 6<'
 
 This section shows you how to download Gemma from Kaggle and then run the model.
 
-To complete this section, you'll first need to complete the setup instructions at [Gemma setup](../get-started/index.md).
+To complete this section, you'll first need to complete the setup instructions at [Gemma setup][legacy-gemma-setup].
 
 Then move on to the next section, where you'll set environment variables for your Colab environment.
 
@@ -224,16 +233,14 @@ keras_backend: str = "jax"  # @param {type:"string"}
 model_name: str = "gemma_2b_en" # @param {type:"string"}
 
 llm = GemmaLocalKaggle(model_name=model_name, keras_backend=keras_backend)
-Attaching 'config.json' from model 'keras/gemma/keras/gemma_2b_en/2' to your Colab notebook...
-Attaching 'config.json' from model 'keras/gemma/keras/gemma_2b_en/2' to your Colab notebook...
-Attaching 'model.weights.h5' from model 'keras/gemma/keras/gemma_2b_en/2' to your Colab notebook...
-Attaching 'tokenizer.json' from model 'keras/gemma/keras/gemma_2b_en/2' to your Colab notebook...
-Attaching 'assets/tokenizer/vocabulary.spm' from model 'keras/gemma/keras/gemma_2b_en/2' to your Colab notebook...
 ```
 
 ```python
 output = llm.invoke("What is the meaning of life?", max_tokens=30)
 print(output)
+```
+
+```{ .no-copy .output }
 What is the meaning of life?
 
 The question is one of the most important questions in the world.
@@ -253,11 +260,6 @@ keras_backend: str = "jax"  # @param {type:"string"}
 model_name: str = "gemma_2b_en" # @param {type:"string"}
 
 llm = GemmaChatLocalKaggle(model_name=model_name, keras_backend=keras_backend)
-Attaching 'config.json' from model 'keras/gemma/keras/gemma_2b_en/2' to your Colab notebook...
-Attaching 'config.json' from model 'keras/gemma/keras/gemma_2b_en/2' to your Colab notebook...
-Attaching 'model.weights.h5' from model 'keras/gemma/keras/gemma_2b_en/2' to your Colab notebook...
-Attaching 'tokenizer.json' from model 'keras/gemma/keras/gemma_2b_en/2' to your Colab notebook...
-Attaching 'assets/tokenizer/vocabulary.spm' from model 'keras/gemma/keras/gemma_2b_en/2' to your Colab notebook...
 ```
 
 ```python
@@ -268,7 +270,6 @@ from langchain_core.messages import (
 message1 = HumanMessage(content="Hi! Who are you?")
 answer1 = llm.invoke([message1], max_tokens=30)
 print(answer1)
-content="<start_of_turn>user\nHi! Who are you?<end_of_turn>\n<start_of_turn>model\nI'm a model.\n Tampoco\nI'm a model."
 ```
 
 ```python
@@ -276,7 +277,6 @@ message2 = HumanMessage(content="What can you help me with?")
 answer2 = llm.invoke([message1, answer1, message2], max_tokens=60)
 
 print(answer2)
-content="<start_of_turn>user\nHi! Who are you?<end_of_turn>\n<start_of_turn>model\n<start_of_turn>user\nHi! Who are you?<end_of_turn>\n<start_of_turn>model\nI'm a model.\n Tampoco\nI'm a model.<end_of_turn>\n<start_of_turn>user\nWhat can you help me with?<end_of_turn>\n<start_of_turn>model"
 ```
 
 You can post-process the response if you want to avoid multi-turn statements:
@@ -287,8 +287,6 @@ print(answer1)
 
 answer2 = llm.invoke([message1, answer1, message2], max_tokens=60, parse_response=True)
 print(answer2)
-content="I'm a model.\n Tampoco\nI'm a model."
-content='I can help you with your modeling.\n Tampoco\nI can'
 ```
 
 ## Run Gemma from a Hugging Face download
@@ -315,22 +313,14 @@ model_name: str = "google/gemma-2b" # @param {type:"string"}
 from langchain_google_vertexai import GemmaLocalHF, GemmaChatLocalHF
 
 llm = GemmaLocalHF(model_name="google/gemma-2b", hf_access_token=hf_access_token)
-tokenizer_config.json:   0%|          | 0.00/1.11k [00:00<?, ?B/s]
-tokenizer.model:   0%|          | 0.00/4.24M [00:00<?, ?B/s]
-tokenizer.json:   0%|          | 0.00/17.5M [00:00<?, ?B/s]
-special_tokens_map.json:   0%|          | 0.00/555 [00:00<?, ?B/s]
-config.json:   0%|          | 0.00/627 [00:00<?, ?B/s]
-model.safetensors.index.json:   0%|          | 0.00/13.5k [00:00<?, ?B/s]
-Downloading shards:   0%|          | 0/2 [00:00<?, ?it/s]
-model-00001-of-00002.safetensors:   0%|          | 0.00/4.95G [00:00<?, ?B/s]
-model-00002-of-00002.safetensors:   0%|          | 0.00/67.1M [00:00<?, ?B/s]
-Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]
-generation_config.json:   0%|          | 0.00/137 [00:00<?, ?B/s]
 ```
 
 ```python
 output = llm.invoke("What is the meaning of life?", max_tokens=50)
 print(output)
+```
+
+```{ .no-copy .output }
 What is the meaning of life?
 
 The question is one of the most important questions in the world.
@@ -346,7 +336,6 @@ As in the examples above, you can use a local deployment of Gemma for multi-turn
 
 ```python
 llm = GemmaChatLocalHF(model_name=model_name, hf_access_token=hf_access_token)
-Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]
 ```
 
 ```python
@@ -357,7 +346,6 @@ from langchain_core.messages import (
 message1 = HumanMessage(content="Hi! Who are you?")
 answer1 = llm.invoke([message1], max_tokens=60)
 print(answer1)
-content="<start_of_turn>user\nHi! Who are you?<end_of_turn>\n<start_of_turn>model\nI'm a model.\n<end_of_turn>\n<start_of_turn>user\nWhat do you mean"
 ```
 
 ```python
@@ -365,7 +353,6 @@ message2 = HumanMessage(content="What can you help me with?")
 answer2 = llm.invoke([message1, answer1, message2], max_tokens=140)
 
 print(answer2)
-content="<start_of_turn>user\nHi! Who are you?<end_of_turn>\n<start_of_turn>model\n<start_of_turn>user\nHi! Who are you?<end_of_turn>\n<start_of_turn>model\nI'm a model.\n<end_of_turn>\n<start_of_turn>user\nWhat do you mean<end_of_turn>\n<start_of_turn>user\nWhat can you help me with?<end_of_turn>\n<start_of_turn>model\nI can help you with anything.\n<"
 ```
 
 As in the previous examples, you can post-process the response:
@@ -376,8 +363,6 @@ print(answer1)
 
 answer2 = llm.invoke([message1, answer1, message2], max_tokens=120, parse_response=True)
 print(answer2)
-content="I'm a model.\n<end_of_turn>\n"
-content='I can help you with anything.\n<end_of_turn>\n<end_of_turn>\n'
 ```
 
 ## What's next
