@@ -76,39 +76,39 @@ This dataset demonstrates a key principle for fine-tuning: the required dataset 
 - To teach the model a stylistic variation of a language it already knows, such as the Martian's accent, a small dataset with as few as 10 to 20 examples can be sufficient.
 - However, to teach the model a completely new or mixed alien language, a significantly larger dataset would be required.
 
-  ```python
-  from datasets import load_dataset
+```python { .notebook-cell }
+from datasets import load_dataset
 
-  def create_conversation(sample):
-    return {
-        "messages": [
-            {"role": "user", "content": sample["player"]},
-            {"role": "assistant", "content": sample["alien"]}
-        ]
-    }
+def create_conversation(sample):
+  return {
+      "messages": [
+          {"role": "user", "content": sample["player"]},
+          {"role": "assistant", "content": sample["alien"]}
+      ]
+  }
 
-  npc_type = "martian"
+npc_type = "martian"
 
-  # Load dataset from the Hub
-  dataset = load_dataset("bebechien/MobileGameNPC", npc_type, split="train")
+# Load dataset from the Hub
+dataset = load_dataset("bebechien/MobileGameNPC", npc_type, split="train")
 
-  # Convert dataset to conversational format
-  dataset = dataset.map(create_conversation, remove_columns=dataset.features, batched=False)
+# Convert dataset to conversational format
+dataset = dataset.map(create_conversation, remove_columns=dataset.features, batched=False)
 
-  # Split dataset into 80% training samples and 20% test samples
-  dataset = dataset.train_test_split(test_size=0.2, shuffle=False)
+# Split dataset into 80% training samples and 20% test samples
+dataset = dataset.train_test_split(test_size=0.2, shuffle=False)
 
-  # Print formatted user prompt
-  print(dataset["train"][0]["messages"])
-  ```
+# Print formatted user prompt
+print(dataset["train"][0]["messages"])
+```
 
-  ```{ .no-copy .output }
-  README.md:   0%|          | 0.00/141 [00:00<?, ?B/s]
-  martian.csv: 0.00B [00:00, ?B/s]
-  Generating train split:   0%|          | 0/25 [00:00<?, ? examples/s]
-  Map:   0%|          | 0/25 [00:00<?, ? examples/s]
-  [{'content': 'Hello there.', 'role': 'user'}, {'content': "Gree-tongs, Terran. You'z a long way from da Blue-Sphere, yez?", 'role': 'assistant'}]
-  ```
+```{ .no-copy .output }
+README.md:   0%|          | 0.00/141 [00:00<?, ?B/s]
+martian.csv: 0.00B [00:00, ?B/s]
+Generating train split:   0%|          | 0/25 [00:00<?, ? examples/s]
+Map:   0%|          | 0/25 [00:00<?, ? examples/s]
+[{'content': 'Hello there.', 'role': 'user'}, {'content': "Gree-tongs, Terran. You'z a long way from da Blue-Sphere, yez?", 'role': 'assistant'}]
+```
 
 ## Fine-tune Gemma using TRL and the SFTTrainer
 
