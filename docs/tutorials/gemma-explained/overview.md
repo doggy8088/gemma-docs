@@ -11,6 +11,8 @@ source_url: https://developers.googleblog.com/gemma-explained-overview-gemma-mod
     Originally published on the
     [Google Developers Blog](https://developers.googleblog.com/gemma-explained-overview-gemma-model-family-architectures).
 
+![banner](/assets/gemma-explained/overview-banner.png)
+
 [Gemma](https://ai.google.dev/gemma) is a family of lightweight, state-of-the art open models built from the same research and technology used to create the Gemini models.
 
 Different variations of Gemma are designed for different use cases and modalities, such as:
@@ -99,6 +101,8 @@ It's worth noting that the practical input limit can vary based on the task and 
 *d_model* represents the size of the embeddings (vector representations of words or subwords a.k.a tokens) used as input to the decoder. It also determines the size of the internal representation within the decoder layers.
 
 ![d_model x Num heads x Head size](../../assets/gemma-explained/image7_PhVB9TE.original.png)
+
+“d_model x Num heads x Head size” defines the parameter number in self_attn
 
 A larger *d_model* value means the model has more “space” to represent the nuances of different words and their relationships. This can lead to better performance, especially for complex language tasks. However, increasing *d_model* also makes the model larger and more computationally expensive to train and use.
 
@@ -191,6 +195,8 @@ Furthermore, the model leverages positional information more effectively by empl
 
 Finally, *o_proj* layer projects the attention output back to the original dimension (3072).
 
+---
+
 Note that the **Gemma 2B** model uses **Multi Query Attention (MQA)**.
 
 ![Multi-Query Attention (MQA) architecture used in Gemma 2B model](../../assets/gemma-explained/image3_3kHryqa.original.png)
@@ -206,6 +212,8 @@ Note that the **Gemma 2B** model uses **Multi Query Attention (MQA)**.
           (rotary_emb): GemmaRotaryEmbedding()
         )
 ```
+
+---
 
 ### **mlp**
 
@@ -248,7 +256,7 @@ And the input prompt should look like this
 
 The model will provide "sys" as the suggested code completion.
 
-You can explore more about CodeGemma on CodeGemma / Quickstart.
+You can explore more about CodeGemma on [CodeGemma / Quickstart](https://colab.research.google.com/github/google-gemma/cookbook/blob/main/docs/codegemma/keras_quickstart.ipynb).
 
 ## **What’s Next?**
 
@@ -275,12 +283,14 @@ Gemma
 
 CodeGemma
 
-- Quickstart
-- AI Assisted coding with CodeGemma
+- [Quickstart](https://colab.research.google.com/github/google-gemma/cookbook/blob/main/docs/codegemma/keras_quickstart.ipynb)
+- [AI Assisted coding with CodeGemma](https://colab.research.google.com/github/google-gemma/cookbook/blob/main/docs/codegemma/code_assist_keras.ipynb)
 
 ## 📋 The complete Gemma architecture series
 
 - Gemma explained: An overview of Gemma model family architectures
-- [Gemma explained: What’s new in Gemma 2](/gemma-explained-new-in-gemma-2/)
-- [Gemma explained: RecurrentGemma architecture](/gemma-explained-recurrentgemma-architecture/)
-- [Gemma explained: PaliGemma architecture](/gemma-explained-paligemma-architecture/)
+- [Gemma explained: What’s new in Gemma 2](/tutorials/gemma-explained/gemma-2/)
+- [Gemma explained: RecurrentGemma architecture](/tutorials/gemma-explained/recurrentgemma/)
+- [Gemma explained: PaliGemma architecture](/tutorials/gemma-explained/paligemma/)
+- [Gemma explained: What’s new in Gemma 3](/tutorials/gemma-explained/gemma-3/)
+- [Gemma explained: EmbeddingGemma architecture](/tutorials/gemma-explained/embeddinggemma/)

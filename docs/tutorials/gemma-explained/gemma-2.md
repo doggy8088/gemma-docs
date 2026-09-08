@@ -11,7 +11,9 @@ source_url: https://developers.googleblog.com/gemma-explained-new-in-gemma-2/
     Originally published on the
     [Google Developers Blog](https://developers.googleblog.com/gemma-explained-new-in-gemma-2/).
 
-In the [previous post](/gemma-explained-overview-gemma-model-family-architectures/) of the Gemma explained series, we discussed the Gemma architecture. In this post, you will explore the latest model, Gemma 2. Let’s get started!
+![banner](/assets/gemma-explained/gemma-2-banner.png)
+
+In the [previous post](/tutorials/gemma-explained/overview/) of the Gemma explained series, we discussed the Gemma architecture. In this post, you will explore the latest model, Gemma 2. Let’s get started!
 
 ## **Gemma 2**
 
@@ -84,6 +86,8 @@ In the self-attention mechanism, Gemma 2 uses **Grouped Query Attention (GQA)**.
 
 *k_proj* and *v_proj* share the same head with a size of 128 and 16 heads (128 x 16 = 2048). In contrast, *q_proj* and *o_proj* have 32 heads (128 x 32 = 4096) in parallel.
 
+---
+
 Note that the Gemma 9B model uses the Same GQA but different number of heads(8 for *k_proj* and *v_proj*, 16 for *q_proj* and *o_proj*) and head size (256)
 
 ```python
@@ -97,6 +101,8 @@ Note that the Gemma 9B model uses the Same GQA but different number of heads(8 f
 ```
 
 The 2B model uses 4 for *k_proj* and *v_proj*, 8 for *q_proj* and *o_proj* and head size (256)
+
+---
 
 ### **pre_feedforward_layernorm and post_feedforward_layernorm**
 
@@ -138,12 +144,14 @@ Stay tuned and thank you for reading!
 
 ### **Code Examples**
 
-- [Keras Gemma 2 Quickstart](https://github.com/google-gemini/gemma-cookbook/blob/main/Gemma/Keras_Gemma_2_Quickstart.ipynb)
-- [Keras Gemma 2 Quickstart Chat](https://github.com/google-gemini/gemma-cookbook/blob/main/Gemma/Keras_Gemma_2_Quickstart_Chat.ipynb)
+- [Keras Gemma 2 Quickstart](https://colab.research.google.com/github/google-gemma/cookbook/blob/main/.archive/Gemma/[Gemma_2]Keras_Quickstart.ipynb)
+- [Keras Gemma 2 Quickstart Chat](https://colab.research.google.com/github/google-gemma/cookbook/blob/main/.archive/Gemma/[Gemma_2]Keras_Quickstart_Chat.ipynb)
 
 ## 📋 The complete Gemma architecture series
 
-- [Gemma explained: An overview of Gemma model family architectures](/gemma-explained-overview-gemma-model-family-architectures/)
+- [Gemma explained: An overview of Gemma model family architectures](/tutorials/gemma-explained/overview/)
 - Gemma explained: What’s new in Gemma 2
-- [Gemma explained: RecurrentGemma architecture](/gemma-explained-recurrentgemma-architecture/)
-- [Gemma explained: PaliGemma architecture](/gemma-explained-paligemma-architecture/)
+- [Gemma explained: RecurrentGemma architecture](/tutorials/gemma-explained/recurrentgemma/)
+- [Gemma explained: PaliGemma architecture](/tutorials/gemma-explained/paligemma/)
+- [Gemma explained: What’s new in Gemma 3](/tutorials/gemma-explained/gemma-3/)
+- [Gemma explained: EmbeddingGemma architecture](/tutorials/gemma-explained/embeddinggemma/)
