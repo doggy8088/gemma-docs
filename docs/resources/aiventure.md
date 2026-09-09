@@ -21,18 +21,32 @@ Learn how to create an AI-powered educational game focused on vibe-coding and ag
         <button
           type="button"
           class="demo-disclaimer-btn"
-          onclick="const embed = this.closest('.demo-embed'); const iframe = embed.querySelector('iframe'); iframe.src = iframe.dataset.src; iframe.hidden = false; this.closest('.demo-disclaimer').hidden = true;"
+          onclick="const embed = this.closest('.demo-embed'); const iframe = embed.querySelector('iframe'); iframe.src = iframe.dataset.src; iframe.hidden = false; const fsBtn = embed.querySelector('.demo-fullscreen-btn'); if (fsBtn) fsBtn.hidden = false; this.closest('.demo-disclaimer').hidden = true;"
         >
           Accept and Continue
         </button>
       </div>
     </div>
   </div>
+  <button
+    type="button"
+    class="demo-fullscreen-btn"
+    aria-label="Toggle full screen"
+    title="Toggle full screen"
+    hidden
+    onclick="const embed = this.closest('.demo-embed'); if (!document.fullscreenElement) { embed.requestFullscreen(); } else { document.exitFullscreen(); }"
+  >
+    <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="currentColor">
+      <path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>
+    </svg>
+    <span>Full screen</span>
+  </button>
   <iframe
     data-src="https://bebechien.github.io/AIventure/index.html"
     title="AIventure"
     loading="lazy"
-    allow="clipboard-read; clipboard-write"
+    allow="clipboard-read; clipboard-write; fullscreen"
+    allowfullscreen
     hidden
   ></iframe>
 </div>
