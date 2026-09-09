@@ -15,7 +15,7 @@ Learn how to create an AI-powered educational game focused on vibe-coding and ag
         This demo uses Mediapipe with WebGPU to load and run a Gemma 4 model locally. <strong>This will require a 4 gigabyte download</strong> the first time it runs which will then be cached. Performance varies depending on the device's GPU.
       </p>
       <p>
-        Note: There is some overhead from the browser's WebGPU API which can reduce performance compared to running the model natively via Ollama or LM Studio. Additionally, this model is quantized. Explore this demo and then download the code yourself to compare the performance with LM Studio.
+        <strong>Note:</strong> There is some overhead from the browser's WebGPU API which can reduce performance compared to running the model natively via Ollama or LM Studio. Additionally, this model is quantized. Explore this demo and then download the code yourself to compare the performance with LM Studio.
       </p>
       <div class="demo-disclaimer-actions">
         <button
