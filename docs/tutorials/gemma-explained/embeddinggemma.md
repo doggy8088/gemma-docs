@@ -11,13 +11,15 @@ source_url: https://developers.googleblog.com/gemma-explained-embeddinggemma-arc
     Originally published on the
     [Google Developers Blog](https://developers.googleblog.com/gemma-explained-embeddinggemma-architecture-and-recipe/).
 
+![banner](../../assets/gemma-explained/embeddinggemma-banner.png)
+
 The previous posts in the “Gemma explained” series provided a detailed overview of the Gemma model family's architectures. You can find links to each post below:
 
-- [Gemma explained: An overview of Gemma model family architectures](https://developers.googleblog.com/gemma-explained-overview-gemma-model-family-architectures/)
-- [Gemma explained: What’s new in Gemma 2](https://developers.googleblog.com/gemma-explained-new-in-gemma-2/)
-- [Gemma explained: RecurrentGemma architecture](https://developers.googleblog.com/gemma-explained-recurrentgemma-architecture/)
-- [Gemma explained: PaliGemma architecture](https://developers.googleblog.com/gemma-explained-paligemma-architecture/)
-- [Gemma explained: What’s new in Gemma 3](https://developers.googleblog.com/gemma-explained-whats-new-in-gemma-3/)
+- [Gemma explained: An overview of Gemma model family architectures](/tutorials/gemma-explained/overview/)
+- [Gemma explained: What’s new in Gemma 2](/tutorials/gemma-explained/gemma-2/)
+- [Gemma explained: RecurrentGemma architecture](/tutorials/gemma-explained/recurrentgemma/)
+- [Gemma explained: PaliGemma architecture](/tutorials/gemma-explained/paligemma/)
+- [Gemma explained: What’s new in Gemma 3](/tutorials/gemma-explained/gemma-3/)
 
 In this post, you will explore the new [EmbeddingGemma](../../models/embeddinggemma/index.md)’s architecture and its recipe. For a high-level introduction, you can read [this announcement blog](https://developers.googleblog.com/introducing-embeddinggemma/). For a comprehensive look at the methodology, experiments, and evaluation, please see the [full technical report](https://arxiv.org/abs/2509.20354). Let’s get started.
 
@@ -140,14 +142,14 @@ Thanks for reading!
 
 - [Generate Embeddings with Sentence Transformers](../../models/embeddinggemma/inference.md)
 - [Fine-tune EmbeddingGemma](../../models/embeddinggemma/fine-tuning.md)
-- [RAG with EmbeddingGemma](https://github.com/google-gemini/gemma-cookbook/blob/main/Gemma/%5BGemma_3%5DRAG_with_EmbeddingGemma.ipynb)
+- [RAG with EmbeddingGemma](https://colab.research.google.com/github/google-gemma/cookbook/blob/main/tutorials/RAG_with_EmbeddingGemma.ipynb)
 - [Mood Palette Generator](https://huggingface.co/spaces/google/mood-palette), an interactive application using EmbeddingGemma
 
 ### The complete Gemma architecture series
 
-- [Gemma explained: An overview of Gemma model family architectures](https://developers.googleblog.com/gemma-explained-overview-gemma-model-family-architectures/)
-- [Gemma explained: What’s new in Gemma 2](https://developers.googleblog.com/gemma-explained-new-in-gemma-2/)
-- [Gemma explained: RecurrentGemma architecture](https://developers.googleblog.com/gemma-explained-recurrentgemma-architecture/)
-- [Gemma explained: PaliGemma architecture](https://developers.googleblog.com/gemma-explained-paligemma-architecture/)
-- [Gemma explained: What’s new in Gemma 3](https://developers.googleblog.com/gemma-explained-whats-new-in-gemma-3/)
+- [Gemma explained: An overview of Gemma model family architectures](/tutorials/gemma-explained/overview/)
+- [Gemma explained: What’s new in Gemma 2](/tutorials/gemma-explained/gemma-2/)
+- [Gemma explained: RecurrentGemma architecture](/tutorials/gemma-explained/recurrentgemma/)
+- [Gemma explained: PaliGemma architecture](/tutorials/gemma-explained/paligemma/)
+- [Gemma explained: What’s new in Gemma 3](/tutorials/gemma-explained/gemma-3/)
 - Gemma explained: EmbeddingGemma architecture

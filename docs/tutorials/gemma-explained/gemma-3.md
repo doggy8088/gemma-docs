@@ -11,15 +11,14 @@ source_url: https://developers.googleblog.com/gemma-explained-whats-new-in-gemma
     Originally published on the
     [Google Developers Blog](https://developers.googleblog.com/gemma-explained-whats-new-in-gemma-3/).
 
+![banner](../../assets/gemma-explained/gemma-3-banner.png)
+
 The previous posts in the "Gemma explained" series provided a detailed overview of the Gemma model family's architectures. You can find links to each post below:
 
-- [Gemma explained: An overview of Gemma model family architectures](https://developers.googleblog.com/gemma-explained-overview-gemma-model-family-architectures)
-
-- [Gemma explained: What’s new in Gemma 2](https://developers.googleblog.com/gemma-explained-new-in-gemma-2)
-
-- [Gemma explained: RecurrentGemma architecture](https://developers.googleblog.com/gemma-explained-recurrentgemma-architecture/)
-
-- [Gemma explained: PaliGemma architecture](https://developers.googleblog.com/gemma-explained-paligemma-architecture/)
+- [Gemma explained: An overview of Gemma model family architectures](/tutorials/gemma-explained/overview/)
+- [Gemma explained: What’s new in Gemma 2](/tutorials/gemma-explained/gemma-2/)
+- [Gemma explained: RecurrentGemma architecture](/tutorials/gemma-explained/recurrentgemma/)
+- [Gemma explained: PaliGemma architecture](/tutorials/gemma-explained/paligemma/)
 
 In this post, you will explore the latest model, [Gemma 3](https://developers.googleblog.com/introducing-gemma3/). Let’s dig in.
 
@@ -203,7 +202,7 @@ Gemma3ForConditionalGeneration(
 ![Gemma 3 27B architecture](../../assets/gemma-explained/Gemma-3-27-B-architecture.original.png)
 
 !!! note
-    Technically RoPE (Rotary Positional Embedding) is inside the SDPA (Scaled Dot-Product Attention), but we simplified it in this diagram. Please see the code for the precise architectural details.
+    Technically RoPE (Rotary Positional Embedding) is inside the SDPA (Scaled Dot-Product Attention), but we simplified it in this diagram. Please see [the code](https://github.com/google-deepmind/gemma/blob/ebfa2c2bddcab1d7cc38b1dca0fe6d98e6e7df71/gemma/modules.py#L170-L182) for the precise architectural details.
 
 ## **Gemma 3 1B**
 
@@ -279,18 +278,14 @@ Thanks for reading!
 
 ### **Code Examples**
 
-- [Prompt with images and text using Gemma library](https://colab.research.google.com/github/google/generative-ai-docs/blob/main/site/en/gemma/docs/core/gemma_library.ipynb)
-
-- Gemma 3 Meme Generator
+- [Prompt with images and text using Gemma library](https://colab.research.google.com/github/google-gemma/cookbook/blob/main/docs/core/gemma_library.ipynb)
+- [Gemma 3 Meme Generator](https://colab.research.google.com/github/google-gemma/cookbook/blob/main/.archive/Gemma/[Gemma_3]Meme_Generator.ipynb)
 
 ## 📋 The complete Gemma architecture series
 
-- [Gemma explained: An overview of Gemma model family architectures](https://developers.googleblog.com/gemma-explained-overview-gemma-model-family-architectures)
-
-- [Gemma explained: What’s new in Gemma 2](https://developers.googleblog.com/gemma-explained-new-in-gemma-2)
-
-- [Gemma explained: RecurrentGemma architecture](https://developers.googleblog.com/gemma-explained-recurrentgemma-architecture/)
-
-- [Gemma explained: PaliGemma architecture](https://developers.googleblog.com/gemma-explained-paligemma-architecture/)
-
+- [Gemma explained: An overview of Gemma model family architectures](/tutorials/gemma-explained/overview/)
+- [Gemma explained: What’s new in Gemma 2](/tutorials/gemma-explained/gemma-2/)
+- [Gemma explained: RecurrentGemma architecture](/tutorials/gemma-explained/recurrentgemma/)
+- [Gemma explained: PaliGemma architecture](/tutorials/gemma-explained/paligemma/)
 - Gemma explained: What’s new in Gemma 3
+- [Gemma explained: EmbeddingGemma architecture](/tutorials/gemma-explained/embeddinggemma/)
