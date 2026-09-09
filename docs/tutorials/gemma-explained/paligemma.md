@@ -11,7 +11,9 @@ source_url: https://developers.googleblog.com/gemma-explained-paligemma-architec
     Originally published on the
     [Google Developers Blog](https://developers.googleblog.com/gemma-explained-paligemma-architecture/).
 
-In the [previous post](https://developers.googleblog.com/en/gemma-explained-recurrentgemma-architecture/) of Gemma explained, you reviewed RecurrentGemma architecture. In this blog post, you will explore PaliGemma architecture. Let’s dive into it!
+![banner](../../assets/gemma-explained/gemma-var-banner.png)
+
+In the [previous post](/tutorials/gemma-explained/recurrentgemma/) of Gemma explained, you reviewed RecurrentGemma architecture. In this blog post, you will explore PaliGemma architecture. Let’s dive into it!
 
 ## **PaliGemma 3B**
 
@@ -188,7 +190,9 @@ Thanks for reading!
 
 ## 📋 The complete Gemma architecture series
 
-- [Gemma explained: An overview of Gemma model family architectures](https://developers.googleblog.com/en/gemma-explained-overview-gemma-model-family-architectures)
-- [Gemma explained: What’s new in Gemma 2](https://developers.googleblog.com/en/gemma-explained-new-in-gemma-2)
-- [Gemma explained: RecurrentGemma architecture](https://developers.googleblog.com/en/gemma-explained-recurrentgemma-architecture/)
+- [Gemma explained: An overview of Gemma model family architectures](/tutorials/gemma-explained/overview/)
+- [Gemma explained: What’s new in Gemma 2](/tutorials/gemma-explained/gemma-2/)
+- [Gemma explained: RecurrentGemma architecture](/tutorials/gemma-explained/recurrentgemma/)
 - Gemma explained: PaliGemma architecture
+- [Gemma explained: What’s new in Gemma 3](/tutorials/gemma-explained/gemma-3/)
+- [Gemma explained: EmbeddingGemma architecture](/tutorials/gemma-explained/embeddinggemma/)

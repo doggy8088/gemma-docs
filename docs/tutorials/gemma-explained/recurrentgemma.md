@@ -11,7 +11,9 @@ source_url: https://developers.googleblog.com/gemma-explained-recurrentgemma-arc
     Originally published on the
     [Google Developers Blog](https://developers.googleblog.com/gemma-explained-recurrentgemma-architecture/).
 
-In the [previous post](/gemma-explained-new-in-gemma-2/) of the Gemma explained series, we discussed the latest Gemma 2 architecture. In this post, you will explore the RecurrentGemma architecture. Let’s get started!
+![banner](../../assets/gemma-explained/gemma-var-banner.png)
+
+In the [previous post](/tutorials/gemma-explained/gemma-2/) of the Gemma explained series, we discussed the latest Gemma 2 architecture. In this post, you will explore the RecurrentGemma architecture. Let’s get started!
 
 ## RecurrentGemma 2B, 9B
 
@@ -203,11 +205,13 @@ Stay tuned and thank you for reading!
 
 ### **Code Examples**
 
-- [Getting started with RecurrentGemma](https://colab.sandbox.google.com/github/google-deepmind/recurrentgemma/blob/main/colabs/sampling_tutorial_jax.ipynb)
+- [Getting started with RecurrentGemma](https://colab.research.google.com/github/google-deepmind/recurrentgemma/blob/main/colabs/sampling_tutorial_jax.ipynb)
 
 ## 📋 The complete Gemma architecture series
 
-- [Gemma explained: An overview of Gemma model family architectures](https://developers.googleblog.com/en/gemma-explained-overview-gemma-model-family-architectures)
-- [Gemma explained: What’s new in Gemma 2](https://developers.googleblog.com/en/gemma-explained-new-in-gemma-2)
+- [Gemma explained: An overview of Gemma model family architectures](/tutorials/gemma-explained/overview/)
+- [Gemma explained: What’s new in Gemma 2](/tutorials/gemma-explained/gemma-2/)
 - Gemma explained: RecurrentGemma architecture
-- [Gemma explained: PaliGemma architecture](/gemma-explained-paligemma-architecture/)
+- [Gemma explained: PaliGemma architecture](/tutorials/gemma-explained/paligemma/)
+- [Gemma explained: What’s new in Gemma 3](/tutorials/gemma-explained/gemma-3/)
+- [Gemma explained: EmbeddingGemma architecture](/tutorials/gemma-explained/embeddinggemma/)
