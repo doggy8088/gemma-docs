@@ -6,7 +6,15 @@ hide:
   - toc
 ---
 
-Learn how to create an AI-powered educational game focused on vibe-coding and agentic characters using Angular, PhaserJS, Gemini and Gemma.
+AIventure is an interactive, AI-powered educational game built with Angular, PhaserJS, Gemini, and Gemma 4. It demonstrates how to run a local Gemma 4 model directly in the browser using MediaPipe and WebGPU to power dynamic, agentic non-player characters (NPCs) while introducing concepts in vibe-coding and generative AI.
+
+### How to use this demo
+
+1. Click **Accept and Continue** below to load the demo. The first run downloads and caches a Gemma 4 E4B model in your browser.
+2. Navigate the game world and interact with characters to see responses generated locally on your device's GPU.
+3. Use the **Full screen** button in the top-left corner of the demo window for an expanded view.
+
+For a deeper dive into the architecture, source code, and step-by-step instructions on building your own agentic game, visit the [AIventure solution page](https://developers.google.com/solutions/learn/aiventure){ data-model="gemma-4" }.
 
 <div class="demo-embed">
   <div class="demo-disclaimer">
@@ -50,5 +58,3 @@ Learn how to create an AI-powered educational game focused on vibe-coding and ag
     hidden
   ></iframe>
 </div>
-
-If the embedded demo does not load, [open it directly from our solutions page](https://developers.google.com/solutions/learn/aiventure){ data-model="gemma-4" }.
