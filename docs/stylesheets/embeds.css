@@ -17,9 +17,70 @@
   border: 0;
 }
 
+.md-typeset .demo-embed iframe[hidden],
+.md-typeset .demo-embed .demo-disclaimer[hidden] {
+  display: none;
+}
+
+.md-typeset .demo-disclaimer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 42rem;
+  padding: var(--gemma-space-6);
+  background: var(--gemma-surface-sunken);
+}
+
+.md-typeset .demo-disclaimer-card {
+  max-width: 36rem;
+  padding: var(--gemma-space-6);
+  border: 1px solid var(--gemma-border);
+  border-radius: var(--gemma-radius-lg);
+  background: var(--gemma-surface);
+  box-shadow: var(--gemma-shadow-md);
+}
+
+.md-typeset .demo-disclaimer-card p {
+  margin: 0 0 var(--gemma-space-4);
+  line-height: 1.6;
+  color: var(--gemma-text-secondary);
+}
+
+.md-typeset .demo-disclaimer-card hr {
+  margin: var(--gemma-space-4) 0;
+  border: 0;
+  border-top: 1px solid var(--gemma-border);
+}
+
+.md-typeset .demo-disclaimer-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: var(--gemma-space-5);
+}
+
+.md-typeset .demo-disclaimer-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--gemma-space-2) var(--gemma-space-5);
+  border: 1px solid transparent;
+  border-radius: var(--gemma-radius-md);
+  background: var(--gemma-accent-fill);
+  color: var(--gemma-white);
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.md-typeset .demo-disclaimer-btn:hover {
+  background: var(--gemma-blue-hover);
+}
+
 @media screen and (max-width: 44.9375em) {
   .md-typeset .demo-embed,
-  .md-typeset .demo-embed iframe {
+  .md-typeset .demo-embed iframe,
+  .md-typeset .demo-disclaimer {
     min-height: 36rem;
   }
 }
