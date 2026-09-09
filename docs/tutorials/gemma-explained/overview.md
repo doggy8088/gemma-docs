@@ -11,7 +11,7 @@ source_url: https://developers.googleblog.com/gemma-explained-overview-gemma-mod
     Originally published on the
     [Google Developers Blog](https://developers.googleblog.com/gemma-explained-overview-gemma-model-family-architectures).
 
-![banner](/assets/gemma-explained/overview-banner.png)
+![banner](../../assets/gemma-explained/overview-banner.png)
 
 [Gemma](https://ai.google.dev/gemma) is a family of lightweight, state-of-the art open models built from the same research and technology used to create the Gemini models.
 
