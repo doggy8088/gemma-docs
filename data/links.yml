@@ -23,9 +23,9 @@ links:
   responsible-ai:
     url: https://ai.google.dev/responsible
   gemma-terms:
-    url: https://ai.google.dev/gemma/terms
+    url: /resources/terms
   prohibited-use:
-    url: https://ai.google.dev/gemma/prohibited_use_policy
+    url: /resources/prohibited_use_policy
 
   # --- Weights and collections -----------------------------------------------------------
   hf-gemma4:

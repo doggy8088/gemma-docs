@@ -81,7 +81,7 @@ all of the following conditions:
 1. You must include the use restrictions referenced in Section 3.2 as an enforceable provision in any agreement (e.g., license agreement, terms of use, etc.) governing the use and/or distribution of Gemma or Model Derivatives and you must provide notice to subsequent users you Distribute to that Gemma or Model Derivatives are subject to the use restrictions in Section 3.2.
 2. You must provide all third party recipients of Gemma or Model Derivatives a copy of this Agreement.
 3. You must cause any modified files to carry prominent notices stating that you modified the files.
-4. All Distributions (other than through a Hosted Service) must be accompanied by a "**Notice** " text file that contains the following notice: "**Gemma is provided under and subject to the Gemma Terms of Use found at ai.google.dev/gemma/terms**".
+4. All Distributions (other than through a Hosted Service) must be accompanied by a "**Notice** " text file that contains the following notice: "**Gemma is provided under and subject to the Gemma Terms of Use found at gemma.ai/resources/terms**".
 
 You may add your own intellectual property statement to your modifications and,
 except as set forth in this Section, may provide additional or different terms
@@ -96,7 +96,7 @@ Agreement.
 
 You must not use any of the Gemma Services:
 
-1. for the restricted uses set forth in the Gemma Prohibited Use Policy at [ai.google.dev/gemma/prohibited_use_policy](prohibited-use.md) ("**Prohibited Use Policy**"), which is hereby incorporated by reference into this Agreement; or
+1. for the restricted uses set forth in the Gemma Prohibited Use Policy at [gemma.ai/resources/prohibited_use_policy](prohibited-use.md) ("**Prohibited Use Policy**"), which is hereby incorporated by reference into this Agreement; or
 2. in violation of applicable laws and regulations.
 
 To the maximum extent permitted by law, Google reserves the right to restrict
@@ -209,4 +209,4 @@ delaying the exercise of) any rights under this Agreement.
 - [TranslateGemma](https://www.kaggle.com/models/google/translategemma)
 
 !!! Note
-    Previous versions of these Terms are [archived here](https://ai.google.dev/gemma/terms-archive).
+    Previous versions of these Terms are [archived here](/resources/terms-archive).

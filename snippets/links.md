@@ -1,8 +1,8 @@
 <!-- GENERATED from data/links.yml by scripts/generate_snippets.py -- do not edit. -->
 
 [responsible-ai]: https://ai.google.dev/responsible
-[gemma-terms]: https://ai.google.dev/gemma/terms
-[prohibited-use]: https://ai.google.dev/gemma/prohibited_use_policy
+[gemma-terms]: /resources/terms
+[prohibited-use]: /resources/prohibited_use_policy
 [hf-gemma4]: https://huggingface.co/collections/google/gemma-4
 [gemma4-hf-collection]: https://huggingface.co/collections/google/gemma-4
 [kaggle-gemma4]: https://www.kaggle.com/models/google/gemma-4
