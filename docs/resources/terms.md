@@ -196,7 +196,7 @@ delaying the exercise of) any rights under this Agreement.
 - [ShieldGemma 2](../models/shieldgemma/model-card-v2.md)
 - [CodeGemma](https://www.kaggle.com/models/google/codegemma)
 - [CodeGemma 1.1](https://www.kaggle.com/models/google/codegemma)
-- [Gemma 2 JPN](https://www.kaggle.com/models/google/gemma-2-2b-jpn-it)
+- [Gemma 2 JPN](https://huggingface.co/google/gemma-2-2b-jpn-it)
 - [DataGemma RIG](https://www.kaggle.com/models/google/datagemma-rig)
 - [DataGemma RAG](https://www.kaggle.com/models/google/datagemma-rag)
 - [RecurrentGemma](../models/recurrentgemma/model-card.md)
@@ -209,4 +209,4 @@ delaying the exercise of) any rights under this Agreement.
 - [TranslateGemma](https://www.kaggle.com/models/google/translategemma)
 
 !!! Note
-    Previous versions of these Terms are [archived here](/resources/terms-archive).
+    Previous versions of these Terms are [archived here](terms-archive/index.md).

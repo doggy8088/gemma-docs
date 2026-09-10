@@ -106,6 +106,10 @@ Follow the Markdown links below to read canonical page content without cloning t
 - [Components](https://gemma.ai/contributing/components.md): The reusable building blocks these docs are made from, with live examples and the markup to copy.
 - [Conventions](https://gemma.ai/contributing/conventions.md): How this documentation stays consistent — where facts live, what is generated, and what the linter enforces.
 - [Gemma Terms of Use](https://gemma.ai/resources/terms.md): Terms and conditions governing the use, reproduction, distribution, and modification of Gemma models and Model Derivatives.
+- [Gemma Terms of Use Archive](https://gemma.ai/resources/terms-archive.md): Archive of previously published Gemma Terms of Use documents and historical licensing terms.
+- [Gemma Terms of Use (TBD 2026 Archive)](https://gemma.ai/resources/terms-archive/TBD_terms_MM_DD_26.md): Archived Gemma Terms of Use document governing the use, reproduction, and distribution of Gemma models.
+- [Gemma Terms of Use (April 1, 2024 Archive)](https://gemma.ai/resources/terms-archive/terms_04_01_24.md): Archived April 1, 2024 version of the Gemma Terms of Use governing Gemma models and Model Derivatives.
+- [Gemma Terms of Use (February 21, 2024 Archive)](https://gemma.ai/resources/terms-archive/terms_02_21_24.md): Archived February 21, 2024 version of the Gemma Terms of Use governing Gemma models and Model Derivatives.
 - [Apache License 2.0](https://gemma.ai/resources/apache-2.md): Full text of the Apache License Version 2.0 governing Gemma 4 models and software.
 - [Gemma Prohibited Use Policy](https://gemma.ai/resources/prohibited-use.md): Restricted uses and safety guidelines governing the use of Gemma models and Model Derivatives.
 - [Intended Use Statement](https://gemma.ai/resources/intended-use.md): Intended purpose, developer responsibilities, and example applications for building with Gemma AI models.

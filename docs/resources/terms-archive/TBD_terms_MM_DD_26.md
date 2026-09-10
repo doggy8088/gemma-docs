@@ -1,6 +1,12 @@
+---
+title: Gemma Terms of Use (TBD 2026 Archive)
+description: Archived Gemma Terms of Use document governing the use, reproduction, and distribution of Gemma models.
+source_url: "https://ai.google.dev/gemma/terms.md.txt"
+---
+
 # Gemma Terms of Use
 
-The terms below apply to Gemma models listed in the Appendix at bottom of this page. For Gemma 4 terms, see the [Gemma 4 license](https://ai.google.dev/gemma/apache_2).
+The terms below apply to Gemma models listed in the Appendix at bottom of this page. For Gemma 4 terms, see the [Gemma 4 license](../apache-2.md).
 
 Last modified: April 1, 2026
 
@@ -23,7 +29,7 @@ providing or making Gemma or its functionality available as a hosted service via
 API, web access, or any other electronic or remote means ("**Hosted Service**").
 
 (c) "**Gemma** " means the set of machine learning language models, trained model
-weights and parameters identified in the [Appendix](https://ai.google.dev/gemma/terms#appendix),
+weights and parameters identified in the [Appendix](#appendix),
 regardless of the source that you obtained it from.
 
 (d) "**Google**" means Google LLC.
@@ -90,7 +96,7 @@ Agreement.
 
 You must not use any of the Gemma Services:
 
-1. for the restricted uses set forth in the Gemma Prohibited Use Policy at [ai.google.dev/gemma/prohibited_use_policy](https://ai.google.dev/gemma/prohibited_use_policy) ("**Prohibited Use Policy**"), which is hereby incorporated by reference into this Agreement; or
+1. for the restricted uses set forth in the Gemma Prohibited Use Policy at [ai.google.dev/gemma/prohibited_use_policy](../prohibited-use.md) ("**Prohibited Use Policy**"), which is hereby incorporated by reference into this Agreement; or
 2. in violation of applicable laws and regulations.
 
 To the maximum extent permitted by law, Google reserves the right to restrict
@@ -177,25 +183,25 @@ delaying the exercise of) any rights under this Agreement.
 
 ## Appendix
 
-- [Gemma 1](https://ai.google.dev/gemma/docs/core/model_card)
-- [Gemma 1.1](https://ai.google.dev/gemma/docs/core/model_card)
-- [Gemma 2](https://ai.google.dev/gemma/docs/core/model_card_2)
-- [Gemma 3](https://ai.google.dev/gemma/docs/core/model_card_3)
-- [Gemma 3n](https://ai.google.dev/gemma/docs/3n)
-- [FunctionGemma](https://ai.google.dev/gemma/docs/functiongemma)
-- [EmbeddingGemma](https://ai.google.dev/gemma/docs/embeddinggemma)
-- [PaliGemma](https://ai.google.dev/gemma/docs/paligemma/model-card)
-- [PaliGemma 2](https://ai.google.dev/gemma/docs/paligemma/model-card-2)
-- [ShieldGemma](https://ai.google.dev/gemma/docs/shieldgemma/model_card)
-- [ShieldGemma 2](https://ai.google.dev/gemma/docs/shieldgemma/model_card_2)
-- [CodeGemma](https://ai.google.dev/gemma/docs/codegemma/model_card)
-- [CodeGemma 1.1](https://ai.google.dev/gemma/docs/codegemma/model_card)
+- [Gemma 1](../../models/gemma-1/index.md)
+- [Gemma 1.1](../../models/gemma-1/index.md)
+- [Gemma 2](../../models/gemma-2/index.md)
+- [Gemma 3](../../models/gemma-3/index.md)
+- [Gemma 3n](../../models/gemma-3n/index.md)
+- [FunctionGemma](../../models/functiongemma/index.md)
+- [EmbeddingGemma](../../models/embeddinggemma/index.md)
+- [PaliGemma](../../models/paligemma/model-card-v1.md)
+- [PaliGemma 2](../../models/paligemma/model-card-v2.md)
+- [ShieldGemma](../../models/shieldgemma/model-card-v1.md)
+- [ShieldGemma 2](../../models/shieldgemma/model-card-v2.md)
+- [CodeGemma](https://www.kaggle.com/models/google/codegemma)
+- [CodeGemma 1.1](https://www.kaggle.com/models/google/codegemma)
 - [Gemma 2 JPN](https://huggingface.co/google/gemma-2-2b-jpn-it)
 - [DataGemma RIG](https://www.kaggle.com/models/google/datagemma-rig)
 - [DataGemma RAG](https://www.kaggle.com/models/google/datagemma-rag)
-- [RecurrentGemma](https://ai.google.dev/gemma/docs/recurrentgemma/model_card)
-- [Gemma Scope](https://ai.google.dev/gemma/docs/gemma_scope)
-- [Gemma-APS](https://ai.google.dev/gemma/docs/gemma-aps)
+- [RecurrentGemma](../../models/recurrentgemma/model-card.md)
+- [Gemma Scope](../../models/gemma-scope/index.md)
+- [Gemma-APS](../../models/gemma-aps/index.md)
 - [T5Gemma](https://www.kaggle.com/models/google/t5gemma)
 - [VaultGemma](https://www.kaggle.com/models/google/vaultgemma)
 - [FunctionGemma](https://www.kaggle.com/models/google/functiongemma)
@@ -203,4 +209,4 @@ delaying the exercise of) any rights under this Agreement.
 - [TranslateGemma](https://www.kaggle.com/models/google/translategemma)
 
 !!! Note
-    Previous versions of these Terms are [archived here](/resources/terms-archive).
+    Previous versions of these Terms are [archived here](index.md).
