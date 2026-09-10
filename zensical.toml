@@ -215,14 +215,13 @@ nav = [
       { "Conventions" = "contributing/conventions.md" },
     ]},
     { "Legal" = [
+      { "Gemma 4 license" = "resources/apache-2.md" },
       { "Terms of use" = "resources/terms.md" },
       { "Terms archive" = [
         { "Overview" = "resources/terms-archive/index.md" },
-        { "TBD 2026" = "resources/terms-archive/TBD_terms_MM_DD_26.md" },
         { "April 1, 2024" = "resources/terms-archive/terms_04_01_24.md" },
         { "February 21, 2024" = "resources/terms-archive/terms_02_21_24.md" },
       ]},
-      { "Gemma 4 license" = "resources/apache-2.md" },
       { "Prohibited use" = "resources/prohibited-use.md" },
       { "Intended use statement" = "resources/intended-use.md" },
     ]},

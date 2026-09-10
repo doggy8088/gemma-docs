@@ -10,6 +10,5 @@ This archive contains previously published versions of the *Gemma Terms of Use*.
 
 The following are links to previously published *Gemma Terms of Use* documents ordered by modification date:
 
-- [TBD, 2026](TBD_terms_MM_DD_26.md) — Updated Terms of Use including appendix entries for Gemma 3, Gemma 3n, FunctionGemma, EmbeddingGemma, and related models.
 - [April 1, 2024](terms_04_01_24.md) — Updated Terms of Use revising Section 4.1 regarding model updates and maintenance.
 - [February 21, 2024](terms_02_21_24.md) — Initial release of the Gemma Terms of Use governing early Gemma model releases and distributions.
