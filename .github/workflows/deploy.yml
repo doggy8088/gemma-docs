@@ -37,6 +37,8 @@ jobs:
         run: uv run --frozen python scripts/lint_docs.py --baseline
 
       - name: Build docs
+        env:
+          GA_MEASUREMENT_ID: ${{ vars.GA_MEASUREMENT_ID || secrets.GA_MEASUREMENT_ID }}
         run: |
           uv run --frozen python scripts/build_docs.py
 

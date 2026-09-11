@@ -18,3 +18,6 @@ venv/
 
 # Cached upstream sources for scripts/port_docs.py
 .sources/
+
+# Temporary build config with injected analytics ID
+.zensical.build.toml

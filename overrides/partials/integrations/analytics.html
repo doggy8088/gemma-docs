@@ -1,0 +1,15 @@
+{#-
+  Only inject Google Analytics 4 and trigger __md_analytics when a Measurement ID
+  (config.extra.analytics.property) is configured.
+-#}
+{% if config.extra.analytics and config.extra.analytics.property %}
+  {% set provider = config.extra.analytics.provider %}
+  {% if provider %}
+    {% include "partials/integrations/analytics/" ~ provider ~ ".html" %}
+    {% if config.extra.consent %}
+      <script>if("undefined"!=typeof __md_analytics){var consent=__md_get("__consent");consent&&consent.analytics&&__md_analytics()}</script>
+    {% else %}
+      <script>"undefined"!=typeof __md_analytics&&__md_analytics()</script>
+    {% endif %}
+  {% endif %}
+{% endif %}
