@@ -177,6 +177,7 @@ nav = [
       { "QLoRA" = "tuning/qlora.md" },
       { "Vision QLoRA" = "tuning/vision-qlora.md" },
       { "Full fine-tune" = "tuning/full-finetune.md" },
+      { "Agent Skill" = "tuning/gemma-trainer.md" },
     ]},
   ]},
 

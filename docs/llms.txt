@@ -84,6 +84,7 @@ Follow the Markdown links below to read canonical page content without cloning t
 - [Fine-Tune Gemma using Hugging Face Transformers and QloRA](https://gemma.ai/tuning/qlora.md): This guide walks you through how to fine-tune Gemma on a custom text-to-sql dataset using Hugging Face Transformers and TRL.
 - [Fine-Tune Gemma for Vision Tasks using Hugging Face Transformers and QLoRA](https://gemma.ai/tuning/vision-qlora.md): This guide walks you through how to fine-tune Gemma on a custom image and text dataset for a vision task (generating product descriptions) using Hugging Face Transformers and TRL.
 - [Full Model Fine-Tune using Hugging Face Transformers](https://gemma.ai/tuning/full-finetune.md): This guide walks you through how to fine-tune Gemma on a mobile game NPC dataset using Hugging Face Transformers and TRL.
+- [Master Local Fine-Tuning with gemma-trainer](https://gemma.ai/tuning/gemma-trainer.md): Take control of your AI models with our newest skill, designed to make local fine-tuning efficient.
 
 ## Learn
 - [Learn](https://gemma.ai/learn.md): Illustrated walkthroughs of how the Gemma models work, from the architecture down to individual mechanisms.
