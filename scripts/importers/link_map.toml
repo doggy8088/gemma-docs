@@ -93,15 +93,6 @@
 "/core/huggingface_text_finetune_qlora" = "tuning/qlora.md"
 "/core/huggingface_vision_finetune_qlora" = "tuning/vision-qlora.md"
 "/core/huggingface_text_full_finetune" = "tuning/full-finetune.md"
-"/core/distributed_tuning" = "tuning/distributed.md"
-"/core/lora_tuning" = "tuning/keras-lora.md"
-"/lora_tuning" = "tuning/keras-lora.md"                   # short form used on some pages
-"/distributed_tuning" = "tuning/distributed.md"
-"/spoken-language/task-specific-tuning" = "tuning/spoken-language.md"
-
-# Learn
-"/business-email-assistant" = "tuning/index.md"
-"/personal-code-assistant" = "tuning/index.md"
 
 # Now ported (were [planned] in Step 0.5)
 "/setup" = "get-started/index.md"        # legacy setup page removed

@@ -212,7 +212,7 @@ tuning_paths:
   - id: keras-lora
     framework: keras
     label: Keras + LoRA
-    page: tuning/keras-lora.md
+    url: https://colab.research.google.com/github/google-gemma/cookbook/blob/main/docs/core/lora_tuning.ipynb
     blurb: Parameter-efficient tuning with KerasHub.
 
   - id: transformers-peft
@@ -259,7 +259,7 @@ tuning_paths:
   - id: keras-distributed
     framework: keras
     label: Keras distributed
-    page: tuning/distributed.md
+    url: https://colab.research.google.com/github/google-gemma/cookbook/blob/main/docs/core/distributed_tuning.ipynb
     blurb: Model-parallel tuning across TPU or GPU pods.
 
   - id: gke
