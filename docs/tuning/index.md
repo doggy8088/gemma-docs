@@ -89,7 +89,7 @@ For runs that outgrow a single machine, or that you would rather not operate you
 {{ paths(["keras-distributed", "gke", "vertex-ai"]) }}
 
 !!! note
-    The JAX fine-tuning guide has been replaced by the [Gemma library fine-tuning](https://gemma-llm.readthedocs.io/en/latest/colab_sampling.html) guide.
+    The JAX fine-tuning guide has been replaced by the [Gemma library fine-tuning](https://gemma-llm.readthedocs.io/en/latest/colab_finetuning.html) guide.
 
 ## 2. Collect data
 
