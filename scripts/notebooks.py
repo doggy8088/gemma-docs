@@ -366,7 +366,7 @@ def build_notebook_map(
         candidates = candidate_models(source)
         if candidates:
             for mid in candidates:
-                slug = f"{mid.replace('/', '-')}-it"
+                slug = f"{mid.replace('/', '-')}"
                 target = NOTEBOOKS_DIR / f"{stem}-{slug}.ipynb"
                 mapping[(source, mid)] = target
         else:
