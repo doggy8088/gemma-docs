@@ -576,7 +576,7 @@ link. Full content width, 16:9, lazy-loaded, privacy-mode host.
 
 ```html
 <div class="video-embed">
-  <iframe src="https://www.youtube-nocookie.com/embed/VIDEO_ID"
+  <iframe src="https://www.youtube.com/embed/VIDEO_ID"
           title="Video" loading="lazy" allowfullscreen></iframe>
 </div>
 ```

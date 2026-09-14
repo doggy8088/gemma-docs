@@ -7,7 +7,7 @@ source_url: "https://ai.google.dev/gemma/docs/shieldgemma.md.txt"
 # ShieldGemma {: #hidden-title style="display: none;" }
 
 <div class="video-embed">
-  <iframe src="https://www.youtube-nocookie.com/embed/BgWO2iVPlyw"
+  <iframe src="https://www.youtube.com/embed/BgWO2iVPlyw"
           title="Video" loading="lazy" allowfullscreen
           allow="accelerometer; encrypted-media; gyroscope; picture-in-picture"
           referrerpolicy="strict-origin-when-cross-origin"></iframe>

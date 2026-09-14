@@ -7,7 +7,7 @@ source_url: "https://ai.google.dev/gemma/docs/functiongemma.md.txt"
 # FunctionGemma model overview {: #hidden-title style="display: none;" }
 
 <div class="video-embed">
-  <iframe src="https://www.youtube-nocookie.com/embed/-Tgc_9uYJLI"
+  <iframe src="https://www.youtube.com/embed/-Tgc_9uYJLI"
           title="Video" loading="lazy" allowfullscreen
           allow="accelerometer; encrypted-media; gyroscope; picture-in-picture"
           referrerpolicy="strict-origin-when-cross-origin"></iframe>

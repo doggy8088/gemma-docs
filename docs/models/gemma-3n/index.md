@@ -7,7 +7,7 @@ source_url: "https://ai.google.dev/gemma/docs/gemma-3n.md.txt"
 # Gemma 3n model overview {: #hidden-title style="display: none;" }
 
 <div class="video-embed">
-  <iframe src="https://www.youtube-nocookie.com/embed/eJFJRyXEHZ0"
+  <iframe src="https://www.youtube.com/embed/eJFJRyXEHZ0"
           title="Video" loading="lazy" allowfullscreen
           allow="accelerometer; encrypted-media; gyroscope; picture-in-picture"
           referrerpolicy="strict-origin-when-cross-origin"></iframe>

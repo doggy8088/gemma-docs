@@ -301,7 +301,7 @@ def embed_videos(text: str) -> str:
     def replace(match: re.Match) -> str:
         return (
             '<div class="video-embed">\n'
-            f'  <iframe src="https://www.youtube-nocookie.com/embed/{match.group("id")}"\n'
+            f'  <iframe src="https://www.youtube.com/embed/{match.group("id")}"\n'
             '          title="Video" loading="lazy" allowfullscreen\n'
             '          allow="accelerometer; encrypted-media; gyroscope; picture-in-picture"\n'
             "          referrerpolicy=\"strict-origin-when-cross-origin\"></iframe>\n"

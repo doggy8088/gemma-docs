@@ -84,6 +84,10 @@ ABBR_DEF = re.compile(r"^\*\[[^\]]+\]:.*$\n?", re.MULTILINE)
 # carries real URLs instead of unresolved brackets.
 REFERENCE_LINK = re.compile(r"\[([^\]]+)\]\[([a-z0-9][a-z0-9-]*)\]")
 OUTPUT_IMAGE = re.compile(r"!\[[^\]]*\]\((?:[^)\n]*/)?output_[^/)\n]*\)[ \t]*\n?")
+OUTPUT_AUDIO = re.compile(
+    r"<audio\b[^>]*\bclass=(?:\"[^\"]*\boutput\b[^\"]*\"|'[^']*\boutput\b[^']*')[^>]*>.*?</audio>[ \t]*\n?",
+    re.DOTALL | re.IGNORECASE,
+)
 # In Markdown tables, Jupyter/Colab table parsers split cells on unescaped `|` even inside inline
 # code spans (`<|turn>`). Escaping `|` as `\|` inside inline code spans on table rows keeps table
 # cells intact.
@@ -223,6 +227,7 @@ def notebook_markdown(text: str) -> str:
     text = ADMONITION.sub(replace_admonition, text)
     text = ATTR_LIST.sub("", text)
     text = OUTPUT_IMAGE.sub("", text)
+    text = OUTPUT_AUDIO.sub("", text)
     lines = []
     for line in text.splitlines(keepends=True):
         if line.lstrip().startswith("|"):

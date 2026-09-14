@@ -122,6 +122,23 @@ print(MODEL_ID)
         self.assertEqual(notebooks.infer_model("mtp-gemma-4-e2b-it.ipynb"), "gemma-4/e2b")
         self.assertIsNone(notebooks.infer_model("full-finetune.ipynb"))
 
+    def test_output_audio_tag_is_removed(self):
+        body = """Before
+<audio class="output" controls="controls" >
+    <source src="data:audio/x-wav;base64,AAAA" />
+    Your browser does not support the audio element.
+</audio>
+<audio controls>
+    <source src="sample.wav" />
+</audio>
+After"""
+        cells = notebooks.export_cells(body)
+        rendered = "".join(cells[0]["source"])
+        self.assertIn("Before", rendered)
+        self.assertIn("After", rendered)
+        self.assertNotIn('class="output"', rendered)
+        self.assertIn('<source src="sample.wav" />', rendered)
+
 
 if __name__ == "__main__":
     unittest.main()

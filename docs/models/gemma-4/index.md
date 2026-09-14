@@ -7,7 +7,7 @@ source_url: "https://ai.google.dev/gemma/docs/core.md.txt"
 # Gemma 4 {: #hidden-title style="display: none;" }
 
 <div class="video-embed">
-  <iframe src="https://www.youtube-nocookie.com/embed/jZVBoFOJK-Q"
+  <iframe src="https://www.youtube.com/embed/jZVBoFOJK-Q"
           title="Video" loading="lazy" allowfullscreen
           allow="accelerometer; encrypted-media; gyroscope; picture-in-picture"
           referrerpolicy="strict-origin-when-cross-origin"></iframe>
