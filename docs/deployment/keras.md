@@ -4,7 +4,7 @@ description: Generating content, summarizing, and analysing content are just som
 models: [gemma-4]
 frameworks: [keras]
 source_url: "https://ai.google.dev/gemma/docs/core/keras_inference.md.txt"
-colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs/notebooks/run-gemma-with-keras-gemma-4-e2b-it.ipynb
+colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs/notebooks/run-gemma-with-keras-gemma-4-e2b.ipynb
 ---
 # Run Gemma with Keras
 

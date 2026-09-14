@@ -4,7 +4,7 @@ description: This guide walks you through how to fine-tune Gemma on a custom aud
 models: [gemma-4]
 requires: audio
 frameworks: [unsloth, peft]
-colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs/notebooks/audio-qlora-gemma-4-e2b-it.ipynb
+colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs/notebooks/audio-qlora-gemma-4-e2b.ipynb
 ---
 # Fine-Tune Gemma for Audio Task using Unsloth and QLoRA
 

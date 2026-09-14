@@ -115,7 +115,7 @@ Ten tutorial pages in `SOURCES` are exported to Jupyter. Markdown owns every sub
 
 Only fences marked `.notebook-cell` become executable cells. When a tutorial contains
 `{ .model-swap }` code blocks, `notebooks.py` exports separate model-specific notebooks named
-`<stem>-gemma-4-<size>-it.ipynb` (e.g., `thinking-gemma-4-e2b-it.ipynb`) for all candidate models
+`<stem>-gemma-4-<size>.ipynb` (e.g., `thinking-gemma-4-e2b.ipynb`) for all candidate models
 matching the tutorial's engines and `requires:` modality constraint. Non-swappable tutorials
 export a single `<stem>.ipynb`.
 

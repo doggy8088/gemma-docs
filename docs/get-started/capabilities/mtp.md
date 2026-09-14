@@ -4,7 +4,7 @@ description: In Gemma 4, Multi-Token Prediction (MTP) is the specific architectu
 models: [gemma-4]
 source_url: "https://ai.google.dev/gemma/docs/mtp/overview.md.txt"
 frameworks: [transformers]
-colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs/notebooks/mtp-gemma-4-e2b-it.ipynb
+colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs/notebooks/mtp-gemma-4-e2b.ipynb
 ---
 # Speed-up Gemma 4 with Multi-Token Prediction
 

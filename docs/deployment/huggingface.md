@@ -4,7 +4,7 @@ description: Generating text, summarizing, and analysing content are just some o
 models: [gemma-4, gemma-3, gemma-3n]
 frameworks: [transformers]
 source_url: "https://ai.google.dev/gemma/docs/core/huggingface_inference.md.txt"
-colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs/notebooks/run-gemma-with-hf-gemma-4-e2b-it.ipynb
+colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs/notebooks/run-gemma-with-hf-gemma-4-e2b.ipynb
 ---
 # Run Gemma with Hugging Face Transformers
 

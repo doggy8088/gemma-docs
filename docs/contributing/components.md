@@ -326,7 +326,7 @@ The quiet band under every H1. You never write this markup; it is rendered from 
 models: [gemma-4]        # what the page is about
 frameworks: [ollama]     # primary tools the page teaches, linked to their home pages
 requires: audio          # narrows the selector to models that accept audio
-colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs/notebooks/tutorial-gemma-4-e2b-it.ipynb # opens in Colab
+colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs/notebooks/tutorial-gemma-4-e2b.ipynb # opens in Colab
 ```
 
 Two kinds of item sit on the line, and keeping them apart is the design:
@@ -401,15 +401,15 @@ Unmarked fences remain part of a Markdown cell, and `{ .output }` blocks are omi
 notebook recreates them when it runs.
 
 When a tutorial uses `{ .model-swap }`, `scripts/notebooks.py` exports separate model-specific
-notebooks named `<page>-gemma-4-<size>-it.ipynb` (e.g., `thinking-gemma-4-e2b-it.ipynb`,
-`thinking-gemma-4-12b-it.ipynb`) for every candidate model supported by the page's engines and
+notebooks named `<page>-gemma-4-<size>.ipynb` (e.g., `thinking-gemma-4-e2b.ipynb`,
+`thinking-gemma-4-12b.ipynb`) for every candidate model supported by the page's engines and
 `requires:` modality constraint. Tutorials without `.model-swap` export a single `<page>.ipynb`.
 
 Add the default model notebook's Colab URL to frontmatter to show a quiet, accessible Colab icon
 in the page context strip:
 
 ```yaml
-colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs/notebooks/tutorial-gemma-4-e2b-it.ipynb
+colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs/notebooks/tutorial-gemma-4-e2b.ipynb
 ```
 
 When readers select another model in the page context dropdown, the model switcher dynamically

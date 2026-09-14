@@ -4,7 +4,7 @@ description: This guide walks you through how to fine-tune Gemma on a custom ima
 models: [gemma-4]
 frameworks: [transformers, peft, trl]
 source_url: "https://ai.google.dev/gemma/docs/core/huggingface_vision_finetune_qlora.md.txt"
-colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs/notebooks/vision-qlora-gemma-4-e2b-it.ipynb
+colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs/notebooks/vision-qlora-gemma-4-e2b.ipynb
 ---
 # Fine-Tune Gemma for Vision Tasks using Hugging Face Transformers and QLoRA
 

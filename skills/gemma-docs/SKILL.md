@@ -86,7 +86,7 @@ description: Concise 1-2 sentence description for search and previews.
 models: [gemma-4]          # Optional: list of relevant model family IDs
 frameworks: [transformers] # Optional: list of relevant framework IDs
 requires: audio            # Optional: required input modality (e.g. audio, vision)
-colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs/notebooks/tutorial-gemma-4-e2b-it.ipynb # Optional: Colab link
+colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs/notebooks/tutorial-gemma-4-e2b.ipynb # Optional: Colab link
 prerequisites:             # Optional: list of prerequisite topics
   - get-started/index.md
 source_url: "https://..."  # Mandatory on imported pages; omitted on original pages
@@ -95,7 +95,7 @@ source_url: "https://..."  # Mandatory on imported pages; omitted on original pa
 - **Authored keys only**: Do NOT add computed keys (e.g. token counts).
 - **Vocabularies**: Model and framework identifiers must exist in `data/models.yml` and `data/frameworks.yml`.
 - **Modality gating**: Use `requires:` to restrict model selection and notebook export to models supporting that modality (e.g., `audio` excludes 26B/31B).
-- **Colab link**: For swappable tutorials, link to the default model notebook (`-gemma-4-e2b-it.ipynb`). The model switcher updates the link dynamically when readers select other models.
+- **Colab link**: For swappable tutorials, link to the default model notebook (`-gemma-4-e2b.ipynb`). The model switcher updates the link dynamically when readers select other models.
 
 ### Headings and Anchor Links
 - Use standard markdown headings (`# H1`, `## 1. Step`, `### Substep`).
@@ -135,7 +135,7 @@ To create or edit a tutorial that exports to a Jupyter notebook:
    model_id = "google/gemma-4-E2B-it"
    ```
    ````
-   During export, `scripts/notebooks.py` detects swappable engines in marked blocks and candidate models matching any `requires:` frontmatter. For swappable tutorials, it generates model-specific notebooks named `<stem>-gemma-4-<size>-it.ipynb` (e.g., `thinking-gemma-4-e2b-it.ipynb`, `thinking-gemma-4-12b-it.ipynb`). Non-swappable tutorials generate a single `<stem>.ipynb`.
+   During export, `scripts/notebooks.py` detects swappable engines in marked blocks and candidate models matching any `requires:` frontmatter. For swappable tutorials, it generates model-specific notebooks named `<stem>-gemma-4-<size>.ipynb` (e.g., `thinking-gemma-4-e2b.ipynb`, `thinking-gemma-4-12b.ipynb`). Non-swappable tutorials generate a single `<stem>.ipynb`.
 3. **Display-Only Code**: Normal fences (without `.notebook-cell`) stay in Markdown and become text cells in notebooks.
 4. **Outputs**: Fences marked `{ .output }` are omitted during notebook export.
 5. **Site-Only Blocks**: Wrap web-only elements (such as interactive widgets or card grids) in skip comments:
@@ -145,7 +145,7 @@ To create or edit a tutorial that exports to a Jupyter notebook:
    <!-- notebook:skip-end -->
    ```
 6. **Registration**: Register new notebook source tutorials in `SOURCES` in `scripts/notebooks.py`.
-7. **Colab Link**: For swappable tutorials, add the default model notebook's Colab URL to frontmatter (`colab: .../<stem>-gemma-4-e2b-it.ipynb`). The page context switcher dynamically updates the link when readers select a different model.
+7. **Colab Link**: For swappable tutorials, add the default model notebook's Colab URL to frontmatter (`colab: .../<stem>-gemma-4-e2b.ipynb`). The page context switcher dynamically updates the link when readers select a different model.
 8. **Export & Verify**: Run `uv run --frozen python scripts/notebooks.py` to regenerate `docs/notebooks/*.ipynb`, and verify with `uv run --frozen python scripts/notebooks.py --check`.
 
 ---
