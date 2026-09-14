@@ -72,8 +72,8 @@ print(42)
             self.assertEqual(payload["cells"][1]["cell_type"], "code")
 
     def test_registered_notebooks_have_unique_outputs_and_code_cells(self):
-        self.assertEqual(len(notebooks.SOURCES), 22)
-        self.assertEqual(len(notebooks.NOTEBOOKS), 63)
+        self.assertEqual(len(notebooks.SOURCES), 23)
+        self.assertEqual(len(notebooks.NOTEBOOKS), 66)
         self.assertEqual(len(set(notebooks.NOTEBOOKS.values())), len(notebooks.NOTEBOOKS))
         for (source, model), target in notebooks.NOTEBOOKS.items():
             with self.subTest(target=target.name):
