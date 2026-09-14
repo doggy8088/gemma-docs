@@ -1,3 +1,17 @@
+# Copyright 2026 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 from __future__ import annotations
 
 import json
@@ -69,7 +83,8 @@ print(42)
             )
             payload = json.loads(notebooks.render(source))
             self.assertEqual(payload["nbformat"], 4)
-            self.assertEqual(payload["cells"][1]["cell_type"], "code")
+            self.assertEqual(payload["cells"][:2], list(notebooks.LICENSE_CELLS))
+            self.assertEqual(payload["cells"][3]["cell_type"], "code")
 
     def test_registered_notebooks_have_unique_outputs_and_code_cells(self):
         self.assertEqual(len(notebooks.SOURCES), 23)
@@ -79,7 +94,7 @@ print(42)
             with self.subTest(target=target.name):
                 payload = json.loads(notebooks.render(source, model=model, target_name=target.name))
                 self.assertTrue(
-                    any(cell["cell_type"] == "code" for cell in payload["cells"]),
+                    any(cell["cell_type"] == "code" for cell in payload["cells"][2:]),
                     f"{target} exports no executable cells",
                 )
                 self.assertEqual(payload["metadata"]["colab"]["name"], target.name)
@@ -103,7 +118,7 @@ print(MODEL_ID)
             source = Path(directory) / "guide.md"
             source.write_text(body, encoding="utf-8")
             payload = json.loads(notebooks.render(source, model="gemma-4/12b"))
-            code_cells = [c for c in payload["cells"] if c["cell_type"] == "code"]
+            code_cells = [c for c in payload["cells"][2:] if c["cell_type"] == "code"]
             self.assertEqual(len(code_cells), 2)
             self.assertIn('MODEL_ID = "google/gemma-4-12B-it"', "".join(code_cells[0]["source"]))
             self.assertIn("# Unswapped cell", "".join(code_cells[1]["source"]))
