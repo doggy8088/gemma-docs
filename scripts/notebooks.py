@@ -327,12 +327,15 @@ def default_stem(source: Path) -> str:
 LICENSE_CELLS: tuple[dict, ...] = (
     {
         "cell_type": "markdown",
+        "metadata": {},
         "source": [
             "##### Copyright 2025 Google LLC."
         ],
     },
     {
         "cell_type": "code",
+        "execution_count": None,
+        "metadata": {"cellView": "form"},
         "outputs": [],
         "source": [
             "#@title Licensed under the Apache License, Version 2.0 (the \"License\");\n",
