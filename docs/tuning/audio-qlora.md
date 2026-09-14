@@ -434,6 +434,7 @@ Fine-tuned QLoRA adapter saved to ./checkpoints/final_model!
 You will evaluate the fine-tuned model on all **130 unseen test audio recordings** using greedy decoding.  
 
 Metrics computed:
+
 1. **SequenceMatcher Similarity** (`difflib.SequenceMatcher`): Character subsequence alignment ratio.
 2. **Levenshtein Similarity**: Normalized edit distance ratio ($1 - \frac{\text{dist}}{\max(L_1, L_2)}$).
 3. **Character Accuracy**: $1 - \text{CER}$ using `jiwer.cer`.
