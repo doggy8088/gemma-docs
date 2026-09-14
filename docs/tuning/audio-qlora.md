@@ -1,6 +1,6 @@
 ---
 title: Fine-Tune Gemma for Audio Tasks using Unsloth and QLoRA
-description: This guide walks you through how to fine-tune Gemma on a custom audio dataset for a audio task (generating transcription of [Kumamoto dialect Japanese](https://en.wikipedia.org/wiki/Kumamoto_dialect)) using Unsloth.
+description: This guide walks you through how to fine-tune Gemma on a custom audio dataset for a audio task (generating transcription of Kumamoto dialect Japanese) using Unsloth.
 models: [gemma-4]
 requires: audio
 frameworks: [unsloth, peft]
