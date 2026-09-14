@@ -46,8 +46,9 @@ SOURCES: tuple[Path | tuple[Path, str], ...] = (
     (REPO_ROOT / "docs" / "deployment" / "huggingface.md", "run-gemma-with-hf"),
     (REPO_ROOT / "docs" / "deployment" / "keras.md", "run-gemma-with-keras"),
     REPO_ROOT / "docs" / "tuning" / "qlora.md",
-    REPO_ROOT / "docs" / "tuning" / "full-finetune.md",
+    REPO_ROOT / "docs" / "tuning" / "audio-qlora.md",
     REPO_ROOT / "docs" / "tuning" / "vision-qlora.md",
+    REPO_ROOT / "docs" / "tuning" / "full-finetune.md",
 )
 
 FENCE_OPEN = re.compile(r"^(?P<fence>`{3,})(?P<language>[\w+-]*)(?P<attributes>.*)$")
