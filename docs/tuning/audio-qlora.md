@@ -14,7 +14,7 @@ This guide walks you through how to fine-tune Gemma on a custom audio dataset fo
 - **Base Model**: Gemma 4 PT multimodal foundation model
 - **Dataset**: [`federerjiang/dialect.kumamoto`](https://huggingface.co/datasets/federerjiang/dialect.kumamoto) on Hugging Face (1,300 speech recordings of Kumamoto dialect Japanese)
 - **Methodology**: **4-bit QLoRA** via Unsloth & PEFT, drastically reducing memory while fine-tuning language attention and MLP projections
-- **Target Metric**: **Text similarity > 80.0%** (achieves **81.91%** mean sequence similarity)
+- **Target Metric**: **Text similarity > 80.0%**
 
 ## 1. Environment Setup & Dependency Installation
 
@@ -73,11 +73,14 @@ Bfloat16 Supported: True
 ## 4. Dataset Loading & Preparation (`federerjiang/dialect.kumamoto`)
 
 You will download the `federerjiang/dialect.kumamoto` dataset directly from Hugging Face.  
+
 The dataset contains:
+
 - `audio`: Audio waveform and sampling rate (16 kHz)
 - `sentence`: Ground-truth transcription in Kumamoto dialect (*Kumamoto-ben*)
 
 You will split the 1,300 samples into:
+
 - **Train split**: 1,170 samples (90%)
 - **Test split**: 130 samples (10%) with fixed random seed (`seed=42`)
 

@@ -32,6 +32,8 @@ extra_css = [
 extra_javascript = [
   "javascripts/model-data.js",     # GENERATED from data/models.yml -- do not edit
   "javascripts/model-switcher.js", # page context strip selector + code rewriting
+  "javascripts/mathjax.js",
+  "https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js",
 ]
 # `include_yaml` exposes data/models.yml as `modeldata.*` in page templates. NOT `models.*`:
 # every page carries a `models:` frontmatter key, and page metadata shadows a macros variable
