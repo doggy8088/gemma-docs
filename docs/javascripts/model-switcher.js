@@ -102,8 +102,8 @@
   const updateColab = (target) => {
     const colabLink = document.querySelector(".page-context__colab");
     if (!colabLink) return;
-    const slug = `${target.replace("/", "-")}-it`;
-    colabLink.href = colabLink.href.replace(/-gemma-4-[a-z0-9-]+-it\.ipynb/, `-${slug}.ipynb`);
+    const slug = `${target.replace("/", "-")}`;
+    colabLink.href = colabLink.href.replace(/-gemma-4-[a-z0-9-]+\.ipynb/, `-${slug}.ipynb`);
   };
 
   const choose = (picker, target) => {
