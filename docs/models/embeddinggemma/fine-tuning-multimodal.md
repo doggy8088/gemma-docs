@@ -17,9 +17,9 @@ source_url: "https://ai.google.dev/gemma/docs/embeddinggemma/fine-tuning-multimo
 
 Imagine you are building a digital archive search engine for a museum exhibition of traditional Joseon-dynasty Korean paintings:
 
-* **[Shin Yunbok](https://artsandculture.google.com/entity/sin-yun-bok/m0749t2), *Dano Pungjeong* (Scenery on Dano Day)** (`ink-wash-1.png`): Genre painting (*pungsokhwa*) of women bathing by a stream and riding a swing during the Dano festival<br>![Shin Yunbok](https://github.com/bebechien/gemma/raw/refs/heads/main/images/ink-wash-1.png)
-* **[Jeong Seon](https://artsandculture.google.com/entity/jeong-seon/m06w7x2), *Inwangjesaekdo* (Clearing after Rain on Mount Inwang)** (`ink-wash-2.png`): True-view landscape painting (*jingyeong sansuhwa*) of rain-soaked granite peaks emerging from mist<br>![Jeong Seon](https://github.com/bebechien/gemma/raw/refs/heads/main/images/ink-wash-2.png)
-* **[Kim Hongdo](https://artsandculture.google.com/entity/gim-hongdo/m0749cz), *Seodang* (Village School)** (`ink-wash-3.png`): Genre painting of a village schoolmaster, a weeping student, and giggling classmates<br>![Kim Hongdo](https://github.com/bebechien/gemma/raw/refs/heads/main/images/ink-wash-3.png)
+* **[Shin Yunbok](https://artsandculture.google.com/entity/sin-yun-bok/m0749t2), *Dano Pungjeong* (Scenery on Dano Day)** (`ink-wash-1.png`): Genre painting (*pungsokhwa*) of women bathing by a stream and riding a swing during the Dano festival<br>![Shin Yunbok](../../assets/embeddinggemma/ink-wash-1.png)
+* **[Jeong Seon](https://artsandculture.google.com/entity/jeong-seon/m06w7x2), *Inwangjesaekdo* (Clearing after Rain on Mount Inwang)** (`ink-wash-2.png`): True-view landscape painting (*jingyeong sansuhwa*) of rain-soaked granite peaks emerging from mist<br>![Jeong Seon](../../assets/embeddinggemma/ink-wash-2.png)
+* **[Kim Hongdo](https://artsandculture.google.com/entity/gim-hongdo/m0749cz), *Seodang* (Village School)** (`ink-wash-3.png`): Genre painting of a village schoolmaster, a weeping student, and giggling classmates<br>![Kim Hongdo](../../assets/embeddinggemma/ink-wash-3.png)
 
 Out of the box, **EmbeddingGemma 2** can retrieve the right painting when given a **descriptive scene caption** (such as *"Scenery on Dano Day"* or *"Village School"*). However, when a user searches by **artist name** alone (e.g. *"Show me an ink wash painting of Shin Yunbok."*), a model sees three visually similar traditional Korean ink wash works and may misrank them without domain-specific artist attribution.
 
@@ -171,7 +171,7 @@ Painting: Kim Hongdo, Seodang (Village School)                               -> 
 ```
 
 !!! note "Note on Task Prompts for Cross-Modal Search"
-    Task-specific prompt prefixes apply to **text inputs only**. Here we encode the text query with `prompt_name="Retrieval-query"` (`"task: search result | query: "`) and encode the candidate images directly without a text prefix. For details on all available prompts, see the [EmbeddingGemma 2 model card](https://ai.google.dev/gemma/docs/embeddinggemma/model_card_2#best_practices).
+    Task-specific prompt prefixes apply to **text inputs only**. Here we encode the text query with `prompt_name="Retrieval-query"` (`"task: search result | query: "`) and encode the candidate images directly without a text prefix. For details on all available prompts, see the [EmbeddingGemma 2 model card](model-card-v2.md#best-practices).
 
 ### Why Did the Baseline Query Misrank the Paintings?
 
