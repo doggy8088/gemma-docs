@@ -8,7 +8,6 @@ source_url: "https://ai.google.dev/gemma/docs/functiongemma/function-calling-wit
 ---
 # Function calling with Hugging Face Transformers
 
-
 FunctionGemma is a specialized version of the Gemma 3 270M model, trained specifically for function calling improvements. It has the same architecture as Gemma, but uses a different chat format and tokenizer.
 
 This guide shows the process of using FunctionGemma within the Hugging Face ecosystem. It covers essential setup steps, such as installing the `torch` and `transformers` libraries and loading the model using `AutoProcessor` and `AutoModelForCausalLM`. Additionally, the guide explains how to pass tools to the model using either manual JSON schemas or raw Python functions and advises on when to use manual schemas to handle complex custom objects effectively.

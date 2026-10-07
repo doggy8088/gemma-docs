@@ -1,7 +1,6 @@
 ---
 title: Gemma Model Family
 description: What Gemma is, how the generations relate, and which variant was built from which base model.
-models: [gemma-4]
 ---
 
 # The Gemma model family

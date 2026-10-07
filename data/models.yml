@@ -97,7 +97,7 @@ families:
         hf: google/functiongemma-270m-it
   - id: embeddinggemma
     name: EmbeddingGemma
-    page: models/embeddinggemma/model-card.md
+    page: models/embeddinggemma/model-card-v1.md
     group: variant
     based_on: gemma-3        # "a 308M parameter multilingual text embedding model based on Gemma 3"
     tagline: 308M multilingual text embeddings
@@ -105,6 +105,16 @@ families:
       - id: 300m
         name: 300M
         hf: google/embeddinggemma-300M
+  - id: embeddinggemma-2
+    name: EmbeddingGemma 2
+    page: models/embeddinggemma/model-card-v2.md
+    group: variant
+    based_on: gemma-4        # "a 740M-parameter natively multimodal embedding model built from Gemma 4"
+    tagline: 740M multimodal text, image, audio and video embeddings
+    sizes:
+      - id: 740m
+        name: 740M
+        hf: google/embeddinggemma-2
   - id: paligemma
     name: PaliGemma
     page: models/paligemma/model-card-v1.md

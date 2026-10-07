@@ -47,9 +47,13 @@
 "/functiongemma/finetuning-with-functiongemma" = "models/functiongemma/fine-tuning.md"
 
 "/embeddinggemma" = "models/embeddinggemma/index.md"
-"/embeddinggemma/model_card" = "models/embeddinggemma/model-card.md"
+"/embeddinggemma/model_card" = "models/embeddinggemma/model-card-v1.md"
+"/embeddinggemma/model_card_2" = "models/embeddinggemma/model-card-v2.md"
 "/embeddinggemma/inference-embeddinggemma-with-sentence-transformers" = "models/embeddinggemma/inference.md"
+"/embeddinggemma/multimodal-embeddinggemma-with-sentence-transformers" = "models/embeddinggemma/multimodal.md"
 "/embeddinggemma/fine-tuning-embeddinggemma-with-sentence-transformers" = "models/embeddinggemma/fine-tuning.md"
+"/embeddinggemma/fine-tuning-multimodal-embeddinggemma-with-sentence-transformers" = "models/embeddinggemma/fine-tuning-multimodal.md"
+"/gemma_4_license" = "resources/apache-2.md"
 
 "/paligemma" = "models/paligemma/index.md"
 "/paligemma/model-card" = "models/paligemma/model-card-v1.md"

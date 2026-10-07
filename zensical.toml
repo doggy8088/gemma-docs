@@ -112,13 +112,16 @@ nav = [
       ]},
       { "EmbeddingGemma" = [
         { "Overview" = "models/embeddinggemma/index.md" },
-        { "Model card" = "models/embeddinggemma/model-card.md" },
+        { "EmbeddingGemma model card" = "models/embeddinggemma/model-card-v1.md" },
+        { "EmbeddingGemma 2 model card" = "models/embeddinggemma/model-card-v2.md" },
         { "Generate embeddings" = "models/embeddinggemma/inference.md" },
+        { "Multimodal embeddings" = "models/embeddinggemma/multimodal.md" },
         { "Fine-tuning" = "models/embeddinggemma/fine-tuning.md" },
+        { "Multimodal fine-tuning" = "models/embeddinggemma/fine-tuning-multimodal.md" },
       ]},
       { "PaliGemma" = [
         { "Overview" = "models/paligemma/index.md" },
-        { "PaliGemma 1 model card" = "models/paligemma/model-card-v1.md" },
+        { "PaliGemma model card" = "models/paligemma/model-card-v1.md" },
         { "PaliGemma 2 model card" = "models/paligemma/model-card-v2.md" },
         { "Prompting & system instructions" = "models/paligemma/prompting.md" },
         { "Generate output with Keras" = "models/paligemma/inference.md" },

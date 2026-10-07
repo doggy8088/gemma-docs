@@ -52,7 +52,9 @@ SOURCES: tuple[Path | tuple[Path, str], ...] = (
     (REPO_ROOT / "docs" / "models" / "functiongemma" / "full-sequence.md", "functiongemma-full-sequence"),
     (REPO_ROOT / "docs" / "models" / "functiongemma" / "fine-tuning.md", "functiongemma-fine-tuning"),
     (REPO_ROOT / "docs" / "models" / "embeddinggemma" / "inference.md", "embeddinggemma-inference"),
+    (REPO_ROOT / "docs" / "models" / "embeddinggemma" / "multimodal.md", "embeddinggemma-multimodal"),
     (REPO_ROOT / "docs" / "models" / "embeddinggemma" / "fine-tuning.md", "embeddinggemma-fine-tuning"),
+    (REPO_ROOT / "docs" / "models" / "embeddinggemma" / "fine-tuning-multimodal.md", "embeddinggemma-fine-tuning-multimodal"),
     (REPO_ROOT / "docs" / "models" / "paligemma" / "inference.md", "paligemma-inference"),
     (REPO_ROOT / "docs" / "models" / "paligemma" / "fine-tuning.md", "paligemma-fine-tuning"),
     (REPO_ROOT / "docs" / "models" / "recurrentgemma" / "inference.md", "recurrentgemma-inference"),
@@ -329,7 +331,7 @@ LICENSE_CELLS: tuple[dict, ...] = (
         "cell_type": "markdown",
         "metadata": {},
         "source": [
-            "##### Copyright 2025 Google LLC."
+            "##### Copyright 2026 Google LLC."
         ],
     },
     {

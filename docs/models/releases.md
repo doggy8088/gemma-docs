@@ -5,6 +5,10 @@ source_url: "https://ai.google.dev/gemma/docs/releases.md.txt"
 ---
 This page documents releases for the Gemma family of models.
 
+## October 6, 2026
+
+- Release of [EmbeddingGemma 2](embeddinggemma/model-card-v2.md).
+
 ## June 3, 2026
 
 - Release of [Gemma 4 12B Unified](gemma-4/index.md).

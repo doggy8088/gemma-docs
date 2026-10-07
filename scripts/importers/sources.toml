@@ -229,8 +229,14 @@ source = "https://ai.google.dev/gemma/docs/embeddinggemma.md.txt"
 frozen = true
 
 [[page]]
-path = "models/embeddinggemma/model-card.md"
+path = "models/embeddinggemma/model-card-v1.md"
 source = "https://ai.google.dev/gemma/docs/embeddinggemma/model_card.md.txt"
+frozen = true
+
+[[page]]
+path = "models/embeddinggemma/model-card-v2.md"
+source = "https://ai.google.dev/gemma/docs/embeddinggemma/model_card_2.md.txt"
+assets = "embeddinggemma"
 frozen = true
 
 [[page]]
@@ -239,8 +245,20 @@ source = "https://ai.google.dev/gemma/docs/embeddinggemma/inference-embeddinggem
 frozen = true
 
 [[page]]
+path = "models/embeddinggemma/multimodal.md"
+source = "https://ai.google.dev/gemma/docs/embeddinggemma/multimodal-embeddinggemma-with-sentence-transformers.md.txt"
+assets = "embeddinggemma"
+frozen = true
+
+[[page]]
 path = "models/embeddinggemma/fine-tuning.md"
 source = "https://ai.google.dev/gemma/docs/embeddinggemma/fine-tuning-embeddinggemma-with-sentence-transformers.md.txt"
+frozen = true
+
+[[page]]
+path = "models/embeddinggemma/fine-tuning-multimodal.md"
+source = "https://ai.google.dev/gemma/docs/embeddinggemma/fine-tuning-multimodal-embeddinggemma-with-sentence-transformers.md.txt"
+assets = "embeddinggemma"
 frozen = true
 
 # --- PaliGemma --------------------------------------------------------------------------------

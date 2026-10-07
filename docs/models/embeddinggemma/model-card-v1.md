@@ -4,7 +4,7 @@ description: "Model card for EmbeddingGemma: embedding inputs and outputs, train
 models: [embeddinggemma]
 source_url: "https://ai.google.dev/gemma/docs/embeddinggemma/model_card.md.txt"
 ---
-# Model card
+# EmbeddingGemma model card
 
 **Model Page** : [EmbeddingGemma](index.md)
 
