@@ -168,6 +168,18 @@ After"""
         self.assertIn('<source src="sample.wav" />', rendered)
         self.assertIn('<source src="sample.mp4" />', rendered)
 
+    def test_attr_list_stripped_without_eating_inline_code_braces(self):
+        body = (
+            'Pass an image as a dictionary `{"image": <source>}`, '
+            'use `<|think|>`{.token-think}, and see [Kaggle](https://kaggle.com){ data-model="gemma-4" }.'
+        )
+        cells = notebooks.export_cells(body)
+        rendered = "".join(cells[0]["source"])
+        self.assertIn('`{"image": <source>}`', rendered)
+        self.assertIn("`<|think|>`", rendered)
+        self.assertNotIn(".token-think", rendered)
+        self.assertNotIn("data-model", rendered)
+
 
 if __name__ == "__main__":
     unittest.main()

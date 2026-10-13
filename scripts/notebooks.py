@@ -79,8 +79,11 @@ ADMONITION = re.compile(
 # `attr_list` attaches classes and attributes to inline spans -- `<|think|>`{.token-think}, or a
 # link followed by { data-model="gemma-4" }. Jupyter has no such extension and renders the braces
 # as literal text, so they are stripped on the way out: the site keeps the styling, the notebook
-# keeps the words. Anchored to the closing `, ) or ] so ordinary prose braces are left alone.
-ATTR_LIST = re.compile(r"(?<=[`)\]])[ \t]*\{[^}\n]*\}")
+# keeps the words. Inline code spans are matched whole so braces inside backticks are left alone.
+_ATTR_BRACE = r"[ \t]*\{[ \t]*(?:[.#][A-Za-z0-9_-]+|[A-Za-z_:][A-Za-z0-9_.:-]*=)[^}\n]*\}"
+ATTR_LIST = re.compile(
+    rf"(?P<code>(?P<ticks>`+)[^`\n]+?(?P=ticks))(?:{_ATTR_BRACE})?|(?<=[)\]]){_ATTR_BRACE}"
+)
 # A card grid is site navigation: raw HTML, and `{{ icon(...) }}` calls that only the Jinja
 # preprocessor resolves. Both render as literal text in Jupyter, and a notebook has nowhere to
 # navigate to anyway, so the grid and the heading introducing it are dropped.
@@ -249,7 +252,7 @@ def notebook_markdown(text: str) -> str:
     text = SNIPPET_INCLUDE.sub("", text)
     text = ABBR_DEF.sub("", text)
     text = ADMONITION.sub(replace_admonition, text)
-    text = ATTR_LIST.sub("", text)
+    text = ATTR_LIST.sub(lambda m: m.group("code") or "", text)
     text = OUTPUT_IMAGE.sub("", text)
     text = OUTPUT_AUDIO.sub("", text)
     text = OUTPUT_VIDEO.sub("", text)
