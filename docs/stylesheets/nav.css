@@ -49,6 +49,12 @@
   color: var(--gemma-header-fg);
 }
 
+body:not([data-md-color-scheme="slate"]):not(:has(.gemma-teaser)) .md-logo .gemma-logo-dark,
+[data-md-color-scheme="slate"] .md-logo .gemma-logo-light,
+body:has(.gemma-teaser) .md-logo .gemma-logo-light {
+  display: none !important;
+}
+
 /* Search sits on the tinted header, so it needs a surface of its own. */
 .md-search__form {
   background-color: var(--gemma-surface);
