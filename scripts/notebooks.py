@@ -101,7 +101,15 @@ ABBR_DEF = re.compile(r"^\*\[[^\]]+\]:.*$\n?", re.MULTILINE)
 REFERENCE_LINK = re.compile(r"\[([^\]]+)\]\[([a-z0-9][a-z0-9-]*)\]")
 OUTPUT_IMAGE = re.compile(r"!\[[^\]]*\]\((?:[^)\n]*/)?output_[^/)\n]*\)[ \t]*\n?")
 OUTPUT_AUDIO = re.compile(
-    r"<audio\b[^>]*\bclass=(?:\"[^\"]*\boutput\b[^\"]*\"|'[^']*\boutput\b[^']*')[^>]*>.*?</audio>[ \t]*\n?",
+    r"<audio\b(?=[^>]*\bclass=(?:\"[^\"]*\boutput\b[^\"]*\"|'[^']*\boutput\b[^']*')"
+    r"|(?:(?!</audio>).)*?\bsrc=(?:\"(?:[^\"\n]*/)?output_[^/\"\n]*\"|'(?:[^'\n]*/)?output_[^/'\n]*'))"
+    r"[^>]*>.*?</audio>[ \t]*\n?",
+    re.DOTALL | re.IGNORECASE,
+)
+OUTPUT_VIDEO = re.compile(
+    r"<video\b(?=[^>]*\bclass=(?:\"[^\"]*\boutput\b[^\"]*\"|'[^']*\boutput\b[^']*')"
+    r"|(?:(?!</video>).)*?\bsrc=(?:\"(?:[^\"\n]*/)?output_[^/\"\n]*\"|'(?:[^'\n]*/)?output_[^/'\n]*'))"
+    r"[^>]*>.*?</video>[ \t]*\n?",
     re.DOTALL | re.IGNORECASE,
 )
 # In Markdown tables, Jupyter/Colab table parsers split cells on unescaped `|` even inside inline
@@ -244,6 +252,7 @@ def notebook_markdown(text: str) -> str:
     text = ATTR_LIST.sub("", text)
     text = OUTPUT_IMAGE.sub("", text)
     text = OUTPUT_AUDIO.sub("", text)
+    text = OUTPUT_VIDEO.sub("", text)
     lines = []
     for line in text.splitlines(keepends=True):
         if line.lstrip().startswith("|"):

@@ -137,22 +137,36 @@ print(MODEL_ID)
         self.assertEqual(notebooks.infer_model("mtp-gemma-4-e2b-it.ipynb"), "gemma-4/e2b")
         self.assertIsNone(notebooks.infer_model("full-finetune.ipynb"))
 
-    def test_output_audio_tag_is_removed(self):
+    def test_output_audio_and_video_tags_are_removed(self):
         body = """Before
 <audio class="output" controls="controls" >
     <source src="data:audio/x-wav;base64,AAAA" />
     Your browser does not support the audio element.
 </audio>
 <audio controls>
+  <source src="../../assets/embeddinggemma/output_roses-are.wav" type="audio/mpeg">
+  Your browser does not support the audio element.
+</audio>
+<video controls>
+  <source src="../../assets/embeddinggemma/output_cat_dozing.mp4" type="video/mp4">
+  Your browser does not support the video element.
+</video>
+<audio controls>
     <source src="sample.wav" />
 </audio>
+<video controls>
+    <source src="sample.mp4" />
+</video>
 After"""
         cells = notebooks.export_cells(body)
         rendered = "".join(cells[0]["source"])
         self.assertIn("Before", rendered)
         self.assertIn("After", rendered)
         self.assertNotIn('class="output"', rendered)
+        self.assertNotIn("output_roses-are.wav", rendered)
+        self.assertNotIn("output_cat_dozing.mp4", rendered)
         self.assertIn('<source src="sample.wav" />', rendered)
+        self.assertIn('<source src="sample.mp4" />', rendered)
 
 
 if __name__ == "__main__":
