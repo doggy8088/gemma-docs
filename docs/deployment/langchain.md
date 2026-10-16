@@ -1,32 +1,32 @@
 ---
-title: Get started with Gemma and LangChain
-description: This tutorial shows you how to get started with Gemma and LangChain, running in Google Cloud or in your Colab environment.
+title: 開始使用 Gemma 與 LangChain
+description: 本教學說明如何在 Google Cloud 或 Colab 環境中開始使用 Gemma 與 LangChain。
 models: [gemma-4, gemma-1]
 frameworks: [langchain, transformers, google-cloud, keras, jax]
 source_url: "https://ai.google.dev/gemma/docs/integrations/langchain.md.txt"
 ---
-# Get started with Gemma and LangChain
+# 開始使用 Gemma 與 LangChain
 
 
-This tutorial shows you how to get started with [Gemma](../index.md) and [LangChain](https://python.langchain.com/docs/get_started/introduction), running in Google Cloud or in your Colab environment. Gemma is a family of light-weight, state-of-the-art open models built from the same research and technology used to create the Gemini models. LangChain is a framework for building and deploying context-aware applications backed by language models.
+本教學說明如何在 Google Cloud 或 Colab 環境中開始使用 [Gemma](../index.md) 與 [LangChain](https://python.langchain.com/docs/get_started/introduction)。Gemma 是輕量、最先進的開放模型家族，以建立 Gemini 模型的相同研究與技術打造。LangChain 是用於建構與部署由語言模型驅動的情境感知應用程式的框架。
 
 !!! Note
-    This tutorial runs on A100 GPU in Google Colab. Free Colab hardware acceleration is *insufficient* to run all the code.
+    本教學在 Google Colab 的 A100 GPU 上執行。免費的 Colab 硬體加速*不足以*執行所有程式碼。
 
 
-## Run Gemma 4 with LangChain
+## 使用 LangChain 執行 Gemma 4
 
-The current path is [`langchain-huggingface`](https://python.langchain.com/docs/integrations/chat/huggingface/),
-which works with any Gemma repository on Hugging Face. The examples below follow this page's
-model selector.
+目前的路徑是 [`langchain-huggingface`](https://python.langchain.com/docs/integrations/chat/huggingface/)，
+適用於 Hugging Face 上的任何 Gemma 儲存庫。以下範例遵循本頁的
+模型選取器。
 
 ```bash
 pip install -qU langchain-huggingface transformers accelerate
 ```
 
-=== "Local pipeline"
+=== "本機管線"
 
-    Runs the weights on your own hardware.
+    在本機硬體上執行權重。
 
     ```python { .model-swap }
     from langchain_huggingface import ChatHuggingFace, HuggingFacePipeline
@@ -44,9 +44,9 @@ pip install -qU langchain-huggingface transformers accelerate
     chat_model = ChatHuggingFace(llm=llm)
     ```
 
-=== "Hosted endpoint"
+=== "託管端點"
 
-    Calls a hosted provider instead, so nothing runs locally.
+    改為呼叫託管的供應商，因此本機不執行任何東西。
 
     ```python { .model-swap }
     from langchain_huggingface import ChatHuggingFace, HuggingFaceEndpoint
@@ -63,7 +63,7 @@ pip install -qU langchain-huggingface transformers accelerate
     chat_model = ChatHuggingFace(llm=llm)
     ```
 
-Then invoke it like any other LangChain chat model:
+然後像其他 LangChain 聊天模型一樣呼叫它：
 
 ```python
 messages = [
@@ -73,44 +73,43 @@ messages = [
 print(chat_model.invoke(messages).content)
 ```
 
-!!! note "The sections below cover earlier Gemma releases"
-    `GemmaLocalKaggle`, `GemmaChatLocalHF` and the Vertex AI one-click deployment were written
-    for Gemma 1 and still reference its `gemma_2b_en` and `google/gemma-2b` checkpoints. They
-    are kept because that deployment path still exists, not because it is the recommended way
-    to run Gemma 4.
+!!! note "以下各節涵蓋較早的 Gemma 版本"
+    `GemmaLocalKaggle`、`GemmaChatLocalHF` 與 Vertex AI 一鍵部署是為 Gemma 1 撰寫的，
+    仍引用其 `gemma_2b_en` 與 `google/gemma-2b` 檢查點。它們被保留下來是因為該部署路徑仍然存在，
+    而非因為它是執行 Gemma 4 的建議方式。
 
-## Run Gemma in Google Cloud
+## 在 Google Cloud 上執行 Gemma
 
-The [`langchain-google-vertexai`](https://pypi.org/project/langchain-google-vertexai/) package provides LangChain integration with Google Cloud models.
+[`langchain-google-vertexai`](https://pypi.org/project/langchain-google-vertexai/) 套件提供 LangChain 與 Google Cloud 模型的整合。
 
-### Install dependencies
+### 安裝依賴
 
 ```bash
 pip install --upgrade -q langchain langchain-google-vertexai
 ```
 
-### Authenticate
+### 驗證
 
-Unless you're using Colab Enterprise, you need to authenticate.
+除非您使用 Colab Enterprise，否則需要進行驗證。
 
 ```python
 from google.colab import auth
 auth.authenticate_user()
 ```
 
-### Deploy the model
+### 部署模型
 
-Vertex AI is a platform for training and deploying AI models and applications. Model Garden is a curated collection of models that you can explore in the Google Cloud console.
+Vertex AI 是用於訓練與部署 AI 模型及應用程式的平台。Model Garden 是精選的模型集合，可在 Google Cloud 主控台中探索。
 
-To deploy Gemma, [open the model](https://console.cloud.google.com/vertex-ai/publishers/google/model-garden/335) in Model Garden for Vertex AI and complete the following steps:
+要部署 Gemma，請在 Vertex AI 的 Model Garden 中[開啟模型](https://console.cloud.google.com/vertex-ai/publishers/google/model-garden/335)並完成以下步驟：
 
-1. Select **Deploy**.
-2. Make any desired changes to the deployment form fields, or leave them as is, if you're okay with the defaults. Make note of the following fields, which you'll need later:
-    - **Endpoint name** (for example, `google_gemma-7b-it-mg-one-click-deploy`)
-    - **Region** (for example, `us-west1`)
-3. Select **Deploy** to deploy the model to Vertex AI. The deployment will take a few minutes to complete.
+1. 選取**部署**。
+2. 視需要變更部署表單欄位，或保留預設值。記下以下欄位，稍後會用到：
+    - **端點名稱**（例如 `google_gemma-7b-it-mg-one-click-deploy`）
+    - **區域**（例如 `us-west1`）
+3. 選取**部署**以將模型部署到 Vertex AI。部署需要幾分鐘才能完成。
 
-When the endpoint is ready, copy its project ID, endpoint ID, and location, and enter them as parameters.
+端點就緒後，複製其專案 ID、端點 ID 與位置，並將它們作為參數輸入。
 
 ```python
 # @title Basic parameters
@@ -119,7 +118,7 @@ endpoint_id: str = ""  # @param {type:"string"}
 location: str = "" # @param {type:"string"}
 ```
 
-### Run the model
+### 執行模型
 
 ```python
 from langchain_google_vertexai import GemmaVertexAIModelGarden, GemmaChatVertexAIModelGarden
@@ -141,7 +140,7 @@ Output:
 Life is a complex and multifaceted phenomenon that has fascinated philosophers, scientists, and
 ```
 
-You can also use Gemma for multi-turn chat:
+您也可以將 Gemma 用於多輪聊天：
 
 ```python
 from langchain_core.messages import (
@@ -166,10 +165,10 @@ print(answer2)
 
 ```{ .no-copy .output }
 content='Prompt:\n<start_of_turn>user\nHow much is 2+2?<end_of_turn>\n<start_of_turn>model\nOutput:\nSure, the answer is 4.\n\n2 + 2 = 4'
-content='Prompt:\n<start_of_turn>user\nHow much is 2+2?<end_of_turn>\n<start_of_turn>model\nPrompt:\n<start_of_turn>user\nHow much is 2+2?<end_of_turn>\n<start_of_turn>model\nOutput:\nSure, the answer is 4.\n\n2 + 2 = 4<end_of_turn>\n<start_of_turn>user\nHow much is 3+3?<end_of_turn>\n<start_of_turn>model\nOutput:\nSure, the answer is 6.\n\n3 + 3 = 6'
+content='Prompt:\n<start_of_turn>user\nHow much is 2+2?<end_of_turn>\n<start_of_turn>model\nOutput:\nSure, the answer is 4.\n\n2 + 2 = 4<end_of_turn>\n<start_of_turn>user\nHow much is 3+3?<end_of_turn>\n<start_of_turn>model\nOutput:\nSure, the answer is 6.\n\n3 + 3 = 6'
 ```
 
-You can post-process responses to avoid repetitions:
+您可以對回應進行後處理以避免重複：
 
 ```python
 answer1 = llm.invoke([message1], parse_response=True)
@@ -185,21 +184,21 @@ content='Output:\nSure, here is the answer:\n\n2 + 2 = 4'
 content='Output:\nSure, here is the answer:\n\n3 + 3 = 6<'
 ```
 
-## Run Gemma from a Kaggle download
+## 從 Kaggle 下載執行 Gemma
 
-This section shows you how to download Gemma from Kaggle and then run the model.
+本節說明如何從 Kaggle 下載 Gemma 然後執行模型。
 
-To complete this section, you'll first need to complete the setup instructions at [Gemma setup][legacy-gemma-setup].
+要完成本節，您首先需要完成 [Gemma 設定][legacy-gemma-setup] 的設定說明。
 
-Then move on to the next section, where you'll set environment variables for your Colab environment.
+然後繼續下一節，在 Colab 環境中設定環境變數。
 
 !!! Note
-    This section of the tutorial runs on A100 GPU in Google Colab.
+    本節的教學在 Google Colab 的 A100 GPU 上執行。
 
 
-### Set environment variables
+### 設定環境變數
 
-Set environment variables for `KAGGLE_USERNAME` and `KAGGLE_KEY`.
+設定 `KAGGLE_USERNAME` 與 `KAGGLE_KEY` 的環境變數。
 
 ```python
 import os
@@ -211,7 +210,7 @@ os.environ["KAGGLE_USERNAME"] = userdata.get('KAGGLE_USERNAME')
 os.environ["KAGGLE_KEY"] = userdata.get('KAGGLE_KEY')
 ```
 
-### Install dependencies
+### 安裝依賴
 
 ```bash
 # Install Keras 3 last. See https://keras.io/getting_started/ for more details.
@@ -219,13 +218,13 @@ pip install -q -U keras-nlp
 pip install -q -U keras>=3
 ```
 
-### Run the model
+### 執行模型
 
 ```python
 from langchain_google_vertexai import GemmaLocalKaggle
 ```
 
-You can specify the Keras backend (by default it's `tensorflow`, but you can change it to `jax` or `torch`).
+您可以指定 Keras 後端（預設為 `tensorflow`，但可以改為 `jax` 或 `torch`）。
 
 ```python
 # @title Basic parameters
@@ -248,9 +247,9 @@ The question is one of the most important questions in the world.
 It’s the question that has
 ```
 
-### Run the chat model
+### 執行聊天模型
 
-As in the Google Cloud example above, you can use a local deployment of Gemma for multi-turn chat. You might need to re-start the notebook and clean your GPU memory in order to avoid OOM errors:
+如同上方的 Google Cloud 範例，您可以使用 Gemma 的本機部署進行多輪聊天。您可能需要重新啟動筆記本並清理 GPU 記憶體，以避免 OOM 錯誤：
 
 ```python
 from langchain_google_vertexai import GemmaChatLocalKaggle
@@ -279,7 +278,7 @@ answer2 = llm.invoke([message1, answer1, message2], max_tokens=60)
 print(answer2)
 ```
 
-You can post-process the response if you want to avoid multi-turn statements:
+如果想避免多輪陳述，可以對回應進行後處理：
 
 ```python
 answer1 = llm.invoke([message1], max_tokens=30, parse_response=True)
@@ -289,16 +288,16 @@ answer2 = llm.invoke([message1, answer1, message2], max_tokens=60, parse_respons
 print(answer2)
 ```
 
-## Run Gemma from a Hugging Face download
+## 從 Hugging Face 下載執行 Gemma
 
-### Setup
+### 設定
 
-Like Kaggle, Hugging Face requires that you accept the Gemma terms and conditions before accessing the model. To get access to Gemma through Hugging Face, go to the [Gemma model card](https://huggingface.co/google/gemma-2b).
+如同 Kaggle，Hugging Face 要求您先接受 Gemma 的條款與條件才能存取模型。要透過 Hugging Face 取得 Gemma 存取權，請前往 [Gemma 模型卡](https://huggingface.co/google/gemma-2b)。
 
-You'll also need to get a [user access token](https://huggingface.co/docs/hub/en/security-tokens) with read permissions, which you can enter below.
+您還需要取得具有讀取權限的[使用者存取權杖](https://huggingface.co/docs/hub/en/security-tokens)，可在下方輸入。
 
 !!! Note
-    This section of the tutorial runs on A100 GPU in Google Colab.
+    本節的教學在 Google Colab 的 A100 GPU 上執行。
 
 
 ```python
@@ -307,7 +306,7 @@ hf_access_token: str = ""  # @param {type:"string"}
 model_name: str = "google/gemma-2b" # @param {type:"string"}
 ```
 
-### Run the model
+### 執行模型
 
 ```python
 from langchain_google_vertexai import GemmaLocalHF, GemmaChatLocalHF
@@ -330,9 +329,9 @@ It’s the question that has been asked by philosophers, theologians, and scient
 And it’s the question that
 ```
 
-As in the examples above, you can use a local deployment of Gemma for multi-turn chat. You might need to re-start the notebook and clean your GPU memory in order to avoid OOM errors:
+如同上方的範例，您可以使用 Gemma 的本機部署進行多輪聊天。您可能需要重新啟動筆記本並清理 GPU 記憶體，以避免 OOM 錯誤：
 
-### Run the chat model
+### 執行聊天模型
 
 ```python
 llm = GemmaChatLocalHF(model_name=model_name, hf_access_token=hf_access_token)
@@ -355,7 +354,7 @@ answer2 = llm.invoke([message1, answer1, message2], max_tokens=140)
 print(answer2)
 ```
 
-As in the previous examples, you can post-process the response:
+如同先前的範例，您可以對回應進行後處理：
 
 ```python
 answer1 = llm.invoke([message1], max_tokens=60, parse_response=True)
@@ -365,7 +364,7 @@ answer2 = llm.invoke([message1, answer1, message2], max_tokens=120, parse_respon
 print(answer2)
 ```
 
-## What's next
+## 下一步
 
-- Learn how to [finetune a Gemma model](../tuning/qlora.md).
-- Learn how to [use Gemma models with Vertex AI][vertex-use-gemma].
+- 了解如何[微調 Gemma 模型](../tuning/qlora.md)。
+- 了解如何[在 Vertex AI 上使用 Gemma 模型][vertex-use-gemma]。

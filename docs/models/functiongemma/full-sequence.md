@@ -1,29 +1,29 @@
 ---
-title: Full function calling sequence with FunctionGemma
-description: "The complete FunctionGemma tool-calling cycle: the model's call, the developer's execution, and the final response built from the tool's output."
+title: FunctionGemma 完整函式呼叫序列
+description: "FunctionGemma 完整的工具呼叫循環：模型的呼叫、開發者的執行，以及用工具輸出建構的最終回覆。"
 models: [functiongemma]
 frameworks: [transformers]
 colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs/notebooks/functiongemma-full-sequence.ipynb
 source_url: "https://ai.google.dev/gemma/docs/functiongemma/full-function-calling-sequence-with-functiongemma.md.txt"
 ---
-# Full function calling sequence with FunctionGemma
+# FunctionGemma 完整函式呼叫序列
 
 
-FunctionGemma is a specialized version of the Gemma 3 270M model, trained specifically for function calling improvements. It has the same architecture as Gemma, but uses a different chat format and tokenizer.
+FunctionGemma 是 Gemma 3 270M 模型的專門版本，專為函式呼叫的改進而訓練。它的架構與 Gemma 相同，但使用不同的聊天格式與分詞器。
 
-This guide shows the complete workflow for using FunctionGemma within the Hugging Face ecosystem. It covers the essential setup steps, including installing necessary Python packages like `torch` and `transformers`, and loading the model via the Hugging Face Hub. The core of the tutorial demonstrates a three-stage cycle for connecting the model to external tools: the **Model's Turn** to generate function call objects, the **Developer's Turn** to parse and execute code (such as a weather API), and the **Final Response** where the model uses the tool's output to answer the user.
+本指南示範在 Hugging Face 生態系中使用 FunctionGemma 的完整工作流程。涵蓋必要的設定步驟，包括安裝 `torch` 與 `transformers` 等 Python 套件，以及透過 Hugging Face Hub 載入模型。本教學的核心示範了連接模型與外部工具的三階段循環：**模型的回合**生成函式呼叫物件、**開發者的回合**解析並執行程式碼（例如天氣 API），以及**最終回覆**——模型用工具的輸出回答使用者。
 
-## Setup
+## 設定
 
-Before starting this tutorial, complete the following steps:
+開始本教學之前，請完成以下步驟：
 
-- Get access to FunctionGemma by logging into [Hugging Face](https://huggingface.co/google/functiongemma-270m-it){ data-model="functiongemma" } and selecting **Acknowledge license** for a FunctionGemma model.
-- Generate a Hugging Face [Access Token](https://huggingface.co/docs/hub/en/security-tokens#how-to-manage-user-access-token) and add it to your Colab environment.
+- 登入 [Hugging Face](https://huggingface.co/google/functiongemma-270m-it){ data-model="functiongemma" } 並為 FunctionGemma 模型選擇 **Acknowledge license** 以取得存取權。
+- 生成 Hugging Face [Access Token](https://huggingface.co/docs/hub/en/security-tokens#how-to-manage-user-access-token) 並加入您的 Colab 環境。
 
 
-## Install Python packages
+## 安裝 Python 套件
 
-Install the Hugging Face libraries required for running the FunctionGemma model and making requests.
+安裝執行 FunctionGemma 模型與發送請求所需的 Hugging Face 函式庫。
 
 ```bash { .notebook-cell }
 # Install PyTorch & other libraries
@@ -41,9 +41,9 @@ from huggingface_hub import login
 login()
 ```
 
-## Load Model
+## 載入模型
 
-Use the `torch` and `transformers` libraries to create an instance of a `processor` and `model` using the `AutoProcessor` and `AutoModelForCausalLM` classes as shown in the following code example:
+使用 `torch` 與 `transformers` 函式庫，透過 `AutoProcessor` 與 `AutoModelForCausalLM` 類別建立 `processor` 與 `model` 實例，如以下程式碼範例所示：
 
 ```python { .notebook-cell }
 from transformers import AutoProcessor, AutoModelForCausalLM
@@ -54,24 +54,24 @@ processor = AutoProcessor.from_pretrained(GEMMA_MODEL_ID, device_map="auto")
 model = AutoModelForCausalLM.from_pretrained(GEMMA_MODEL_ID, dtype="auto", device_map="auto")
 ```
 
-## Example Use Cases
+## 範例使用場景
 
-Function calling connects the generative capabilities of Gemma and the external data and services. Here are some common applications:
+函式呼叫把 Gemma 的生成能力與外部資料及服務連接起來。以下是一些常見應用：
 
-- **Answering Questions with Real-Time Data:** Use a search engine or weather API to answer questions like "What's the weather in Tokyo?" or "Who won the latest F1 race?"
-- **Controlling External Systems:** Connect Gemma to other applications to perform actions, such as sending emails ("Send a reminder to the team about the meeting"), managing a calendar, or controlling smart home devices.
-- **Creating Complex Workflows**: Chain multiple tool calls together to accomplish multi-step tasks, like planning a trip by finding flights, booking a hotel, and creating a calendar event.
+- **用即時資料回答問題：**使用搜尋引擎或天氣 API 回答「東京的天氣如何？」或「最近的 F1 比賽誰贏了？」這類問題。
+- **控制外部系統：**把 Gemma 連接到其他應用程式來執行動作，例如發送電子郵件（「提醒團隊開會」）、管理行事曆，或控制智慧家庭裝置。
+- **建立複雜工作流程**：把多個工具呼叫串連起來完成多步驟任務，例如找航班、訂飯店、建立行事曆事件來規劃旅行。
 
-## Using Tools
+## 使用工具
 
-The core of function calling involves a four-step process:
+函式呼叫的核心是一個四步驟流程：
 
-1. **Define Tools**: Create the functions your model can use, specifying arguments and descriptions (e.g., a weather lookup function).
-2. **Model's Turn**: FunctionGemma receives the user's prompt and a list of available tools. It generates a special object indicating which function to call and with what arguments instead of a plain text response.
-3. **Developer's Turn**: Your code receives this object, executes the specified function with the provided arguments, and formats the result to be sent back to the model.
-4. **Final Response**: FunctionGemma uses the function's output to generate a final, user-facing response.
+1. **定義工具**：建立模型可以使用的函式，指定引數與描述（例如天氣查詢函式）。
+2. **模型的回合**：FunctionGemma 收到使用者的提示與可用工具清單。它生成一個特殊的物件，指出要呼叫哪個函式以及用什麼引數，而不是純文字回覆。
+3. **開發者的回合**：您的程式碼收到這個物件，執行指定的函式與提供的引數，並把結果格式化後送回模型。
+4. **最終回覆**：FunctionGemma 用函式的輸出生成最終、面向使用者的回覆。
 
-Let's simulate this process.
+讓我們模擬這個流程。
 
 ```python { .notebook-cell }
 # Define a function that our model can use.
@@ -90,9 +90,9 @@ def get_current_weather(location: str, unit: str = "celsius"):
     return {"temperature": 15, "weather": "sunny"}
 ```
 
-### Model's Turn
+### 模型的回合
 
-Here's the user prompt `"Hey, what's the weather in Tokyo right now?"`, and the tool `[get_current_weather]`. FunctionGemma generates a function call object as follows.
+以下是使用者提示 `"Hey, what's the weather in Tokyo right now?"` 與工具 `[get_current_weather]`。FunctionGemma 生成的函式呼叫物件如下。
 
 ```python { .notebook-cell }
 prompt = "Hey, what's the weather in Tokyo right now?"
@@ -123,7 +123,7 @@ Tools: [<function get_current_weather at 0x79b7e0f52e80>]
 Output: <start_function_call>call:get_current_weather{location:<escape>Tokyo, Japan<escape>}<end_function_call>
 ```
 !!! Note
-    To ensure FunctionGemma correctly interprets the available tools and generates a structured call instead of plain text, the **developer** message is essential. This specific system prompt instructs the model that it has permission and capability to perform function calling.
+    為確保 FunctionGemma 正確解讀可用工具並生成結構化呼叫而非純文字，**developer** 訊息至關重要。這個特定的系統提示指示模型它有權限與能力執行函式呼叫。
     
 
 ```python
@@ -135,11 +135,11 @@ message = [
 ]
 ```
 
-### Developer's Turn
+### 開發者的回合
 
-Your application should parse the model's response to extract function name and argments, and append function call result with the `tool` role.
+您的應用程式應解析模型的回覆來擷取函式名稱與引數，並以 `tool` 角色附加函式呼叫結果。
 !!! Note
-    Always validate function names and arguments before execution.
+    執行前務必驗證函式名稱與引數。
     
 
 ```python { .notebook-cell }
@@ -193,7 +193,7 @@ if calls:
 {'role': 'tool', 'content': [{'name': 'get_current_weather', 'response': {'temperature': 15, 'weather': 'sunny'} }]}
 ```
 !!! Note
-    For optimal results, append the tool execution result to your message history using the specific format below. This ensures the chat template correctly generates the required token structure (e.g., `response:get_current_weather{temperature:15,weather:<escape>sunny<escape>}`).
+    為獲得最佳結果，請使用以下特定格式將工具執行結果附加到訊息歷史中。這能確保聊天範本正確生成所需的詞元結構（例如 `response:get_current_weather{temperature:15,weather:<escape>sunny<escape>}`）。
     
 
 ```python
@@ -206,7 +206,7 @@ message.append({
 })
 ```
 
-In case of multiple independent requests:
+如果是多個獨立請求的情況：
 
 ```python
 message.append({
@@ -224,9 +224,9 @@ message.append({
 })
 ```
 
-### Final Response
+### 最終回覆
 
-Finally, FunctionGemma reads the tool response and reply to the user.
+最後，FunctionGemma 讀取工具回覆並回覆使用者。
 
 ```python { .notebook-cell }
 inputs = processor.apply_chat_template(message, tools=tools, add_generation_prompt=True, return_dict=True, return_tensors="pt")
@@ -241,7 +241,7 @@ message.append({"role": "assistant", "content": output})
 Output: The current weather in Tokyo is sunny with a temperature of 15 degrees Celsius.
 ```
 
-You can see the full chat history below.
+您可以在下方看到完整的聊天歷史。
 
 ```python { .notebook-cell }
 # full history
@@ -268,25 +268,25 @@ Hey, what's the weather in Tokyo right now?<end_of_turn>
 <start_function_call>call:get_current_weather{location:<escape>Tokyo, Japan<escape>}<end_function_call><start_function_response>response:get_current_weather{temperature:15,weather:<escape>sunny<escape>}<end_function_response>The current weather in Tokyo is sunny with a temperature of 15 degrees Celsius.<end_of_turn>
 ```
 
-## Summary
+## 摘要
 
-You have established how to build an application that can calls functions with FunctionGemma. The workflow is established through a four-stage cycle:
+您已經建立了如何用 FunctionGemma 打造能呼叫函式的應用程式。這個工作流程透過四階段循環建立：
 
-1. **Define Tools**: Create the functions your model can use, specifying arguments and descriptions (e.g., a weather lookup function).
-2. **Model's Turn**: The model receives the user's prompt and a list of available tools, returning a structured function call object instead of plain text.
-3. **Developer's Turn**: The developer parses this output using regular expressions to extract function names and arguments, executes the actual Python code, and appends the results to the chat history using the specific tool role.
-4. **Final Response**: The model processes the tool's execution result to generate a final, natural language answer for the user.
-## What's next
+1. **定義工具**：建立模型可以使用的函式，指定引數與描述（例如天氣查詢函式）。
+2. **模型的回合**：模型收到使用者的提示與可用工具清單，回傳結構化的函式呼叫物件而非純文字。
+3. **開發者的回合**：開發者用正規表示式解析這個輸出，擷取函式名稱與引數，執行實際的 Python 程式碼，並以特定的 tool 角色把結果附加到聊天歷史中。
+4. **最終回覆**：模型處理工具的執行結果，為使用者生成最終的自然語言答案。
+## 接下來
 
 <div class="card-grid">
 <a class="card" href="fine-tuning.md">
   <span class="card-icon">{{ icon('lucide/graduation-cap') }}</span>
-  <div class="card-title">Fine-tune FunctionGemma</div>
-  <p class="card-desc">Teach it to pick the right tool for your policies.</p>
+  <div class="card-title">微調 FunctionGemma</div>
+  <p class="card-desc">教它依您的政策挑選正確的工具。</p>
 </a>
 <a class="card" href="../../deployment/index.md">
   <span class="card-icon">{{ icon('lucide/play') }}</span>
-  <div class="card-title">Run Gemma</div>
-  <p class="card-desc">Every engine that runs Gemma, from a laptop to a cluster.</p>
+  <div class="card-title">執行 Gemma</div>
+  <p class="card-desc">從筆電到叢集，每種能跑 Gemma 的引擎。</p>
 </a>
 </div>

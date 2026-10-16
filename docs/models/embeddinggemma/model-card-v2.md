@@ -1,95 +1,94 @@
 ---
-title: EmbeddingGemma 2 model card
-description: "Model card for EmbeddingGemma 2: architecture, multimodal capabilities, benchmarks, best practices, training data, and intended use."
+title: EmbeddingGemma 2 模型卡
+description: "EmbeddingGemma 2 模型卡：架構、多模態能力、基準測試、最佳實務、訓練資料與預期用途。"
 models: [embeddinggemma]
 source_url: "https://ai.google.dev/gemma/docs/embeddinggemma/model_card_2.md.txt"
 ---
-# EmbeddingGemma 2 model card
+# EmbeddingGemma 2 模型卡
 
-![EmbeddingGemma 2 banner](../../assets/embeddinggemma/embeddinggemma2_banner.png)
+![EmbeddingGemma 2 橫幅](../../assets/embeddinggemma/embeddinggemma2_banner.png)
 
 [Hugging Face](https://huggingface.co/google/embeddinggemma-2) |
 [GitHub](https://github.com/google-gemma) |
-[Launch Blog](https://blog.google/innovation-and-ai/technology/developers-tools/embeddinggemma-2) |
-[Documentation](index.md)
+[發佈部落格](https://blog.google/innovation-and-ai/technology/developers-tools/embeddinggemma-2) |
+[文件](index.md)
 
-**License** : [Apache 2.0](../../resources/apache-2.md) | **Authors** : [Google DeepMind](https://deepmind.google/models/gemma/)
+**授權**：[Apache 2.0](../../resources/apache-2.md) | **作者**：[Google DeepMind](https://deepmind.google/models/gemma/)
 
-**EmbeddingGemma 2** is an open multimodal embedding model built by Google DeepMind which maps text (incl. code), images, video, and audio inputs---and combinations thereof---into a single, unified 768-dimensional vector space. The model has 740M total parameters, combining a 270M parameter text model with modular vision (170M) and audio (300M) encoders.
+**EmbeddingGemma 2** 是由 Google DeepMind 打造的開放多模態嵌入模型，能將文字（含程式碼）、圖像、影片與音訊輸入（及其組合）映射到單一統一的 768 維向量空間。模型共有 740M 參數，由 270M 參數的文字模型結合模組化的視覺（170M）與音訊（300M）編碼器組成。
 
-Designed to run on consumer hardware such as mobile devices and laptops, EmbeddingGemma 2 delivers low-latency semantic representations for on-device applications, like search, retrieval-augmented generation (RAG), classification, and clustering.
+EmbeddingGemma 2 設計為可在手機與筆記型電腦等消費級硬體上執行，為裝置端應用（例如搜尋、檢索增強生成（RAG）、分類和分群）提供低延遲的語義表示。
 
-EmbeddingGemma 2 builds upon the architectural and capability advancements of Gemma 4, offering several core features:
+EmbeddingGemma 2 承襲 Gemma 4 的架構與能力進展，提供以下核心特色：
 
-- **Native multimodality:** Unifies 4 modalities (text, images, video, and audio) in a single shared 768-dimensional embedding space.
-- **Multilinguality and code:** EmbeddingGemma 2 understands 100+ languages, and achieves a ~14% improvement on code tasks relative to its predecessor.
-- **Flexible footprint:** Combines a 270M parameter text backbone (130M transformer + 140M embedder) with selectively loadable vision (170M) and audio (300M) encoders, allowing developers to load only the modalities required for their use case.
-- **Matryoshka Representation Learning (MRL):** Native support for truncated embeddings across 128d, 256d, 512d, and 768d, enabling up to a **6x reduction** in vector storage costs with minimal impact on quality.
-- **Context length:** 8K token context window, capable of processing minutes of audio or video.
-- **Task-steered representations:** Uses lightweight text instruction prefixes to optimize embeddings for different tasks (search, classification, clustering, semantic similarity, etc.).
+- **原生多模態：** 在單一共享的 768 維嵌入空間中，統合 4 種模態（文字、圖像、影片與音訊）。
+- **多語言與程式碼：** EmbeddingGemma 2 理解 100 多種語言，相較前一代在程式碼任務上提升約 14%。
+- **彈性體積：** 將 270M 參數的文字主幹（130M transformer + 140M 嵌入器）與可選擇性載入的視覺（170M）及音訊（300M）編碼器結合，讓開發者只載入其使用情境所需的模態。
+- **Matryoshka Representation Learning (MRL)：** 原生支援跨 128d、256d、512d 與 768d 的截斷嵌入，在品質影響極小的情況下，將向量儲存成本降低高達 **6 倍**。
+- **上下文長度：** 8K 詞元上下文視窗，可處理數分鐘的音訊或影片。
+- **任務導向表示：** 使用輕量文字指令前綴，針對不同任務（搜尋、分類、分群、語義相似度等）最佳化嵌入。
 
-### Model Overview
+### 模型概覽
 
-| Parameters | Total | 740M |
+| 參數 | 總計 | 740M |
 |---|---|---|
-| | **Backbone** | 130M |
-| | **Embedder** | 140M |
-| | **Modality Encoders** | *Vision:* 170M *Audio:* 300M |
-| **Architecture** | **Layers** | 24 |
-| | **Model Dimension** | 512 |
-| | **Hidden Dimension** | 2048 |
-| | **Sliding Window** | 1024 tokens |
-| | **Vocabulary Size** | 262,144 |
-| | **# Heads** | 4 |
-| | **# KV-Heads (Local/Global)** | 2/1 |
-| | **Local:Global** | 5:1 |
-| | **Attention** | GQA/MQA |
-| | **Activation** | Gated FFN with GELU |
-| | **Pooling** | Mean Pooling |
-| | **Projection Layer** | 512→768 |
-| **Input/Output** | **Supported Modalities** | Text, Images, Video, Audio |
-| | **Context Window** | 8,192 tokens |
-| | **Native Output Dimension** | 768 |
-| | **MRL Truncation Dimensions** | 128, 256, 512 |
+| | **主幹** | 130M |
+| | **嵌入器** | 140M |
+| | **模態編碼器** | *視覺：* 170M *音訊：* 300M |
+| **架構** | **層數** | 24 |
+| | **模型維度** | 512 |
+| | **隱藏維度** | 2048 |
+| | **滑動視窗** | 1024 詞元 |
+| | **詞彙表大小** | 262,144 |
+| | **注意力頭數** | 4 |
+| | **KV 頭數（局部/全域）** | 2/1 |
+| | **局部：全域** | 5:1 |
+| | **注意力** | GQA/MQA |
+| | **激活函數** | 帶 GELU 的 Gated FFN |
+| | **池化** | Mean Pooling |
+| | **投影層** | 512→768 |
+| **輸入/輸出** | **支援模態** | 文字、圖像、影片、音訊 |
+| | **上下文視窗** | 8,192 詞元 |
+| | **原生輸出維度** | 768 |
+| | **MRL 截斷維度** | 128, 256, 512 |
 
-## Benchmark Results
+## 基準測試結果
 
-EmbeddingGemma 2 was evaluated across text, code, vision, visual document, video, and audio embedding benchmarks. All results reported below use the full-precision checkpoint.
+EmbeddingGemma 2 在文字、程式碼、視覺、視覺文件、影片與音訊嵌入基準測試上進行了評估。以下所有結果均使用全精度檢查點。
 
-### Overall Evaluation Results (768d)
+### 整體評估結果 (768d)
 
-| Modality | Benchmark | Metric | EmbeddingGemma 2 | EmbeddingGemma 1 |
+| 模態 | 基準測試 | 指標 | EmbeddingGemma 2 | EmbeddingGemma 1 |
 |---|---|---|---|---|
-| *Text* | Massive Text Embedding Benchmark (MTEB, multilingual, v2) | Mean(Task), Multiple | 61.36 | 61.15 |
-| | Massive Text Embedding Benchmark (MTEB, code, v1) | Mean(Task), NDCG@10 | 78.68 | 68.76 |
-| *Image* | Massive Image Embedding Benchmark (MIEB, lite) | Mean(TaskType), Multiple | 64.64 | - |
-| | Massive Multimodal Embedding Benchmark (MMEB v2 - Image) | Mean(Task), Hit@1 | 57.28 | - |
-| | Massive Multimodal Embedding Benchmark (MMEB v2 - VisDoc) | Mean(Task), NDCG@5 | 67.84 | - |
-| *Video* | Massive Multimodal Embedding Benchmark (MMEB v2 - Video) | Mean(Task), Hit@1 | 50.67 | - |
-| *Audio* | Massive Sound Embedding Benchmark (MSEB, Retrieval) | Mean(Task), MRR@10 | 69.54 | - |
-| | Massive Audio Embedding Benchmark (MAEB) *Hugging Face* | Mean(Task), Multiple | 49.39 | - |
+| *文字* | 大規模文字嵌入基準測試（MTEB，多語言，v2） | Mean(Task), Multiple | 61.36 | 61.15 |
+| | 大規模文字嵌入基準測試（MTEB，程式碼，v1） | Mean(Task), NDCG@10 | 78.68 | 68.76 |
+| *圖像* | 大規模圖像嵌入基準測試（MIEB，lite） | Mean(TaskType), Multiple | 64.64 | - |
+| | 大規模多模態嵌入基準測試（MMEB v2 - 圖像） | Mean(Task), Hit@1 | 57.28 | - |
+| | 大規模多模態嵌入基準測試（MMEB v2 - 視覺文件） | Mean(Task), NDCG@5 | 67.84 | - |
+| *影片* | 大規模多模態嵌入基準測試（MMEB v2 - 影片） | Mean(Task), Hit@1 | 50.67 | - |
+| *音訊* | 大規模聲音嵌入基準測試（MSEB，檢索） | Mean(Task), MRR@10 | 69.54 | - |
+| | 大規模音訊嵌入基準測試（MAEB） *Hugging Face* | Mean(Task), Multiple | 49.39 | - |
 
-### Evaluation Results with Vector Truncation
+### 向量截斷評估結果
 
-With MRL, EmbeddingGemma 2 representations can be truncated below the native 768d to 128d, 256d, and 512d representations and re-normalized.
-With this, model users can reduce storage requirements, with minimal quality impact down to 256d. 128d is best suited to text-only workloads.
+透過 MRL，EmbeddingGemma 2 的表示可截斷至低於原生 768d 的 128d、256d、512d 表示並重新正規化。如此一來，模型使用者可降低儲存需求，在 256d 以上品質影響極小。128d 最適合純文字工作負載。
 
-| Output Dimension | Compression Ratio | MTEB *(multilingual, v2) Mean(Task)* | MTEB *(eng, v2) Mean(Task)* | MTEB *(code, v1) Mean(Task)* | MIEB *(lite) Mean(TaskType)* | MMEB (v2) *Overall* | MSEB *(Retrieval) Mean(Task)* | MAEB *Mean(Task)* |
+| 輸出維度 | 壓縮比 | MTEB *(多語言，v2) Mean(Task)* | MTEB *(英文，v2) Mean(Task)* | MTEB *(程式碼，v1) Mean(Task)* | MIEB *(lite) Mean(TaskType)* | MMEB (v2) *整體* | MSEB *(檢索）Mean(Task)* | MAEB *Mean(Task)* |
 |---|---|---|---|---|---|---|---|---|
-| 768d (Full) | 1:1 | 61.36 | 68.46 | 78.68 | 64.64 | 59.01 | 69.54 | 49.39 |
+| 768d（完整） | 1:1 | 61.36 | 68.46 | 78.68 | 64.64 | 59.01 | 69.54 | 49.39 |
 | 512d | 1:1.5 | 61.17 | 68.41 | 77.24 | 64.32 | 58.38 | 69.18 | 49.21 |
 | 256d | 1:3 | 60.41 | 67.78 | 76.18 | 63.13 | 56.24 | 66.76 | 48.91 |
 | 128d | 1:6 | 57.89 | 65.68 | 71.41 | 59.06 | 45.65 | 56.71 | 46.92 |
 
-## Quick Start
+## 快速入門
 
-Install the `sentence-transformers` library:
+安裝 `sentence-transformers` 函式庫：
 
 ```bash
 pip install -U sentence-transformers transformers
 ```
 
-Generate text embeddings:
+產生文字嵌入：
 
 ```python
 from sentence_transformers import SentenceTransformer
@@ -104,57 +103,57 @@ doc_emb = model.encode(document, prompt_name="Document")
 print(model.similarity(query_emb, doc_emb))
 ```
 
-## Best Practices
+## 最佳實務
 
-For optimal embedding quality and runtime efficiency, follow these configurations and best practices:
+為獲得最佳嵌入品質與執行效率，請遵循以下設定與最佳實務：
 
-### 1. Task Instruction Prefixes
+### 1. 任務指令前綴
 
-EmbeddingGemma 2 is trained with short task instruction prefixes prepended to text inputs. Using the right prefix improves quality; omitting it still works but reduces precision. Prefixes apply to text only. Pass images, video, and audio without any prefix.
+EmbeddingGemma 2 以加在文字輸入前的短任務指令前綴訓練。使用正確的前綴可提升品質；省略仍可運作，但精確度會降低。前綴僅適用於文字。傳入圖像、影片與音訊時不加任何前綴。
 
-Documents with a real title should be formatted as `title: {title} | text: {content}`. Use `title: none` when no title is available.
+有真實標題的文件應格式化為 `title: {title} | text: {content}`。無標題時使用 `title: none`。
 
-**Prefix Notation & Usage**
+**前綴表示法與用法**
 
-We offer two types of task prefixes, depending on how embeddings are used in the task. There are two types of tasks:
+根據嵌入在任務中的使用方式，我們提供兩種任務前綴。有兩種任務類型：
 
-- **Asymmetric Tasks (e.g. retrieval):** Use a query prefix for queries and a document prefix for corpus items.
-- **Symmetric Tasks (e.g. classification, similarity)**: Apply the same task prefix to all inputs being compared.
+- **非對稱任務（例如檢索）：** 查詢使用查詢前綴，語料庫項目使用文件前綴。
+- **對稱任務（例如分類、相似度）**：對所有被比較的輸入套用相同的前綴。
 
-| Use Case | Task Type | Prompt Name | Query Task Instruction | Document Task Instruction *(use `none` if no title)* |
+| 使用情境 | 任務類型 | 提示名稱 | 查詢任務指令 | 文件任務指令 *（無標題請用 `none`）* |
 |---|---|---|---|---|
-| Web / document search | Asymmetric | SearchQuery | `task: search result | query: {query}` | `title: {title} | text: {content}` |
-| Question answering | Asymmetric | QuestionAnswering | `task: question answering | query: {question}` | `title: {title} | text: {passage}` |
-| Fact checking | Asymmetric | FactChecking | `task: fact checking | query: {claim}` | `title: {title} | text: {evidence}` |
-| Code search | Asymmetric | CodeRetrieval | `task: code retrieval | query: {query}` | `title: {title or filename} | text: {code}` |
-| Text classification | Symmetric | Classification | `task: classification | query: {content}` | N/A |
-| Clustering | Symmetric | Clustering | `task: clustering | query: {content}` | N/A |
-| Measuring similarity | Symmetric | SentenceSimilarity | `task: sentence similarity | query: {content}` | N/A |
+| 網頁/文件搜尋 | 非對稱 | SearchQuery | `task: search result | query: {query}` | `title: {title} | text: {content}` |
+| 問答 | 非對稱 | QuestionAnswering | `task: question answering | query: {question}` | `title: {title} | text: {passage}` |
+| 事實查核 | 非對稱 | FactChecking | `task: fact checking | query: {claim}` | `title: {title} | text: {evidence}` |
+| 程式碼搜尋 | 非對稱 | CodeRetrieval | `task: code retrieval | query: {query}` | `title: {title or filename} | text: {code}` |
+| 文字分類 | 對稱 | Classification | `task: classification | query: {content}` | N/A |
+| 分群 | 對稱 | Clustering | `task: clustering | query: {content}` | N/A |
+| 衡量相似度 | 對稱 | SentenceSimilarity | `task: sentence similarity | query: {content}` | N/A |
 
-**Please note:** `prompt_name="Document"` applies `title: none`; titled documents must still be formatted manually, like `model.encode(f"title: {title} | text: {document}")`
+**請注意：** `prompt_name="Document"` 套用的是 `title: none`；有標題的文件仍需手動格式化，例如 `model.encode(f"title: {title} | text: {document}")`
 
-### 2. Selective Encoder Loading
+### 2. 選擇性編碼器載入
 
-The vision and audio encoders are independent components. To reduce memory consumption when deploying text-only or single-modality pipelines, disable unused modality encoders via SentenceTransformer's `config_kwargs`:
+視覺與音訊編碼器是獨立元件。在部署純文字或單模態管線時，若要降低記憶體消耗，可透過 SentenceTransformer 的 `config_kwargs` 停用未使用的模態編碼器：
 
-**Please note:** configuring EmbeddingGemma 2 to load with omission of some encoders differs among model libraries; please refer to the appropriate documentation for more information on this.
+**請注意：** 設定 EmbeddingGemma 2 省略部分編碼器的載入方式因模型函式庫而異；請參閱相應文件以取得此功能的更多資訊。
 
-| Active Modalities | `config_kwargs` | Effective Size |
+| 啟用模態 | `config_kwargs` | 有效大小 |
 |---|---|---|
-| Text only | `{"vision_config": None, "audio_config": None}` | 270M |
-| Text and image | `{"audio_config": None}` | 440M |
-| Text and audio | `{"vision_config": None}` | 570M |
-| Full multimodal | `{}` | 740M |
+| 僅文字 | `{"vision_config": None, "audio_config": None}` | 270M |
+| 文字與圖像 | `{"audio_config": None}` | 440M |
+| 文字與音訊 | `{"vision_config": None}` | 570M |
+| 完整多模態 | `{}` | 740M |
 
-### 3. Matryoshka Dimension Truncation
+### 3. Matryoshka 維度截斷
 
-EmbeddingGemma 2 is trained with Matryoshka Representation Learning, so the 768-dimensional output vector can be shortened by keeping only its leading dimensions. The supported dimensions are 768, 512, 256, and 128. Shorter vectors reduce storage and speed up similarity search at some cost to quality.
+EmbeddingGemma 2 以 Matryoshka Representation Learning 訓練，因此 768 維的輸出向量可以透過僅保留其前導維度來縮短。支援的維度為 768、512、256 與 128。較短的向量可降低儲存成本並加速相似度搜尋，但會犧牲部分品質。
 
-At runtime, please adhere to the following guidelines:
+在執行時期，請遵守以下指引：
 
-- **Re-normalize after truncating:** slicing a unit-length vector does not preserve unit length. The shortened vector must be L2-normalized before it is used for cosine similarity. Skipping this step degrades ranking quality silently---it produces plausible-looking scores rather than an error.
-- **Queries and documents must share a dimension.** A 768-dimensional query cannot be scored against a 128-dimensional corpus.
-- To avoid truncating and normalizing yourself, you should pass in the `truncate_dim` and `normalize_embeddings` fields when calling `model.encode()`:
+- **截斷後重新正規化：** 對單位長度向量切片無法保持單位長度。縮短後的向量必須在用於餘弦相似度前先做 L2 正規化。跳過此步驟會無聲地降低排名品質——它產生的是看似合理的分數，而非錯誤。
+- **查詢與文件必須共用同一維度。** 768 維的查詢無法與 128 維的語料庫評分。
+- 為避免自行截斷與正規化，您應在呼叫 `model.encode()` 時傳入 `truncate_dim` 與 `normalize_embeddings` 欄位：
 
 ```python
 query_emb = model.encode(
@@ -164,17 +163,17 @@ query_emb = model.encode(
 )
 ```
 
-Model quality at each dimension is reported in the truncation table in the **Benchmark Results** section above. Quality is close to lossless down to 256 dimensions. 128 dimensions degrades multimodal quality substantially and should be validated against your own workload before adoption.
+各維度的模型品質列於上方**基準測試結果**一節的截斷表中。品質在 256 維以上幾乎無損。128 維會大幅降低多模態品質，採用前應先針對您的工作負載驗證。
 
-### 4. Numerical Precision
+### 4. 數值精度
 
-Run inference in `bfloat16` or `float32`. Do not use `float16`.
+以 `bfloat16` 或 `float32` 執行推論。不要使用 `float16`。
 
-EmbeddingGemma 2's activation range exceeds the dynamic range of `float16`. In `float16` the model returns NaN or silently degraded embeddings rather than raising an error, so the failure is easy to miss.
+EmbeddingGemma 2 的激活範圍超出 `float16` 的動態範圍。在 `float16` 下，模型會回傳 NaN 或無聲劣化的嵌入，而非引發錯誤，因此這種失敗很容易被忽略。
 
-`bfloat16` is safe, and carries the same 8-bit exponent as `float32`. This is the recommended default on hardware with native support, and halves memory use relative to `float32`. Use `float32` elsewhere, including on most CPUs.
+`bfloat16` 是安全的，其 8 位元指數與 `float32` 相同。這是原生支援硬體上的建議預設值，且記憶體使用量為 `float32` 的一半。其他情況下請使用 `float32`，包括大多數 CPU。
 
-In SentenceTransformers, you can set this via `model_kwargs`, and determine it programmatically via `is_bf16_supported`:
+在 SentenceTransformers 中，可透過 `model_kwargs` 設定，並以 `is_bf16_supported` 以程式判斷：
 
 ```python
 dtype = torch.bfloat16 if torch.cuda.is_bf16_supported() else torch.float32
@@ -182,19 +181,19 @@ dtype = torch.bfloat16 if torch.cuda.is_bf16_supported() else torch.float32
 model = SentenceTransformer("google/embeddinggemma-2", model_kwargs={"torch_dtype": dtype})
 ```
 
-### 5. Multimodal Input
+### 5. 多模態輸入
 
-#### Interleaving
+#### 交錯式
 
-A single input may mix text with images, video, and audio, using a single shared 8,192-token context.
+單一輸入可使用單一共享的 8,192 詞元上下文，混合文字與圖像、影片和音訊。
 
-The position of each media item within the sequence is marked in the text using placeholder tokens from the model's vocabulary:
+每個媒體項目在序列中的位置使用來自模型詞彙表的佔位符詞元在文字中標示：
 
-- `<|image|>` marks the position of image input
-- `<|video|>` marks the position of video input
-- `<|audio|>` marks the position of audio input
+- `<|image|>` 標示圖像輸入的位置
+- `<|video|>` 標示影片輸入的位置
+- `<|audio|>` 標示音訊輸入的位置
 
-For example, a product listing indexed for search might be encoded as:
+例如，為搜尋索引的產品列表可編碼為：
 
 ```python
 emb_interleaved = model.encode({
@@ -204,116 +203,114 @@ emb_interleaved = model.encode({
 })
 ```
 
-Each placeholder in text is filled from the corresponding key, in order. The call returns a single embedding that represents the text, images and video together. This embedding can be compared directly against any other EmbeddingGemma 2 embedding; for example, a text-only query such as "waterproof shoes for trail running".
+文字中的每個佔位符依序從對應的鍵填入。此呼叫回傳單一嵌入，同時表示文字、圖像與影片。此嵌入可直接與任何其他 EmbeddingGemma 2 嵌入比較；例如純文字查詢 "waterproof shoes for trail running"。
 
-#### Context Limits
+#### 上下文限制
 
-All modalities share a single 8,192-token context window. Each modality consumes that budget at a fixed rate:
+所有模態共用單一 8,192 詞元的上下文視窗。每種模態以固定速率消耗該預算：
 
-| Modality | Token Cost | Max Input |
+| 模態 | 詞元成本 | 最大輸入 |
 |---|---|---|
-| *Text* | 1 token per subword | 8,192 tokens |
-| *Image* | 280 tokens per image *(default)* | ~29 images |
-| *Video* | 140 tokens per frame *(default)* | ~58 frames |
-| *Audio* | 25 tokens per second | ~327 seconds |
+| *文字* | 每個子詞 1 詞元 | 8,192 詞元 |
+| *圖像* | 每張圖像 280 詞元 *（預設）* | 約 29 張圖像 |
+| *影片* | 每幀 140 詞元 *（預設）* | 約 58 幀 |
+| *音訊* | 每秒 25 詞元 | 約 327 秒 |
 
-Note max input for images and video can be as high as ~114 images or frames when using a lower vision token budget (described below).
+請注意，使用較低的視覺詞元預算（如下所述）時，圖像與影片的最大輸入可高達約 114 張圖像或幀。
 
-The maximums above assume a single modality with no accompanying text. Interleaved inputs draw from the same budget, so mixing modalities reduces the amount of each that fits. Note also max input for images and video can be as high as ~114 images or frames when using a lower vision token budget (described below).
+上述最大值假設單一模態且無伴隨文字。交錯式輸入從同一預算支出，因此混合模態會減少每種模態能容納的量。另請注意，使用較低的視覺詞元預算（如下所述）時，圖像與影片的最大輸入可高達約 114 張圖像或幀。
 
-#### Vision Token Budget
+#### 視覺詞元預算
 
-Model users can forgo the default sequence length for input images / video frames to represent images with "soft token" amounts ranging from 70 to 1120. Increasing the vision budget for input images trades latency and token count for quality.
+模型使用者可以放棄輸入圖像/影片幀的預設序列長度，以 70 到 1120 之間的「軟詞元」數量來表示圖像。提高輸入圖像的視覺預算會以延遲與詞元數換取品質。
 
-In general, higher input sequence lengths capture more information. Scaling up input sequence length means more expressive input representations; so, increasing input sequence length will improve fine-grained visual understanding, uplifting embedding quality and performance in downstream use cases.
+一般而言，更高的輸入序列長度能捕捉更多資訊。擴大輸入序列長度意味著更具表現力的輸入表示；因此，提高輸入序列長度可改善細粒度視覺理解，提升嵌入品質與下游使用情境的效能。
 
-#### Input Sampling Defaults
+#### 輸入取樣預設值
 
-Audio and video inputs have the following default sampling rates:
+音訊與影片輸入的預設取樣率如下：
 
-- By default, video is processed as sampled frames through the vision encoder at **1 frame per second;** FPS sampling rate is configurable.
-- Audio should be supplied as **mono at 16 kHz.**
+- 預設情況下，影片以 **每秒 1 幀**的取樣幀透過視覺編碼器處理；FPS 取樣率可設定。
+- 音訊應提供為 **16 kHz 單聲道**。
 
-## Model Data
+## 模型資料
 
-Our pre-training dataset is a large-scale, diverse collection of data encompassing a wide range of domains and modalities, which includes web documents, code, images, video, and audio, with a cutoff date of January 2025. These include:
+我們的預訓練資料集是涵蓋廣泛領域與模態的大規模多樣資料集合，包括網頁文件、程式碼、圖像、影片與音訊，截止日期為 2025 年 1 月。其中包括：
 
-- **Web Documents:** A diverse collection of web text ensures the model is exposed to a broad range of linguistic styles, topics, and vocabulary. The training dataset includes content in over 140 languages.
-- **Code:** Exposing the model to code helps it to learn the syntax and patterns of programming languages, which improves its ability to understand code-related semantics.
-- **Images:** A wide range of images enables the model to perform image analysis and visual data extraction tasks.
-- **Video:** Video sequences and clips covering diverse visual scenes, human actions, and temporal dynamics.
-- **Audio:** Speech recordings across multiple languages, environmental sounds, and acoustic events.
-- **Cross-modality Samples:** Paired text, image, video, and audio data to align representations across different modalities.
+- **網頁文件：** 多樣化的網頁文字集合，確保模型接觸廣泛的語言風格、主題與詞彙。訓練資料集包含 140 多種語言的內容。
+- **程式碼：** 讓模型接觸程式碼有助於它學習程式語言的語法與模式，提升其理解程式碼相關語義的能力。
+- **圖像：** 廣泛的圖像，讓模型能執行圖像分析與視覺資料擷取任務。
+- **影片：** 涵蓋多樣視覺場景、人類動作與時間動態的影片序列與片段。
+- **音訊：** 多種語言的語音錄音、環境音與聲學事件。
+- **跨模態樣本：** 配對的文字、圖像、影片與音訊資料，以對齊不同模態的表示。
 
-### Data Processing
+### 資料處理
 
-Several data cleaning and filtering methods were applied to the training data:
+訓練資料套用了多種資料清理與篩選方法：
 
-- **CSAM Filtering**: Rigorous CSAM (Child Sexual Abuse Material) filtering was applied at multiple stages in the data preparation process to ensure the exclusion of harmful and illegal content.
-- **Sensitive Data Filtering**: As part of making Gemma pre-trained models safe and reliable, automated techniques were used to filter out certain personal information and other sensitive data from training sets.
-- **Additional Methods** : Filtering based on content quality and safety in line with [our policies](https://ai.google/static/documents/ai-responsibility-update-published-february-2025.pdf).
+- **CSAM 篩選**：在資料準備流程的多個階段套用嚴格的 CSAM（兒童性虐待素材）篩選，確保排除有害與非法內容。
+- **敏感資料篩選**：作為讓 Gemma 預訓練模型安全可靠的一部分，使用自動化技術從訓練集中篩除某些個人資訊與其他敏感資料。
+- **其他方法**：依[我們的政策](https://ai.google/static/documents/ai-responsibility-update-published-february-2025.pdf)進行內容品質與安全篩選。
 
-### Ethics & Safety
+### 倫理與安全
 
-EmbeddingGemma 2 is a pre-trained embedding model. Unlike generative models, it does not undergo post-training alignment, safety tuning, or output-level moderation. Safety mitigations during development were focused on pre-training data filtering to reduce exposure to harmful content and severe biases in the learned embedding space, in alignment with [Google's AI Principles](https://ai.google/principles/).
+EmbeddingGemma 2 是預訓練嵌入模型。與生成式模型不同，它不經過後訓練對齊、安全調校或輸出層審查。開發期間的安全緩解措施聚焦於預訓練資料篩選，以減少有害內容的暴露，並降低學習到的嵌入空間中的嚴重偏見，符合 [Google AI 原則](https://ai.google/principles/)。
 
-Since embedding models produce representations rather than user-facing text, safety risks manifest downstream in how those representations are used.
+由於嵌入模型產生的是表示而非面向使用者的文字，安全風險體現在這些表示的下游使用方式。
 
-Developers and deployers are responsible for evaluating and implementing application-level safeguards, like retrieval filtering and fairness testing, appropriate to their specific production use case.
+開發者與部署者負責評估並實施應用層防護措施，例如檢索篩選與公平性測試，以適合其特定生產使用情境。
 
-Deployments must adhere to the [Gemma Prohibited Use Policy][prohibited-use].
+部署必須遵守 [Gemma 禁止使用政策][prohibited-use]。
 
-## Usage and Limitations
+## 使用與限制
 
-EmbeddingGemma 2 has certain limitations that users should be aware of.
+EmbeddingGemma 2 有一些使用者應注意的限制。
 
-### Intended Usage
+### 預期用途
 
-EmbeddingGemma 2 generates embeddings from input content, which can be used for a number of downstream applications.
+EmbeddingGemma 2 從輸入內容產生嵌入，可用於多種下游應用。
 
-The following list of potential uses is not comprehensive. The purpose of this list is to provide contextual information about the possible use-cases that the model creators considered as part of model training and development.
+以下潛在用途清單並不完整，其目的是提供模型建立者在訓練與開發時考慮的可能使用情境背景資訊。
 
-- **Retrieval:** Embeddings for semantic search across text, code, images, video, and audio, such as document search, RAG over enterprise knowledge bases, code search from natural language queries, or spoken-query search over audio archives.
-- **Classification:** Embeddings to classify inputs according to preset labels, like sentiment analysis, content moderation, audio event detection, or image categorization.
-- **Clustering:** Embeddings to group inputs based on semantic similarity, like organizing document collections, clustering customer feedback by theme, or discovering near-duplicate content across modalities.
-- **Semantic Similarity:** Embeddings to measure pairwise similarity between inputs, such as recommendation systems, duplicate detection, paraphrase identification, or cross-lingual content alignment.
-- **Fact Verification:** Embeddings for retrieving evidence documents given a claim, like automated fact-checking systems or source attribution pipelines.
+- **檢索：** 用於跨文字、程式碼、圖像、影片與音訊的語義搜尋的嵌入，例如文件搜尋、企業知識庫 RAG、來自自然語言查詢的程式碼搜尋，或以語音查詢搜尋音訊典藏。
+- **分類：** 用於依預設標籤分類輸入的嵌入，例如情緒分析、內容審查、音訊事件偵測或圖像分類。
+- **分群：** 用於依語義相似度分組輸入的嵌入，例如組織文件集合、依主題分群客戶回饋，或發現跨模態的近似重複內容。
+- **語義相似度：** 用於衡量輸入間成對相似度的嵌入，例如推薦系統、重複內容偵測、改寫識別或跨語言內容對齊。
+- **事實查核：** 用於根據主張檢索證據文件的嵌入，例如自動化事實查核系統或來源歸屬管線。
 
-### Limitations
+### 限制
 
-- **Training Data:** The quality and diversity of the training data significantly influence the model's capabilities. Biases or gaps in the training data can lead to limitations in the model's responses.
-  - The scope of the training dataset determines the subject areas the model can handle effectively.
-  - For example, while EmbeddingGemma 2 supports 100+ languages, the model may not exhibit equal performance across languages.
-- **Context and Task Complexity:** Models perform well on tasks that can be framed with clear prompts and instructions.
-  - Open-ended or highly complex tasks might be challenging.
-  - A model's performance can be influenced by the amount of context provided (longer context generally leads to better outputs, up to a certain point).
-- **Language Ambiguity and Nuance:** Natural language is inherently complex. Models might struggle to grasp subtle nuances, sarcasm, or figurative language.
-- **Task Instruction Usage:** For text tasks, omitting the recommended task prefix may lead to sub-optimal embedding quality.
+- **訓練資料：** 訓練資料的品質與多樣性顯著影響模型能力。訓練資料中的偏見或缺口可能導致模型回應的限制。
+  - 訓練資料集的範圍決定了模型能有效處理的主題領域。
+  - 例如，雖然 EmbeddingGemma 2 支援 100 多種語言，模型在各語言上的表現可能並不相等。
+- **上下文與任務複雜度：** 模型在能以清晰提示與指令框架化的任務上表現良好。
+  - 開放式或高度複雜的任務可能具有挑戰性。
+  - 模型表現可能受提供上下文量的影響（在一定程度內，較長的上下文通常帶來更好的輸出）。
+- **語言歧義與細微差別：** 自然語言本質上很複雜。模型可能難以掌握細微差別、諷刺或比喻語言。
+- **任務指令使用：** 對於文字任務，省略建議的任務前綴可能導致次佳的嵌入品質。
 
-### Ethical Considerations and Risks
+### 倫理考量與風險
 
-In creating an open embedding model, we have carefully considered the following:
+在建立開放嵌入模型時，我們審慎考慮了以下事項：
 
-- **Bias and Fairness**
-  - Models trained on large-scale, real-world text and image data can reflect socio-cultural biases embedded in the training material.
-  - Training data used for EmbeddingGemma 2 underwent safety filtering to mitigate the risk of these biases.
-- **Misinformation and Misuse**
-  - Embedding representations can be misused to retrieve, classify, or otherwise organize embedded content in false, misleading or harmful ways.
-  - Guidelines are provided for responsible use with the model, see the [Responsible Generative AI Toolkit][responsible-ai].
-- **Transparency and Accountability**
-  - This model card summarizes details on the model's architecture, capabilities, limitations, and evaluation processes.
-  - A responsibly developed open model offers the opportunity to share innovation by making Vision-Language Model (VLM) technology accessible to developers and researchers across the AI ecosystem.
+- **偏見與公平性**
+  - 以大規模真實世界文字與圖像資料訓練的模型，可能反映訓練素材中內嵌的社會文化偏見。
+  - EmbeddingGemma 2 的訓練資料經過安全篩選，以減緩這些偏見的風險。
+- **錯誤資訊與濫用**
+  - 嵌入表示可能被濫用，以錯誤、誤導或有害的方式檢索、分類或以其他方式組織嵌入內容。
+  - 模型附有負責任使用的指引，請參閱 [Responsible Generative AI Toolkit][responsible-ai]。
+- **透明度與問責**
+  - 本模型卡彙整了模型架構、能力、限制與評估流程的細節。
+  - 負責任開發的開放模型提供分享創新的機會，透過讓 AI 生態系中的開發者與研究者都能使用視覺語言模型（VLM）技術。
 
-### Risks Identified and Mitigations
+### 已識別的風險與緩解措施
 
-- **Misuse for malicious purposes:** Technical limitations and developer and end-user education can help mitigate against malicious applications of embedding models. Educational resources and reporting mechanisms for users to flag misuse are provided.
-- **Privacy violations:** Models were trained on data filtered for removal of certain personal information and other sensitive data. Developers are encouraged to adhere to privacy regulations with privacy-preserving techniques.
-- **Perpetuation of biases:** It's encouraged to perform continuous monitoring (using evaluation metrics, human review) and the exploration of de-biasing techniques during model training, fine-tuning, and other use cases.
+- **惡意目的的濫用：** 技術限制，以及開發者與終端使用者的教育，有助於減緩嵌入模型的惡意應用。已提供教育資源與回報機制，讓使用者能標記濫用。
+- **隱私侵犯：** 模型以已篩除某些個人資訊與其他敏感資料的資料訓練。鼓勵開發者以隱私保護技術遵守隱私法規。
+- **偏見的延續：** 鼓勵進行持續監控（使用評估指標、人工審查），並在模型訓練、微調與其他使用情境中探索去偏見技術。
 
-### Benefits
+### 優點
 
-EmbeddingGemma 2 is among the strongest multimodal embedding models under 1B parameters. We're excited to see how developers will use and adapt this model for on-device or edge AI applications.
+EmbeddingGemma 2 是 10 億參數以下最強的多模態嵌入模型之一。我們很期待看到開發者如何為裝置端或邊緣 AI 應用使用與調適這個模型。
 
-The model is designed from the ground up for responsible AI development, like other Gemma-family models.
-
---8<-- "glossary.md"
+此模型從設計之初就面向負責任的 AI 開發，如同其他 Gemma 系列模型。

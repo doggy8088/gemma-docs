@@ -1,40 +1,40 @@
 ---
-title: Generate Embeddings with Sentence Transformers
-description: Generate text embeddings, compute semantic similarity, apply task prompts, and build RAG and zero-shot classifiers with EmbeddingGemma 2 and Sentence Transformers.
+title: 使用 Sentence Transformers 產生嵌入
+description: 使用 EmbeddingGemma 2 與 Sentence Transformers 產生文字嵌入、計算語義相似度、套用任務提示，並打造 RAG 與零樣本分類器。
 models: [embeddinggemma]
 frameworks: [sentence-transformers, transformers]
 colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs/notebooks/embeddinggemma-inference.ipynb
 source_url: "https://ai.google.dev/gemma/docs/embeddinggemma/inference-embeddinggemma-with-sentence-transformers.md.txt"
 ---
-# Generate Embeddings with Sentence Transformers
+# 使用 Sentence Transformers 產生嵌入
 
-**EmbeddingGemma 2** is a lightweight, open-source 740M parameter model designed for unified text and multimodal embeddings. Built on the Gemma 4 decoder architecture, it maps inputs into a unified 768-dimensional vector space.
+**EmbeddingGemma 2** 是一個輕量、開源的 740M 參數模型，專為統一的文字與多模態嵌入而設計。它基於 Gemma 4 解碼器架構，能將輸入映射到統一的 768 維向量空間。
 
-Because of its compact footprint, you can run demanding semantic workflows (e.g. Retrieval-Augmented Generation (RAG), semantic search, and zero-shot classification) locally and offline on consumer GPUs or CPUs.
+得益於其精簡的體積，您可以在消費級 GPU 或 CPU 上，於本機離線執行要求嚴苛的語義工作流程（例如檢索增強生成（RAG）、語義搜尋和零樣本分類）。
 
-**What this guide covers:**
+**本指南涵蓋：**
 
-- Installing dependencies and loading **EmbeddingGemma 2**
-- Generating **text embeddings** , computing semantic similarity, and applying **task-specific prompts**
-- Building downstream applications (**RAG** and **zero-shot classification**)
-- Optimizing storage and inference speed with **Matryoshka Representation Learning (MRL)**
+- 安裝相依套件並載入 **EmbeddingGemma 2**
+- 產生**文字嵌入**、計算語義相似度，並套用**任務專用提示**
+- 打造下游應用（**RAG** 與**零樣本分類**）
+- 使用 **Matryoshka Representation Learning (MRL)** 最佳化儲存與推論速度
 
-!!! tip "Looking for image, audio, or video embeddings?"
-    Check out [Multimodal Embeddings with EmbeddingGemma 2](multimodal.md) guide.
+!!! tip "想找圖像、音訊或影片嵌入？"
+    請參閱 [EmbeddingGemma 2 多模態嵌入](multimodal.md)指南。
 
-## Setup and Installation
+## 設定與安裝
 
-Install `sentence-transformers` and `transformers`.
+安裝 `sentence-transformers` 與 `transformers`。
 
-Sentence Transformers is a Python framework for using and training embedding and reranker models. For more details on the framework, see the [Sentence Transformers documentation](https://www.sbert.net/).
+Sentence Transformers 是一個用於使用與訓練嵌入（embedding）及重排序（reranker）模型的 Python 框架。如需更多框架細節，請參閱 [Sentence Transformers 文件](https://www.sbert.net/)。
 
 ```bash { .notebook-cell }
 pip install -U sentence-transformers transformers pillow soundfile torchcodec
 ```
 
-## Model Initialization
+## 模型初始化
 
-Instantiate EmbeddingGemma 2 directly using the `SentenceTransformer` class.
+直接使用 `SentenceTransformer` 類別實例化 EmbeddingGemma 2。
 
 ```python { .notebook-cell }
 from sentence_transformers import SentenceTransformer
@@ -60,19 +60,19 @@ SentenceTransformer(
 Total number of parameters in the model: 744371488
 ```
 
-!!! tip "Text-Only Memory Optimization"
-    By default, `SentenceTransformer` loads all modality encoders (740M parameters). If your workflow only uses text, you can pass `config_kwargs={"vision_config": None, "audio_config": None}` to skip loading the vision and audio encoders (270M parameters).
+!!! tip "純文字記憶體最佳化"
+    預設情況下，`SentenceTransformer` 會載入所有模態編碼器（740M 參數）。如果您的工作流程只使用文字，可以傳入 `config_kwargs={"vision_config": None, "audio_config": None}` 來跳過視覺與音訊編碼器的載入（270M 參數）。
 
-!!! note "Note on Precision"
-    EmbeddingGemma 2 activations are incompatible with `float16`. Use `bfloat16` (default on supported GPUs) or `float32`.
+!!! note "精度說明"
+    EmbeddingGemma 2 的激活值與 `float16` 不相容。請使用 `bfloat16`（支援的 GPU 上為預設值）或 `float32`。
 
-## Text Embeddings and Task Prompts
+## 文字嵌入與任務提示
 
-Learn how to encode text into dense vector representations, measure semantic similarity between inputs, and apply task-specific prompt prefixes to optimize embedding quality.
+了解如何將文字編碼為稠密向量表示、衡量輸入之間的語義相似度，並套用任務專用提示前綴以最佳化嵌入品質。
 
-### Generating Text Embeddings
+### 產生文字嵌入
 
-An embedding is a dense numerical vector that captures the semantic meaning of an input. Let's encode three words---`["king", "queen", "car"]`---to inspect their 768-dimensional representations.
+嵌入（embedding）是捕捉輸入語義的稠密數值向量。讓我們編碼三個單字——`["king", "queen", "car"]`——來檢視它們的 768 維表示。
 
 ```python { .notebook-cell }
 words = ["king", "queen", "car"]
@@ -97,26 +97,26 @@ Embedding 2 (shape): (768,)
 Embedding 3 (shape): (768,)
 ```
 
-The key property of embeddings is **the distance between vectors in semantic space** . Because `"king"` and `"queen"` share semantic characteristics as royal titles, their vectors are positioned close together, whereas `"car"` lies further away.
+嵌入的關鍵性質是**語義空間中向量之間的距離**。由於 `"king"` 與 `"queen"` 共享王室頭銜的語義特徵，它們的向量位置彼此靠近，而 `"car"` 則距離較遠。
 
-### Determining Semantic Similarity
+### 判斷語義相似度
 
-We can quantify how semantically similar two inputs are by computing the cosine similarity between their embeddings using `model.similarity()`.
+我們可以使用 `model.similarity()` 計算嵌入之間的餘弦相似度，來量化兩個輸入在語義上有多相似。
 
-Below are three sentence pairs demonstrating high, medium, and low semantic similarity:
+以下是三組示範高、中、低語義相似度的句子配對：
 
-- **High Similarity:**
-  - *Sentence A:* `"The chef prepared a delicious meal for the guests."`
-  - *Sentence B:* `"A tasty dinner was cooked by the chef for the visitors."`
-  - *Reasoning:* Both sentences describe the exact same event using active vs. passive voice.
-- **Medium Similarity:**
-  - *Sentence A:* `"She is an expert in machine learning."`
-  - *Sentence B:* `"He has a deep interest in artificial intelligence."`
-  - *Reasoning:* Related domains (ML is a subfield of AI), but different subjects and levels of expertise.
-- **Low Similarity:**
-  - *Sentence A:* `"The weather in Tokyo is sunny today."`
-  - *Sentence B:* `"I need to buy groceries for the week."`
-  - *Reasoning:* Completely unrelated topics with no semantic overlap.
+- **高相似度：**
+  - *句子 A：* `"The chef prepared a delicious meal for the guests."`
+  - *句子 B：* `"A tasty dinner was cooked by the chef for the visitors."`
+  - *推論：* 兩個句子使用主動與被動語態描述完全相同的事件。
+- **中相似度：**
+  - *句子 A：* `"She is an expert in machine learning."`
+  - *句子 B：* `"He has a deep interest in artificial intelligence."`
+  - *推論：* 相關領域（ML 是 AI 的子領域），但主體與專業程度不同。
+- **低相似度：**
+  - *句子 A：* `"The weather in Tokyo is sunny today."`
+  - *句子 B：* `"I need to buy groceries for the week."`
+  - *推論：* 完全無關的主題，沒有語義重疊。
 
 ```python { .notebook-cell }
 sentence_high = [
@@ -148,45 +148,45 @@ for pair in [sentence_high, sentence_medium, sentence_low]:
  `-> 🤖 similarity score: 0.6880
 ```
 
-!!! note "Note on interpreting scores"
-    Cosine similarity values for text embeddings tend to skew higher than human intuition might suggest, often rarely dropping below 0.5 in practice. For instance, even completely unrelated sentences (like the "Low Similarity" example above) can yield a similarity score of roughly 0.6880. Keep this higher baseline in mind when evaluating semantic overlap.
+!!! note "分數解讀說明"
+    文字嵌入的餘弦相似度值往往比人類直覺預期偏高，實務上很少低於 0.5。例如，即使是完全無關的句子（像上方「低相似度」範例），相似度分數也可能高達約 0.6880。評估語義重疊時，請記住這個較高的基準。
 
-### Optimizing Embeddings with Task Prompts
+### 使用任務提示最佳化嵌入
 
-To achieve optimal performance with EmbeddingGemma 2 on text tasks, prepend an **instructional prompt** (task prefix) to your input. Task prompts condition the model for specific objectives (e.g. sentence similarity, asymmetric search retrieval, or classification) and help separate queries from documents.
+要在文字任務上發揮 EmbeddingGemma 2 的最佳效能，請在輸入前加上**指示性提示**（任務前綴）。任務提示能針對特定目標（例如句子相似度、非對稱搜尋檢索或分類）調節模型，並幫助區分查詢與文件。
 
-**Prefix Notation & Usage**
+**前綴表示法與用法**
 
-We offer two types of task prefixes, depending on how embeddings are used in the task. There are two types of tasks:
+根據嵌入在任務中的使用方式，我們提供兩種任務前綴。有兩種任務類型：
 
-- **Asymmetric Tasks (e.g. retrieval):** Use a query prefix for queries and a document prefix for corpus items.
-- **Symmetric Tasks (e.g. classification, similarity):** Apply the same task prefix to all inputs being compared.
+- **非對稱任務（例如檢索）：** 查詢使用查詢前綴，語料庫項目使用文件前綴。
+- **對稱任務（例如分類、相似度）：** 對所有被比較的輸入套用相同的前綴。
 
-| Use Case | Task Type | Query Task Instruction | Document Task Instruction *(use `none` if no title)* |
+| 使用情境 | 任務類型 | 查詢任務指令 | 文件任務指令 *（無標題請用 `none`）* |
 |---|---|---|---|
-| Web / document search | Asymmetric | `task: search result | query: {query}` | `title: {title} | text: {content}` |
-| Question answering | Asymmetric | `task: question answering | query: {question}` | `title: {title} | text: {passage}` |
-| Fact checking | Asymmetric | `task: fact checking | query: {claim}` | `title: {title} | text: {evidence}` |
-| Code search | Asymmetric | `task: code retrieval | query: {query}` | `title: {title or filename} | text: {code}` |
-| Text classification | Symmetric | `task: classification | query: {content}` | N/A |
-| Clustering | Symmetric | `task: clustering | query: {content}` | N/A |
-| Measuring similarity | Symmetric | `task: sentence similarity | query: {content}` | N/A |
+| 網頁/文件搜尋 | 非對稱 | `task: search result | query: {query}` | `title: {title} | text: {content}` |
+| 問答 | 非對稱 | `task: question answering | query: {question}` | `title: {title} | text: {passage}` |
+| 事實查核 | 非對稱 | `task: fact checking | query: {claim}` | `title: {title} | text: {evidence}` |
+| 程式碼搜尋 | 非對稱 | `task: code retrieval | query: {query}` | `title: {title or filename} | text: {code}` |
+| 文字分類 | 對稱 | `task: classification | query: {content}` | N/A |
+| 分群 | 對稱 | `task: clustering | query: {content}` | N/A |
+| 衡量相似度 | 對稱 | `task: sentence similarity | query: {content}` | N/A |
 
-**Please note:** Prefixes are used on text inputs only; when encoding images, video, or audio, pass them directly.
+**請注意：** 前綴僅用於文字輸入；編碼圖像、影片或音訊時，請直接傳入。
 
-You can apply prompts during inference in three ways:
+您可以在推論期間以三種方式套用提示：
 
-1. **Using `prompt_name` (Recommended):** Select a built-in task prompt registered in `model.prompts`:
+1. **使用 `prompt_name`（建議）：** 選擇註冊在 `model.prompts` 中的內建任務提示：
    ```python
    embeddings = model.encode(sentences, prompt_name="STS")
    ```
-2. **Using `prompt`:** Pass a custom prefix string directly to `model.encode()`:
+2. **使用 `prompt`：** 直接將自訂前綴字串傳給 `model.encode()`：
    ```python
    embeddings = model.encode(sentences, prompt="task: sentence similarity | query: ")
    ```
-3. **Using the Default Prompt:** If `default_prompt_name` is configured on the model, calling `model.encode(sentences)` applies it automatically.
+3. **使用預設提示：** 若模型已設定 `default_prompt_name`，呼叫 `model.encode(sentences)` 會自動套用。
 
-Let's inspect all built-in task prompts and re-evaluate our sentence similarity pairs using `prompt_name="STS"`:
+讓我們檢視所有內建任務提示，並使用 `prompt_name="STS"` 重新評估句子相似度配對：
 
 ```python { .notebook-cell }
 print("Available task prompts:")
@@ -232,16 +232,16 @@ Available task prompts:
  `-> 🤖 STS score: 0.7340
 ```
 
-## Downstream Applications
+## 下游應用
 
-Put EmbeddingGemma 2 embeddings into practice to power common real-world workflows, such as document retrieval for Retrieval-Augmented Generation (RAG) and zero-shot text classification.
+將 EmbeddingGemma 2 嵌入實際應用於常見的真實工作流程，例如檢索增強生成（RAG）的文件檢索與零樣本文字分類。
 
-### Retrieval-Augmented Generation (RAG)
+### 檢索增強生成（RAG）
 
-In asymmetric retrieval and RAG pipelines, queries are typically short questions while documents are longer passages. Use dedicated retrieval prompts to optimize both sides of the search index:
+在非對稱檢索與 RAG 管線中，查詢通常是簡短的問題，而文件是較長的段落。使用專用的檢索提示來最佳化搜尋索引的兩端：
 
-- **Search Queries:** Use `prompt_name="Retrieval-query"` (applies `"task: search result | query: "`).
-- **Documents:** Use `prompt_name="Retrieval-document"` (applies `"title: none | text: "`), or pass a custom `prompt` string to include document titles (`"title: <Document Title> | text: "`). Including titles significantly improves retrieval accuracy.
+- **搜尋查詢：** 使用 `prompt_name="Retrieval-query"`（套用 `"task: search result | query: "`）。
+- **文件：** 使用 `prompt_name="Retrieval-document"`（套用 `"title: none | text: "`），或傳入自訂 `prompt` 字串以包含文件標題（`"title: <Document Title> | text: "`）。加入標題可顯著提升檢索準確度。
 
 ```python { .notebook-cell }
 query = "How do I reduce memory usage when running EmbeddingGemma 2?"
@@ -281,20 +281,20 @@ for doc, score in zip(documents, scores):
 [Score: 0.5653] Audio Processing Specifications
 ```
 
-For a complete end-to-end RAG tutorial, see the [RAG with EmbeddingGemma notebook](https://github.com/google-gemma/cookbook/blob/main/tutorials/RAG_with_EmbeddingGemma.ipynb){ data-model="embeddinggemma-2" } in the Gemma Cookbook.
+如需完整的端對端 RAG 教學，請參閱 Gemma Cookbook 中的 [RAG with EmbeddingGemma notebook](https://github.com/google-gemma/cookbook/blob/main/tutorials/RAG_with_EmbeddingGemma.ipynb){ data-model="embeddinggemma-2" }。
 
-### Zero-Shot Classification
+### 零樣本分類
 
-Zero-shot text classification assigns inputs to predefined categories without task-specific training by selecting the candidate label with the highest embedding similarity to the input text.
+零樣本文字分類不需任務專用訓練，透過選擇與輸入文字嵌入相似度最高的候選標籤，將輸入分配到預定義類別。
 
-When choosing a task prompt for zero-shot classification, consider whether your target labels match standard classification datasets:
+為零樣本分類選擇任務提示時，請考慮目標標籤是否符合標準分類資料集：
 
-- **Custom or Arbitrary Categories (`prompt_name="Clustering"`):** For domain-specific or ad-hoc labels like `"Billing Issue"`, `"Technical Support"`, and `"Sales Inquiry"`, the `"Classification"` prompt does not work well because the training dataset does not include those specific labels. Instead, use `prompt_name="Clustering"` to group inputs and candidate labels by semantic topic similarity.
-- **Standard Classification Tasks (`prompt_name="Classification"`):** Common classification prompts---such as sentiment analysis (`"Positive"`, `"Neutral"`, `"Negative"`)---work well with `prompt_name="Classification"` because they align with the classification tasks seen during training.
+- **自訂或任意類別（`prompt_name="Clustering"`）：** 對於領域特定或臨時標籤（如 `"Billing Issue"`、`"Technical Support"`、`"Sales Inquiry"`），`"Classification"` 提示效果不佳，因為訓練資料集不包含這些特定標籤。請改用 `prompt_name="Clustering"`，依語義主題相似度分組輸入與候選標籤。
+- **標準分類任務（`prompt_name="Classification"`）：** 常見分類提示（例如情緒分析：`"Positive"`、`"Neutral"`、`"Negative"`）適合使用 `prompt_name="Classification"`，因為它們與訓練期間見過的分類任務一致。
 
-#### Custom Category Routing with `Clustering`
+#### 使用 `Clustering` 做自訂類別路由
 
-Use `prompt_name="Clustering"` to route incoming support tickets to custom department categories:
+使用 `prompt_name="Clustering"` 將收到的支援工單路由到自訂部門類別：
 
 ```python { .notebook-cell }
 labels = ["Billing Issue", "Technical Support", "Sales Inquiry"]
@@ -331,9 +331,9 @@ Similarity matrix:
  `-> 🤖 Predicted Category: Sales Inquiry
 ```
 
-#### Sentiment Analysis with `Classification`
+#### 使用 `Classification` 做情緒分析
 
-For standard sentiment analysis, encode the common sentiment labels and input sentences using `prompt_name="Classification"`:
+對於標準情緒分析，使用 `prompt_name="Classification"` 編碼常見情緒標籤與輸入句子：
 
 ```python { .notebook-cell }
 labels = ["Positive", "Neutral", "Negative"]
@@ -395,11 +395,11 @@ Similarity matrix:
 
 ## Matryoshka Representation Learning (MRL)
 
-EmbeddingGemma 2 is trained with **Matryoshka Representation Learning (MRL)**, which concentrates the most important semantic information in the earliest dimensions of the output vector.
+EmbeddingGemma 2 以 **Matryoshka Representation Learning (MRL)** 訓練，將最重要的語義資訊集中在輸出向量的前幾個維度。
 
-Instead of deploying separate models for different latency or storage budgets, you can **truncate** the full 768-dimensional embedding to smaller prefixes---such as **512** , **256** or **128** dimensions---while preserving strong semantic quality. When truncating dimensions, always set `normalize_embeddings=True` so that the truncated vectors are re-normalized to unit length.
+您無需為不同的延遲或儲存預算部署多個模型——只需將完整的 768 維嵌入**截斷**為較小的前綴（例如 **512**、**256** 或 **128** 維），同時保持強勁的語義品質。截斷維度時，務必設定 `normalize_embeddings=True`，讓截斷後的向量重新正規化為單位長度。
 
-Let's compare word similarity scores across **768** , **512** , and **128** dimensions:
+讓我們比較 **768**、**512** 與 **128** 維的單字相似度分數：
 
 ```python { .notebook-cell }
 words = ["king", "queen", "car"]
@@ -421,9 +421,9 @@ Embedding shape: (3, 768) | Similarity function: cosine
   🙋‍♂️ 'king' vs. 'car' -> 🤖 score: 0.8354
 ```
 
-### Truncating to 512 Dimensions
+### 截斷至 512 維
 
-Pass `truncate_dim=512` directly to `model.encode()` to slice and re-normalize vectors on the fly:
+直接將 `truncate_dim=512` 傳給 `model.encode()`，即可即時切片並重新正規化向量：
 
 ```python { .notebook-cell }
 # 2. Truncate to 512 dimensions at inference time
@@ -442,9 +442,9 @@ Embedding shape: (3, 512) | Similarity function: cosine
   🙋‍♂️ 'king' vs. 'car' -> 🤖 score: 0.8334
 ```
 
-### Truncating to 128 Dimensions with Dot-Product Similarity
+### 截斷至 128 維並使用點積相似度
 
-For maximum speed in high-throughput vector databases, you can configure `truncate_dim=128` and `similarity_fn_name="dot"` at model initialization. Because normalized embeddings have unit length, dot product is mathematically equivalent to cosine similarity while being faster to compute:
+要在高吞吐量向量資料庫中追求最高速度，可以在模型初始化時設定 `truncate_dim=128` 與 `similarity_fn_name="dot"`。由於正規化後的嵌入具有單位長度，點積在數學上等價於餘弦相似度，但計算更快：
 
 ```python { .notebook-cell }
 # 3. Initialize model with default 128-dim truncation and dot-product similarity
@@ -467,18 +467,18 @@ Embedding shape: (3, 128) | Similarity function: dot
 ```
 
 !!! note
-    EmbeddingGemma 2 supports any output dimension between 128 and 768. However, we recommend using 768, 512, 256, or 128 for optimal performance.
+    EmbeddingGemma 2 支援 128 到 768 之間的任意輸出維度。不過，我們建議使用 768、512、256 或 128 以獲得最佳效能。
 
-## Summary and Next Steps
+## 摘要與後續步驟
 
-You now know how to generate text embeddings using **EmbeddingGemma 2** and the `sentence-transformers` library. You also explored how to apply task-specific prompts, build zero-shot classifiers and RAG retrievers, and compress embeddings using Matryoshka Representation Learning (MRL).
+您現在已經知道如何使用 **EmbeddingGemma 2** 與 `sentence-transformers` 函式庫產生文字嵌入，也探索了如何套用任務專用提示、打造零樣本分類器與 RAG 檢索器，以及使用 Matryoshka Representation Learning (MRL) 壓縮嵌入。
 
-### Further Reading
+### 延伸閱讀
 
-- [EmbeddingGemma 2 Model Card](model-card-v2.md)
-- [Multimodal Embeddings with EmbeddingGemma 2](multimodal.md)
-- [Fine-tune EmbeddingGemma with Sentence Transformers](fine-tuning.md)
-- [Sentence Transformers Prompt Templates Guide](https://sbert.net/examples/sentence_transformer/applications/computing-embeddings/README.html#prompt-templates)
-- [Simple RAG with EmbeddingGemma in the Gemma Cookbook](https://github.com/google-gemma/cookbook/blob/main/tutorials/RAG_with_EmbeddingGemma.ipynb){ data-model="embeddinggemma-2" }
+- [EmbeddingGemma 2 模型卡](model-card-v2.md)
+- [EmbeddingGemma 2 多模態嵌入](multimodal.md)
+- [使用 Sentence Transformers 微調 EmbeddingGemma](fine-tuning.md)
+- [Sentence Transformers 提示模板指南](https://sbert.net/examples/sentence_transformer/applications/computing-embeddings/README.html#prompt-templates)
+- [Gemma Cookbook 中的 EmbeddingGemma 簡易 RAG](https://github.com/google-gemma/cookbook/blob/main/tutorials/RAG_with_EmbeddingGemma.ipynb){ data-model="embeddinggemma-2" }
 
 --8<-- "glossary.md"

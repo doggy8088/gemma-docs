@@ -1,24 +1,23 @@
 ---
 title: Unsloth
-description: Run Gemma 4 with Unsloth — the desktop Studio app, dynamic-quant GGUFs for llama.cpp, and 2x faster fine-tuning.
+description: 使用 Unsloth 執行 Gemma 4 —— 桌面 Studio 應用程式、適用於 llama.cpp 的動態量化 GGUF，以及快 2 倍的微調。
 models: [gemma-4]
 frameworks: [unsloth, llamacpp]
 ---
 
-# Run Gemma with Unsloth
+# 使用 Unsloth 執行 Gemma
 
-[Unsloth](https://unsloth.ai/docs) publishes dynamic-quantized GGUF builds of Gemma 4 and ships
-a desktop application, Unsloth Studio, that downloads and runs them locally. It is also the
-fastest route to fine-tuning Gemma on a single consumer GPU.
+[Unsloth](https://unsloth.ai/docs) 發布 Gemma 4 的動態量化 GGUF 建置版本，並提供桌面應用程式 Unsloth Studio，
+可在本地下載並執行它們。它也是在單張消費級 GPU 上微調 Gemma 的最快途徑。
 
-There are two ways to run Gemma 4 here: the Studio app, or Unsloth's GGUFs directly in
-[llama.cpp](llamacpp.md).
+在這裡執行 Gemma 4 有兩種方式：Studio 應用程式，或直接在
+[llama.cpp](llamacpp.md) 中使用 Unsloth 的 GGUF。
 
-## Hardware requirements
+## 硬體需求
 
-Unsloth's own recommended totals — RAM + VRAM combined, or unified memory:
+Unsloth 自家的建議總量——RAM + VRAM 合計，或統一記憶體：
 
-| Size | 4-bit | 8-bit | BF16 / FP16 |
+| 尺寸 | 4 位元 | 8 位元 | BF16 / FP16 |
 |---|---:|---:|---:|
 | E2B | 4 GB | 5–8 GB | 10 GB |
 | E4B | 5.5–6 GB | 9–12 GB | 16 GB |
@@ -27,17 +26,16 @@ Unsloth's own recommended totals — RAM + VRAM combined, or unified memory:
 | 31B | 17–20 GB | 34–38 GB | 62 GB |
 
 !!! note
-    These are Unsloth's figures for their GGUF builds and include runtime overhead, so they run
-    slightly above the static weight sizes in the
-    [Gemma 4 overview](../models/gemma-4/index.md). Context (KV cache) is on top of both.
+    這些是 Unsloth 針對其 GGUF 建置版本的數字，包含執行期開銷，因此略高於
+    [Gemma 4 總覽](../models/gemma-4/index.md)中的靜態權重大小。脈絡（KV 快取）還需額外計算。
 
-Unsloth recommends **dynamic 4-bit** (`UD-Q4_K_XL`) for 12B, 26B A4B and 31B, and **8-bit**
-(`Q8_0`) for E2B and E4B.
+Unsloth 建議 12B、26B A4B 與 31B 使用**動態 4 位元**（`UD-Q4_K_XL`），E2B 與 E4B 使用
+**8 位元**（`Q8_0`）。
 
-## Recommended settings
+## 建議設定
 
-Use Google's default Gemma 4 sampling parameters — the same ones described in
-[Best practices](../get-started/best-practices.md):
+使用 Google 預設的 Gemma 4 取樣參數——與
+[最佳實務](../get-started/best-practices.md)中所述相同：
 
 ```text
 temperature = 1.0
@@ -49,45 +47,43 @@ top_k = 64
 
 <ol class="steps" markdown>
 <li markdown>
-**Install**
+**安裝**
 
-Download the [Unsloth app](https://unsloth.ai/download) for macOS, Windows or Linux, or install
-it manually.
+下載 [Unsloth 應用程式](https://unsloth.ai/download) 的 macOS、Windows 或 Linux 版本，或手動安裝。
 
-macOS, Linux, WSL:
+macOS、Linux、WSL：
 
 ```bash
 curl -fsSL https://unsloth.ai/install.sh | sh
 ```
 
-Windows PowerShell:
+Windows PowerShell：
 
 ```powershell
 irm https://unsloth.ai/install.ps1 | iex
 ```
 </li>
 <li markdown>
-**Launch**
+**啟動**
 
 ```bash
 unsloth studio -H 0.0.0.0 -p 8888
 ```
 
-Then open `http://127.0.0.1:8888`. To serve it over HTTPS through a free Cloudflare tunnel
-instead, use `unsloth studio --secure`.
+然後開啟 `http://127.0.0.1:8888`。若要改為透過免費的 Cloudflare 隧道以 HTTPS 提供服務，
+請使用 `unsloth studio --secure`。
 </li>
 <li markdown>
-**Download and run Gemma 4**
+**下載並執行 Gemma 4**
 
-Search for Gemma 4 in the Chat tab and pick a quant. Inference parameters are set automatically,
-and both GGUF and MLX files are supported.
+在聊天分頁中搜尋 Gemma 4 並選擇一個量化版本。推論參數會自動設定，
+GGUF 與 MLX 檔案都支援。
 </li>
 </ol>
 
 ## llama.cpp
 
-Build `llama.cpp` first — set `-DGGML_CUDA=OFF` for CPU-only machines and for Apple silicon,
-where Metal is on by default:
+先建置 `llama.cpp`——CPU 機器與 Apple 晶片（Metal 預設開啟）請設定 `-DGGML_CUDA=OFF`：
 
 ```bash
 git clone https://github.com/ggml-org/llama.cpp
@@ -98,8 +94,8 @@ cmake --build llama.cpp/build --config Release -j --clean-first \
 cp llama.cpp/build/bin/llama-* llama.cpp
 ```
 
-Then pull and run a model straight from Hugging Face. There is no need to set a context length —
-llama.cpp uses exactly what is required.
+然後直接從 Hugging Face 拉取並執行模型。無需設定脈絡長度——
+llama.cpp 會使用正好所需的量。
 
 === "E2B"
 
@@ -146,9 +142,9 @@ llama.cpp uses exactly what is required.
         --temp 1.0 --top-p 0.95 --top-k 64
     ```
 
-### Vision
+### 視覺
 
-Download the weights together with the multimodal projector, then pass both:
+將權重與多模態投影器一起下載，然後同時傳入兩者：
 
 ```bash
 hf download unsloth/gemma-4-26B-A4B-it-GGUF \
@@ -164,7 +160,7 @@ hf download unsloth/gemma-4-26B-A4B-it-GGUF \
     --temp 1.0 --top-p 0.95 --top-k 64
 ```
 
-### Server
+### 伺服器
 
 ```bash
 ./llama.cpp/llama-server \
@@ -176,10 +172,9 @@ hf download unsloth/gemma-4-26B-A4B-it-GGUF \
     --chat-template-kwargs '{"enable_thinking":true}'
 ```
 
-## Thinking mode
+## 思考模式
 
-Thinking is enabled by putting `<|think|>` at the start of the system prompt. To turn it off
-through llama.cpp instead, pass:
+思考模式的啟用方式是在系統提示開頭加上 `<|think|>`。若要改為透過 llama.cpp 關閉它，請傳入：
 
 === "macOS, Linux"
 
@@ -193,17 +188,16 @@ through llama.cpp instead, pass:
     --chat-template-kwargs "{\"enable_thinking\":false}"
     ```
 
-See [Best practices](../get-started/best-practices.md) for how thinking output is structured and
-what to keep in conversation history.
+關於思考輸出的結構以及對話歷史中應保留的內容，請參閱[最佳實務](../get-started/best-practices.md)。
 
-## Fine-tuning
+## 微調
 
-Unsloth trains Gemma with substantially less memory than a stock Transformers loop, which is
-what makes single-GPU and free-Colab fine-tuning practical. See Unsloth's
-[Gemma 4 fine-tuning guide](https://unsloth.ai/docs/models/gemma-4){ data-model="gemma-4" }, and our own
-[fine-tuning overview](../tuning/index.md) for the QLoRA and full fine-tune paths.
+Unsloth 訓練 Gemma 所需的記憶體遠少於原生的 Transformers 迴圈，這使得
+單 GPU 與免費 Colab 微調成為可能。請參閱 Unsloth 的
+[Gemma 4 微調指南](https://unsloth.ai/docs/models/gemma-4){ data-model="gemma-4" }，以及我們自己的
+[微調總覽](../tuning/index.md)，了解 QLoRA 與完整微調路徑。
 
-## Resources
+## 資源
 
-- [Gemma 4 GGUF collection](https://huggingface.co/collections/unsloth/gemma-4){ data-model="gemma-4" }
-- [Unsloth documentation](https://unsloth.ai/docs/models/gemma-4){ data-model="gemma-4" }
+- [Gemma 4 GGUF 集合](https://huggingface.co/collections/unsloth/gemma-4){ data-model="gemma-4" }
+- [Unsloth 文件](https://unsloth.ai/docs/models/gemma-4){ data-model="gemma-4" }

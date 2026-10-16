@@ -1,43 +1,42 @@
 ---
-title: RecurrentGemma model card
-description: RecurrentGemma is a family of open language models built on a novel recurrent architecture developed at Google.
+title: RecurrentGemma 模型卡
+description: RecurrentGemma 是在 Google 開發的全新遞迴架構上打造的開放語言模型家族。
 models: [recurrentgemma]
 source_url: "https://ai.google.dev/gemma/docs/recurrentgemma/model_card.md.txt"
 ---
-# Model card
+# 模型卡
 
-**Model page:** [RecurrentGemma](index.md)
+**模型頁面：** [RecurrentGemma](index.md)
 
-**Resources and technical documentation:**
+**資源與技術文件：**
 
-- [Responsible Generative AI Toolkit][responsible-ai]
-- [RecurrentGemma on Kaggle](https://www.kaggle.com/models/google/recurrentgemma){ data-model="recurrentgemma" }
+- [負責任的生成式 AI 工具包][responsible-ai]
+- [Kaggle 上的 RecurrentGemma](https://www.kaggle.com/models/google/recurrentgemma){ data-model="recurrentgemma" }
 
-**Terms of Use:** [Terms](https://www.kaggle.com/models/google/gemma/license/consent)
+**使用條款：** [條款](https://www.kaggle.com/models/google/gemma/license/consent)
 
-**Authors:** Google
+**作者：** Google
 
-## Model information
+## 模型資訊
 
-### Model summary
+### 模型摘要
 
-#### Description
+#### 說明
 
-RecurrentGemma is a family of open language models built on a [novel recurrent
-architecture](https://arxiv.org/abs/2402.19427) developed at Google. Both
-pre-trained and instruction-tuned versions are available in English.
+RecurrentGemma 是基於 Google 開發的[全新遞迴
+架構](https://arxiv.org/abs/2402.19427) 的開放語言模型家族。提供預訓練與指令微調版本，皆為英文。
 
-Like Gemma, RecurrentGemma models are well-suited for a variety of text
-generation tasks, including question answering, summarization, and reasoning.
-Because of its novel architecture, RecurrentGemma requires less memory than
-Gemma and achieves faster inference when generating long sequences.
+如同 Gemma，RecurrentGemma 模型非常適合多種文字
+生成任務，包括問答、摘要與推理。
+由於其新穎的架構，RecurrentGemma 比
+Gemma 需要更少的記憶體，並在生成長序列時達到更快的推論速度。
 
-#### Inputs and outputs
+#### 輸入與輸出
 
-- **Input:** Text string (e.g., a question, a prompt, or a document to be summarized).
-- **Output:** Generated English-language text in response to the input (e.g., an answer to the question, a summary of the document).
+- **輸入：** 文本字串（例如問題、提示，或要摘要的文件）。
+- **輸出：** 回應輸入的生成英文文本（例如問題的答案、文件的摘要）。
 
-#### Citation
+#### 引用
 
 ```python
 @article{recurrentgemma_2024,
@@ -50,37 +49,36 @@ Gemma and achieves faster inference when generating long sequences.
 }
 ```
 
-### Model data
+### 模型資料
 
-#### Training dataset and data processing
+#### 訓練資料集與資料處理
 
-RecurrentGemma uses the same training data and data processing as used by the
-Gemma model family. A full description can be found on the [Gemma model
-card](../gemma-1/index.md#model-data).
+RecurrentGemma 使用與 Gemma 模型家族相同的訓練資料與資料處理方式。完整說明請參閱 [Gemma
+模型卡](../gemma-1/index.md#model-data)。
 
-## Implementation information
+## 實作資訊
 
-### Hardware and frameworks used during training
+### 訓練期間使用的硬體與框架
 
-Like
-[Gemma](../gemma-1/index.md#implementation-information),
-RecurrentGemma was trained on
-[TPUv5e](https://cloud.google.com/tpu/docs/intro-to-tpu?_gl=1*18wi411*_ga*MzE3NDU5OTY1LjE2MzQwNDA4NDY.*_ga_WH2QY8WWF5*MTcxMTA0MjUxMy4xNy4wLjE3MTEwNDI1MTkuMC4wLjA.&_ga=2.239449409.-317459965.1634040846),
-using [JAX](https://github.com/jax-ml/jax) and [ML
-Pathways](https://blog.google/technology/ai/introducing-pathways-next-generation-ai-architecture/).
+如同
+[Gemma](../gemma-1/index.md#實作資訊)，
+RecurrentGemma 使用
+[TPUv5e](https://cloud.google.com/tpu/docs/intro-to-tpu?_gl=1*18wi411*_ga*MzE3NDU5OTY1LjE2MzQwNDA4NDY.*_ga_WH2QY8WWF5*MTcxMTA0MjUxMy4xNy4wLjE3MTEwNDI1MTkuMC4wLjA.&_ga=2.239449409.-317459965.1634040846)，
+以 [JAX](https://github.com/jax-ml/jax) 與 [ML
+Pathways](https://blog.google/technology/ai/introducing-pathways-next-generation-ai-architecture/) 訓練。
 
-## Evaluation information
+## 評估資訊
 
-### Benchmark results
+### 基準測試結果
 
-#### Evaluation approach
+#### 評估方法
 
-These models were evaluated against a large collection of different datasets and
-metrics to cover different aspects of text generation:
+這些模型針對大量不同的資料集與
+指標進行評估，以涵蓋文字生成的不同面向：
 
-#### Evaluation results
+#### 評估結果
 
-| Benchmark | Metric | RecurrentGemma 2B | RecurrentGemma 9B |
+| 基準測試 | 指標 | RecurrentGemma 2B | RecurrentGemma 9B |
 |---|---|---|---|
 | [MMLU](https://arxiv.org/abs/2009.03300) | 5-shot, top-1 | 38.4 | 60.5 |
 | [HellaSwag](https://arxiv.org/abs/1905.07830) | 0-shot | 71.0 | 80.4 |
@@ -100,36 +98,32 @@ metrics to cover different aspects of text generation:
 | [MATH](https://arxiv.org/abs/2103.03874) | 4-shot | 11.0 | 23.8 |
 | [AGIEval](https://arxiv.org/abs/2304.06364) |   | 23.8 | 39.3 |
 | [BIG-Bench](https://arxiv.org/abs/2206.04615) |   | 35.3 | 55.2 |
-| **Average** |   | 44.6 | 56.1 |
+| **平均** |   | 44.6 | 56.1 |
 
-## Ethics and safety
+## 倫理與安全
 
-### Ethics and safety evaluations
+### 倫理與安全評估
 
-#### Evaluations approach
+#### 評估方法
 
-Our evaluation methods include structured evaluations and internal red-teaming
-testing of relevant content policies. Red-teaming was conducted by a number of
-different teams, each with different goals and human evaluation metrics. These
-models were evaluated against a number of different categories relevant to
-ethics and safety, including:
+我們的評估方法包括結構化評估，以及針對相關內容政策的內部紅隊
+測試。紅隊測試由多個不同的團隊執行，各自有不同的目標與人工評估指標。這些
+模型針對倫理與安全相關的多個類別進行了評估，包括：
 
-- **Text-to-text content safety:** Human evaluation on prompts covering safety policies including child sexual abuse and exploitation, harassment, violence and gore, and hate speech.
-- **Text-to-text representational harms:** Benchmark against relevant academic datasets such as WinoBias and BBQ Dataset.
-- **Memorization:** Automated evaluation of memorization of training data, including the risk of personally identifiable information exposure.
-- **Large-scale harm:** Tests for "dangerous capabilities," such as chemical, biological, radiological, and nuclear (CBRN) risks; as well as tests for persuasion and deception, cybersecurity, and autonomous replication.
+- **文字轉文字內容安全：** 針對安全政策（包括兒童性虐待與剝削、騷擾、暴力與血腥，以及仇恨言論）提示的人工評估。
+- **文字轉文字再現性傷害：** 以 WinoBias 與 BBQ 資料集等相關學術資料集進行的基準測試。
+- **記憶化：** 對訓練資料記憶的自動化評估，包括個人可識別資訊外洩的風險。
+- **大規模傷害：** 針對「危險能力」的測試，例如化學、生物、放射性與核（CBRN）風險；以及說服與欺騙、網路安全與自主複製的測試。
 
-#### Evaluation results
+#### 評估結果
 
-The results of ethics and safety evaluations are within acceptable thresholds
-for meeting [internal
-policies](https://storage.googleapis.com/gweb-uniblog-publish-prod/documents/2023_Google_AI_Principles_Progress_Update.pdf#page=11)
-for categories such as child safety, content safety, representational harms,
-memorization, large-scale harms. On top of robust internal evaluations, the
-results of well known safety benchmarks like BBQ, Winogender, WinoBias,
-RealToxicity, and TruthfulQA are shown here.
+倫理與安全評估的結果落在可接受的門檻內，符合兒童安全、內容安全、再現性傷害、
+記憶化、大規模傷害等類別的[內部
+政策](https://storage.googleapis.com/gweb-uniblog-publish-prod/documents/2023_Google_AI_Principles_Progress_Update.pdf#page=11)。
+除了穩健的內部評估，BBQ、Winogender、WinoBias、
+RealToxicity 與 TruthfulQA 等知名安全基準測試的結果也列於此處。
 
-| Benchmark | Metric | RecurrentGemma 2B | RecurrentGemma 2B IT | RecurrentGemma 9B | RecurrentGemma 9B IT |
+| 基準測試 | 指標 | RecurrentGemma 2B | RecurrentGemma 2B IT | RecurrentGemma 9B | RecurrentGemma 9B IT |
 |---|---|---|---|---|---|
 | [RealToxicity](https://arxiv.org/abs/2009.11462) | avg | 9.8 | 7.60 | 10.3 | 8.8 |
 | [BOLD](https://arxiv.org/abs/2101.11718) |   | 39.3 | 52.3 | 39.8 | 47.9 |
@@ -142,76 +136,71 @@ RealToxicity, and TruthfulQA are shown here.
 | [WinoBias 2_2](https://arxiv.org/abs/1804.06876) |   | 90.0 | 75.4 | 90.2 | 90.3 |
 | [Toxigen](https://arxiv.org/abs/2203.09509) |   | 56.7 | 50.0 | 58.8 | 64.5 |
 
-## Model usage and limitations
+## 模型用途與限制
 
-### Known limitations
+### 已知限制
 
-These models have certain limitations that users should be aware of:
+這些模型有一些使用者應注意的限制：
 
-- **Training data**
-    - The quality and diversity of the training data significantly influence the model's capabilities. Biases or gaps in the training data can lead to limitations in the model's responses.
-    - The scope of the training dataset determines the subject areas the model can handle effectively.
-- **Context and task complexity**
-    - LLMs are better at tasks that can be framed with clear prompts and instructions. Open-ended or highly complex tasks might be challenging.
-    - A model's performance can be influenced by the amount of context provided (longer context generally leads to better outputs, up to a certain point).
-- **Language ambiguity and nuance**
-    - Natural language is inherently complex. LLMs might struggle to grasp subtle nuances, sarcasm, or figurative language.
-- **Factual accuracy**
-    - LLMs generate responses based on information they learned from their training datasets, but they are not knowledge bases. They may generate incorrect or outdated factual statements.
-- **Common sense**
-    - LLMs rely on statistical patterns in language. They might lack the ability to apply common sense reasoning in certain situations.
+- **訓練資料**
+    - 訓練資料的品質與多樣性會顯著影響模型的能力。訓練資料中的偏見或缺口可能導致模型回應的限制。
+    - 訓練資料集的範圍決定了模型能有效處理的主題領域。
+- **脈絡與任務複雜度**
+    - LLM 更擅長可以用明確提示與指示框定的任務。開放式或高度複雜的任務可能具有挑戰性。
+    - 模型的效能可能受提供的脈絡量影響（在一定範圍內，較長的脈絡通常會帶來較好的輸出）。
+- **語言歧義與細微差異**
+    - 自然語言本質上很複雜。LLM 可能難以掌握細微的差異、諷刺或比喻性語言。
+- **事實準確性**
+    - LLM 根據從訓練資料集學到的資訊生成回應，但它們不是知識庫。它們可能生成不正確或過時的事實陳述。
+- **常識**
+    - LLM 依賴語言中的統計模式。在某些情況下，它們可能缺乏運用常識推理的能力。
 
-### Ethical considerations and risks
+### 倫理考量與風險
 
-The development of large language models (LLMs) raises several ethical concerns.
-In creating an open model, we have carefully considered the following:
+大型語言模型（LLM）的開發引發了若干倫理議題。
+在建立開放模型時，我們審慎考量了以下幾點：
 
-- **Bias and fairness**
-    - LLMs trained on large-scale, real-world text data can reflect socio-cultural biases embedded in the training material. These models underwent careful scrutiny, input data pre-processing described and posterior evaluations reported in this card.
-- **Misinformation and misuse**
-    - LLMs can be misused to generate text that is false, misleading, or harmful.
-    - Guidelines are provided for responsible use with the model, see the [Responsible Generative AI Toolkit][responsible-ai].
-- **Transparency and accountability**
-    - This model card summarizes details on the models' architecture, capabilities, limitations, and evaluation processes.
-    - A responsibly developed open model offers the opportunity to share innovation by making LLM technology accessible to developers and researchers across the AI ecosystem.
+- **偏見與公平性**
+    - 以大規模真實世界文本資料訓練的 LLM 可能反映訓練素材中嵌入的社會文化偏見。這些模型經過仔細審查，本卡片說明了輸入資料預處理，並報告了後續評估。
+- **錯誤資訊與濫用**
+    - LLM 可能被濫用以生成虛假、誤導或有害的文字。
+    - 本模型提供了負責任使用的指南，請參閱 [負責任的生成式 AI 工具包][responsible-ai]。
+- **透明度與問責**
+    - 本模型卡彙整了模型的架構、能力、限制與評估流程的詳細資訊。
+    - 負責任開發的開放模型提供了分享創新的機會，讓 AI 生態系中的開發者與研究人員都能使用 LLM 技術。
 
-Risks Identified and Mitigations:
+已識別的風險與緩解措施：
 
-- **Perpetuation of biases:** It's encouraged to perform continuous monitoring (using evaluation metrics, human review) and the exploration of de-biasing techniques during model training, fine-tuning, and other use cases.
-- **Generation of harmful content:** Mechanisms and guidelines for content safety are essential. Developers are encouraged to exercise caution and implement appropriate content safety safeguards based on their specific product policies and application use cases.
-- **Misuse for malicious purposes:** Technical limitations and developer and end-user education can help mitigate against malicious applications of LLMs. Educational resources and reporting mechanisms for users to flag misuse are provided. Prohibited uses of Gemma models are outlined in our [terms of
-  use](https://www.kaggle.com/models/google/gemma/license/consent).
-- **Privacy violations:** Models were trained on data filtered for removal of PII (Personally Identifiable Information). Developers are encouraged to adhere to privacy regulations with privacy-preserving techniques.
+- **偏見的延續：** 鼓勵在模型訓練、微調與其他使用案例期間進行持續監控（使用評估指標、人工審查），並探索去偏見技術。
+- **有害內容的生成：** 內容安全的機制與指南至關重要。鼓勵開發者謹慎行事，並根據其特定的產品政策與應用使用案例實施適當的內容安全防護措施。
+- **用於惡意目的的濫用：** 技術限制以及開發者與終端使用者的教育，有助於緩解 LLM 的惡意應用。提供了教育資源與使用者舉報濫用的機制。Gemma 模型的禁止用途列於我們的[使用
+  條款](https://www.kaggle.com/models/google/gemma/license/consent)。
+- **隱私侵犯：** 模型以經過篩選、移除 PII（個人可識別資訊）的資料訓練。鼓勵開發者以保護隱私的技術遵守隱私法規。
 
-## Intended usage
+## 預期用途
 
-### Application
+### 應用
 
-Open Large Language Models (LLMs) have a wide range of applications across
-various industries and domains. The following list of potential uses is not
-comprehensive. The purpose of this list is to provide contextual information
-about the possible use-cases that the model creators considered as part of model
-training and development.
+開放大型語言模型（LLM）在各行各業與領域有廣泛的應用。
+以下潛在用途清單並不完整。其目的是提供背景資訊，說明模型建立者在模型訓練
+與開發過程中考量的可能使用案例。
 
-- **Content creation and communication**
-    - **Text generation:** These models can be used to generate creative text formats like poems, scripts, code, marketing copy, email drafts, etc.
-    - **Chatbots and conversational AI:** Power conversational interfaces for customer service, virtual assistants, or interactive applications.
-    - **Text summarization:** Generate concise summaries of a text corpus, research papers, or reports.
-- **Research and education**
-    - **Natural Language Processing (NLP) research:** These models can serve as a foundation for researchers to experiment with NLP techniques, develop algorithms, and contribute to the advancement of the field.
-    - **Language Learning Tools:** Support interactive language learning experiences, aiding in grammar correction or providing writing practice.
-    - **Knowledge Exploration:** Assist researchers in exploring large bodies of text by generating summaries or answering questions about specific topics.
+- **內容創作與溝通**
+    - **文字生成：** 這些模型可用於生成創意文字格式，例如詩歌、劇本、程式碼、行銷文案、電子郵件草稿等。
+    - **聊天機器人與對話式 AI：** 為客戶服務、虛擬助理或互動式應用程式提供對話介面。
+    - **文字摘要：** 為文本語料庫、研究論文或報告生成簡潔摘要。
+- **研究與教育**
+    - **自然語言處理（NLP）研究：** 這些模型可作為研究人員實驗 NLP 技術、開發演算法並推動領域進展的基礎。
+    - **語言學習工具：** 支援互動式語言學習體驗，協助文法修正或提供寫作練習。
+    - **知識探索：** 透過生成摘要或回答特定主題的問題，協助研究人員探索大量文本。
 
-### Benefits
+### 效益
 
-At the time of release, this family of models provides high-performance open
-large language model implementations designed from the ground up for Responsible
-AI development compared to similarly sized models.
+在發布時，相較於類似規模的模型，這個模型家族提供了專為負責任 AI 開發從頭設計的高效能開放
+大型語言模型實作。
 
-Using the benchmark evaluation metrics described in this document, these models
-have shown to provide superior performance to other, comparably-sized open model
-alternatives.
+使用本文件所述的基準測試評估指標，這些模型
+的表現優於其他同等規模的開放模型替代方案。
 
-In particular, RecurrentGemma models achieve comparable performance to Gemma
-models but are faster during inference and require less memory, especially on
-long sequences.
+特別是，RecurrentGemma 模型的效能可與 Gemma
+模型媲美，但推論速度更快、記憶體需求更低，尤其是在長序列上。

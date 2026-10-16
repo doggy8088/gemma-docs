@@ -1,83 +1,70 @@
 ---
-title: Best practices
-description: Sampling parameters, thinking-mode tokens, modality order and image token budgets that get the best results out of Gemma 4.
+title: 最佳做法
+description: 能讓 Gemma 4 發揮最佳效果的取樣參數、思考模式詞元、模態順序與圖像詞元預算。
 models: [gemma-4]
 ---
 
-# Best practices
+# 最佳做法
 
-For the best performance when using [Gemma 4](../models/gemma-4/index.md), use these configurations and best practices.
+使用 [Gemma 4](../models/gemma-4/index.md) 時，請採用以下設定與最佳做法以獲得最佳效能。
 
-## 1. Sampling parameters
+## 1. 取樣參數
 
-Use the following standardized sampling configuration across all use cases:
+在所有使用情境下，一律採用以下標準化取樣設定：
 
-| Parameter | Value |
+| 參數 | 值 |
 |---|---|
 | `temperature` | `1.0` |
 | `top_p` | `0.95` |
 | `top_k` | `64` |
 
-## 2. Thinking mode configuration
+## 2. 思考模式設定
 
-Compared to Gemma 3, the models use standard `system`{.token-role}, `assistant`{.token-role},
-and `user`{.token-role} roles. To properly manage the thinking process, use the following
-control tokens:
+相較於 Gemma 3，這些模型使用標準的 `system`{.token-role}、`assistant`{.token-role} 與
+`user`{.token-role} 角色。要正確管理思考流程，請使用以下控制詞元：
 
-- **Trigger thinking:** Thinking is enabled by including the `<|think|>`{.token-think} token at
-  the start of the system prompt. To disable thinking, remove the token.
-- **Standard generation:** When thinking is enabled, the model will output its internal
-  reasoning followed by the final answer using this structure:
+- **觸發思考：** 在系統提示開頭加入 `<|think|>`{.token-think} 詞元即可啟用思考模式；移除該詞元則停用思考。
+- **標準生成：** 啟用思考時，模型會先輸出內部推理，再以下列結構輸出最終答案：
 
 <pre><code><span class="token-think">&lt;|channel&gt;thought</span>
-<strong>[Internal reasoning]</strong><span class="token-think">&lt;channel|&gt;</span></code></pre>
+<strong>[內部推理]</strong><span class="token-think">&lt;channel|&gt;</span></code></pre>
 
-- **Disabled thinking behavior:** For all models except for the E2B and E4B variants, if
-  thinking is disabled, the model will still generate the tags but with an empty thought block:
+- **停用思考的行為：** 除 E2B 與 E4B 變體外的所有模型，若停用思考，模型仍會生成標籤，但思考區塊為空：
 
 <pre><code><span class="token-think">&lt;|channel&gt;thought</span>
-<span class="token-think">&lt;channel|&gt;</span><strong>[Final answer]</strong></code></pre>
+<span class="token-think">&lt;channel|&gt;</span><strong>[最終答案]</strong></code></pre>
 
 !!! note
-    Many libraries like Transformers and llama.cpp handle the complexities of the chat template
-    for you.
+    許多函式庫（例如 Transformers 與 llama.cpp）會替您處理聊天範本的複雜細節。
 
-## 3. Multi-turn conversations
+## 3. 多輪對話
 
-**No thinking content in history**: In multi-turn conversations, the historical model output
-should only include the final response. Thoughts from previous model turns must *not be added*
-before the next user turn begins, with the exception of tool call turns where thinking content
-should be preserved.
+**歷史紀錄不含思考內容**：多輪對話中，歷史模型輸出應只包含最終回應。前幾輪模型的思考內容，在下一輪使用者輸入開始前*不得加入*，唯有工具呼叫輪次除外（該輪次應保留思考內容）。
 
-## 4. Modality order
+## 4. 模態順序
 
-For optimal performance with multimodal inputs, place:
+為讓多模態輸入發揮最佳效能，請按以下順序放置：
 
-- Image content **before** the text in your prompt.
-- Audio content **after** the text in your prompt.
+- 將圖像內容放在提示中文字**之前**。
+- 將音訊內容放在提示中文字**之後**。
 
-## 5. Variable image resolution
+## 5. 可變圖像解析度
 
-Aside from variable aspect ratios, Gemma 4 supports variable image resolution through a
-configurable visual token budget, which controls how many tokens are used to represent an image.
-A higher token budget preserves more visual detail at the cost of additional compute, while a
-lower budget enables faster inference for tasks that don't require fine-grained understanding.
+除了可變長寬比之外，Gemma 4 還可透過可設定的視覺詞元預算支援可變圖像解析度；詞元預算決定以多少個詞元來表示一張圖像。較高的預算能以額外運算為代價保留更多視覺細節，而較低的預算則能為不需要精細理解的任務提供更快的推論。
 
-The supported token budgets are **70**, **140**, **280**, **560**, and **1120**.
+支援的詞元預算為 **70**、**140**、**280**、**560** 與 **1120**。
 
-- Use *lower budgets* for classification, captioning, or video understanding, where faster
-  inference and processing many frames outweigh fine-grained detail.
-- Use *higher budgets* for tasks like OCR, document parsing, or reading small text.
+- 對分類、圖說生成或影片理解使用*較低預算*：這類任務中更快的推論與處理大量畫格，比精細細節更重要。
+- 對 OCR、文件解析或閱讀小字等任務使用*較高預算*。
 
 !!! tip
-    The [vision token budget demo](../resources/vision-token-budget.md) shows the quality and speed
-    tradeoff at each budget.
+    [視覺詞元預算示範](../resources/vision-token-budget.md)展示了各預算下的品質與速度權衡。
 
-## 6. Audio
+## 6. 音訊
 
-Use the following prompt structures for audio processing.
+處理音訊時請使用以下提示結構。
 
-**Audio speech recognition (ASR)**
+**音訊語音辨識（ASR）**
 
 ```text
 Transcribe the following speech segment in {LANGUAGE} into {LANGUAGE} text.
@@ -87,36 +74,34 @@ Follow these specific instructions for formatting the answer:
 * When transcribing numbers, write the digits, i.e. write 1.7 and not one point seven, and write 3 instead of three.
 ```
 
-**Automatic speech translation (AST)**
+**自動語音翻譯（AST）**
 
 ```text
 Transcribe the following speech segment in {SOURCE_LANGUAGE}, then translate it into {TARGET_LANGUAGE}.
 When formatting the answer, first output the transcription in {SOURCE_LANGUAGE}, then one newline, then output the string '{TARGET_LANGUAGE}: ', then the translation in {TARGET_LANGUAGE}.
 ```
 
-## 7. Audio and video length
+## 7. 音訊與影片長度
 
-All models support image inputs and can process videos as frames whereas the E2B, E4B, and 12B
-models also support audio inputs. Audio supports a maximum length of 30 seconds. Video supports
-a maximum of 60 seconds assuming the images are processed at one frame per second.
+所有模型都支援圖像輸入，並能將影片以畫格方式處理；其中 E2B、E4B 與 12B 模型還支援音訊輸入。音訊最長支援 30 秒；若以每秒一畫格處理圖像，影片最長支援 60 秒。
 
-## What's next
+## 接下來
 
 <div class="card-grid">
 <a class="card" href="capabilities/thinking.md">
   <span class="card-icon">{{ icon('lucide/brain') }}</span>
-  <div class="card-title">Reasoning</div>
-  <p class="card-desc">Let Gemma reason before it answers, and parse the two apart.</p>
+  <div class="card-title">推理</div>
+  <p class="card-desc">讓 Gemma 在回答前先推理，並將兩者解析分離。</p>
 </a>
 <a class="card" href="prompt-formatting.md">
   <span class="card-icon">{{ icon('lucide/braces') }}</span>
-  <div class="card-title">Prompt formatting</div>
-  <p class="card-desc">The control tokens that structure a Gemma prompt.</p>
+  <div class="card-title">提示格式</div>
+  <p class="card-desc">組織 Gemma 提示結構的控制詞元。</p>
 </a>
 <a class="card" href="capabilities/vision.md">
   <span class="card-icon">{{ icon('lucide/eye') }}</span>
-  <div class="card-title">Vision overview</div>
-  <p class="card-desc">Detection, OCR, visual question answering and captioning.</p>
+  <div class="card-title">視覺總覽</div>
+  <p class="card-desc">偵測、OCR、視覺問答與圖說生成。</p>
 </a>
 </div>
 

@@ -1,6 +1,6 @@
 ---
 title: ShieldGemma
-description: ShieldGemma is a set of instruction tuned models for evaluating the safety of text and images against a set of defined safety policies.
+description: ShieldGemma 是一組指令微調（instruction-tuned）模型，用於依據一組定義好的安全政策，評估文字與圖片的安全性。
 models: [shieldgemma]
 source_url: "https://ai.google.dev/gemma/docs/shieldgemma.md.txt"
 ---
@@ -8,49 +8,46 @@ source_url: "https://ai.google.dev/gemma/docs/shieldgemma.md.txt"
 
 <div class="video-embed">
   <iframe src="https://www.youtube.com/embed/BgWO2iVPlyw"
-          title="Video" loading="lazy" allowfullscreen
+          title="影片" loading="lazy" allowfullscreen
           allow="accelerometer; encrypted-media; gyroscope; picture-in-picture"
           referrerpolicy="strict-origin-when-cross-origin"></iframe>
 </div>
 
 
-ShieldGemma is a set of instruction tuned models for evaluating the safety of text and images against a set of defined safety policies. You can use
-this model as part of a larger implementation of a generative AI application to help
-evaluate and prevent generative AI applications from violating safety policies. The ShieldGemma family of models is provided with open weights to allow you to fine-tune it
-for your specific use case.
+ShieldGemma 是一組指令微調模型，用於依據一組定義好的安全政策，評估文字與圖片的安全性。您可以將這個模型納入生成式 AI 應用的較大實作中，協助評估並防止生成式 AI 應用違反安全政策。ShieldGemma 系列模型以開放權重提供，讓您可以針對特定使用場景進行微調。
 
 
-ShieldGemma 2 is a 4B parameter model built to label images for safety.
-ShieldGemma 1 is built on [Gemma 2](../gemma-4/index.md) in 2B, 9B, and 27B parameter sizes.
+ShieldGemma 2 是為圖片安全標註而建構的 40 億（4B）參數模型。
+ShieldGemma 1 建構於 [Gemma 2](../gemma-4/index.md) 之上，提供 2B、9B 與 27B 三種參數規模。
 
 
-- **Content safety evaluation** — Evaluate the safety of prompt input and output responses against a set of defined safety policies.
-- **[Tuneable, open models](https://huggingface.co/collections/google/shieldgemma-67d130ef8da6af884072a789){ data-model="shieldgemma" }** — ShieldGemma models are provided with open weights and can be fine-tuned for your specific use case.
+- **內容安全評估** — 依據一組定義好的安全政策，評估提示輸入與輸出回應的安全性。
+- **[可調校的開放模型](https://huggingface.co/collections/google/shieldgemma-67d130ef8da6af884072a789){ data-model="shieldgemma" }** — ShieldGemma 模型以開放權重提供，可針對您的特定使用場景進行微調。
 
 ## ShieldGemma 2
 
-### [View the model card](model-card-v2.md)
+### [檢視模型卡](model-card-v2.md)
 
-ShieldGemma's 2 model card contains detailed information about the model implementation, evaluations, model usage and limitations, and more.
+ShieldGemma 2 的模型卡包含關於模型實作、評估、模型用途與限制等詳細資訊。
 
-### [View on Kaggle](https://www.kaggle.com/models/google/shieldgemma-2){ data-model="shieldgemma" }
+### [在 Kaggle 上查看](https://www.kaggle.com/models/google/shieldgemma-2){ data-model="shieldgemma" }
 
-View more code, Colab notebooks, information, and discussions about ShieldGemma on Kaggle.
+在 Kaggle 上查看更多關於 ShieldGemma 的程式碼、Colab 筆記本、資訊與討論。
 
-### [View on HuggingFace](https://huggingface.co/google/shieldgemma-2-4b-it){ data-model="shieldgemma" }
+### [在 HuggingFace 上查看](https://huggingface.co/google/shieldgemma-2-4b-it){ data-model="shieldgemma" }
 
-Run a working example for using ShieldGemma to evaluate images.
+執行一個可用的範例，學習如何使用 ShieldGemma 評估圖片。
 
 ## ShieldGemma 1
 
-### [View the model card](model-card-v1.md)
+### [檢視模型卡](model-card-v1.md)
 
-ShieldGemma's model card contains detailed information about the model implementation, evaluations, model usage and limitations, and more.
+ShieldGemma 的模型卡包含關於模型實作、評估、模型用途與限制等詳細資訊。
 
-### [View on Kaggle](https://www.kaggle.com/models/google/shieldgemma){ data-model="shieldgemma" }
+### [在 Kaggle 上查看](https://www.kaggle.com/models/google/shieldgemma){ data-model="shieldgemma" }
 
-View more code, Colab notebooks, information, and discussions about ShieldGemma on Kaggle.
+在 Kaggle 上查看更多關於 ShieldGemma 的程式碼、Colab 筆記本、資訊與討論。
 
-### [Run in Colab](https://colab.research.google.com/github/google-gemini/gemma-cookbook/blob/main/responsible/shieldgemma_on_keras.ipynb){ data-model="shieldgemma" }
+### [在 Colab 執行](https://colab.research.google.com/github/google-gemini/gemma-cookbook/blob/main/responsible/shieldgemma_on_keras.ipynb){ data-model="shieldgemma" }
 
-Run a working example for using ShieldGemma to evaluate text prompt input and output.
+執行一個可用的範例，學習如何使用 ShieldGemma 評估文字提示輸入與輸出。

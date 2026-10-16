@@ -1,23 +1,23 @@
 ---
 title: SGLang
-description: Serve Gemma 4 with SGLang — install, launch_server, model repositories, and the OpenAI-compatible API.
+description: 使用 SGLang 服務 Gemma 4 —— 安裝、launch_server、模型儲存庫，以及 OpenAI 相容 API。
 models: [gemma-4]
 frameworks: [sglang]
 ---
 
-# Serve Gemma with SGLang
+# 使用 SGLang 服務 Gemma
 
-[SGLang](https://docs.sglang.io) is a serving engine built for high throughput and structured
-generation. Like [vLLM](vllm.md), it targets multi-user production rather than local
-single-user work.
+[SGLang](https://docs.sglang.io) 是為高吞吐量與結構化
+生成打造的服務引擎。如同 [vLLM](vllm.md)，它針對多使用者生產環境，而非本機
+單使用者工作。
 
-## Install
+## 安裝
 
 ```bash
 uv pip install --prerelease=allow sglang
 ```
 
-## Serve
+## 服務
 
 ```bash { .model-swap }
 python3 -m sglang.launch_server \
@@ -26,9 +26,9 @@ python3 -m sglang.launch_server \
   --port 30000
 ```
 
-## Model repositories
+## 模型儲存庫
 
-| Size | Repository |
+| 尺寸 | 儲存庫 |
 |---|---|
 | E2B | `google/gemma-4-E2B-it` |
 | E4B | `google/gemma-4-E4B-it` |
@@ -36,10 +36,10 @@ python3 -m sglang.launch_server \
 | 26B A4B | `google/gemma-4-26B-A4B-it` |
 | 31B | `google/gemma-4-31B-it` |
 
-For 4-bit serving, use the [QAT](../get-started/qat.md) compressed-tensors builds,
-`google/gemma-4-{E2B,E4B,12B,31B}-it-qat-w4a16-ct`.
+對於 4 位元服務，請使用 [QAT](../get-started/qat.md) compressed-tensors 建置版本，
+`google/gemma-4-{E2B,E4B,12B,31B}-it-qat-w4a16-ct`。
 
-## Call it
+## 呼叫它
 
 ```python { .model-swap }
 from openai import OpenAI

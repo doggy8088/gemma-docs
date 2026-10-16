@@ -1,76 +1,57 @@
 ---
-title: DiffusionGemma model card
-description: DiffusionGemma is a generative model built by Google DeepMind.
+title: DiffusionGemma 模型卡
+description: DiffusionGemma 是由 Google DeepMind 打造的生成式模型。
 models: [diffusiongemma]
 source_url: "https://ai.google.dev/gemma/docs/diffusiongemma/model_card.md.txt"
 ---
-# DiffusionGemma model card
+# DiffusionGemma 模型卡
 
 [Hugging Face](https://huggingface.co/google/diffusiongemma-26B-A4B-it){ data-model="diffusiongemma" } \|
 [GitHub][gemma-github] \|
-[Launch Blog](https://blog.google/innovation-and-ai/technology/developers-tools/diffusion-gemma-faster-text-generation/) \|
-[Documentation](index.md)
+[發布部落格](https://blog.google/innovation-and-ai/technology/developers-tools/diffusion-gemma-faster-text-generation/) \|
+[說明文件](index.md)
 
 
-**License** : [Apache 2.0](https://ai.google.dev/gemma/apache_2) \| **Authors** : [Google DeepMind](https://deepmind.google/models/gemma/)
+**授權** : [Apache 2.0](https://ai.google.dev/gemma/apache_2) \| **作者** : [Google DeepMind](https://deepmind.google/models/gemma/)
 
-DiffusionGemma is a generative model built by Google DeepMind. Based on the 26B
-A4B Mixture-of-Experts (MoE) Gemma 4 architecture, DiffusionGemma generates
-tokens using discrete diffusion. This open-weights model is multimodal, handling
-text, image, and video inputs to generate text output.
+DiffusionGemma 是由 Google DeepMind 打造的生成式模型。基於 26B A4B 混合專家（MoE）Gemma 4 架構，DiffusionGemma 使用離散擴散生成詞元。這個開放權重模型具備多模態能力，可處理文字、影像與影片輸入，產生文字輸出。
 
-Built on a MoE foundation, DiffusionGemma is designed to improve generation
-speed (tokens per second) while remaining deployable across various hardware
-environments. DiffusionGemma builds upon the architectural and capability
-advancements of Gemma 4, introducing several core features:
+DiffusionGemma 建立在 MoE 基礎上，旨在提升生成速度（每秒詞元數），同時保持能在多種硬體環境部署。DiffusionGemma 繼承 Gemma 4 的架構與能力進展，並引入幾項核心功能：
 
-- **Discrete Text Diffusion** -- Shifts from token-by-token autoregression to block-autoregressive multi-canvas sampling. It generates text by iteratively denoising blocks of tokens (a 'canvas') in parallel, significantly increasing decoding speed.
-- **Multimodal Input Processing** -- Processes interleaved text, image (with variable aspect ratio and resolution support), and video inputs to generate text outputs.
-- **Encoder-Decoder Architecture** -- Utilizes an autoregressive encoder to process and cache the prompt context, paired with a decoder that applies bidirectional attention over the generation canvas.
-- **Mixture-of-Experts (MoE) Efficiency** -- Leverages a sparse MoE design (8 active experts out of 128 total) to provide strong reasoning capabilities while maintaining a low memory footprint suitable for local execution.
-- **Thinking Mode (Reasoning)** -- Designed as a highly capable reasoner, with configurable thinking modes.
-- **Optimized for Small Batch Size Inference** -- Specifically engineered for low-latency, high-speed generation on a single capable accelerator.
-- **Native System Prompt Support** -- As with Gemma 4, it supports updating the `system` role, enabling more structured and controllable conversations.
+- **離散文字擴散** -- 從逐詞元自迴歸轉為區塊自迴歸多畫布取樣。透過平行地反覆去除詞元區塊（「畫布」）的雜訊來生成文字，大幅提升解碼速度。
+- **多模態輸入處理** -- 處理交錯的文字、影像（支援可變長寬比與解析度）與影片輸入，產生文字輸出。
+- **編碼器-解碼器架構** -- 使用自迴歸編碼器處理並快取提示上下文，搭配在生成畫布上套用雙向注意力的解碼器。
+- **混合專家（MoE）效率** -- 採用稀疏 MoE 設計（128 個專家中啟動 8 個），以適合本機執行的低記憶體佔用量提供強大的推理能力。
+- **思考模式（推理）** -- 設計為能力強大的推理者，具備可設定的思考模式。
+- **針對小批次推論最佳化** -- 專為在單一強力加速器上進行低延遲、高速生成而設計。
+- **原生系統提示支援** -- 與 Gemma 4 相同，支援更新 `system` 角色，實現更結構化、可控的對話。
 
-## **Model Overview**
+## **模型總覽**
 
-DiffusionGemma is engineered to reduce the sequential bottlenecks of standard
-causal language models. It employs an encoder-decoder architecture specifically
-optimized for inference speed.
+DiffusionGemma 的設計目標是降低標準因果語言模型的序列化瓶頸。它採用針對推論速度特別最佳化的編碼器-解碼器架構。
 
-The encoder operates in a prefill capacity, processing the initial prompt and
-generating the KV cache. The decoder then utilizes bidirectional attention to
-process an input block (a 'canvas') of tokens, accessing the cached context via
-cross-attention.
+編碼器以預填充的角色運作，處理初始提示並產生 KV 快取。解碼器接著使用雙向注意力處理一個詞元區塊（「畫布」），透過交叉注意力取用快取的上下文。
 
-During inference, DiffusionGemma leverages multi-canvas sampling. Rather than
-generating one token at a time, the model iteratively denoises a full block of
-tokens using a diffusion sampler. Once a canvas is fully denoised, it is
-processed by the encoder and appended to the KV cache, after which the model
-generates the next canvas. This block-autoregressive approach facilitates text
-generation at higher speeds.
+在推論期間，DiffusionGemma 利用多畫布取樣。模型不再一次生成一個詞元，而是使用擴散取樣器反覆對完整的一塊詞元去噪。一旦某塊畫布完全去噪，就會由編碼器處理並附加到 KV 快取，接著模型再生成下一塊畫布。這種區塊自迴歸方式讓文字能以更高速生成。
 
 ### DiffusionGemma
 
-\| **Total Parameters** \| 25.2B \|
-\| **Active Parameters** \| 3.8B \|
-\| **Layers** \| 30 \|
-\| **Sliding Window** \| 1024 tokens \|
-\| **Context Length** \| Up to 256K tokens \|
-\| **Canvas Length** \| 256 \|
-\| **Vocabulary Size** \| 262K \|
-\| **Expert Count** \| 8 active / 128 total and 1 shared \|
-\| **Supported Modalities** \| Text, Image \|
-\| **Vision Encoder Parameters** \| \~550M \|
+\| **總參數量** \| 25.2B \|
+\| **啟動參數量** \| 3.8B \|
+\| **層數** \| 30 \|
+\| **滑動視窗** \| 1024 詞元 \|
+\| **上下文長度** \| 最多 256K 詞元 \|
+\| **畫布長度** \| 256 \|
+\| **詞彙表大小** \| 262K \|
+\| **專家數量** \| 8 啟動 / 128 總數，另有 1 個共享專家 \|
+\| **支援的模態** \| 文字、影像 \|
+\| **視覺編碼器參數量** \| \~550M \|
 
-## **Benchmark Results**
+## **基準測試結果**
 
-These models were evaluated against a large collection of different datasets and
-metrics to cover different aspects of text generation. Evaluation results marked
-in the table are for instruction-tuned models, with the recommended Entropy
-Bound (EB) sampler (see Best Practices below).
+這些模型在一系列涵蓋文字生成不同面向的資料集與指標上進行評估。表格中標示的評估結果為指令微調模型，使用建議的熵上限（EB）取樣器（詳見下方的最佳實務）。
 
-| Benchmark | DiffusionGemma 26B A4B | Gemma 4 26B A4B |
+| 基準測試 | DiffusionGemma 26B A4B | Gemma 4 26B A4B |
 |---|---|---|
 | MMLU Pro | 77.6% | 82.6% |
 | AIME 2026 no tools | 69.1% | 88.3% |
@@ -90,204 +71,165 @@ Bound (EB) sampler (see Best Practices below).
 | **Long Context** |   |   |
 | MRCR v2 8 needle 128k (average) | 32.0% | 44.1% |
 
-## **Core Capabilities**
+## **核心能力**
 
-DiffusionGemma handles a broad range of tasks across text and vision. Key
-capabilities include:
+DiffusionGemma 可處理橫跨文字與視覺的多種任務。主要能力包括：
 
-- **High-Speed Generation** - parallel denoising of 256 tokens via diffusion sampling achieves low latency by generating 15-20 tokens per forward pass, unlocking per user generation speeds exceeding 1100 tokens per second in low batch size settings (H100, FP8).
-- **Adaptive Inference Time Computation** - Simpler prompts and structured tasks like code require fewer denoising steps, enabling dynamic tokens-per-second speeds based on task complexity.
-- **Thinking** -- Built-in reasoning mode that lets the model think step-by-step before answering.
-- **Long Context** -- Context windows of up to 256K tokens.
-- **Image Understanding** -- Object detection, Document/PDF parsing, screen and UI understanding, chart comprehension, OCR (including multilingual), handwriting recognition, and pointing. Images can be processed at variable aspect ratios and resolutions.
-- **Video Understanding** -- Analyzes and describes video content by processing sequences of frames.
-- **Interleaved Multimodal Input** -- Mix images, video, and text within a single prompt for context-heavy reasoning.
-- **Function Calling** -- Native support for structured tool use, enabling agentic workflows.
-- **Coding \& Reasoning** -- Capable of code generation, completion, and step-by-step logical reasoning.
-- **Multilingual** -- Out-of-the-box support for 35+ languages, pre-trained on 140+ languages.
+- **高速生成** - 透過擴散取樣平行去除 256 個詞元的雜訊，以低延遲生成：每次前向傳遞生成 15–20 個詞元，在低批次設定下每位使用者的生成速度可超過每秒 1100 個詞元（H100、FP8）。
+- **自適應推論時間計算** - 簡單的提示與程式碼這類結構化任務所需的去噪步數較少，能依任務複雜度動態調整每秒詞元數。
+- **思考** -- 內建的推理模式，讓模型在回答前逐步思考。
+- **長上下文** -- 上下文視窗最多 256K 詞元。
+- **影像理解** -- 物件偵測、文件/PDF 解析、螢幕與 UI 理解、圖表理解、OCR（包含多語言）、手寫辨識與指向。可以可變長寬比與解析度處理影像。
+- **影片理解** -- 以影格序列處理影片來分析並描述影片內容。
+- **交錯式多模態輸入** -- 在單一提示中混合影像、影片與文字，進行上下文豐富的推理。
+- **函式呼叫** -- 原生支援結構化工具使用，實現代理式（agentic）工作流程。
+- **程式撰寫與推理** -- 能生成程式碼、補全程式碼，並進行逐步邏輯推理。
+- **多語言** -- 開箱即支援 35+ 種語言，預訓練涵蓋 140+ 種語言。
 
-## **Best Practices**
+## **最佳實務**
 
-For the best performance, use these configurations and best practices:
+為獲得最佳效能，請使用以下設定與最佳實務：
 
-### 1. Diffusion Sampling Settings
+### 1. 擴散取樣設定
 
-Use the following standardized sampling configuration across all use cases:
+在所有使用場景中一律使用以下標準取樣設定：
 
-- **Method:** Diffusion sampling with Entropy-Bounded Denoising and Adaptive Stopping.
-- **Sampling Configuration:**
-    - Maximum number of Denoising Steps = 48
-    - Temperature schedule (for logit shaping): Linear decay from 0.8 → 0.4
-    - Token Selection: At each step, the sampler selects the lowest-entropy tokens such that their mutual information bound stays below entropy bound = 0.1
-    - Token Renoising: The sampler fully renoises the non-selected tokens
-- **Adaptive Stopping:** Sampling terminates early if and only if both of the following conditions are met simultaneously:
-    - Confident predictions: The average model entropy over the canvas is below the entropy threshold = 0.005
-    - Stable predictions: The highest-probability token predictions remain identical across two consecutive denoising steps
+- **方法：**使用熵上限去噪（Entropy-Bounded Denoising）與自適應停止的擴散取樣。
+- **取樣設定：**
+    - 最大去噪步數 = 48
+    - 溫度排程（用於 logit 塑形）：從 0.8 → 0.4 線性遞減
+    - 詞元選擇：在每個步驟中，取樣器選擇熵最低的詞元，使其互資訊上限保持在熵上限 = 0.1 以下
+    - 詞元重新注入雜訊：取樣器對未被選中的詞元完全重新注入雜訊
+- **自適應停止：**僅當以下兩個條件同時成立時，取樣才提早終止：
+    - 有把握的預測：整塊畫布的平均模型熵低於熵閾值 = 0.005
+    - 穩定的預測：最高機率的詞元預測在連續兩次去噪步驟中保持不變
 
-### 2. Thinking Mode Configuration
+### 2. 思考模式設定
 
-Similar to Gemma 4 models, we use standard `system`, `assistant`, and `user`
-roles. To properly manage the thinking process, use the following control
-tokens:
+與 Gemma 4 模型類似，我們使用標準的 `system`、`assistant` 與 `user` 角色。要妥善管理思考流程，請使用以下控制詞元：
 
-- **Trigger Thinking:** Thinking is enabled by including the `<|think|>` token at the start of the system prompt. To disable thinking, remove the token (note that an empty thinking channel might still be emitted).
-- **Standard Generation:** When thinking is enabled, the model will output its internal reasoning followed by the final answer using this structure: `<|channel>thought\n`**\[Internal reasoning\]** `<channel|>`.
-- **Disabled Thinking Behavior:** If thinking is disabled, the model will still generate the tags but with an empty thought block: `<|channel>thought\n<channel|>`**\[Final answer\]**.
+- **觸發思考：**在系統提示開頭加入 `<|think|>` 詞元即可啟用思考。要停用思考，移除該詞元即可（注意仍可能輸出空的思考通道）。
+- **標準生成：**啟用思考時，模型會輸出內部推理，接著以此結構輸出最終答案：`<|channel>thought\n`**\[內部推理\]** `<channel|>`。
+- **停用思考的行為：**若停用思考，模型仍會生成這些標籤，但思考區塊為空：`<|channel>thought\n<channel|>`**\[最終答案\]**。
 
 !!! Note
-    Note that many libraries like transformers handle the complexities of the chat
-    template for you.
+    注意，許多像 transformers 這樣的函式庫會幫您處理聊天範本的複雜細節。
 
 
-### 3. Multi-Turn Conversations
+### 3. 多輪對話
 
-- **No Thinking Content in History:** In multi-turn conversations, the historical model output should only include the final response. Thoughts from previous model turns must not be added before the next user turn begins.
+- **歷史紀錄中不含思考內容：**在多輪對話中，歷史模型輸出只應包含最終回覆。在下一輪使用者訊息開始前，不得加入先前模型回合的思考內容。
 
-### 4. Modality order
+### 4. 模態順序
 
-- For optimal performance with multimodal inputs, place image content **before** the text in your prompt.
+- 對於多模態輸入，為獲得最佳效能，請在提示中將影像內容放在文字**之前**。
 
-### 5. Variable Image Resolution
+### 5. 可變影像解析度
 
-Aside from variable aspect ratios, DiffusionGemma supports variable image
-resolution through a configurable visual token budget, which controls how many
-tokens are used to represent an image. A higher token budget preserves more
-visual detail at the cost of additional compute, while a lower budget enables
-faster inference for tasks that don't require fine-grained understanding.
+除了可變長寬比，DiffusionGemma 也透過可設定的視覺詞元預算支援可變影像解析度，用來控制表示一張影像所用的詞元數量。較高的詞元預算能保留更多視覺細節，但代價是額外運算；較低的預算則能加速推論，適合不需要細粒度理解的任務。
 
-- The supported token budgets are: **70** , **140** , **280** , **560** , and **1120** .
-    - Use *lower budgets* for classification, captioning, or video understanding, where faster inference and processing many frames outweigh fine-grained detail.
-    - Use *higher budgets* for tasks like OCR, document parsing, or reading small text.
+- 支援的詞元預算為：**70**、**140**、**280**、**560** 與 **1120**。
+    - 對分類、圖說生成或影片理解這類任務使用*較低的預算*，較快的推論與處理更多影格比細粒度細節更重要。
+    - 對 OCR、文件解析或讀取小字這類任務使用*較高的預算*。
 
-### 6. Video Length
+### 6. 影片長度
 
-All models support image inputs and can process videos as frames. Video supports
-a maximum of 60 seconds assuming the images are processed at one frame per
-second.
+所有模型都支援影像輸入，並能以影格方式處理影片。假設以每秒一影格處理影像，影片支援最長 60 秒。
 
-## **Model Data**
+## **模型資料**
 
-Data used for model training and how the data was processed.
+模型訓練所用的資料與資料處理方式。
 
-### **Training Dataset**
+### **訓練資料集**
 
-Our pre-training dataset is a large-scale, diverse collection of data
-encompassing a wide range of domains and modalities, which includes web
-documents, code, images, audio, with a cutoff date of January 2025. Here are the
-key components:
+我們的預訓練資料集是涵蓋廣泛領域與模態的大規模、多樣化資料集合，包括網頁文件、程式碼、影像、音訊，知識截止日期為 2025 年 1 月。主要組成如下：
 
-- **Web Documents:** A diverse collection of web text ensures the model is exposed to a broad range of linguistic styles, topics, and vocabulary. The training dataset includes content in over 140 languages.
-- **Code:** Exposing the model to code helps it to learn the syntax and patterns of programming languages, which improves its ability to generate code and understand code-related questions.
-- **Mathematics:** Training on mathematical text helps the model learn logical reasoning, symbolic representation, and address mathematical queries.
-- **Images:** A wide range of images enables the model to perform image analysis and visual data extraction tasks.
+- **網頁文件：**多樣化的網頁文字集合，確保模型接觸廣泛的語言風格、主題與詞彙。訓練資料集包含超過 140 種語言的內容。
+- **程式碼：**讓模型接觸程式碼，幫助它學習程式語言的語法與模式，提升生成程式碼與理解程式碼相關問題的能力。
+- **數學：**在數學文本上訓練，幫助模型學習邏輯推理、符號表示，並處理數學問題。
+- **影像：**廣泛的影像讓模型能執行影像分析與視覺資料擷取任務。
 
-The combination of these diverse data sources is crucial for training a powerful
-multimodal model that can handle a wide variety of different tasks and data
-formats.
+這些多樣化資料來源的組合，是訓練出能處理各種不同任務與資料格式的強大多模態模型的關鍵。
 
-### **Data Preprocessing**
+### **資料預處理**
 
-Here are the key data cleaning and filtering methods applied to the training
-data:
+以下是在訓練資料上套用的主要資料清理與篩選方法：
 
-- **CSAM Filtering:** Rigorous CSAM (Child Sexual Abuse Material) filtering was applied at multiple stages in the data preparation process to ensure the exclusion of harmful and illegal content.
-- **Sensitive Data Filtering:** As part of making Gemma pre-trained models safe and reliable, automated techniques were used to filter out certain personal information and other sensitive data from training sets.
-- **Additional methods:** Filtering based on content quality and safety in line with [our
-  policies](https://ai.google/static/documents/ai-responsibility-update-published-february-2025.pdf).
+- **CSAM 篩選：**在資料準備流程的多個階段套用嚴格的 CSAM（兒童性虐待素材）篩選，確保排除有害與非法內容。
+- **敏感資料篩選：**為了讓 Gemma 預訓練模型安全可靠，使用自動化技術從訓練集中篩除特定個人資訊與其他敏感資料。
+- **其他方法：**依循[我們的政策](https://ai.google/static/documents/ai-responsibility-update-published-february-2025.pdf)基於內容品質與安全進行篩選。
 
-## **Ethics and Safety**
+## **倫理與安全**
 
-As open models become central to enterprise infrastructure, provenance and
-security are paramount. Developed by Google DeepMind, DiffusionGemma undergoes
-the same rigorous safety evaluations as our proprietary Gemini models.
+隨著開放模型成為企業基礎設施的核心，來源與安全性至關重要。DiffusionGemma 由 Google DeepMind 開發，經過與我們專有的 Gemini 模型同樣嚴格的安全評估。
 
-### **Evaluation Approach**
+### **評估方法**
 
-DiffusionGemma was developed in partnership with internal safety and responsible
-AI teams. A range of automated as well as human evaluations were conducted to
-help improve model safety. These evaluations align with [Google's AI
-principles](https://ai.google/principles/), as well as safety policies, which
-aim to prevent our generative AI models from generating harmful content,
-including:
+DiffusionGemma 是與內部安全與負責任 AI 團隊合作開發。我們進行了一系列自動化與人工評估來提升模型安全性。這些評估遵循 [Google AI 原則](https://ai.google/principles/) 與安全政策，旨在防止我們的生成式 AI 模型產生有害內容，包括：
 
-- Content related to child sexual abuse material and exploitation
-- Dangerous content (e.g., promoting suicide, or instructing in activities that could cause real-world harm)
-- Sexually explicit content
-- Hate speech (e.g., dehumanizing members of protected groups)
-- Harassment (e.g., encouraging violence against people)
+- 與兒童性虐待素材與剝削相關的內容
+- 危險內容（例如鼓吹自殺，或教導可能造成現實世界傷害的活動）
+- 色情內容
+- 仇恨言論（例如去人性化特定受保護群體的成員）
+- 騷擾（例如鼓勵對他人的暴力）
 
-### **Evaluation Results**
+### **評估結果**
 
-For all areas of safety testing, we saw major improvements in all categories of
-content safety relative to previous generations of Gemma models. Overall,
-DiffusionGemma, like Gemma 4 models, significantly outperforms Gemma 3 and 3n
-models in improving safety, while keeping unjustified refusals low. All testing
-was intentionally conducted without safety filters to evaluate the model's raw
-capabilities and baseline behaviors. For both text-to-text and image-to-text,
-and across all model sizes, the model produced minimal policy violations, and
-showed significant improvements over previous Gemma models.
+在所有安全測試領域，相較於前幾代 Gemma 模型，所有內容安全類別都有顯著改善。整體而言，DiffusionGemma 與 Gemma 4 模型一樣，在提升安全性方面顯著超越 Gemma 3 與 3n 模型，同時保持低的無正當理由拒答率。所有測試都是在無安全篩選器的情況下刻意進行的，以評估模型的原始能力與基準行為。對於文字對文字與影像對文字，在所有模型大小下，模型產生的政策違規極少，並較前幾代 Gemma 模型有顯著改善。
 
-## **Usage and Limitations**
+## **使用方式與限制**
 
-These models have certain limitations that users should be aware of.
+這些模型有一些使用者應注意的限制。
 
-### **Intended Usage**
+### **預期用途**
 
-Multimodal models (capable of processing vision, language, and/or audio) have a
-wide range of applications across various industries and domains. The following
-list of potential uses is not comprehensive. The purpose of this list is to
-provide contextual information about the possible use-cases that the model
-creators considered as part of model training and development.
+多模態模型（能處理視覺、語言及/或音訊）在各行各業與領域有廣泛的應用。以下潛在用途清單並非詳盡無遺，目的在於提供關於模型創建者在模型訓練與開發過程中考慮過的可能使用場景的背景資訊。
 
-- **Content Creation and Communication**
-    - **Text Generation:** Generates creative text formats such as poems, scripts, code, marketing copy, and email drafts.
-    - **Chatbots and Conversational AI:** Powers conversational interfaces for customer service, virtual assistants, or interactive applications.
-    - **Text Summarization:** Generates concise summaries of a text corpus, research papers, or reports.
-    - **Image Data Extraction:** Extracts, interprets and summarizes visual data for text communications.
-- **Research and Education**
-    - **Natural Language Processing (NLP) and VLM Research:** Serves as a foundation for researchers to experiment with VLM and NLP techniques, develop algorithms, and contribute to the advancement of the field.
-    - **Language Learning Tools:** Supports interactive language learning experiences, aiding in grammar correction or providing writing practice.
-    - **Knowledge Exploration:** Assists researchers in exploring large bodies of text by generating summaries or answering questions about specific topics.
+- **內容創作與溝通**
+    - **文字生成：**生成創意文字格式，如詩歌、腳本、程式碼、行銷文案與電子郵件草稿。
+    - **聊天機器人與對話式 AI：**為客服、虛擬助理或互動應用提供對話介面。
+    - **文字摘要：**為文字語料庫、研究論文或報告生成簡潔摘要。
+    - **影像資料擷取：**為文字溝通擷取、解讀與彙整視覺資料。
+- **研究與教育**
+    - **自然語言處理（NLP）與 VLM 研究：**作為研究人員的基礎，用於實驗 VLM 與 NLP 技術、開發演算法，為領域進展做出貢獻。
+    - **語言學習工具：**支援互動式語言學習體驗，協助文法修正或提供寫作練習。
+    - **知識探索：**透過生成摘要或回答特定主題的問題，協助研究人員探索大量文本。
 
-### **Limitations**
+### **限制**
 
-- **Training Data**
-    - The quality and diversity of the training data significantly influence the model's capabilities. Biases or gaps in the training data can lead to limitations in the model's responses.
-    - The scope of the training dataset determines the subject areas the model can handle effectively.
-- **Context and Task Complexity**
-    - The model performs well on tasks that can be framed with clear prompts and instructions. Open-ended or highly complex tasks might be challenging.
-    - The model's performance can be influenced by the amount of context provided (longer context generally leads to better outputs, up to a certain point).
-- **Language Ambiguity and Nuance**
-    - Natural language is inherently complex. The model might struggle to grasp subtle nuances, sarcasm, or figurative language.
-- **Factual Accuracy**
-    - The model generates responses based on information it learned from their training datasets, but they are not knowledge bases. It may generate incorrect or outdated factual statements.
-- **Common Sense**
-    - The model relies on statistical patterns in language. It might lack the ability to apply common sense reasoning in certain situations.
+- **訓練資料**
+    - 訓練資料的品質與多樣性顯著影響模型能力。訓練資料中的偏見或缺口可能導致模型回覆的限制。
+    - 訓練資料集的範疇決定了模型能有效處理的主題領域。
+- **上下文與任務複雜度**
+    - 模型在能以清楚的提示與指令框架化的任務上表現良好。開放式或高度複雜的任務可能具有挑戰性。
+    - 提供上下文的量會影響模型效能（上下文越長通常輸出越好，但有一定上限）。
+- **語言歧義與細微差別**
+    - 自然語言本質上很複雜。模型可能難以掌握細微差別、諷刺或比喻。
+- **事實正確性**
+    - 模型根據從訓練資料集學到的資訊生成回覆，但它們不是知識庫。可能產生不正確或過時的事實陳述。
+- **常識**
+    - 模型仰賴語言中的統計模式。在某些情況下可能缺乏運用常識推理的能力。
 
-### **Ethical Considerations and Risks**
+### **倫理考量與風險**
 
-In creating an open, vision-language model, we have carefully considered the
-following:
+在創建開放的視覺語言模型時，我們審慎考慮了以下事項：
 
-- **Bias and Fairness**
-    - VLMs trained on large-scale, real-world text and image data can reflect socio-cultural biases embedded in the training material. DiffusionGemma underwent careful scrutiny, input data pre-processing, and post-training evaluations as reported in this card to help mitigate the risk of these biases.
-- **Misinformation and Misuse**
-    - VLMs can be misused to generate text that is false, misleading, or harmful.
-    - Guidelines are provided for responsible use with the model, see the [Responsible Generative AI Toolkit][responsible-ai].
-- **Transparency and Accountability**
-    - This model card summarizes details on the model's architecture, capabilities, limitations, and evaluation processes.
-    - A responsibly developed open model offers the opportunity to share innovation by making VLM technology accessible to developers and researchers across the AI ecosystem.
+- **偏見與公平性**
+    - 在大規模真實世界文字與影像資料上訓練的 VLM，可能反映訓練素材中嵌入的社會文化偏見。DiffusionGemma 經過審慎檢視、輸入資料預處理，以及本卡所述的訓練後評估，以幫助降低這些偏見的風險。
+- **錯誤資訊與濫用**
+    - VLM 可能被濫用來產生虛假、誤導或有害的文字。
+    - 本模型提供負責任使用的指引，請參閱 [Responsible Generative AI Toolkit][responsible-ai]。
+- **透明度與可歸責性**
+    - 本模型卡彙整了模型架構、能力、限制與評估流程的詳細資訊。
+    - 一個負責任開發的開放模型，讓整個 AI 生態系的開發者與研究人員都能取得 VLM 技術，提供了分享創新的機會。
 
-**Risks identified and mitigations**:
+**已識別的風險與緩解措施**：
 
-- **Generation of harmful content:** Mechanisms and guidelines for content safety are essential. Developers are encouraged to exercise caution and implement appropriate content safety safeguards based on their specific product policies and application use cases.
-- **Misuse for malicious purposes:** Technical limitations and developer and end-user education can help mitigate against malicious applications of VLMs. Educational resources and reporting mechanisms for users to flag misuse are provided.
-- **Privacy violations:** Models were trained on data filtered for removal of certain personal information and other sensitive data. Developers are encouraged to adhere to privacy regulations with privacy-preserving techniques.
-- **Perpetuation of biases:** It's encouraged to perform continuous monitoring (using evaluation metrics, human review) and the exploration of de-biasing techniques during model training, fine-tuning, and other use cases.
+- **產生有害內容：**內容安全機制與指引至關重要。鼓勵開發者依其特定產品政策與應用場景，謹慎行事並實施適當的內容安全防護措施。
+- **用於惡意目的的濫用：**技術限制，以及對開發者與終端使用者的教育，可幫助減輕 VLM 的惡意應用。我們提供教育資源與通報機制，讓使用者能標記濫用行為。
+- **侵犯隱私：**模型在訓練資料上篩除了特定個人資訊與其他敏感資料。鼓勵開發者遵守隱私法規，並採用隱私保護技術。
+- **偏見的延續：**鼓勵在模型訓練、微調及其他使用場景中持續監控（使用評估指標、人工審查）並探索去偏見技術。
 
-### **Benefits**
+### **優點**
 
-At the time of release, this is a low-latency, high-performance open
-vision-language model that provides a compelling option for developers and those
-interested in researching diffusion language models. The model is designed from
-the ground up for responsible AI development compared to similarly sized models.
+在發布時，這是一個低延遲、高效能的開放視覺語言模型，為對研究擴散語言模型感興趣的開發者與研究人員提供了極具吸引力的選擇。相較於同級模型，本模型從頭開始就為負責任的 AI 開發而設計。

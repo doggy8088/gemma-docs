@@ -1,32 +1,32 @@
 ---
-title: Run Gemma with Keras
-description: Generating content, summarizing, and analysing content are just some of the tasks you can accomplish with Gemma open models.
+title: 使用 Keras 執行 Gemma
+description: 生成內容、摘要與分析內容，只是您可以用 Gemma 開放模型完成的其中一些任務。
 models: [gemma-4]
 frameworks: [keras]
 source_url: "https://ai.google.dev/gemma/docs/core/keras_inference.md.txt"
 colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs/notebooks/run-gemma-with-keras-gemma-4-e2b.ipynb
 ---
-# Run Gemma with Keras
+# 使用 Keras 執行 Gemma
 
 
-Generating content, summarizing, and analysing content are just some of the tasks you can accomplish with Gemma open models. This tutorial shows you how to get started running Gemma using Keras, including generating text content with text and image input. [Keras](https://keras.io/) provides implementations for running Gemma and other models using JAX, PyTorch, and TensorFlow. If you're new to Keras, you might want to read [Getting started with Keras](https://keras.io/getting_started/) before you begin.
+生成內容、摘要與分析內容，只是您可以用 Gemma 開放模型完成的其中一些任務。本教學說明如何使用 Keras 開始執行 Gemma，包括使用文本與圖像輸入生成文本內容。[Keras](https://keras.io/) 提供使用 JAX、PyTorch 與 TensorFlow 執行 Gemma 與其他模型的實作。如果您是 Keras 新手，建議先閱讀 [Keras 入門](https://keras.io/getting_started/) 再開始。
 
-Gemma 3 and later models support text and image input. Earlier versions of Gemma only support text input, except for some variants, including [PaliGemma](../get-started/index.md).
+Gemma 3 及後續模型支援文本與圖像輸入。較早版本的 Gemma 僅支援文本輸入，但部分變體除外，包括 [PaliGemma](../get-started/index.md)。
 !!! Note
-    This notebook won't run on T4 if you try with Gemma 4. Use L4 or higher GPUs.
-    
+    這本筆記本在使用 Gemma 4 時無法在 T4 上執行。請使用 L4 或更高階的 GPU。
 
-### Install Keras packages
 
-Install the Keras and KerasHub Python packages.
+### 安裝 Keras 套件
+
+安裝 Keras 與 KerasHub Python 套件。
 
 ```bash { .notebook-cell }
 pip install -q -U keras keras-hub keras-nlp
 ```
 
-### Select a backend
+### 選擇後端
 
-Keras is a high-level, multi-framework deep learning API designed for simplicity and ease of use. [Keras 3](https://keras.io/keras_3) lets you choose the backend: TensorFlow, JAX, or PyTorch. All three will work for this tutorial. For this tutorial, configure the backend for JAX as it typically provides the better performance.
+Keras 是設計簡單易用的高階多框架深度學習 API。[Keras 3](https://keras.io/keras_3) 讓您選擇後端：TensorFlow、JAX 或 PyTorch。三者都適用於本教學。在本教學中，請將後端設定為 JAX，因為它通常提供更好的效能。
 
 ```python { .notebook-cell }
 import os
@@ -35,18 +35,18 @@ os.environ["KERAS_BACKEND"] = "jax"  # Or "tensorflow" or "torch".
 os.environ["XLA_PYTHON_CLIENT_MEM_FRACTION"] = "1.00"
 ```
 
-### Import packages
+### 匯入套件
 
-Import the Keras and KerasHub packages.
+匯入 Keras 與 KerasHub 套件。
 
 ```python { .notebook-cell }
 import keras
 import keras_hub
 ```
 
-## Load model
+## 載入模型
 
-Keras provides implementations of many popular [model architectures](https://keras.io/api/keras_nlp/models/). Download and configure a Gemma model using the `Gemma4CausalLM` class to build an end-to-end, causal language modeling implementation for Gemma 4 models. Create the model using the `from_preset()` method, as shown in the following code example:
+Keras 提供許多熱門[模型架構](https://keras.io/api/keras_nlp/models/)的實作。使用 `Gemma4CausalLM` 類別下載並設定 Gemma 模型，以建構適用於 Gemma 4 模型的端到端因果語言建模實作。使用 `from_preset()` 方法建立模型，如下方程式碼範例所示：
 
 ```python { .notebook-cell .model-swap }
 gemma_lm = keras_hub.models.Gemma4CausalLM.from_preset(
@@ -55,16 +55,14 @@ gemma_lm = keras_hub.models.Gemma4CausalLM.from_preset(
 )
 ```
 
-!!! note "Keras presets"
-    Presets are `gemma4_instruct_{SIZE}` for the instruction-tuned weights and `gemma4_{SIZE}`
-    for base. There is no 12B preset, so the selector above offers the four sizes KerasHub
-    publishes. Each instruction-tuned preset also has a `_assistant` MTP drafter — see
-    [Multi-Token Prediction](../get-started/capabilities/mtp.md) — which must never be loaded
-    on its own.
+!!! note "Keras 預設"
+    預設為指令微調權重的 `gemma4_instruct_{SIZE}`，基礎權重為 `gemma4_{SIZE}`。
+    沒有 12B 預設，因此上方的選取器提供 KerasHub 發布的四種尺寸。每個指令微調預設還有一個
+    `_assistant` MTP 草稿模型——請參閱[多詞元預測](../get-started/capabilities/mtp.md)——絕不能單獨載入它。
 
-The `Gemma4CausalLM.from_preset()` method instantiates the model from a preset architecture and weights. In the code above, the string `"gemma#_xxxxxxx"` specifies a preset version and parameter size for Gemma. You can find the code strings for Gemma models in their **Model Variation** listings on [Kaggle](https://www.kaggle.com/models/keras/gemma4){ data-model="gemma-4" }.
+`Gemma4CausalLM.from_preset()` 方法從預設的架構與權重具現化模型。在上方程式碼中，字串 `"gemma#_xxxxxxx"` 指定 Gemma 的預設版本與參數大小。您可以在 [Kaggle](https://www.kaggle.com/models/keras/gemma4){ data-model="gemma-4" } 的**模型變體**清單中找到 Gemma 模型的程式碼字串。
 
-Once you have the model downloaded, Use the `summary()` function to get more info about the model:
+模型下載完成後，使用 `summary()` 函數取得模型的更多資訊：
 
 ```python { .notebook-cell }
 gemma_lm.summary()
@@ -138,16 +136,16 @@ Trainable params: 5,104,186,912 (10.39 GB)
 Non-trainable params: 111,555 (435.69 KB)
 ```
 
-The output of the summary shows the models total number of trainable parameters.
-For purposes of naming the model, the embedding layer is not counted against the number of parameters.
+摘要輸出顯示了模型的可訓練參數總數。
+在命名模型時，嵌入層不計入參數數量。
 
 !!! Note
-    To run larger Gemma models with Google Colab, you need access to the premium GPUs available in paid plans. Alternatively, you can perform inferences using [Kaggle](https://www.kaggle.com/code) notebooks or Google Cloud projects.
+    要在 Google Colab 上執行較大的 Gemma 模型，您需要付費方案提供的高階 GPU。或者，您可以使用 [Kaggle](https://www.kaggle.com/code) 筆記本或 Google Cloud 專案執行推論。
 
 
-## Generate text with text
+## 以文本生成文本
 
-Generate text with a text prompt with using `generate()` method of the Gemma model object you configured in the previous steps. The optional `max_length` argument specifies the maximum length of the generated sequence. The following code examples shows a few ways to prompt the model.
+使用您在前述步驟中設定的 Gemma 模型物件的 `generate()` 方法，以文本提示生成文本。選用的 `max_length` 參數指定生成序列的最大長度。以下程式碼範例示範幾種提示模型的方式。
 
 ```python { .notebook-cell }
 output = gemma_lm.generate("what is keras in 3 bullet points?", max_length=64)
@@ -161,7 +159,7 @@ what is keras in 3 bullet points?
 * **User-Friendly and Fast:** It abstracts away complex mathematical details, allowing users to
 ```
 
-You can also provide batched prompts using a list as input:
+您也可以使用清單作為輸入來提供批次提示：
 
 ```python { .notebook-cell }
 output = gemma_lm.generate(
@@ -185,11 +183,11 @@ This
 ---
 ```
 
-If you're running on JAX or TensorFlow backends, you should notice that the second `generate()` call returns an answer more quickly. This performance improvement is because each call to `generate()` for a given batch size and `max_length` is compiled with XLA. The first run is expensive, but subsequent runs are faster.
+如果您在 JAX 或 TensorFlow 後端上執行，應該會注意到第二次 `generate()` 呼叫回傳答案的速度更快。這是因為每次以給定的批次大小與 `max_length` 呼叫 `generate()` 時，都會以 XLA 編譯。第一次執行成本較高，但後續執行會更快。
 
-### Use a prompt template
+### 使用提示範本
 
-When building more complex requests or multi-turn chat interactions use a prompt template to structure your request. The following code creates a standard template for Gemma prompts:
+建構較複雜的請求或多輪聊天互動時，請使用提示範本來組織您的請求。以下程式碼為 Gemma 提示建立標準範本：
 
 ```python { .notebook-cell }
 PROMPT_TEMPLATE = """<|turn>user
@@ -199,7 +197,7 @@ PROMPT_TEMPLATE = """<|turn>user
 """
 ```
 
-The following code shows how to use the template to format a simple request:
+以下程式碼示範如何使用範本格式化簡單的請求：
 
 ```python { .notebook-cell }
 question = """what is keras in 3 bullet points?"""
@@ -220,9 +218,9 @@ Here are three bullet points explaining what Keras is:
 * **Backend Agnostic:** Keras acts as a consistent interface that can run on top of various powerful deep learning backends (most commonly TensorFlow, but also others), allowing users to switch frameworks easily.<turn|>
 ```
 
-### Optional: Try a different sampler
+### 選用：試試不同的取樣器
 
-You can control the generation strategy for model object by setting the `sampler` argument on `compile()`. By default, [`"greedy"`](https://keras.io/api/keras_nlp/samplers/greedy_sampler/#greedysampler-class) sampling will be used. As an experiment, try setting a [`"top_k"`](https://keras.io/api/keras_nlp/samplers/top_k_sampler/) strategy:
+您可以透過在 `compile()` 上設定 `sampler` 參數來控制模型物件的生成策略。預設會使用 [`"greedy"`](https://keras.io/api/keras_nlp/samplers/greedy_sampler/#greedysampler-class) 取樣。作為實驗，試著設定 [`"top_k"`](https://keras.io/api/keras_nlp/samplers/top_k_sampler/) 策略：
 
 ```python { .notebook-cell }
 gemma_lm.compile(sampler="top_k")
@@ -238,15 +236,15 @@ The stars glitter like scattered diamonds on a black velvet canvas. Nebulae swir
 Everywhere, there, in
 ```
 
-While the default greedy algorithm always picks the token with the largest probability, the top-K algorithm randomly picks the next token from the tokens of top K probability. You don't have to specify a sampler, and you can ignore the last code snippet if it's not helpful to your use case. If you'd like learn more about the available samplers, see [Samplers](https://keras.io/api/keras_nlp/samplers/).
+雖然預設的貪婪演算法總是選擇機率最大的詞元，但 top-K 演算法會從機率最高的 K 個詞元中隨機選擇下一個詞元。您不必指定取樣器，如果對您的使用案例沒有幫助，可以忽略上一段程式碼。若想進一步了解可用的取樣器，請參閱[取樣器](https://keras.io/api/keras_nlp/samplers/)。
 
-## Generate text with image data
+## 以圖像資料生成文本
 
-With Gemma 3 and later models, you can use images as part of a prompt to generate output. This capability allows you to use Gemma to interpret visual content or use images as data for content generation.
+使用 Gemma 3 及後續模型，您可以在提示中使用圖像來生成輸出。此功能讓您可以使用 Gemma 解讀視覺內容，或將圖像作為內容生成的資料。
 
-### Create image loader function
+### 建立圖像載入函數
 
-The following function loads an image file from a URL and tokenizes it for use in Gemma prompt:
+以下函數從 URL 載入圖像檔，並將其分詞以用於 Gemma 提示：
 
 ```python { .notebook-cell }
 import numpy as np
@@ -261,9 +259,9 @@ def read_image(url):
     return image
 ```
 
-### Load image for a prompt
+### 為提示載入圖像
 
-Load the image and format the data so the model can process it. Use `read_image()` function defined in the previous section, as shown in the example code below:
+載入圖像並格式化資料，讓模型可以處理。使用上一節定義的 `read_image()` 函數，如下方範例程式碼所示：
 
 ```python { .notebook-cell }
 from matplotlib import pyplot as plt
@@ -282,11 +280,11 @@ plt.imshow(image)
 
 ![](../assets/deployment/thali-indian-plate.jpg)
 
-**Figure 1.** Image of Thali Indian food on a metal plate.
+**圖 1。** 金屬盤上的印度塔利餐圖。
 
-### Run request with an image
+### 以圖像執行請求
 
-When prompting the Gemma 4 model with image content, you use a specific string sequence, `<|image|>`{.token-multi}, within your prompt to include the image as part of the prompt. Use a prompt template, such as the `PROMPT_TEMPLATE` string defined previously, to format your request as shown in the following prompt code:
+以圖像內容提示 Gemma 4 模型時，請在提示中使用特定的字串序列 `<|image|>`{.token-multi}，將圖像納入提示。使用提示範本（例如先前定義的 `PROMPT_TEMPLATE` 字串）來格式化您的請求，如下方提示程式碼所示：
 
 ```python { .notebook-cell }
 question = """Which cuisine is this: <|image|>?
@@ -328,16 +326,16 @@ The food items strongly suggest **Indian cuisine** or South Asian cuisine.
 *   **Low on:** Protein (unless a significant amount of meat/legumes is present in the unseen curries) and Fiber (unless the curries are vegetable-heavy).<turn|>
 ```
 
-If you are using a smaller GPU, and encountering out of memory (OOM) errors, you can set `max_images_per_prompt` and `sequence_length` to smaller values. The following code shows how to reduce sequence length to 768.
+如果您使用的 GPU 較小，並遇到記憶體不足（OOM）錯誤，可以將 `max_images_per_prompt` 與 `sequence_length` 設為較小的值。以下程式碼示範如何將序列長度縮減為 768。
 
 ```python { .notebook-cell }
 gemma_lm.preprocessor.max_images_per_prompt = 2
 gemma_lm.preprocessor.sequence_length = 768
 ```
 
-### Run requests with multiple images
+### 以多張圖像執行請求
 
-When using more than one image in a prompt, use multiple `<|image|>`{.token-multi} tokens for each provided image, as shown in the following example:
+在提示中使用多張圖像時，請為每張提供的圖像使用多個 `<|image|>`{.token-multi} 詞元，如下方範例所示：
 
 ```python { .notebook-cell }
 photo_a = read_image("https://raw.githubusercontent.com/google-gemma/cookbook/refs/heads/main/apps/sample-data/GoldenGate.png")
@@ -378,10 +376,10 @@ Photo A is a picture of the **Golden Gate Bridge** in San Francisco, California,
 Photo B is a close-up portrait of a **cat** with black and white markings and striking green eyes.<turn|>
 ```
 
-## What's next
+## 下一步
 
-In this tutorial, you learned how to generate text using Keras and Gemma. Here are a few suggestions for what to learn next:
+在本教學中，您學會了如何使用 Keras 與 Gemma 生成文本。以下是一些後續學習建議：
 
-- Learn how to [finetune a Gemma model](../tuning/qlora.md).
-- Learn about [Gemma integration with Vertex AI](google-cloud.md)
-- Learn how to [use Gemma models with Vertex AI][vertex-use-gemma].
+- 了解如何[微調 Gemma 模型](../tuning/qlora.md)。
+- 了解 [Gemma 與 Vertex AI 的整合](google-cloud.md)
+- 了解如何[在 Vertex AI 上使用 Gemma 模型][vertex-use-gemma]。

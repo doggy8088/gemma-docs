@@ -1,61 +1,61 @@
 ---
-title: Fine-Tune Multimodal EmbeddingGemma 2 with Sentence Transformers
-description: Adapt EmbeddingGemma 2 across text and visual inputs using contrastive multimodal triplet fine-tuning with Sentence Transformers.
+title: 使用 Sentence Transformers 微調多模態 EmbeddingGemma 2
+description: 使用 Sentence Transformers 透過對比式多模態三元組微調（triplet fine-tuning），讓 EmbeddingGemma 2 適應文字與視覺輸入。
 models: [embeddinggemma]
 frameworks: [sentence-transformers, transformers]
 colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs/notebooks/embeddinggemma-fine-tuning-multimodal.ipynb
 source_url: "https://ai.google.dev/gemma/docs/embeddinggemma/fine-tuning-multimodal-embeddinggemma-with-sentence-transformers.md.txt"
 ---
-# Fine-Tune Multimodal EmbeddingGemma 2 with Sentence Transformers
+# 使用 Sentence Transformers 微調多模態 EmbeddingGemma 2
 
-**EmbeddingGemma 2** maps text, images, audio, and video into a unified 768-dimensional vector space. So you can fine-tune it on **cross-modal triplets**, such as `(text_query, positive_image, negative_image)`, using the same Sentence Transformers training pipeline used for text.
+**EmbeddingGemma 2** 能將文字、圖像、音訊和影片映射到統一的 768 維向量空間。因此，您可以使用與文字相同的 Sentence Transformers 訓練管線，在**跨模態三元組**（例如 `(text_query, positive_image, negative_image)`）上對其進行微調。
 
-!!! note "Note"
-    This guide requires a GPU which support bfloat16 data type such as NVIDIA L4 or NVIDIA A100.
+!!! note "注意"
+    本指南需要支援 bfloat16 資料型別的 GPU，例如 NVIDIA L4 或 NVIDIA A100。
 
-### Example Scenario: Korean Ink Wash Painting Archive Search
+### 範例情境：韓國水墨畫典藏搜尋
 
-Imagine you are building a digital archive search engine for a museum exhibition of traditional Joseon-dynasty Korean paintings:
+想像您正在為一場傳統朝鮮王朝韓國畫作的博物館展覽，打造一個數位典藏搜尋引擎：
 
-* **[Shin Yunbok](https://artsandculture.google.com/entity/sin-yun-bok/m0749t2), *Dano Pungjeong* (Scenery on Dano Day)** (`ink-wash-1.png`): Genre painting (*pungsokhwa*) of women bathing by a stream and riding a swing during the Dano festival<br>![Shin Yunbok](../../assets/embeddinggemma/ink-wash-1.png)
-* **[Jeong Seon](https://artsandculture.google.com/entity/jeong-seon/m06w7x2), *Inwangjesaekdo* (Clearing after Rain on Mount Inwang)** (`ink-wash-2.png`): True-view landscape painting (*jingyeong sansuhwa*) of rain-soaked granite peaks emerging from mist<br>![Jeong Seon](../../assets/embeddinggemma/ink-wash-2.png)
-* **[Kim Hongdo](https://artsandculture.google.com/entity/gim-hongdo/m0749cz), *Seodang* (Village School)** (`ink-wash-3.png`): Genre painting of a village schoolmaster, a weeping student, and giggling classmates<br>![Kim Hongdo](../../assets/embeddinggemma/ink-wash-3.png)
+* **[Shin Yunbok](https://artsandculture.google.com/entity/sin-yun-bok/m0749t2), *Dano Pungjeong* (Scenery on Dano Day)** (`ink-wash-1.png`)：描繪端午節期間女子在溪邊沐浴、盪鞦韆的風俗畫（*pungsokhwa*）<br>![Shin Yunbok](../../assets/embeddinggemma/ink-wash-1.png)
+* **[Jeong Seon](https://artsandculture.google.com/entity/jeong-seon/m06w7x2), *Inwangjesaekdo* (Clearing after Rain on Mount Inwang)** (`ink-wash-2.png`)：描繪雨後仁王山花崗岩峰巒自霧中浮現的真景山水畫（*jingyeong sansuhwa*）<br>![Jeong Seon](../../assets/embeddinggemma/ink-wash-2.png)
+* **[Kim Hongdo](https://artsandculture.google.com/entity/gim-hongdo/m0749cz), *Seodang* (Village School)** (`ink-wash-3.png`)：描繪鄉村書塾老師、哭泣的學生與竊笑同學的風俗畫<br>![Kim Hongdo](../../assets/embeddinggemma/ink-wash-3.png)
 
-Out of the box, **EmbeddingGemma 2** can retrieve the right painting when given a **descriptive scene caption** (such as *"Scenery on Dano Day"* or *"Village School"*). However, when a user searches by **artist name** alone (e.g. *"Show me an ink wash painting of Shin Yunbok."*), a model sees three visually similar traditional Korean ink wash works and may misrank them without domain-specific artist attribution.
+開箱即用的 **EmbeddingGemma 2** 在給定**描述性場景說明文字**（例如 *"Scenery on Dano Day"* 或 *"Village School"*）時，可以檢索出正確的畫作。但是，當使用者僅以**畫家姓名**搜尋（例如 *"Show me an ink wash painting of Shin Yunbok."*）時，模型面對三幅視覺上相似的傳統韓國水墨畫作，若缺乏特定領域的畫家歸屬知識，就可能排錯順序。
 
-**What this guide covers:**
+**本指南涵蓋：**
 
-* Installing dependencies and loading **EmbeddingGemma 2** (`google/embeddinggemma-2`) with text and vision encoders
-* Evaluating baseline **text-to-image** retrieval performance (comparing artist-based queries vs. descriptive scene queries) before fine-tuning
-* Preparing cross-modal `(anchor, positive, negative)` training triplets linking artist names to their paintings
-* Fine-tuning the model using `SentenceTransformerTrainer`, `MultipleNegativesRankingLoss`, and column-specific task prompts
-* Evaluating post-training improvements and saving your adapted multimodal model
+* 安裝相依套件，並載入具備文字與視覺編碼器的 **EmbeddingGemma 2** (`google/embeddinggemma-2`)
+* 在微調前評估基準 **文字轉圖像**檢索效能（比較以畫家為基礎的查詢與描述性場景查詢）
+* 準備將畫家姓名連結到其畫作的跨模態 `(anchor, positive, negative)` 訓練三元組
+* 使用 `SentenceTransformerTrainer`、`MultipleNegativesRankingLoss` 與欄位特定的任務提示（task prompt）微調模型
+* 評估訓練後的改善情況，並儲存您調適後的多模態模型
 
-!!! tip "New to multimodal inference with EmbeddingGemma 2?"
-    See [Multimodal Embeddings with EmbeddingGemma 2](multimodal.md) for an overview of image, audio, video, and interleaved inputs.
+!!! tip "第一次使用 EmbeddingGemma 2 做多模態推論？"
+    請參閱 [EmbeddingGemma 2 多模態嵌入](multimodal.md)，了解圖像、音訊、影片與交錯式輸入的概覽。
 
-## Setup and Installation
+## 設定與安裝
 
-Install `sentence-transformers`, `transformers`, `datasets`, and `pillow` for image processing.
+安裝用於圖像處理的 `sentence-transformers`、`transformers`、`datasets` 和 `pillow`。
 
-Sentence Transformers is a Python framework for using and training embedding and reranker models. For more details on the framework, see the [Sentence Transformers documentation](https://www.sbert.net/).
+Sentence Transformers 是一個用於使用與訓練嵌入（embedding）及重排序（reranker）模型的 Python 框架。如需更多框架細節，請參閱 [Sentence Transformers 文件](https://www.sbert.net/)。
 
 ```bash { .notebook-cell }
 pip install -U sentence-transformers transformers datasets pillow soundfile torchcodec
 ```
 
-## (Optional) Hugging Face Authentication
+## （選用）Hugging Face 驗證
 
-You need a valid Hugging Face Token to publish your model. If you are running inside Google Colab, you can securely load your Hugging Face Token from Colab secrets; otherwise you can pass the token directly to `login()`. Make sure your token has write access if you plan to push your fine-tuned model to the Hub.
+您需要有效的 Hugging Face Token 才能發佈模型。若您在 Google Colab 內執行，可以從 Colab 密鑰安全載入 Hugging Face Token；否則可以直接將 Token 傳給 `login()`。如果您打算將微調後的模型推送到 Hub，請確保 Token 具有寫入權限。
 
 ```python { .notebook-cell }
 from huggingface_hub import login
 login()
 ```
 
-## Load the Base Model
+## 載入基礎模型
 
-Load `google/embeddinggemma-2` using `SentenceTransformer`.
+使用 `SentenceTransformer` 載入 `google/embeddinggemma-2`。
 
 ```python { .notebook-cell }
 from sentence_transformers import SentenceTransformer
@@ -85,21 +85,21 @@ Total number of parameters in the model: 438760448
 ```
 
 !!! tip
-    Since this tutorial fine-tunes on **text and image** data, we pass `config_kwargs={"audio_config": None}` during initialization to omit the audio encoder and reduce GPU memory usage during training. If your fine-tuning dataset also includes audio, initialize `SentenceTransformer(model_id)` with default settings to load all modality encoders.
+    由於本教學是在**文字與圖像**資料上微調，我們在初始化時傳入 `config_kwargs={"audio_config": None}` 來省略音訊編碼器，以減少訓練期間的 GPU 記憶體使用量。如果您的微調資料集也包含音訊，請使用預設設定初始化 `SentenceTransformer(model_id)` 以載入所有模態編碼器。
 
-!!! note "Note on Precision"
-    EmbeddingGemma 2 activations are incompatible with `float16`. Use `bfloat16` (default on supported GPUs) or `float32`.
+!!! note "精度說明"
+    EmbeddingGemma 2 的激活值與 `float16` 不相容。請使用 `bfloat16`（支援的 GPU 上為預設值）或 `float32`。
 
-## Baseline Evaluation (Before Fine-Tuning)
+## 基準評估（微調前）
 
-First, let's load the three Joseon-dynasty ink wash paintings and test how the base model ranks them when a visitor searches by artist name:
-> *"Show me an ink wash painting of Shin Yunbok."*
+首先，載入三幅朝鮮王朝水墨畫，並測試基礎模型在訪客以畫家姓名搜尋時的排名：
+> *「向我展示一幅 Shin Yunbok 的水墨畫。」*
 
-Our three candidate paintings are:
+我們的三幅候選畫作：
 
-1. **Shin Yunbok, *Dano Pungjeong* (Scenery on Dano Day)** (`ink-wash-1.png`) — **Target Match**
-2. **Jeong Seon, *Inwangjesaekdo* (Clearing after Rain on Mount Inwang)** (`ink-wash-2.png`) — **Hard Negative**
-3. **Kim Hongdo, *Seodang* (Village School)** (`ink-wash-3.png`) — **Hard Negative**
+1. **Shin Yunbok, *Dano Pungjeong* (Scenery on Dano Day)** (`ink-wash-1.png`) — **正確匹配**
+2. **Jeong Seon, *Inwangjesaekdo* (Clearing after Rain on Mount Inwang)** (`ink-wash-2.png`) — **困難負樣本**
+3. **Kim Hongdo, *Seodang* (Village School)** (`ink-wash-3.png`) — **困難負樣本**
 
 ```python { .notebook-cell }
 from PIL import Image
@@ -170,14 +170,14 @@ Painting: Jeong Seon, Inwangjesaekdo (Clearing after Rain on Mount Inwang)   -> 
 Painting: Kim Hongdo, Seodang (Village School)                               -> 🤖 Score: 0.6631
 ```
 
-!!! note "Note on Task Prompts for Cross-Modal Search"
-    Task-specific prompt prefixes apply to **text inputs only**. Here we encode the text query with `prompt_name="Retrieval-query"` (`"task: search result | query: "`) and encode the candidate images directly without a text prefix. For details on all available prompts, see the [EmbeddingGemma 2 model card](model-card-v2.md#best-practices).
+!!! note "跨模態搜尋任務提示說明"
+    任務專用提示前綴僅適用於**文字輸入**。在此我們以 `prompt_name="Retrieval-query"`（`"task: search result | query: "`）編碼文字查詢，並直接編碼候選圖像（不加文字前綴）。如需所有可用提示的細節，請參閱 [EmbeddingGemma 2 模型卡](model-card-v2.md#最佳實務)。
 
-### Why Did the Baseline Query Misrank the Paintings?
+### 為什麼基準查詢排錯了畫作順序？
 
-In the baseline evaluation above, searching for *"Show me an ink wash painting of Shin Yunbok."* **misranks** the candidates: the base model assigns the highest similarity score to **Jeong Seon's  _Inwangjesaekdo_** instead of the true match, **Shin Yunbok's _Dano Pungjeong_**.
+在上述基準評估中，搜尋 *"Show me an ink wash painting of Shin Yunbok."* **排錯了**候選順序：基礎模型給 **Jeong Seon 的 _Inwangjesaekdo_** 的相似度分數最高，而非真正的匹配 **Shin Yunbok 的 _Dano Pungjeong_**。
 
-Note that the base model **does** retrieve the correct image out of the box when you provide a **descriptive caption** about the visual scene itself (such as *"Dano Pungjeong (Scenery on Dano Day)"* or *"Seodang (Village School)"* below). However, because an artist's name (*"Shin Yunbok"*) is domain metadata rather than a literal visual description of the scene, fine-tuning is needed to teach the model to associate each artist with their painting.
+請注意，當您提供關於視覺場景本身的**描述性說明文字**（例如下方的 *"Dano Pungjeong (Scenery on Dano Day)"* 或 *"Seodang (Village School)"*）時，基礎模型**確實**能開箱即用檢索出正確圖像。然而，由於畫家姓名（*"Shin Yunbok"*）是領域元資料（metadata），而非場景的字面視覺描述，因此需要微調來教會模型將每位畫家與其畫作關聯起來。
 
 ```python { .notebook-cell }
 query_desc = "Dano Pungjeong (Scenery on Dano Day)"
@@ -200,15 +200,15 @@ Painting: Jeong Seon, Inwangjesaekdo (Clearing after Rain on Mount Inwang)   -> 
 Painting: Kim Hongdo, Seodang (Village School)                               -> 🤖 Score: 0.6997
 ```
 
-## Prepare the Multimodal Fine-Tuning Dataset
+## 準備多模態微調資料集
 
-To teach the model to associate each Joseon-dynasty master with their artwork, we structure our training data as cross-modal contrastive triplets: **`(anchor, positive, negative)`**:
+為了教會模型將每位朝鮮王朝大師與其作品關聯起來，我們將訓練資料組織為跨模態對比三元組：**`(anchor, positive, negative)`**：
 
-* **`anchor` (Text)**: The artist's name (`"Shin Yunbok"`, `"Jeong Seon"`, `"Kim Hongdo"`).
-* **`positive` (Image)**: The matching `PIL.Image` painting by that artist.
-* **`negative` (Image)**: Another traditional Korean ink wash painting by a different artist, acting as a visual hard negative.
+* **`anchor`（文字）**：畫家姓名（`"Shin Yunbok"`、`"Jeong Seon"`、`"Kim Hongdo"`）。
+* **`positive`（圖像）**：該畫家對應的 `PIL.Image` 畫作。
+* **`negative`（圖像）**：另一位畫家的傳統韓國水墨畫，作為視覺困難負樣本。
 
-`SentenceTransformerTrainer` automatically inspects each column's modality and preprocesses text and images transparently—no manual tokenization or pixel preprocessing is required.
+`SentenceTransformerTrainer` 會自動檢查每個欄位的模態，並透明地預處理文字與圖像——無需手動分詞或像素預處理。
 
 ```python { .notebook-cell }
 from datasets import Dataset
@@ -247,17 +247,17 @@ Dataset({
 })
 ```
 
-!!! tip "Tip (Other Multimodal Formats)"
-    Dataset columns can also contain image file paths/URLs, audio waveforms, video paths, or multimodal dictionaries like `{"text": "caption", "image": pil_image}` when training on interleaved inputs.
+!!! tip "提示（其他多模態格式）"
+    在交錯式輸入上訓練時，資料集欄位也可以包含圖像檔案路徑/URL、音訊波形、影片路徑，或像 `{"text": "caption", "image": pil_image}` 這樣的多模態字典。
 
 !!! note
-    For demonstration purposes, we create a compact dataset of 3 cross-modal triplets below. In production applications, use hundreds or thousands of domain-specific pairs or triplets for robust generalization.
+    為示範起見，我們在下方建立一個僅含 3 個跨模態三元組的精簡資料集。在實際生產應用中，請使用數百或數千個特定領域的配對或三元組，以達到穩健的泛化能力。
 
-## Fine-Tuning the Multimodal Model
+## 微調多模態模型
 
-We fine-tune the model using `SentenceTransformerTrainer` and **`MultipleNegativesRankingLoss`**, which pulls `(anchor, positive)` text-image pairs closer together in the shared 768-dimensional embedding space while pushing `(anchor, negative)` pairs—and in-batch negatives—apart.
+我們使用 `SentenceTransformerTrainer` 和 **`MultipleNegativesRankingLoss`** 微調模型；此損失函數會將 `(anchor, positive)` 文字-圖像配對在共享的 768 維嵌入空間中拉近，同時將 `(anchor, negative)` 配對（以及批次內的負樣本）推遠。
 
-Crucially, because only the `anchor` column contains text while `positive` and `negative` contain images, we pass a **column-specific prompt mapping** `prompts={"anchor": model.prompts[task_name]}` in `SentenceTransformerTrainingArguments`. This ensures the task prefix is prepended only to text queries and not to image inputs.
+關鍵是：由於只有 `anchor` 欄位包含文字，而 `positive` 和 `negative` 包含圖像，我們在 `SentenceTransformerTrainingArguments` 中傳入**欄位特定的提示映射** `prompts={"anchor": model.prompts[task_name]}`。這能確保任務前綴只加到文字查詢上，而不會加到圖像輸入上。
 
 ```python { .notebook-cell }
 from sentence_transformers import (
@@ -353,9 +353,9 @@ Painting: Kim Hongdo, Seodang (Village School)                               -> 
 TrainOutput(global_step=15, training_loss=0.49939937591552735, metrics={'train_runtime': 20.5693, 'train_samples_per_second': 0.729, 'train_steps_per_second': 0.729, 'total_flos': 0.0, 'train_loss': 0.49939937591552735, 'epoch': 5.0})
 ```
 
-## Evaluation After Fine-Tuning
+## 微調後評估
 
-Let's run our test query once more on the fine-tuned model and compare the post-training cross-modal similarity scores against our baseline:
+讓我們在微調後的模型上再執行一次測試查詢，並將訓練後的跨模態相似度分數與基準比較：
 
 ```python { .notebook-cell }
 print("Post-Training Scores (After Fine-Tuning):")
@@ -370,40 +370,40 @@ Painting: Jeong Seon, Inwangjesaekdo (Clearing after Rain on Mount Inwang)   -> 
 Painting: Kim Hongdo, Seodang (Village School)     
 ```
 
-### What Changed After Fine-Tuning?
+### 微調後有什麼改變？
 
-Before fine-tuning, all three Joseon-dynasty paintings shared a similar traditional Korean ink wash aesthetic, causing the base model to misrank **Jeong Seon's _Inwangjesaekdo_** above **Shin Yunbok's _Dano Pungjeong_** when queried for *"Show me an ink wash painting of Shin Yunbok."*
+在微調前，三幅朝鮮王朝畫作具有相似的傳統韓國水墨美學，導致基礎模型在查詢 *"Show me an ink wash painting of Shin Yunbok."* 時，將 **Jeong Seon 的 _Inwangjesaekdo_** 排在 **Shin Yunbok 的 _Dano Pungjeong_** 之上。
 
-After just 5 epochs (15 steps) of contrastive fine-tuning on `(artist_name, positive_image, negative_image)` triplets:
-* Even though the training anchors only contained artist names (`"Shin Yunbok"`, `"Jeong Seon"`, `"Kim Hongdo"`), the model generalizes to the natural-language query *"Show me an ink wash painting of Shin Yunbok."*
-* **Shin Yunbok, *Dano Pungjeong* (Scenery on Dano Day)** (`ink-wash-1.png`) rises from Rank #2 to Rank #1, already claiming the top rank after the very first epoch (Step 3).
-* The competing ink-wash hard negatives (**Jeong Seon** and **Kim Hongdo**) are pushed further apart in the shared 768-dimensional embedding space.
+僅在 `(artist_name, positive_image, negative_image)` 三元組上進行 5 個 epoch（15 個步驟）的對比式微調後：
+* 雖然訓練錨點僅包含畫家姓名（`"Shin Yunbok"`、`"Jeong Seon"`、`"Kim Hongdo"`），模型仍能泛化到自然語言查詢 *"Show me an ink wash painting of Shin Yunbok."*。
+* **Shin Yunbok, *Dano Pungjeong* (Scenery on Dano Day)** (`ink-wash-1.png`) 從第 2 名上升到第 1 名，在第一個 epoch（第 3 步）後就已奪下榜首。
+* 競爭的水墨畫困難負樣本（**Jeong Seon** 與 **Kim Hongdo**）在共享的 768 維嵌入空間中被推得更遠。
 
-## Saving and Sharing Your Model
+## 儲存與分享您的模型
 
-Save your fine-tuned multimodal model locally so it can be reloaded directly with `SentenceTransformer`:
+將微調後的多模態模型儲存在本機，以便直接用 `SentenceTransformer` 重新載入：
 
 ```python { .notebook-cell }
 # Save locally
 model.save_pretrained("my-embeddinggemma-2-multimodal-finetuned")
 ```
 
-To share your adapted model with your team or deploy it from the Hugging Face Hub, use `push_to_hub`:
+若要與團隊分享調適後的模型，或從 Hugging Face Hub 部署，請使用 `push_to_hub`：
 
 ```python { .notebook-cell }
 # Optional: Push your fine-tuned model to the Hugging Face Hub
 model.push_to_hub("my-embeddinggemma-2-multimodal-finetuned")
 ```
 
-## Summary and Next Steps
+## 摘要與後續步驟
 
-You have learned how to fine-tune **EmbeddingGemma 2** for cross-modal **text-to-image retrieval** using multimodal triplets and `SentenceTransformerTrainer`.
+您已學會如何使用多模態三元組與 `SentenceTransformerTrainer`，針對跨模態**文字轉圖像檢索**微調 **EmbeddingGemma 2**。
 
-Explore what more you can do with EmbeddingGemma 2:
+探索 EmbeddingGemma 2 的更多用法：
 
-- [Multimodal Embeddings with EmbeddingGemma 2](multimodal.md)
-- [Fine-tune EmbeddingGemma with Sentence Transformers (Text-Only)](fine-tuning.md)
-- [Sentence Transformers Training Overview](https://sbert.net/docs/sentence_transformer/training_overview.html)
-- [Simple RAG with EmbeddingGemma in the Gemma Cookbook](https://github.com/google-gemma/cookbook/blob/main/tutorials/RAG_with_EmbeddingGemma.ipynb)
+- [EmbeddingGemma 2 多模態嵌入](multimodal.md)
+- [使用 Sentence Transformers 微調 EmbeddingGemma（純文字）](fine-tuning.md)
+- [Sentence Transformers 訓練概覽](https://sbert.net/docs/sentence_transformer/training_overview.html)
+- [Gemma Cookbook 中的 EmbeddingGemma 簡易 RAG](https://github.com/google-gemma/cookbook/blob/main/tutorials/RAG_with_EmbeddingGemma.ipynb)
 
 --8<-- "glossary.md"

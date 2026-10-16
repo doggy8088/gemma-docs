@@ -1,168 +1,168 @@
 ---
-title: A Visual Guide to Gemma 4 12B
-description: A Visual Guide to Gemma 4 12B — a visual walkthrough.
+title: Gemma 4 12B 視覺化指南
+description: Gemma 4 12B 視覺化指南：用圖解導覽這個統一 12B 模型的獨特之處，以及它與其他尺寸變體的差異。
 models: [gemma-4/12b]
 source_url: https://newsletter.maartengrootendorst.com/p/a-visual-guide-to-gemma-4-12b
 ---
 
-# A Visual Guide to Gemma 4 12B
+# Gemma 4 12B 視覺化指南
 
 !!! note
-    Originally published on
-    [Exploring Language Models](https://newsletter.maartengrootendorst.com/p/a-visual-guide-to-gemma-4-12b){ data-model="gemma-4" }.
+    原文首刊於
+    [Exploring Language Models](https://newsletter.maartengrootendorst.com/p/a-visual-guide-to-gemma-4-12b){ data-model="gemma-4" }。
 
-[A new Gemma 4 model](https://huggingface.co/google/gemma-4-12B-it){ data-model="gemma-4" } has been released and it’s an interesting one. There was an empty spot between the E4B and 26B A4B that needed to be filled and a 12B model fits nicely there. However, it wouldn’t be Google DeepMind without trying to do something special with that model and sharing it with the public.
+[全新的 Gemma 4 模型](https://huggingface.co/google/gemma-4-12B-it){ data-model="gemma-4" } 已經發布，相當值得關注。E4B 與 26B A4B 之間原本有一個空缺需要填補，12B 模型正好補上這個位置。不過，要是 Google DeepMind 不在這款模型上搞點特別的、再與大家分享，那就不像 Google DeepMind 了。
 
-So what is different with Gemma 4 12B?
+那麼，Gemma 4 12B 到底有什麼不同？
 
-It is encoder-free!
+它沒有編碼器（encoder-free）！
 
-I’m going to be honest with you. The first time I heard “encoder-free” I was confused. Aren’t generative LLMs these days decoder-only anyway? It took me a minute to realize that the encoders for audio and video understanding were actually removed in this model but still had those multimodal capabilities.
+老實說，我第一次聽到「無編碼器」時也是一頭霧水。現在的生成式 LLM 不本來就都是只有解碼器嗎？過了一會兒我才明白，這個模型其實是把負責音訊與影片理解的編碼器拿掉了，但仍然保有這些多模態能力。
 
 ![](https://substackcdn.com/image/fetch/$s_!5wj1!,w_1456,c_limit,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F5d303de1-ff8c-427d-8865-86ec3ec04ace_3688x2736.png)
 
-The removal of the encoders, which are typically in charge of making sense of the multimodal inputs, places the burden of making sense of all outputs on the LLM. Although the model is encoder-free, all modalities are now unified within the LLM. Instead of the model having to wait for the encoders to finish processing the audio and image inputs, the LLM can get started earlier processing the input and generating output!
+移除編碼器（通常由它們負責解讀多模態輸入）之後，解讀所有輸入的重擔就落到了 LLM 身上。雖然模型沒有編碼器，但所有模態如今都統一在 LLM 之內。模型不必等待編碼器先處理完音訊和圖像輸入，LLM 可以更早開始處理輸入、生成輸出！
 
-In this guide, I want to showcase what it took to remove the vision and audio encoders and replace them with something much faster. The result, a 12B model that can handle audio and image inputs but without the need for encoders.
+在這份指南中，我想呈現移除視覺與音訊編碼器、並用更快方案取代它們的過程。成果就是一個 12B 模型，能處理音訊和圖像輸入，但不需要編碼器。
 
-## Encoding and Connecting Modalities
-Before we explore Gemma 4 and how it was made encoder-free, let’s take a step back and discover what it generally means to connect modalities other than text to an LLM.
+## 編碼與連接各個模態
+在探索 Gemma 4 與它如何做到無編碼器之前，讓我們先退一步，了解把文字以外的模態接上 LLM 大致意味著什麼。
 
-When a piece of text is given to an LLM, the LLM itself (through its token embedding layer) is in charge of splitting it up into tokens and converting them to embeddings. They are then passed to the decoder layers of the LLM which houses the attention layers used to create meaningful and contextual representations of those token embeddings.
+當一段文字交給 LLM，LLM 本身（透過其詞元嵌入層）負責把文字切成詞元、轉換成嵌入。這些嵌入接著傳給 LLM 的解碼器層，解碼器中的注意力層會為這些詞元嵌入建立有意義、具上下文的表示。
 
-To give an LLM the capability to understand modalities other than text, like audio and vision, much of the processing is generally not handled by the LLM. Instead, a separate encoder driven by attention is used to first process the input into embeddings. The encoder tends to be a small Transformer model and uses attention to process the input, much like the LLM would.
+要讓 LLM 具備理解文字以外模態（如音訊和視覺）的能力，這些處理大多不由 LLM 處理。取而代之的是先用一個由注意力驅動的獨立編碼器，把輸入處理成嵌入。編碼器通常是小型的 Transformer 模型，用注意力處理輸入，就像 LLM 那樣。
 
 ![](https://substackcdn.com/image/fetch/$s_!WT2m!,w_1456,c_limit,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F6e8f2eae-611f-40a0-97f4-5f862da7ca36_3810x1344.png)
 
-However, the resulting embeddings cannot be used directly by the LLM. They typically are of different dimensions and might behave differently in n-dimensional space. A common technique is to use something called a “connector”. It converts the output of an encoder to the same dimensions as the token embeddings. After all, a Large **Language** Model is mostly trained on text.
+然而，產生的嵌入無法直接給 LLM 使用。它們的維度通常不同，在 n 維空間中的行為也可能不一樣。常見的做法是使用稱為「連接器（connector）」的東西，把編碼器的輸出轉換成與詞元嵌入相同的維度。畢竟，大型**語言**模型主要是在文字上訓練的。
 
 ![](https://substackcdn.com/image/fetch/$s_!P0zW!,w_1456,c_limit,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F791201e6-51e5-4358-b9f0-3c0fb4905341_4128x2610.png)
 
-Generally, these two components are used to make LLMs multimodal. It works quite well and is used by many open-access multimodal LLMs, like Gemma 4 and Qwen 3.5.
+一般來說，就是用這兩個元件讓 LLM 具備多模態能力。效果相當不錯，許多開放的多模態 LLM 都採用，例如 Gemma 4 和 Qwen 3.5。
 
-It is not a free lunch though. The non-text encoders will need to process their inputs first before the LLM can start working. This adds some latency to the inference of these models. Moreover, it also adds quite a few parameters since the encoders are, in absolute terms, quite large.
+不過天下沒有白吃的午餐。非文字編碼器必須先處理完輸入，LLM 才能開始工作。這會為模型推論增加一些延遲。而且以絕對值來說，編碼器不小，也會增加不少參數量。
 
-So… What if we do not need the encoder? What if the connector is all you need?
+那麼……如果我們不需要編碼器呢？如果只需要連接器呢？
 
-To explore how DeepMind unified multimodal inputs, let’s first explore how the encoders in Gemma 4 work and what it took to replace them.
+要探索 DeepMind 如何統一多模態輸入，我們先來看看 Gemma 4 的編碼器如何運作，以及取代它們需要做什麼。
 
-## The Modalities of Gemma 4
-Gemma 4 supports three modalities:
+## Gemma 4 的模態
+Gemma 4 支援三種模態：
 
-- **Text input** – All models
-- **Image input** – All models
-- **Audio input** – The E2B and E4B models only
+- **文字輸入** – 所有模型
+- **圖像輸入** – 所有模型
+- **音訊輸入** – 僅 E2B 與 E4B 模型
 
-All of these modalities require a transformer-like architecture with attention to process those inputs. For the image and audio inputs, two separate transformer encoders are used to create visual and audio tokens that the LLM can use.
+這些模態都需要類似 Transformer 的注意力架構來處理輸入。圖像和音訊輸入各用兩個獨立的 Transformer 編碼器，產生 LLM 可用的視覺詞元與音訊詞元。
 
-### The Vision Encoder
-Gemma 4 E2B, E4B, 26B A4B, and 31B all have a vision encoder that is used to process input images. Those vision encoders have some weight to them. For E2B and E4B, they have 150 million parameters. For 26B A4B and 31B, they have 550 million parameters.
+### 視覺編碼器
+Gemma 4 E2B、E4B、26B A4B 和 31B 都有視覺編碼器來處理輸入圖像。這些視覺編碼器有一定的份量：E2B 和 E4B 的編碼器有 1.5 億參數；26B A4B 和 31B 的則有 5.5 億參數。
 
 ![](https://substackcdn.com/image/fetch/$s_!4k8m!,w_1456,c_limit,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F2965d9a1-8eea-41b6-9242-22376ec34080_4408x3928.png)
 
-The input patches have a size of 16 by 16 pixels. After they are processed by the vision encoder, they are pooled together in a grid of 3 by 3 patches each.
+輸入圖塊（patch）大小為 16 x 16 像素。經過視覺編碼器處理後，會以 3 x 3 圖塊的格子做池化（pooling）。
 
 ![](https://substackcdn.com/image/fetch/$s_!9Jtg!,w_1456,c_limit,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F645ed06e-253c-4b23-ade0-522500d47823_2904x1672.png)
 
-Those patch embeddings represent 48 by 48 pixels as a result of pooling the original patches together. After this pooling step, a small linear projection layer (the connector) is used to transform the patch embeddings into embeddings that are suitable to be processed by the LLM. As such, the final patch embeddings have the same shape as the token embeddings and are interleaved with the token embeddings.
+由於把原始圖塊池化在一起，這些圖塊嵌入代表 48 x 48 像素。池化之後，用一個小型的線性投影層（即連接器）把圖塊嵌入轉換成 LLM 可處理的嵌入。因此，最終的圖塊嵌入與詞元嵌入形狀相同，並與詞元嵌入交錯排列。
 
-### The Audio Encoder
-The smaller Gemma 4 models (E2B and E4B) also have an audio encoder that is used to process input audio. Like the vision encoders, these audio encoders have some weight to them. The audio encoder for E2B and E4B are the same and both have 305 million parameters.
+### 音訊編碼器
+較小的 Gemma 4 模型（E2B 和 E4B）也有音訊編碼器處理輸入音訊。和視覺編碼器一樣，這些音訊編碼器也有一定份量。E2B 和 E4B 的音訊編碼器相同，都有 3.05 億參數。
 
 ![](https://substackcdn.com/image/fetch/$s_!q0xz!,w_1456,c_limit,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F4ff43215-5a63-4c0a-85de-87167c0b9306_5510x4910.png)
 
-Like the vision encoder, after it processes the audio input, it projects the embeddings onto the same dimensional space as the token embeddings. The resulting audio token embeddings are interleaved with the text token embeddings.
+和視覺編碼器一樣，處理完音訊輸入後，會把嵌入投影到與詞元嵌入相同的維度空間。產生的音訊詞元嵌入與文字詞元嵌入交錯排列。
 
-These models, albeit relatively small compared to their corresponding Gemma 4 model, still require processing the input which increases latency and adds complexity to the entire pipeline. Moreover, when you fine-tune a Gemma 4 model, you are typically only fine-tuning the LLM itself and not its encoders. This makes it more difficult to grow the encoders with the models as you would have to fine-tune them in tandem, which adds complexity.
+這些模型雖然相對於對應的 Gemma 4 模型來說不算大，但處理輸入仍會增加延遲，也讓整個管線更複雜。而且微調 Gemma 4 模型時，通常只微調 LLM 本身，而不會微調其編碼器。這讓編碼器很難跟著模型一起成長——必須同步微調，徒增複雜度。
 
-So what if we could do without the encoders entirely?
+那麼，如果能完全不用編碼器呢？
 
-## Making Gemma 4 12B Encoder-free
-To remove the encoders and at the same time provide the community with a new model, Google DeepMind introduces the Gemma 4 12B model. The main architecture of Gemma 4 12B (looking only at the LLM itself) is rather similar to that of the 31B dense model. It uses the same decoder structure interleaving local attention with global attention in such a way that global attention is always last.
+## 讓 Gemma 4 12B 無編碼器
+為了移除編碼器，同時為社群帶來新模型，Google DeepMind 推出了 Gemma 4 12B 模型。Gemma 4 12B 的主架構（只看 LLM 本身）與 31B 稠密模型相當類似：同樣使用解碼器結構，局部注意力（local attention）與全域注意力（global attention）交錯排列，且全域注意力永遠排在最後。
 
 ![](https://substackcdn.com/image/fetch/$s_!h2lV!,w_1456,c_limit,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F12384610-b895-46de-b5f3-4765cf1c87f6_3000x4488.png)
 
-The model sits nicely between the existing E4B and 26B A4B models. That makes it suited for setups that have between 12GB and 16GB of VRAM.
+這個模型正好落在現有的 E4B 與 26B A4B 之間，非常適合擁有 12GB 到 16GB VRAM 的配置。
 
-Aside from the size, a big part of its offering is the removal of those somewhat chunky encoders.
+除了大小，它最大的賣點就是去掉了那些有些笨重的編碼器。
 
-### Replacing The Vision Encoder
-Gemma 4 12B replaces the entire vision encoder with a lightweight embedding module. Instead of running all those transformer layers (15 or 27) to extract and process visual features, the embedding module only contains a single layer to create the embeddings.
+### 取代視覺編碼器
+Gemma 4 12B 用一個輕量的嵌入模組取代整個視覺編碼器。不必跑過所有 Transformer 層（15 或 27 層）來抽取和處理視覺特徵，嵌入模組只用單一層就能產生嵌入。
 
 ![](https://substackcdn.com/image/fetch/$s_!2N-X!,w_1456,c_limit,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Ffed0644d-ed62-4652-957e-9911c5dfa7d6_3424x3840.png)
 
-The model directly uses those 48x48 patches instead of the 16x16 patches. Although simplifying the architecture is a nice side effect, the vision encoder would have created semantically rich embeddings which isn’t the case with the embedder. So pooling the 16x16 patches into 48x48 wouldn’t have that much of an effect.
+模型直接使用 48x48 圖塊，而非 16x16 圖塊。架構簡化當然是好事，但視覺編碼器本會產生語義豐富的嵌入，嵌入器（embedder）可做不到這點。因此把 16x16 圖塊池化成 48x48 並不會有太大效果。
 
-During processing of the input patches, positional information needs to be added so the LLM has an idea of where those vision tokens are located in the original image. Since the embedder is attention-free, you can’t use the same 2D-positional RoPE as is done in the vision encoder. Likewise, using the LLM’s positional encoding also wouldn’t work since it treats its inputs as a one-dimensional sequence.
+在處理輸入圖塊時，必須加入位置資訊，讓 LLM 知道這些視覺詞元在原圖中的位置。由於嵌入器沒有注意力，無法使用與視覺編碼器相同的 2D 位置 RoPE。同樣地，也不能用 LLM 的位置編碼，因為 LLM 把輸入視為一維序列。
 
-Instead, you can inject spatial information in the vision token embeddings before they enter the LLM. The process is actually quite straightforward and involves two matrices:
+取而代之的是，在視覺詞元嵌入進入 LLM 之前，先注入空間資訊。這個過程其實相當直接，只需要兩個矩陣：
 
 ![](https://substackcdn.com/image/fetch/$s_!nQ5-!,w_1456,c_limit,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F0347cf29-5a49-4984-b3b8-d85412a324d8_1668x1296.png)
 
-These two matrices represent the x and y coordinates of the patches. Each has a dimension of 1120 (representing the patch position) by 3840 (same as the model’s input dimensions). The patch positions represent the maximum number of patches of the input image. As with the vision encoders, the maximum number of patches can represent different ratio aspects.
+這兩個矩陣代表圖塊的 x 和 y 座標。每個矩陣的維度都是 1120（代表圖塊位置）乘以 3840（與模型的輸入維度相同）。圖塊位置代表輸入圖像的圖塊數量上限。和視覺編碼器一樣，圖塊數量上限可以對應不同的長寬比。
 
-The Gemma 4 models with vision encoders allow the user to select budget sizes of 70, 140, 280, 560, or 1120 tokens (also referred to as “patches”). These budget sizes represent the maximum number of patches to split an image up. More tokens means a more fine-grained perspective.
+Gemma 4 的視覺編碼器模型允許使用者選擇 70、140、280、560 或 1120 詞元的預算大小（也稱為「圖塊」）。這些預算大小代表把一張圖像切成的最大圖塊數。詞元越多，視角越精細。
 
-For each patch, positional embeddings are added based on their locations. Let’s go through an example. Let’s say that you have a patch at location x=2 and y=1. For both the x and y matrices, the corresponding embedding is selected. Those embeddings are then added together to create the positional embeddings that are added to each vision token embedding generated in the embedder.
+每個圖塊會根據其位置加上位置嵌入。舉個例子：假設有個圖塊位於 x=2、y=1。從 x 和 y 矩陣中各選出對應的嵌入，再把它們相加，得到加到每個由嵌入器生成的視覺詞元嵌入上的位置嵌入。
 
 ![](https://substackcdn.com/image/fetch/$s_!1n69!,w_1456,c_limit,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fa8ef1fbc-57a4-4868-8b7c-845f75b3d063_2400x2896.png)
 
-After adding the positional embeddings there’s a final LayerNorm for stability before the embeddings are projected to the dimensions that Gemma 4 12B expects.
+加上位置嵌入後，最後會做一次 LayerNorm 以確保穩定，然後再投影到 Gemma 4 12B 預期的維度。
 
 ![](https://substackcdn.com/image/fetch/$s_!GDnt!,w_1456,c_limit,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fe1f8eeca-54f0-47a0-b55c-f41279df7d3f_4656x3216.png)
 
-Compared to the larger models with vision encoders of 550 million parameters, the embedder only has about 35 million parameters! This is no free lunch though since the LLM now has to take over much of the processing and understanding that the vision encoder initially did, which it can learn during training.
+相較於擁有 5.5 億參數視覺編碼器的大型模型，嵌入器只有約 3500 萬參數！不過天下沒有白吃的午餐：原本由視覺編碼器負責的處理和理解工作，現在得由 LLM 接手，而這些是它在訓練中學會的。
 
-You might wonder where the 35 million parameters come from when the model is encoder-free! The reason for this has mostly to do with projecting the image patches to the dimensionality of the LLM. Each patch has 48 x 48 x 3 = 6912 pixels that need to be projected onto the dimensions of Gemma 4 12B (3,840). Just this projection (6,912 x 3,840 + 3,840) takes up about 26 million parameters.
+你可能會好奇：模型明明是無編碼器的，3500 萬參數是從哪來的？原因主要在於要把圖像圖塊投影到 LLM 的維度。每個圖塊有 48 x 48 x 3 = 6912 個像素，需要投影到 Gemma 4 12B 的維度（3,840）。光是這個投影（6,912 x 3,840 + 3,840）就佔了約 2600 萬參數。
 
-So the encoder didn’t shrink to 35 million parameters of attention and/or feed forward neural network weights, it’s just that there are so many pixels to project!
+所以，編碼器並沒有縮成 3500 萬參數的注意力與前饋神經網路權重，只是因為有太多像素要投影！
 
 ![](https://substackcdn.com/image/fetch/$s_!ABoi!,w_1456,c_limit,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F47f6586a-6c03-4913-82b1-19df88f6f835_3280x3872.png)
 
-You might also notice that only one patch is used in the image above. Since the embedder has no attention, it processes each patch in isolation. The attention is handled by the LLM instead!
+你可能還注意到上圖只用了一個圖塊。由於嵌入器沒有注意力，每個圖塊都是獨立處理的，注意力改由 LLM 處理！
 
-Looking at the picture below, the difference is quite large. Compared to Gemma 4 31B, the embedder is very minimal and is mostly meant to add the positional embeddings. Other than that, the embedder only has about 35 million parameters whilst the vision encoder has around 550 million!
+看看下圖，差異相當大。相較於 Gemma 4 31B，嵌入器非常精簡，主要用途是加入位置嵌入。除此之外，嵌入器只有約 3500 萬參數，而視覺編碼器有約 5.5 億！
 
 ![](https://substackcdn.com/image/fetch/$s_!RRuZ!,w_1456,c_limit,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fc1acf330-a0f3-4e60-9ec1-892a918900c5_4656x4864.png)
 
-A major benefit of encoder-free models is that the vision tokens reach the LLM much faster compared to the larger vision encoders. As a result, the LLM can get started earlier processing the input and generating output!
+無編碼器模型的一大好處是，視覺詞元比起大型視覺編碼器能更快到達 LLM。因此，LLM 可以更早開始處理輸入、生成輸出！
 
-### Replacing The Audio Encoder
-Replacing the audio encoder is much like was done with the vision encoder, but even simpler!
+### 取代音訊編碼器
+取代音訊編碼器的做法與視覺編碼器類似，但更簡單！
 
-Instead of creating processed features, as is the main purpose of an encoder, the raw audio input is used directly much like the raw pixels for the embedder. With audio, this comes with a major advantage, namely that it does not need additional positional embeddings! The reason for this is that audio is already a 2-dimensional sequence and as such can be processed much like text sequences.
+不同於編碼器（主要目的是產生處理過的特徵），這裡直接使用原始音訊輸入，就像嵌入器直接使用原始像素一樣。對音訊來說這有個很大的優勢：不需要額外的位置嵌入！因為音訊本來就是一個二維序列，可以像文字序列一樣處理。
 
-We first split the audio input up into sequences of 40 milliseconds. The audio sequence is recorded at 16,000 snapshots per second (16 kHz), where each sequence contains 640 values. Each value represents how high or low the sound wave is. Together these 640 values are the raw amplitude samples and represent the raw features at that sequence.
+我們先把音訊輸入切成 40 毫秒的序列。音訊序列以每秒 16,000 個取樣（16 kHz）錄製，每個序列包含 640 個值。每個值代表聲波的高低。這些 640 個值合在一起就是原始振幅取樣，代表該序列的原始特徵。
 
 ![](https://substackcdn.com/image/fetch/$s_!X2Fc!,w_1456,c_limit,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F53862529-7a89-45f2-b59c-c83b26b21774_4680x2016.png)
 
-These raw features are then given to a linear projection layer so that they have the same dimensionality as Gemma 4 12B expects.
+這些原始特徵接著交給一個線性投影層，使其維度與 Gemma 4 12B 預期的一致。
 
 ![](https://substackcdn.com/image/fetch/$s_!D6Ij!,w_1456,c_limit,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fa5c58dee-0600-49af-b080-6b08fce52d9b_2340x1376.png)
 
-And that was it! Really, all that was needed is to remove the encoder and directly project the raw features into the same format as the text tokens.
+就這樣！真的，就只是移除編碼器、把原始特徵直接投影成與文字詞元相同的格式。
 
-Looking at the picture below, there is a big difference in creating audio tokens between Gemma 4 12B and Gemma 4 E4B. Gemma 4 E4B needs to tokenize the audio input and perform processing through stacked decoders. Gemma 4 12B on the other only splits and projects, that is it.
+看看下圖，Gemma 4 12B 和 Gemma 4 E4B 在產生音訊詞元上的差異很大。Gemma 4 E4B 需要把音訊輸入詞元化，再經過堆疊的解碼器處理。Gemma 4 12B 則只做切割和投影，就這樣。
 
 ![](https://substackcdn.com/image/fetch/$s_!5OvL!,w_1456,c_limit,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Ffba73d61-baca-4a32-9f48-6116b4bdbfa3_4656x4864.png)
 
-Gemma 4 12B is not just a model that fits nicely between E4B and 26B A4B, it does something different and the way it does so is quite interesting!
-## What's next
+Gemma 4 12B 不只是一款正好落在 E4B 與 26B A4B 之間的模型，它的做法很不一樣，而且背後的原理相當有趣！
+## 接下來
 
 <div class="card-grid">
 <a class="card" href="mtp">
   <span class="card-icon">{{ icon('lucide/book-open') }}</span>
-  <div class="card-title">A Visual Guide to MTP</div>
-  <p class="card-desc">Drafter models and speculative decoding, illustrated.</p>
+  <div class="card-title">MTP 視覺化指南</div>
+  <p class="card-desc">用圖解說明草稿模型與推測性解碼。</p>
 </a>
 <a class="card" href="diffusiongemma">
   <span class="card-icon">{{ icon('lucide/book-open') }}</span>
-  <div class="card-title">A Visual Guide to DiffusionGemma</div>
-  <p class="card-desc">How denoising produces text instead of pixels.</p>
+  <div class="card-title">DiffusionGemma 視覺化指南</div>
+  <p class="card-desc">去噪如何生成文字而非像素。</p>
 </a>
 <a class="card" href="../../resources">
   <span class="card-icon">{{ icon('lucide/library') }}</span>
-  <div class="card-title">Resources</div>
-  <p class="card-desc">Demos, tools and the repositories worth bookmarking.</p>
+  <div class="card-title">資源</div>
+  <p class="card-desc">值得加入書籤的展示、工具與程式碼倉庫。</p>
 </a>
 </div>

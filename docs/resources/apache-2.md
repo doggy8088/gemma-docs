@@ -1,10 +1,10 @@
 ---
-title: Apache License 2.0
-description: Full text of the Apache License Version 2.0 governing Gemma 4 models and software.
+title: Apache 授權條款 2.0
+description: 規範 Gemma 4 模型與相關軟體的 Apache 授權條款 2.0 版全文，說明使用、重製與散佈的權利義務。
 source_url: "https://ai.google.dev/gemma/apache_2.md.txt"
 ---
 
-# Apache License 2.0
+# Apache 授權條款 2.0
 
 ```text
                               Apache License

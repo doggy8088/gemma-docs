@@ -1,42 +1,42 @@
 ---
-title: Fine-tune EmbeddingGemma with Sentence Transformers
-description: Adapt EmbeddingGemma 2 to specialized domain terminology using contrastive triplet fine-tuning with Sentence Transformers.
+title: 使用 Sentence Transformers 微調 EmbeddingGemma
+description: 使用 Sentence Transformers 的對比式三元組微調（triplet fine-tuning），讓 EmbeddingGemma 2 適應特定領域術語。
 models: [embeddinggemma]
 frameworks: [sentence-transformers, transformers]
 colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs/notebooks/embeddinggemma-fine-tuning.ipynb
 source_url: "https://ai.google.dev/gemma/docs/embeddinggemma/fine-tuning-embeddinggemma-with-sentence-transformers.md.txt"
 ---
-# Fine-tune EmbeddingGemma with Sentence Transformers
+# 使用 Sentence Transformers 微調 EmbeddingGemma
 
-Fine-tuning helps close the gap between a model's general-purpose understanding and the specialized, high-performance accuracy that your application requires. While **EmbeddingGemma 2** provides strong out-of-the-box semantic representations across text and multimodal inputs, domain-specific terminology often benefits from targeted adaptation.
+微調有助於彌補模型的通用理解與應用所需的特定領域高精度表現之間的落差。雖然 **EmbeddingGemma 2** 在文字與多模態輸入上提供了強大的開箱即用語義表示，但特定領域的術語通常能從有針對性的調適中獲益。
 
-### Example Scenario: Financial Knowledge Base Search
+### 範例情境：金融知識庫搜尋
 
-Imagine your company, "Shibuya Financial", offers various complex financial products like investment trusts, **NISA accounts** (Japanese tax-advantaged savings accounts), and home loans. Customer support agents rely on an internal semantic search engine to retrieve relevant policy documents for customer inquiries.
+想像您的公司「Shibuya Financial」提供各種複雜的金融產品，例如投資信託、**NISA 帳戶**（日本免稅儲蓄帳戶）和房屋貸款。客服人員依賴內部語義搜尋引擎，為客戶諮詢檢索相關的政策文件。
 
-Without fine-tuning, general-purpose embeddings may struggle to separate closely related financial concepts, for example, confusing a query about a *tax-free investment account* (NISA) with a *regular savings account*.
+未經微調的通用嵌入可能難以區分密切相關的金融概念，例如將關於*免稅投資帳戶*（NISA）的查詢與*一般儲蓄帳戶*混淆。
 
-**What this guide covers:**
+**本指南涵蓋：**
 
-- Installing dependencies and loading **EmbeddingGemma 2** (`google/embeddinggemma-2`)
-- Evaluating baseline retrieval performance before fine-tuning
-- Preparing contrastive `(anchor, positive, negative)` training triplets
-- Fine-tuning the model using `SentenceTransformerTrainer` and `MultipleNegativesRankingLoss`
-- Evaluating post-training improvements and saving your adapted model
+- 安裝相依套件並載入 **EmbeddingGemma 2** (`google/embeddinggemma-2`)
+- 在微調前評估基準檢索效能
+- 準備對比式 `(anchor, positive, negative)` 訓練三元組
+- 使用 `SentenceTransformerTrainer` 與 `MultipleNegativesRankingLoss` 微調模型
+- 評估訓練後的改善情況，並儲存您調適後的模型
 
-## Setup and Installation
+## 設定與安裝
 
-Install `sentence-transformers`, `transformers`, and the multimedia libraries (`pillow`, `soundfile`, `torchcodec`) required for processing images, audio, and video.
+安裝 `sentence-transformers`、`transformers`，以及處理圖像、音訊和影片所需的多媒體函式庫（`pillow`、`soundfile`、`torchcodec`）。
 
-Sentence Transformers is a Python framework for using and training embedding and reranker models. For more details on the framework, see the [Sentence Transformers documentation](https://www.sbert.net/).
+Sentence Transformers 是一個用於使用與訓練嵌入（embedding）及重排序（reranker）模型的 Python 框架。如需更多框架細節，請參閱 [Sentence Transformers 文件](https://www.sbert.net/)。
 
 ```bash { .notebook-cell }
 pip install -U sentence-transformers transformers pillow soundfile torchcodec
 ```
 
-## (Optional) Hugging Face Authentication
+## （選用）Hugging Face 驗證
 
-You need a valid Hugging Face Token to publish your model. If you are running inside a Google Colab, you can securely use your Hugging Face Token using the Colab secrets otherwise you can set the token as directly in the login method. Make sure your token has write access too, as you push your model to the Hub during training.
+您需要有效的 Hugging Face Token 才能發佈模型。如果您在 Google Colab 內執行，可以使用 Colab 密鑰安全地使用您的 Hugging Face Token；否則可以直接在登入方法中設定 Token。請確保 Token 也具有寫入權限，因為訓練期間您會將模型推送到 Hub。
 
 ```python { .notebook-cell }
 # Login into Hugging Face Hub
@@ -44,12 +44,12 @@ from huggingface_hub import login
 login()
 ```
 
-## Load the Base Model
+## 載入基礎模型
 
-Load `google/embeddinggemma-2` using `SentenceTransformer`.
+使用 `SentenceTransformer` 載入 `google/embeddinggemma-2`。
 
 !!! tip
-    If you are fine-tuning exclusively on text data and want to minimize GPU memory usage, you can pass `config_kwargs={"vision_config": None, "audio_config": None}` during initialization to omit the vision and audio encoders.
+    如果您只在文字資料上微調，且想盡量減少 GPU 記憶體使用量，可以在初始化時傳入 `config_kwargs={"vision_config": None, "audio_config": None}` 來省略視覺與音訊編碼器。
 
 ```python { .notebook-cell }
 from sentence_transformers import SentenceTransformer
@@ -78,15 +78,15 @@ SentenceTransformer(
 Total number of parameters in the model: 271002624
 ```
 
-## Baseline Evaluation (Before Fine-Tuning)
+## 基準評估（微調前）
 
-First, let's test how the base model ranks three candidate knowledge base documents when a customer asks:
-> *"I want to start a tax-free installment investment, what should I do?"*
+首先，當客戶詢問以下問題時，測試基礎模型如何對三份候選知識庫文件進行排名：
+> *「我想開始免稅的定期定額投資，該怎麼做？」*
 
-The correct match is **Opening a NISA Account**, since NISA is specifically a tax-free investment account.
+正確的匹配是 **Opening a NISA Account**，因為 NISA 專指免稅投資帳戶。
 
-!!! note "Note on Task Prompts"
-    Always include task-specific prompts when encoding text with EmbeddingGemma 2. Here we use `prompt_name="STS"` (sentence similarity). For details on all available prompts, see the [EmbeddingGemma 2 model card](model-card-v2.md#best-practices).
+!!! note "任務提示說明"
+    使用 EmbeddingGemma 2 編碼文字時，務必包含任務專用提示。在此我們使用 `prompt_name="STS"`（句子相似度）。如需所有可用提示的細節，請參閱 [EmbeddingGemma 2 模型卡](model-card-v2.md#最佳實務)。
 
 ```python { .notebook-cell }
 task_name = "STS"
@@ -117,16 +117,16 @@ Document: Opening a Regular Savings Account   -> 🤖 Score: 0.8463
 Document: Home Loan Application Guide         -> 🤖 Score: 0.8078
 ```
 
-## Prepare the Fine-Tuning Dataset
+## 準備微調資料集
 
-To teach the model domain-specific distinctions, we structure our training data as contrastive triplets: **`(anchor, positive, negative)`**:
+為了教會模型特定領域的區別，我們將訓練資料組織為對比三元組：**`(anchor, positive, negative)`**：
 
-- **`anchor`**: The user query or reference sentence.
-- **`positive`**: A sentence that shares the exact domain intent (e.g., matching "NISA account" with "tax-free investment account").
-- **`negative`**: A hard negative sentence from the same domain that is semantically distinct (e.g., "regular savings account" or "investment trust fee").
+- **`anchor`**：使用者查詢或參考句。
+- **`positive`**：具有相同領域意圖的句子（例如將 "NISA account" 與 "tax-free investment account" 配對）。
+- **`negative`**：來自同一領域但語義不同的困難負樣本句子（例如 "regular savings account" 或 "investment trust fee"）。
 
 !!! note
-    For demonstration purposes, we create a toy dataset of 3 triplets below. In real-world applications, use hundreds or thousands of domain-specific triplets for robust generalization.
+    為示範起見，我們在下方建立一個僅含 3 個三元組的玩具資料集。在實際應用中，請使用數百或數千個特定領域三元組，以達到穩健的泛化能力。
 
 ```python { .notebook-cell }
 from datasets import Dataset
@@ -165,11 +165,11 @@ Dataset({
 })
 ```
 
-## Fine-Tuning the Model
+## 微調模型
 
-We fine-tune the model using `SentenceTransformerTrainer` and **`MultipleNegativesRankingLoss`** , which pulls `(anchor, positive)` pairs closer together in vector space while pushing `(anchor, negative)` pairs (and all other in-batch negatives) apart.
+我們使用 `SentenceTransformerTrainer` 與 **`MultipleNegativesRankingLoss`** 微調模型；此損失函數會將 `(anchor, positive)` 配對在向量空間中拉近，同時將 `(anchor, negative)` 配對（以及所有其他批次內負樣本）推遠。
 
-Crucially, we pass `prompts=model.prompts[task_name]` in `SentenceTransformerTrainingArguments` so the model is trained using the exact same task prefix used during inference.
+關鍵是：我們在 `SentenceTransformerTrainingArguments` 中傳入 `prompts=model.prompts[task_name]`，讓模型在訓練時使用與推論時完全相同的任務前綴。
 
 ```python { .notebook-cell }
 from sentence_transformers import (
@@ -257,9 +257,9 @@ Document: Home Loan Application Guide         -> 🤖 Score: 0.7273
 TrainOutput(global_step=15, training_loss=0.033247121175130206, metrics={'train_runtime': 61.8294, 'train_samples_per_second': 0.243, 'train_steps_per_second': 0.243, 'total_flos': 0.0, 'train_loss': 0.033247121175130206, 'epoch': 5.0})
 ```
 
-## Evaluation After Fine-Tuning
+## 微調後評估
 
-Let's run our test query once more on the fine-tuned model and compare the results against our baseline:
+讓我們在微調後的模型上再執行一次測試查詢，並將結果與基準比較：
 
 ```python { .notebook-cell }
 print("Post-Training Scores (After Fine-Tuning):")
@@ -273,40 +273,40 @@ Document: Opening a Regular Savings Account   -> 🤖 Score: 0.7902
 Document: Home Loan Application Guide         -> 🤖 Score: 0.7273
 ```
 
-### Results Comparison
+### 結果比較
 
-| Candidate Document | Relevance | Score (Before) | Score (After) | Separation Margin vs. Top Hit |
+| 候選文件 | 相關性 | 分數（微調前） | 分數（微調後） | 與榜首的區隔幅度 |
 | :--- | :--- | :---: | :---: | :---: |
-| **Opening a NISA Account** | **Target Match** | `0.8552` | `0.8254` | — |
-| **Opening a Regular Savings Account** | Hard Negative | `0.8463` | `0.7902` | **+0.0352** *(3.9x wider than 0.0091)* |
-| **Home Loan Application Guide** | Unrelated Distractor | `0.8078` | `0.7273` | **+0.0981** *(2.2x wider than 0.0443)* |
+| **Opening a NISA Account** | **正確匹配** | `0.8552` | `0.8254` | — |
+| **Opening a Regular Savings Account** | 困難負樣本 | `0.8463` | `0.7902` | **+0.0352** *（為 0.0091 的 3.9 倍寬）* |
+| **Home Loan Application Guide** | 無關干擾項 | `0.8078` | `0.7273` | **+0.0981** *（為 0.0443 的 2.2 倍寬）* |
 
-Even with just a few training steps, fine-tuning significantly increased the margin between the true match (**Opening a NISA Account**) and competing financial documents, making downstream search and RAG pipelines much more reliable.
+即使只經過少數訓練步驟，微調仍顯著拉大了真實匹配（**Opening a NISA Account**）與競爭金融文件之間的差距，讓下游搜尋與 RAG 管線更加可靠。
 
-## Saving and Sharing Your Model
+## 儲存與分享您的模型
 
-Save your fine-tuned model locally so it can be reloaded directly with `SentenceTransformer`:
+將微調後的模型儲存在本機，以便直接用 `SentenceTransformer` 重新載入：
 
 ```python { .notebook-cell }
 # Save locally
 model.save_pretrained("my-embeddinggemma-2-finetuned")
 ```
 
-To share your adapted model with your team or deploy it from the Hugging Face Hub, use `push_to_hub`:
+若要與團隊分享調適後的模型，或從 Hugging Face Hub 部署，請使用 `push_to_hub`：
 
 ```python { .notebook-cell }
 # Optional: Push your fine-tuned model to the Hugging Face Hub
 model.push_to_hub("my-embeddinggemma-2-finetuned")
 ```
 
-## Summary and next steps
+## 摘要與後續步驟
 
-You have learned how to adapt **EmbeddingGemma 2** to specialized domain terminology using contrastive triplet fine-tuning with the Sentence Transformers library.
+您已學會如何使用對比式三元組微調與 Sentence Transformers 函式庫，將 **EmbeddingGemma 2** 調適到特定領域術語。
 
-Explore what more you can do with EmbeddingGemma:
+探索 EmbeddingGemma 的更多用法：
 
-- [Sentence Transformers Training Overview](https://sbert.net/docs/sentence_transformer/training_overview.html)
-- [Multimodal Embeddings with EmbeddingGemma 2](multimodal.md)
-- [Simple RAG with EmbeddingGemma in the Gemma Cookbook](https://github.com/google-gemma/cookbook/blob/main/tutorials/RAG_with_EmbeddingGemma.ipynb){ data-model="embeddinggemma-2" }
+- [Sentence Transformers 訓練概覽](https://sbert.net/docs/sentence_transformer/training_overview.html)
+- [EmbeddingGemma 2 多模態嵌入](multimodal.md)
+- [Gemma Cookbook 中的 EmbeddingGemma 簡易 RAG](https://github.com/google-gemma/cookbook/blob/main/tutorials/RAG_with_EmbeddingGemma.ipynb){ data-model="embeddinggemma-2" }
 
 --8<-- "glossary.md"

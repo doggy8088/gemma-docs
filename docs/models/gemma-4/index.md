@@ -1,6 +1,6 @@
 ---
 title: Gemma 4
-description: Gemma is a family of generative artificial intelligence models and you can use them in a wide variety of generation tasks, including question answering, summarization, and reasoning.
+description: Gemma 是生成式人工智慧模型的家族，可用於各種生成任務，包括問答、摘要與推理。
 models: [gemma-4]
 source_url: "https://ai.google.dev/gemma/docs/core.md.txt"
 ---
@@ -8,79 +8,62 @@ source_url: "https://ai.google.dev/gemma/docs/core.md.txt"
 
 <div class="video-embed">
   <iframe src="https://www.youtube.com/embed/jZVBoFOJK-Q"
-          title="Video" loading="lazy" allowfullscreen
+          title="影片" loading="lazy" allowfullscreen
           allow="accelerometer; encrypted-media; gyroscope; picture-in-picture"
           referrerpolicy="strict-origin-when-cross-origin"></iframe>
 </div>
 
-Gemma is a family of generative artificial intelligence models and you can
-use them in a wide variety of generation tasks, including question answering,
-summarization, and reasoning. Gemma models are provided with open weights and
-permit responsible
-[commercial use][gemma-terms],
-allowing you to tune and deploy them in your own projects and applications.
+Gemma 是生成式人工智慧模型的家族，可用於各種生成任務，包括問答、摘要與推理。Gemma 模型提供開放權重，並允許負責任的[商業用途][gemma-terms]，讓您能在自己的專案與應用中微調與部署它們。
 
-Gemma 4 model family spans four distinct architectures tailored for specific
-hardware requirements:
+Gemma 4 模型家族包含四種為特定硬體需求量身打造的架構：
 
-- **Small Sizes:** 2B and 4B effective parameter models built for ultra-mobile, edge, and browser deployment (e.g., Pixel, Chrome).
-- **Dense:** A powerful 31B parameter dense model that bridges the gap between server-grade performance and local execution.
-- **Mixture-of-Experts:** A highly efficient 26B MoE model designed for high-throughput, advanced reasoning.
-- **Unified:** A 12B parameter encoder free model for multimodal tasks, replaced vision and audio encoders with direct linear projections of the input.
+- **小型：**2B 與 4B 有效參數模型，為超行動、邊緣與瀏覽器部署打造（例如 Pixel、Chrome）。
+- **稠密（Dense）：**強大的 31B 參數稠密模型，彌合伺服器級效能與本地執行之間的差距。
+- **混合專家：**高效率的 26B MoE 模型，為高吞吐量、進階推理而設計。
+- **統一（Unified）：**12B 參數的無編碼器多模態任務模型，以輸入的直接線性投影取代視覺與音訊編碼器。
 
-You can download Gemma 4 models from
-[Kaggle](https://www.kaggle.com/models?query=gemma-4&publisher=google){ data-model="gemma-4" } and
-[Hugging Face][hf-gemma4].
-For more technical details on Gemma 4, see the
-[Model Card](model-card.md) and
-[Technical Report](https://goo.gle/Gemma4Report){ data-model="gemma-4" }.
-Earlier versions of Gemma core models are also available for download. For more
-information, see [Previous Gemma models](index.md#previous-gemma-models).
+您可以從
+[Kaggle](https://www.kaggle.com/models?query=gemma-4&publisher=google){ data-model="gemma-4" } 與
+[Hugging Face][hf-gemma4] 下載 Gemma 4 模型。
+如需更多 Gemma 4 的技術細節，請見
+[模型卡](model-card.md)與
+[技術報告](https://goo.gle/Gemma4Report){ data-model="gemma-4" }。
+舊版 Gemma 核心模型亦可下載。詳情請見[舊版 Gemma 模型](index.md#舊版-gemma-模型)。
 
 <div class="cookbook-grid">
 <a class="cookbook-card" href="https://www.kaggle.com/models?query=gemma-4&publisher=google" target="_blank" rel="noopener">
   <div class="cookbook-card-title">Kaggle <span class="cookbook-card-ext">↗</span></div>
-  <p class="cookbook-card-desc">Get it on Kaggle</p>
+  <p class="cookbook-card-desc">在 Kaggle 上取得</p>
 </a>
 <a class="cookbook-card" href="https://huggingface.co/collections/google/gemma-4" target="_blank" rel="noopener">
   <div class="cookbook-card-title">Hugging Face <span class="cookbook-card-ext">↗</span></div>
-  <p class="cookbook-card-desc">Get it on Hugging Face</p>
+  <p class="cookbook-card-desc">在 Hugging Face 上取得</p>
 </a>
 </div>
 
 
-## Capabilities
+## 功能
 
-- **Reasoning:** All models in the family are designed as highly capable reasoners, with configurable [thinking
-  modes](../../get-started/capabilities/thinking.md).
-- **Extended Multimodalities:** Processes Text, [Image](../../get-started/capabilities/image.md) with variable aspect ratio and resolution support (all models), [Video](../../get-started/capabilities/video.md), and [Audio](../../get-started/capabilities/audio.md) (featured natively on the E2B, E4B and 12B models).
-- **Increased Context Window:** Small models feature a 128K context window, while the medium models support 256K.
-- **Enhanced Coding \& Agentic Capabilities:** Achieves notable improvements in coding benchmarks alongside built-in [function-calling
-  support](../../get-started/capabilities/function-calling.md), powering highly capable autonomous agents.
-- **Native System Prompt Support:** Gemma 4 introduces built-in support for the system role, enabling more structured and controllable conversations.
-- **[Multi-Token Prediction](../../get-started/capabilities/mtp.md):** All Gemma 4 models (E2B, E4B, 12B, 31B, and 26B A4B) include a dedicated draft model for speculative decoding, enabling significantly faster inference with no quality loss.
+- **推理：**此家族所有模型皆設計為高能力的推理者，並支援可設定的[思考模式](../../get-started/capabilities/thinking.md)。
+- **擴展多模態：**可處理文字、[圖像](../../get-started/capabilities/image.md)（所有模型均支援可變長寬比與解析度）、[影片](../../get-started/capabilities/video.md)與[音訊](../../get-started/capabilities/audio.md)（E2B、E4B 與 12B 模型原生支援）。
+- **更大的上下文視窗：**小型模型具備 128K 上下文視窗，中型模型支援 256K。
+- **增強的程式設計與智慧代理能力：**在程式設計基準測試上取得顯著進步，並內建[函式呼叫支援](../../get-started/capabilities/function-calling.md)，驅動高能力的自主智慧代理。
+- **原生系統提示支援：**Gemma 4 內建對 system 角色的支援，實現更結構化、可控的對話。
+- **[多詞元預測](../../get-started/capabilities/mtp.md)：**所有 Gemma 4 模型（E2B、E4B、12B、31B 與 26B A4B）皆包含用於推測解碼的專用草稿模型，可在不損失品質的情況下顯著加速推論。
 
-## Parameter sizes and quantization
+## 參數規模與量化
 
-Gemma 4 models are available in 5 parameter sizes: E2B, E4B, 12B, 31B and 26B
-A4B. The models can be used with their default precision (16-bit) or with a
-lower precision using quantization. The different sizes and precisions represent
-a set of trade-offs for your AI application. Models with higher parameters and
-bit counts (higher precision) are generally more capable, but are more expensive
-to run in terms of processing cycles, memory cost and power consumption. Models
-with lower parameters and bit counts (lower precision) have less capabilities,
-but may be sufficient for your AI task.
+Gemma 4 模型提供 5 種參數規模：E2B、E4B、12B、31B 與 26B A4B。模型可以預設精度（16 位元）使用，也可以透過量化以較低精度使用。不同的規模與精度代表您的 AI 應用的一組取捨：參數與位元數較高（精度較高）的模型通常能力更強，但執行成本更高，包括運算週期、記憶體成本與功耗。參數與位元數較低（精度較低）的模型能力較弱，但可能已足以應付您的 AI 任務。
 
-### Gemma 4 Inference Memory Requirements
+### Gemma 4 推論記憶體需求
 
-The following table details the approximate GPU or TPU memory requirements for
-running inference with each size of the Gemma 4 model versions.
+下表詳列執行各尺寸 Gemma 4 模型版本推論所需的 GPU 或 TPU 記憶體約略值。
 
 !!! Note
-    These numbers may change based on your specific inference tool and environment.
+    這些數字可能因您的推論工具與環境而異。
 
 
-| Parameters | BF16 (16-bit) | SFP8 (8-bit) | Q4_0 (4-bit) | Mobile | Mobile (Text-only) |
+| 參數量 | BF16 (16-bit) | SFP8 (8-bit) | Q4_0 (4-bit) | 行動版 | 行動版（僅文字） |
 |---|---|---|---|---|---|
 | Gemma 4 E2B | 11.4 GB | 5.7 GB | 2.9 GB | 1.1 GB | 0.84 GB |
 | Gemma 4 E4B | 17.9 GB | 8.9 GB | 4.5 GB | 2.5 GB | 2.2 GB |
@@ -88,65 +71,56 @@ running inference with each size of the Gemma 4 model versions.
 | Gemma 4 26B A4B | 57.7 GB | 28.8 GB | 14.4 GB | - | - |
 | Gemma 4 31B | 69.9 GB | 34.9 GB | 17.5 GB | - | - |
 
-**Table 1.** Approximate GPU or TPU memory required to load Gemma 4 models based
-on parameter count, quantization level and 20% overhead of loading additional
-things. Mobile versions use LiteRT-LM.
+**表 1.** 根據參數量、量化等級，載入 Gemma 4 模型所需的 GPU 或 TPU 記憶體約略值（含額外載入項目的 20% 開銷）。行動版使用 LiteRT-LM。
 
-### Key Considerations for Memory Planning
+### 記憶體規劃要點
 
-- **Efficient Architecture (E2B and E4B):** The "E" stands for "effective" parameters. The smaller models incorporate Per-Layer Embeddings (PLE) to maximize parameter efficiency in on-device deployments. Rather than adding more layers to the model, PLE gives each decoder layer its own small embedding for every token. These embedding tables are large but only used for quick lookups, which is why the total memory required to load static weights is higher than the effective parameter count suggests.
-- **The MoE Architecture (26B A4B):** The 26B is a Mixture of Experts model. While it only activates 4 billion parameters per token during generation, **all 26 billion parameters** must be loaded into memory to maintain fast routing and inference speeds. This is why its baseline memory requirement is much closer to a dense 26B model than a 4B model.
-- **Base Weights Only:** The estimates in the preceding table *only* account for the memory required to load the static model weights. They don't include the additional VRAM needed for supporting software or the context window.
-- **Context Window (KV Cache):** Memory consumption will increase dynamically based on the total number of tokens in your prompt and the generated response. Larger context windows require significantly more VRAM on top of the base model weights.
-- **Fine-Tuning Overhead:** Memory requirements for *fine-tuning* Gemma models are drastically higher than for standard inference. Your exact footprint will depend heavily on the development framework, batch size, and whether you are using full-precision tuning versus a Parameter-Efficient Fine-Tuning (PEFT) method like Low-Rank Adaptation (LoRA).
+- **高效架構（E2B 與 E4B）：**「E」代表「有效」參數。小型模型採用逐層嵌入（PLE）以最大化裝置端部署的參數效率。PLE 不為模型增加更多層，而是讓每個解碼器層為每個詞元擁有自己的小型嵌入。這些嵌入表雖然龐大，但僅用於快速查表，這也是載入靜態權重所需的總記憶體高於有效參數量所暗示的原因。
+- **MoE 架構（26B A4B）：**26B 是混合專家模型。雖然它在生成期間每個詞元僅啟用 40 億個參數，但**全部 260 億個參數**都必須載入記憶體，才能維持快速的路由與推論速度。這也是其基準記憶體需求更接近稠密 26B 模型而非 4B 模型的原因。
+- **僅基礎權重：**上表中的估計*僅*計入載入靜態模型權重所需的記憶體，不包括支援軟體或上下文視窗所需的額外 VRAM。
+- **上下文視窗（KV 快取）：**記憶體消耗會根據提示中的詞元總數與生成的回應動態增加。較大的上下文視窗需要在基礎模型權重之外使用顯著更多的 VRAM。
+- **微調開銷：***微調* Gemma 模型所需的記憶體遠高於標準推論。您的實際用量將高度取決於開發框架、批次大小，以及使用全精度微調或參數高效微調（PEFT）方法（如低秩適應，LoRA）。
 
-### Quantization-Aware Training (QAT)
+### 量化感知訓練（QAT）
 
-For deployments requiring maximum efficiency with minimal quality compromise,
-Gemma offers official **Quantization-Aware Training (QAT)** models.
+對於要求最高效率且品質妥協最小的部署，Gemma 提供官方的**量化感知訓練（Quantization-Aware Training, QAT）**模型。
 
-Unlike standard Post-Training Quantization (PTQ), which compresses a fully
-trained model and can lead to quality degradation, QAT integrates quantization
-simulation into the training process itself. This allows the model to learn to
-compensate for the precision loss, resulting in smaller models that perform
-nearly identically to their high-precision baselines.
+與標準的訓練後量化（PTQ）不同——後者壓縮已完全訓練的模型，可能導致品質下降——QAT 將量化模擬整合到訓練過程本身。這讓模型學會補償精度損失，產出的小型模型表現幾乎與高精度基線相同。
 
-#### Quick Routing Table
+#### 快速路由表
 
-| Target Deployment Engine | Download Suffix | Primary Use Case |
+| 目標部署引擎 | 下載後綴 | 主要使用情境 |
 |---|---|---|
-| llama.cpp / LM Studio (Local) | `{model-name}-qat-q4_0-gguf` | Zero-setup local deployment on CPU, Apple Silicon, or consumer GPUs. |
-| vLLM / SGLang | SERVER: `{model-name}-qat-w4a16-ct` MOBILE: `{model-name}-qat-mobile-ct` | High-throughput inference utilizing 4-bit weights with 16-bit activations. |
-| Speculative Decoding | MODEL: `{model-name}-qat-q4_0-unquantized` DRAFTER: `{model-name}-qat-q4_0-unquantized-assistant` | Running a primary model alongside its matching MTP draft model to drastically accelerate token generation. The model must be quantized. |
-| Other formats | `{model-name}-qat-q4_0-unquantized` | Unquantized weights for converting to other formats (e.g. MLX) |
-| Mobile Deployment (Transformers) | `{model-name}-qat-mobile-transformers` | Edge weights optimized for mobile use cases. They serve as reference for other formats. |
+| llama.cpp / LM Studio（本機） | `{model-name}-qat-q4_0-gguf` | 在 CPU、Apple Silicon 或消費級 GPU 上零設定本機部署。 |
+| vLLM / SGLang | 伺服器版：`{model-name}-qat-w4a16-ct` 行動版：`{model-name}-qat-mobile-ct` | 使用 4 位元權重與 16 位元激活的高吞吐量推論。 |
+| 推測解碼 | 主模型：`{model-name}-qat-q4_0-unquantized` 草稿模型：`{model-name}-qat-q4_0-unquantized-assistant` | 將主模型與其對應的 MTP 草稿模型並行運行，大幅加速詞元生成。模型必須經過量化。 |
+| 其他格式 | `{model-name}-qat-q4_0-unquantized` | 用於轉換為其他格式（例如 MLX）的未量化權重 |
+| 行動部署（Transformers） | `{model-name}-qat-mobile-transformers` | 針對行動使用情境優化的邊緣權重，可作為其他格式的參考。 |
 
-Official QAT collections on Hugging Face
+Hugging Face 上的官方 QAT 集合
 
 - **[collections/google/gemma-4-qat-q4-0][hf-gemma4-qat-q40]**
-    - **Unquantized QAT Checkpoints (`-unquantized` / `-assistant`):** Half-precision weights extracted directly from the QAT pipeline. These are ideal for custom downstream compilation, research, or running speculative decoding using the assistant draft models. *Available for Gemma 4 E2B, E4B, 12B, 26B A4B, and 31B.*
-    - **GGUF (`-gguf`):** Checkpoints available for immediate drop-in compatibility across the local LLM ecosystem. *Available for Gemma 4 E2B, E4B, 12B, 26B A4B, and 31B.*
-    - **Compressed Tensors (`-w4a16-ct`):** Serialized natively in the `compressed-tensors` standard for optimized, high-concurrency cloud serving. *Available for Gemma 4 E2B, E4B, 12B, and 31B.*
+    - **未量化 QAT 檢查點（`-unquantized` / `-assistant`）：**直接從 QAT 流程提取的半精度權重。非常適合自訂下游編譯、研究，或使用輔助草稿模型進行推測解碼。*適用於 Gemma 4 E2B、E4B、12B、26B A4B 與 31B。*
+    - **GGUF（`-gguf`）：**可直接相容於本機 LLM 生態系的檢查點。*適用於 Gemma 4 E2B、E4B、12B、26B A4B 與 31B。*
+    - **Compressed Tensors（`-w4a16-ct`）：**以 `compressed-tensors` 標準原生序列化，為優化、高併發的雲端服務而設計。*適用於 Gemma 4 E2B、E4B、12B 與 31B。*
 - **[collections/google/gemma-4-qat-mobile][hf-gemma4-qat-mobile]**
-    - **Mobile-Optimized (`-mobile-transformers` / `-mobile-ct`):** Built on a custom `wNa8o8` schema engineered specifically for mobile hardware limits. It utilizes targeted 2-bit decoding layers, optimized KV caches, and static activations to maximize on-device RAM savings without choking edge processors. *Available for Gemma 4 E2B and E4B.*
+    - **行動優化（`-mobile-transformers` / `-mobile-ct`）：**基於專為行動硬體限制設計的自訂 `wNa8o8` 結構。利用針對性的 2 位元解碼層、優化的 KV 快取與靜態激活，在不拖慢邊緣處理器的前提下，最大化裝置端 RAM 節省。*適用於 Gemma 4 E2B 與 E4B。*
 
-All official Gemma 4 QAT checkpoints can also be accessed directly from
-[Kaggle](https://www.kaggle.com/models/google/gemma-4/transformers){ data-model="gemma-4" }.
+所有官方 Gemma 4 QAT 檢查點也可直接從
+[Kaggle](https://www.kaggle.com/models/google/gemma-4/transformers){ data-model="gemma-4" } 取得。
 
-## Previous Gemma models
+## 舊版 Gemma 模型
 
-You can work with previous generations of Gemma models, which are also
-available from [Kaggle](https://www.kaggle.com/models?query=gemma) and
-[Hugging Face](https://huggingface.co/google/collections).
-For more technical details about previous Gemma models, see the following
-model card pages:
+您也可以使用舊世代的 Gemma 模型，這些模型同樣可從 [Kaggle](https://www.kaggle.com/models?query=gemma) 與
+[Hugging Face](https://huggingface.co/google/collections) 取得。
+如需舊版 Gemma 模型的更多技術細節，請見以下模型卡頁面：
 
-- Gemma 3 [Model Card](../gemma-3/index.md)
-- Gemma 2 [Model Card](../gemma-2/index.md)
-- Gemma 1 [Model Card](../gemma-1/index.md)
+- Gemma 3 [模型卡](../gemma-3/index.md)
+- Gemma 2 [模型卡](../gemma-2/index.md)
+- Gemma 1 [模型卡](../gemma-1/index.md)
 
-Ready to start building?
-[Get started](../../get-started/index.md)
-with Gemma models!
+準備好開始打造了嗎？
+[立即開始](../../get-started/index.md)
+使用 Gemma 模型！
 
 --8<-- "glossary.md"

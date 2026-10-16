@@ -1,27 +1,25 @@
 ---
 title: Gemma Skills
-description: Agent skills that teach a coding agent how to build with Gemma and how to fine-tune it.
+description: 教導程式設計代理如何使用 Gemma 打造應用程式，以及如何微調 Gemma 的代理技能。
 models: [gemma-4]
 ---
 
 # Gemma Skills
 
-[Gemma Skills][gemma-skills-repo] are installable skills that give a
-coding agent working knowledge of Gemma — current model names, the APIs to reach for, and the
-steps a task actually takes. Install one and the agent stops guessing.
+[Gemma Skills][gemma-skills-repo] 是可安裝的技能，讓程式設計代理具備使用 Gemma 的實戰知識——最新的模型名稱、該使用的 API，以及任務實際需要的步驟。安裝之後，代理就不再需要憑空猜測。
 
 <div class="card-grid">
 <a class="card" href="https://github.com/google-gemma/gemma-skills/tree/main/skills" target="_blank" rel="noopener">
   <div class="card-title">gemma-dev <span class="card-ext">↗</span></div>
-  <p class="card-desc">Building applications with Gemma, and general questions about the models.</p>
+  <p class="card-desc">使用 Gemma 打造應用程式，以及關於模型的一般問題。</p>
 </a>
 <a class="card" href="https://github.com/google-gemma/gemma-skills/tree/main/skills" target="_blank" rel="noopener">
   <div class="card-title">gemma-trainer <span class="card-ext">↗</span></div>
-  <p class="card-desc">Training and adapting Gemma on local hardware — SFT, DPO, RLHF and reward modeling.</p>
+  <p class="card-desc">在本機硬體上訓練與調整 Gemma——SFT、DPO、RLHF 與獎勵建模。</p>
 </a>
 </div>
 
-## Install
+## 安裝
 
 === "skills CLI"
 
@@ -35,8 +33,8 @@ steps a task actually takes. Install one and the agent stops guessing.
     npx ctx7 skills install /google-gemma/gemma-skills gemma-dev
     ```
 
-Swap `gemma-dev` for `gemma-trainer`, or browse them interactively with
-`npx skills add google-gemma/gemma-skills --list`.
+將 `gemma-dev` 換成 `gemma-trainer`，或使用
+`npx skills add google-gemma/gemma-skills --list` 以互動方式瀏覽。
 
 !!! note
-    The repository is Apache-2.0 licensed and is not an officially supported Google product.
+    此存放庫採用 Apache-2.0 授權，並非 Google 官方支援的產品。

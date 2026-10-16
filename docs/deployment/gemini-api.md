@@ -1,30 +1,28 @@
 ---
 title: Gemini API
-description: Call hosted Gemma 4 models through the Gemini API instead of running and serving your own instance.
+description: 透過 Gemini API 呼叫託管的 Gemma 4 模型，而無需自行執行與服務執行個體。
 models: [gemma-4]
 frameworks: [gemini-api]
 source_url: "https://ai.google.dev/gemma/docs/core/gemma_on_gemini_api.md.txt"
 ---
 
-# Run Gemma with the Gemini API
+# 使用 Gemini API 執行 Gemma
 
-The Gemini API provides hosted access to Gemma as a programming API you can use
-in application development or prototyping. This API is a convenient alternative
-to setting up your own local instance of Gemma and web service to handle
-generative AI tasks.
+Gemini API 提供託管的 Gemma 存取，作為可在應用程式開發或原型設計中使用的程式化 API。
+此 API 是自行架設 Gemma 本機執行個體與處理生成式 AI 任務的 Web 服務的便利替代方案。
 
-## Supported models
+## 支援的模型
 
-The Gemini API hosts the two largest Gemma 4 models:
+Gemini API 託管 Gemma 4 中最大的兩個模型：
 
-| Model | Identifier |
+| 模型 | 識別碼 |
 |---|---|
 | Gemma 4 31B | `gemma-4-31b-it` |
 | Gemma 4 26B A4B | `gemma-4-26b-a4b-it` |
 
-The smaller sizes are not hosted — run those yourself with [Ollama](ollama.md),
-[llama.cpp](llamacpp.md) or [LiteRT-LM](litert.md). The selector on this page offers the two
-sizes the API serves, and every example below follows it.
+較小的尺寸沒有託管——請使用 [Ollama](ollama.md)、
+[llama.cpp](llamacpp.md) 或 [LiteRT-LM](litert.md) 自行執行。本頁的選取器提供 API 所服務的兩種
+尺寸，下方的每個範例都遵循它。
 
 === "Python"
 
@@ -68,29 +66,27 @@ sizes the API serves, and every example below follows it.
        }'
     ```
 
-[Get API Key](https://aistudio.google.com/apikey)
+[取得 API 金鑰](https://aistudio.google.com/apikey)
 
 !!! Important
-    You must obtain an API key to use the Gemini API, which you can get from the Google [AI Studio](https://aistudio.google.com/apikey) application.
+    您必須取得 API 金鑰才能使用 Gemini API，可從 Google [AI Studio](https://aistudio.google.com/apikey) 應用程式取得。
 
-You can access the Gemini API on many platforms, such as mobile, web, and cloud
-services, and with multiple programming languages. For more information on
-Gemini API SDK packages, see the Gemini API
-[SDK downloads](https://ai.google.dev/gemini-api/docs/downloads)
-page. For a general introduction to the Gemini API, see the
-[Gemini API get started guide](https://ai.google.dev/gemini-api/docs/get-started).
+您可以在許多平台上存取 Gemini API，例如行動裝置、網頁與雲端
+服務，並支援多種程式語言。關於 Gemini API SDK 套件的更多資訊，請參閱 Gemini API
+[SDK 下載](https://ai.google.dev/gemini-api/docs/downloads)
+頁面。關於 Gemini API 的一般介紹，請參閱
+[Gemini API 入門指南](https://ai.google.dev/gemini-api/docs/get-started)。
 
-## Thinking
+## 思考
 
-Gemma 4 utilizes an internal "thinking process" that optimizes its multi-step
-reasoning, delivering superior performance in logically demanding domains such
-as algorithmic coding and advanced mathematical proofs.
+Gemma 4 運用內部的「思考流程」來最佳化其多步
+推理，在演算法程式設計與高等數學證明等邏輯要求嚴苛的領域
+提供卓越的效能。
 
-While Gemma 4 strictly supports toggling this feature on or off, you can control
-it using the API by setting the thinking level to `"high"` for enabled or
-`"minimal"` for disabled.
+雖然 Gemma 4 僅支援開啟或關閉此功能，但您可以透過將思考等級設為 `"high"`（啟用）或
+`"minimal"`（停用）來使用 API 控制它。
 
-The following example demonstrates how to activate the thinking process:
+以下範例示範如何啟動思考流程：
 
 === "Python"
 
@@ -148,17 +144,17 @@ The following example demonstrates how to activate the thinking process:
        }'
     ```
 
-Learn more about Thinking:
+深入了解思考：
 
-- [Gemini API Thinking](https://ai.google.dev/gemini-api/docs/thinking) (General introduction)
-- [Gemma Thinking](../get-started/capabilities/thinking.md) (Gemma-specific capabilities)
+- [Gemini API 思考](https://ai.google.dev/gemini-api/docs/thinking)（一般介紹）
+- [Gemma 思考](../get-started/capabilities/thinking.md)（Gemma 專屬功能）
 
-## Image Understanding
+## 圖像理解
 
-Gemma 4 models can process images, enabling many frontier developer use cases
-that would have historically required domain specific models.
+Gemma 4 模型可以處理圖像，為開發者開啟了許多前沿的使用案例，
+這些案例過去需要特定領域的模型。
 
-The following example shows how to use Gemma Image inputs with the Gemini API:
+以下範例示範如何在 Gemini API 中使用 Gemma 圖像輸入：
 
 === "Python"
 
@@ -254,14 +250,14 @@ The following example shows how to use Gemma Image inputs with the Gemini API:
     jq -r ".candidates[].content.parts[].text" response.json
     ```
 
-Learn more about Image Understanding:
+深入了解圖像理解：
 
-- [Gemini API Image understanding](https://ai.google.dev/gemini-api/docs/image-understanding) (General introduction)
-- [Gemma Image Understanding](../get-started/capabilities/image.md) (Gemma-specific capabilities)
+- [Gemini API 圖像理解](https://ai.google.dev/gemini-api/docs/image-understanding)（一般介紹）
+- [Gemma 圖像理解](../get-started/capabilities/image.md)（Gemma 專屬功能）
 
-## System Instructions
+## 系統指示
 
-You can pass a system instruction to set the model's behavior:
+您可以傳入系統指示來設定模型的行為：
 
 === "Python"
 
@@ -314,10 +310,9 @@ You can pass a system instruction to set the model's behavior:
     }'
     ```
 
-## Multi-turn Conversations
+## 多輪對話
 
-The SDK provides a chat interface that tracks conversation history
-automatically:
+SDK 提供了自動追蹤對話歷史的聊天介面：
 
 === "Python"
 
@@ -373,9 +368,9 @@ automatically:
     }'
     ```
 
-## Function Calling
+## 函數呼叫
 
-Define tools as function declarations. The model decides when to call them:
+將工具定義為函數宣告。模型會決定何時呼叫它們：
 
 === "Python"
 
@@ -490,9 +485,9 @@ Define tools as function declarations. The model decides when to call them:
     }'
     ```
 
-## Google Search
+## Google 搜尋
 
-Ground Gemma 4 responses in real-time web data with Google Search:
+以 Google 搜尋的即時網路資料為 Gemma 4 回應接地：
 
 === "Python"
 
@@ -556,4 +551,3 @@ Ground Gemma 4 responses in real-time web data with Google Search:
       "tools": [{"googleSearch": {}}]
     }'
     ```
-

@@ -1,30 +1,29 @@
 ---
-title: Prompt Formatting
-description: The control tokens Gemma 4 uses to structure a prompt, and the older start_of_turn format used by Gemma 1 to 3.
+title: 提示格式
+description: Gemma 4 用於建構提示的控制詞元，以及 Gemma 1 至 3 使用的舊版 start_of_turn 格式。
 models: [gemma-4]
 ---
 
 
-# Prompt formatting
+# 提示格式
 
-Gemma 4 introduced a new set of control tokens. Gemma 1 through 3 use an older
-`<start_of_turn>`{.token-turn} format, kept below because those models are still in use.
+Gemma 4 引入了一組新的控制詞元。Gemma 1 至 3 則使用較舊的
+`<start_of_turn>`{.token-turn} 格式，因為這些模型仍在使用中，相關說明保留於下方。
 
 ## Gemma 4
 
-The following sections specify the control tokens used by Gemma 4 and their use
-cases. Note that the control tokens are reserved in and specific to our
-tokenizer.
+以下章節說明 Gemma 4 使用的控制詞元及其使用情境。請注意，這些控制詞元是保留給我們的
+分詞器專用的。
 
 
 
-- Token to indicate a system instruction: `system`{.token-role}
-- Token to indicate a user turn: `user`{.token-role}
-- Token to indicate a model turn: `model`{.token-role}
-- Token to indicate the beginning of a dialogue turn: `<|turn>`{.token-turn}
-- Token to indicate the end of a dialogue turn: `<turn|>`{.token-turn}
+- 表示系統指令的詞元：`system`{.token-role}
+- 表示使用者輪次的詞元：`user`{.token-role}
+- 表示模型輪次的詞元：`model`{.token-role}
+- 表示對話輪次開始的詞元：`<|turn>`{.token-turn}
+- 表示對話輪次結束的詞元：`<turn|>`{.token-turn}
 
-Here's an example dialogue:
+以下是一個對話範例：
 
 <pre><code><span class="token-turn">&lt;|turn&gt;</span><span class="token-role">system</span>
 You are a helpful assistant.<span class="token-turn">&lt;turn|&gt;</span>
@@ -32,19 +31,18 @@ You are a helpful assistant.<span class="token-turn">&lt;turn|&gt;</span>
 Hello.<span class="token-turn">&lt;turn|&gt;</span></code></pre>
 
 
-### Multi-modalities
+### 多模態
 
-| Multimodal Token | Purpose |
+| 多模態詞元 | 用途 |
 |---|---|
-| `<|image>`{.token-multi} `<image|>`{.token-multi} | Indicate image embeddings |
-| `<|audio>`{.token-multi} `<audio|>`{.token-multi} | Indicate audio embeddings |
-| `<|image|>`{.token-multi} `<|audio|>`{.token-multi} | Special placeholder tokens |
+| `<|image>`{.token-multi} `<image|>`{.token-multi} | 表示圖像嵌入 |
+| `<|audio>`{.token-multi} `<audio|>`{.token-multi} | 表示音訊嵌入 |
+| `<|image|>`{.token-multi} `<|audio|>`{.token-multi} | 特殊佔位符詞元 |
 
-We use two special placeholder tokens (`<|image|>`{.token-multi} and `<|audio|>`{.token-multi}) to specify
-where image and audio tokens should be inserted. After tokenization, these
-tokens are replaced by the actual soft embeddings inside the model.
+我們使用兩個特殊佔位符詞元（`<|image|>`{.token-multi} 與 `<|audio|>`{.token-multi}）來指定
+圖像與音訊詞元的插入位置。在分詞（tokenization）之後，這些詞元會在模型內部被實際的軟嵌入（soft embeddings）取代。
 
-Here is an example dialogue:
+以下是一個對話範例：
 
 <pre><code>prompt = """<span class="token-turn">&lt;|turn&gt;</span><span class="token-role">user</span>
 Describe this image: <span class="token-multi">&lt;|image|&gt;</span>
@@ -55,12 +53,11 @@ a. <span class="token-multi">&lt;|audio|&gt;</span>
 b. <span class="token-multi">&lt;|audio|&gt;</span><span class="token-turn">&lt;turn|&gt;</span>
 <span class="token-turn">&lt;|turn&gt;</span><span class="token-role">model</span>"""</code></pre>
 
-#### Audio
+#### 音訊
 
-For the optimal results, use the following prompt structures. You can also
-use a basic `transcribe the audio` prompt.
+若想獲得最佳結果，請使用以下提示結構。您也可以使用基本的 `transcribe the audio` 提示。
 
-- **Audio Speech Recognition (ASR)**
+- **音訊語音辨識（ASR）**
 
 ```text
 Transcribe the following speech segment in {LANGUAGE} into {LANGUAGE} text.
@@ -70,57 +67,52 @@ Follow these specific instructions for formatting the answer:
 *   When transcribing numbers, write the digits, i.e. write 1.7 and not one point seven, and write 3 instead of three.
 ```
 
-- **Automatic Speech Translation (AST)**
+- **自動語音翻譯（AST）**
 
 ```text
 Transcribe the following speech segment in {SOURCE_LANGUAGE}, then translate it into {TARGET_LANGUAGE}.
 When formatting the answer, first output the transcription in {SOURCE_LANGUAGE}, then one newline, then output the string '{TARGET_LANGUAGE}: ', then the translation in {TARGET_LANGUAGE}.
 ```
 
-But just `transcribe the audio` should work too.
+但只要使用 `transcribe the audio` 也應該能運作。
 
-### Agentic and Reasoning Control Tokens
+### 智慧代理與推理控制詞元
 
-To support agentic workflows, Gemma uses specialized control tokens that
-delineate internal reasoning (thinking) from external actions (function
-calling). These tokens allow the model to process complex logic before providing
-a final response or interacting with outside tools.
+為了支援智慧代理（agentic）工作流程，Gemma 使用了專門的控制詞元，將內部推理（thinking）與外部動作（函式呼叫）區分開來。這些詞元讓模型能在提供最終回應或與外部工具互動之前，先處理複雜的邏輯。
 
-#### Function Calling
+#### 函式呼叫
 
-Gemma 4 is trained on six special tokens to manage the "tool use" lifecycle.
+Gemma 4 接受過六個特殊詞元的訓練，用於管理「工具使用」生命週期。
 
-| Token Pair | Purpose |
+| 詞元對 | 用途 |
 |---|---|
-| `<|tool|>`{.token-tool} `<tool|>`{.token-tool} | Defines a tool |
-| `<|tool_call>`{.token-tool} `<tool_call|>`{.token-tool} | Indicates a model's request to use a tool. |
-| `<|tool_response>`{.token-tool} `<tool_response|>`{.token-tool} | Provides a tool's execution result back to the model. |
+| `<|tool|>`{.token-tool} `<tool|>`{.token-tool} | 定義工具 |
+| `<|tool_call>`{.token-tool} `<tool_call|>`{.token-tool} | 表示模型請求使用工具。 |
+| `<|tool_response>`{.token-tool} `<tool_response|>`{.token-tool} | 將工具的執行結果傳回模型。 |
 
 !!! Note
-    `<|tool_response>`{.token-tool} acts as an additional stop sequence for the inference engine.
+    `<|tool_response>`{.token-tool} 可作為推論引擎額外的停止序列。
 
-**Delimiter for String Values: `<|"|>`{.token-tool}**
+**字串值的分隔符：`<|"|>`{.token-tool}**
 
-A single token, `<|"|>`{.token-tool}, is used as a delimiter for **all string values**
-within the structured data blocks.
+單一詞元 `<|"|>`{.token-tool} 作為結構化資料區塊內**所有字串值**的分隔符。
 
-- **Purpose:** This token ensures that any special characters (such as `{`, `}`, `,`, or quotes) inside a string are treated as literal text and not as part of the data structure's underlying syntax.
-- **Usage:** All string literals in your function declarations, calls, and responses must be enclosed using this token (e.g., <code>key:<span class="token-tool">&lt;|"|&gt;</span>string value<span class="token-tool">&lt;|"|&gt;</span></code>).
+- **用途：** 此詞元可確保字串中的任何特殊字元（例如 `{`、`}`、`,` 或引號）都被視為字面文字，而非資料結構底層語法的一部分。
+- **用法：** 函式宣告、呼叫與回應中的所有字串字面量都必須使用此詞元包覆（例如：<code>key:<span class="token-tool">&lt;|"|&gt;</span>string value<span class="token-tool">&lt;|"|&gt;</span></code>）。
 
-#### Thinking Mode
+#### 思考模式
 
-To activate thinking mode, include the `<|think|>`{.token-think} control token within the
-system instruction.
+若要啟用思考模式，請在系統指令中加入 `<|think|>`{.token-think} 控制詞元。
 
-| Control Token | Purpose |
+| 控制詞元 | 用途 |
 |---|---|
-| `<|think|>`{.token-think} | Activates thinking mode |
-| `<|channel>`{.token-think} `<channel|>`{.token-think} | Indicates a model's internal process. |
+| `<|think|>`{.token-think} | 啟用思考模式 |
+| `<|channel>`{.token-think} `<channel|>`{.token-think} | 表示模型的內部處理過程。 |
 
 !!! Note
-    `<|channel>`{.token-think} is always followed by the word `thought`{.token-think} when thinking mode is active.
+    當思考模式啟用時，`<|channel>`{.token-think} 之後一律接著單字 `thought`{.token-think}。
 
-Here is an example dialogue:
+以下是一個對話範例：
 
 <pre><code><span class="token-turn">&lt;|turn&gt;</span><span class="token-role">system</span>
 <span class="token-think">&lt;|think|&gt;</span><span class="token-turn">&lt;turn|&gt;</span>
@@ -131,22 +123,19 @@ What is the water formula?<span class="token-turn">&lt;turn|&gt;</span>
 ...
 <span class="token-think">&lt;channel|&gt;</span>The most common interpretation of "the water formula" refers...<span class="token-turn">&lt;turn|&gt;</span></code></pre>
 
-Thinking mode is designed to be enabled at the conversation level. This should
-be consolidated into a single system turn alongside your other system
-instructions, such as tool definitions.
+思考模式的設計是在對話層級啟用。它應該與其他系統指令（例如工具定義）合併在同一個系統輪次中。
 
-#### Reasoning and Function Calling Example
+#### 推理與函式呼叫範例
 
-In an agentic turn, the model may "think" privately before deciding to call a
-function. The lifecycle follows this sequence:
+在智慧代理輪次中，模型可能在決定呼叫函式之前先私下「思考」。生命週期遵循以下順序：
 
-1. **User Inquiry**: The user asks a question.
-2. **Internal Reasoning**: The model thinks privately in the thought channel.
-3. **Tool Request**: The model halts generation to request a tool call.
-4. **Execution \& Injection**: The application executes the tool and appends the response.
-5. **Final Response**: The model reads the response and generates the final answer.
+1. **使用者提問**：使用者提出一個問題。
+2. **內部推理**：模型在思考通道中私下思考。
+3. **工具請求**：模型停止生成以請求呼叫工具。
+4. **執行與注入**：應用程式執行工具並附加回應。
+5. **最終回應**：模型讀取回應並產生最終答案。
 
-The following example demonstrates a model using a weather tool:
+以下範例展示模型使用天氣工具：
 
 <pre><code><span class="token-turn">&lt;|turn&gt;</span><span class="token-role">system</span>
 <span class="token-think">&lt;|think|&gt;</span>You are a helpful assistant.<span class="token-tool">&lt;|tool&gt;</span>declaration:get_current_temperature{...}<span class="token-tool">&lt;tool|&gt;</span><span class="token-turn">&lt;turn|&gt;</span>
@@ -157,18 +146,17 @@ What's the temperature in London?<span class="token-turn">&lt;turn|&gt;</span>
 ...
 <span class="token-think">&lt;channel|&gt;</span><span class="token-tool">&lt;|tool_call&gt;</span>call:get_current_temperature{location:<span class="token-tool">&lt;|"|&gt;</span>London<span class="token-tool">&lt;|"|&gt;</span>}<span class="token-tool">&lt;tool_call|&gt;</span><span class="token-tool">&lt;|tool_response&gt;</span></code></pre>
 
-Your application should parse the model's response to extract the function name
-and arguments, execute the function, and then append the `tool_calls`{.token-tool} and
-`tool_responses`{.token-tool} to the chat history under the `assistant`{.token-role} role.
+您的應用程式應解析模型的回應以提取函式名稱與引數、執行該函式，然後將 `tool_calls`{.token-tool} 與
+`tool_responses`{.token-tool} 以 `assistant`{.token-role} 角色附加到聊天記錄中。
 
 <pre><code><span class="token-turn">&lt;|turn&gt;</span><span class="token-role">model</span>
 <span class="token-tool">&lt;|tool_call&gt;</span>call:get_current_weather{location:<span class="token-tool">&lt;|"|&gt;</span>London<span class="token-tool">&lt;|"|&gt;</span>}<span class="token-tool">&lt;tool_call|&gt;</span><span class="token-tool">&lt;|tool_response&gt;</span>response:get_current_weather{temperature:15,weather:<span class="token-tool">&lt;|"|&gt;</span>sunny<span class="token-tool">&lt;|"|&gt;</span>}<span class="token-tool">&lt;tool_response|&gt;</span></code></pre>
 
-Finally, Gemma reads the tool response and replies to the user.
+最後，Gemma 讀取工具回應並回覆使用者。
 
 <pre><code>The temperature in London is 15 degrees and it is sunny.<span class="token-turn">&lt;turn|&gt;</span></code></pre>
 
-Here is the complete JSON chat history for this example:
+以下是此範例完整的 JSON 聊天記錄：
 
     [
       {
@@ -204,73 +192,59 @@ Here is the complete JSON chat history for this example:
       }
     ]
 
-#### Managing Thought Context Between Turns
+#### 在輪次之間管理思考上下文
 
-Properly managing the model's generated thoughts is critical for maintaining
-performance across multi-turn conversations.
+妥善管理模型生成的思考內容，對於在多輪對話中維持效能至關重要。
 
-- **Standard Multi-Turn Conversations:** You must remove (strip) the model's generated thoughts from the previous turn before passing the conversation history back to the model for the next turn. If you want to disable thinking mode mid-conversation, you can remove the `<|think|>`{.token-think} token when you strip the previous thoughts.
-- **Function Calling (Exception):** If a single model turn involves function or tool calls, thoughts must **NOT** be removed between the function calls.
+- **標準多輪對話：** 在將對話記錄傳回模型以進行下一輪之前，必須移除（strip）前一輪中模型生成的思考內容。如果想在對話中途停用思考模式，可以在移除先前思考內容的同時，一併移除 `<|think|>`{.token-think} 詞元。
+- **函式呼叫（例外）：** 如果單一模型輪次涉及函式或工具呼叫，則在函式呼叫之間**不得**移除思考內容。
 
-**Agentic Workflows and Long-Running Tasks**
+**智慧代理工作流程與長時間執行的任務**
 
-Because raw thoughts are stripped between standard turns, developers building
-long-running agents may want to retain reasoning context to prevent the model
-from entering cyclical reasoning loops.
+由於原始思考內容會在標準輪次之間被移除，開發長時間執行代理的開發者可能希望保留推理上下文，以避免模型陷入循環推理迴圈。
 
-- **Summarizing Thoughts:** A highly recommended inference technique is to extract, summarize, and feed the model's previous thoughts back into the context window as standard text.
-- **Formatting Constraints:** Because Gemma 4 was not explicitly trained with raw thoughts included in the prompt (outside of the specific tool-call scenario mentioned above), there is no strict or specific format expected by the model for these injected thoughts. You have the flexibility to format summarized reasoning in whatever way best suits your specific agentic architecture.
+- **彙總思考內容：** 一種高度推薦的推論技巧是將模型先前的思考內容擷取、彙總後，以標準文字的形式回填到上下文視窗中。
+- **格式限制：** 由於 Gemma 4 並未在明確包含原始思考內容的提示下受訓練（上述特定的工具呼叫情境除外），模型對這些注入的思考內容並沒有嚴格或特定的格式要求。您可以彈性地以最適合自身智慧代理架構的方式來格式化彙總後的推理內容。
 
-### Integration Notes
+### 整合注意事項
 
-- **Internal State:** The `<|channel>`{.token-think} and `<channel|>`{.token-think} tokens are typically used for Chain-of-Thought (CoT) processing. In standard user-facing applications, this content is usually hidden from the end-user.
-- **Tool Loop:** The `tool_call`{.token-tool} and `tool_response`{.token-tool} tokens facilitate a "handshake" between the model your application environment. The application intercepts the `tool_call`{.token-tool}, executes the underlying code, and feeds the result back to the model within the `tool_response`{.token-tool} tokens.
-- **Model Behavior:** Larger models (e.g., gemma-4-26B-A4B-it, gemma-4-31B-it) may occasionally generate a thought channel even when thinking mode is explicitly turned off. To stabilize model behavior in these edge cases, consider adding an empty thinking token to the prompt.
+- **內部狀態：** `<|channel>`{.token-think} 與 `<channel|>`{.token-think} 詞元通常用於思維鏈（Chain-of-Thought, CoT）處理。在標準的面向使用者應用程式中，這些內容通常會對終端使用者隱藏。
+- **工具迴圈：** `tool_call`{.token-tool} 與 `tool_response`{.token-tool} 詞元促成模型與您的應用程式環境之間的「握手」。應用程式會攔截 `tool_call`{.token-tool}、執行底層程式碼，並將結果以 `tool_response`{.token-tool} 詞元的形式回饋給模型。
+- **模型行為：** 較大的模型（例如 gemma-4-26B-A4B-it、gemma-4-31B-it）即使在明確關閉思考模式的情況下，偶爾仍會產生思考通道。若要在這些邊緣案例中穩定模型行為，請考慮在提示中加入一個空的思考詞元。
 
-### Tip: Fine-Tuning Big Models with No-Thinking Datasets
+### 提示：以不含思考的資料集微調大型模型
 
-When fine-tuning gemma-4-26B-A4B-it and gemma-4-31B-it with a dataset that does
-not include thinking, you can achieve better results by adding the empty channel
-to your training prompts:
+使用不含思考內容的資料集微調（fine-tuning）gemma-4-26B-A4B-it 與 gemma-4-31B-it 時，可在訓練提示中加入空的通道以獲得更好的結果：
 
 <pre><code><span class="token-turn">&lt;|turn&gt;</span><span class="token-role">model</span>
 <span class="token-think">&lt;|channel&gt;thought</span>
 <span class="token-think">&lt;channel|&gt;</span></code></pre>
 
-### Tip: Adaptive Thought Efficiency using System Instructions
+### 提示：使用系統指令達成適應性思考效率
 
-While "thinking" in Gemma 4 is officially supported as an ON or OFF boolean
-feature, the model has exceptionally strong instruction-following capabilities
-that allow you to modulate its thinking behavior dynamically.
+雖然 Gemma 4 中的「思考」功能官方僅支援開啟或關閉的布林參數，但該模型具有極強的指令遵循能力，讓您可以動態調整其思考行為。
 
-Rather than relying on a hardcoded framework parameter for "high" or "low"
-thinking, you can use System Instructions (SI) to guide the model into a reduced
-thinking mode. By explicitly instructing the model to think efficiently or at a
-lower depth (a concept we refer to as a "LOW" thinking instruction), you can
-achieve adaptive thought efficiency.
+您無需依賴寫死的框架參數來設定「高」或「低」思考量，而是可以使用系統指令（System Instructions, SI）引導模型進入精簡的思考模式。明確指示模型以更有效率或較淺層次的方式思考（我們將此概念稱為「LOW」思考指令），即可達成適應性思考效率。
 
-- **Reduced Cost:** Testing has shown that applying a "LOW" thinking System Instruction can reduce the number of thinking tokens generated by approximately 20%.
-- **Proof of Concept:** Because this behavior is a byproduct of the model's instructability rather than a specifically trained, there is no single "perfect" prompt. The "LOW" instruction is a proof of concept.
-- **Customization:** We highly encourage developers to play around with their own custom System Instructions. You can fine-tune the depth, length, and style of the model's thinking process to perfectly balance latency, cost, and output quality for your specific use cases.
+- **降低成本：** 測試顯示，套用「LOW」思考系統指令可將生成的思考詞元數量減少約 20%。
+- **概念驗證：** 由於這種行為是模型可指導性的副產品，而非經專門訓練的行為，因此沒有唯一的「完美」提示。「LOW」指令只是一個概念驗證。
+- **客製化：** 我們非常鼓勵開發者嘗試自己的客製化系統指令。您可以微調模型思考過程的深度、長度與風格，以完美平衡特定使用案例的延遲、成本與輸出品質。
 
 ## Gemma 1-3
 
-Gemma instruction-tuned (IT) models are trained with a specific *formatter* that
-annotates all instruction tuning examples with extra information, both at
-training and inference time. The formatter has two purposes:
+Gemma 指令微調（instruction-tuned, IT）模型是使用特定的 *formatter* 訓練的，會在訓練與推論時為所有指令微調範例加上額外資訊的標註。此格式化器有兩個用途：
 
-1. Indicating roles in a conversation, such as the *system* , *user* , or *assistant* roles.
-2. Delineating turns in a conversation, especially in a multi-turn conversation.
+1. 標示對話中的角色，例如 *system*、*user* 或 *assistant* 角色。
+2. 劃分對話中的輪次，特別是在多輪對話中。
 
-Below, we specify the control tokens used by Gemma and their use cases. Note
-that the control tokens are reserved in and specific to our tokenizer.
+以下說明 Gemma 使用的控制詞元及其使用情境。請注意，這些控制詞元是保留給我們的分詞器專用的。
 
-- Token to indicate a user turn: `user`{.token-role}
-- Token to indicate a model turn: `model`{.token-role}
-- Token to indicate the beginning of dialogue turn: `<start_of_turn>`{.token-turn}
-- Token to indicate the end of dialogue turn: `<end_of_turn>`{.token-turn}
+- 表示使用者輪次的詞元：`user`{.token-role}
+- 表示模型輪次的詞元：`model`{.token-role}
+- 表示對話輪次開始的詞元：`<start_of_turn>`{.token-turn}
+- 表示對話輪次結束的詞元：`<end_of_turn>`{.token-turn}
 
-Here's an example dialogue:
+以下是一個對話範例：
 
 <pre><code><span class="token-turn">&lt;start_of_turn&gt;</span><span class="token-role">user</span>
 knock knock<span class="token-turn">&lt;end_of_turn&gt;</span>
@@ -281,28 +255,21 @@ Gemma<span class="token-turn">&lt;end_of_turn&gt;</span>
 <span class="token-turn">&lt;start_of_turn&gt;</span><span class="token-role">model</span>
 Gemma who?<span class="token-turn">&lt;end_of_turn&gt;</span></code></pre>
 
-The token `"<end_of_turn>\n"`{.token-turn} is the turn separator, and the prompt prefix is
-`"<start_of_turn>model\n"`{.token-turn}. This means that if you'd like to prompt the model
-with a question like, "What is Cramer's Rule?", you should instead feed the
-model as follows:
+詞元 `"<end_of_turn>\n"`{.token-turn} 是輪次分隔符，提示前綴則是
+`"<start_of_turn>model\n"`{.token-turn}。這表示，如果您想用「What is Cramer's Rule?」這類問題提示模型，應改為以下列方式餵給模型：
 
 <pre><code><span class="token-turn">&lt;start_of_turn&gt;</span><span class="token-role">user</span>
 What is Cramer's Rule?<span class="token-turn">&lt;end_of_turn&gt;</span>
 <span class="token-turn">&lt;start_of_turn&gt;</span><span class="token-role">model</span></code></pre>
 
-Note that if you want to finetune the pretrained Gemma models with your own
-data, you can use any such schema for control tokens, as long as it's consistent
-between your training and inference use cases.
+請注意，如果您想用自己的資料微調預訓練的 Gemma 模型，只要訓練與推論使用情境之間保持一致，您可以使用任何這類控制詞元架構。
 
-### System instructions
+### 系統指令
 
-Gemma's instruction-tuned models are designed to work with only two roles:
-`user`{.token-role} and `model`{.token-role}. Therefore, the `system`{.token-role} role or a
-system turn is not supported.
+Gemma 的指令微調模型僅設計用於兩種角色：
+`user`{.token-role} 與 `model`{.token-role}。因此不支援 `system`{.token-role} 角色或系統輪次。
 
-Instead of using a separate system role, provide system-level instructions
-directly within the initial user prompt. The model instruction following
-capabilities allow Gemma to interpret the instructions effectively. For example:
+請不要使用獨立的系統角色，而是直接在最初的使用者提示中提供系統層級的指令。模型的指令遵循能力讓 Gemma 能有效解讀這些指令。例如：
 
 <pre><code><span class="token-turn">&lt;start_of_turn&gt;</span><span class="token-role">user</span>
 Only reply like a pirate.
@@ -310,22 +277,22 @@ Only reply like a pirate.
 What is the answer to life the universe and everything?<span class="token-turn">&lt;end_of_turn&gt;</span>
 <span class="token-turn">&lt;start_of_turn&gt;</span><span class="token-role">model</span>
 Arrr, 'tis 42,<span class="token-turn">&lt;end_of_turn&gt;</span></code></pre>
-## What's next
+## 後續步驟
 
 <div class="card-grid">
 <a class="card" href="capabilities/mtp.md">
   <span class="card-icon">{{ icon('lucide/zap') }}</span>
-  <div class="card-title">Multi-Token Prediction</div>
-  <p class="card-desc">Speculative decoding for faster inference at identical quality.</p>
+  <div class="card-title">多詞元預測</div>
+  <p class="card-desc">在品質完全相同的前提下，以推測式解碼加快推論。</p>
 </a>
 <a class="card" href="qat.md">
   <span class="card-icon">{{ icon('lucide/shrink') }}</span>
-  <div class="card-title">Quantization-Aware Training</div>
-  <p class="card-desc">Which quantized weights to download, and why.</p>
+  <div class="card-title">量化感知訓練</div>
+  <p class="card-desc">該下載哪些量化權重，以及原因。</p>
 </a>
 <a class="card" href="../deployment/index.md">
   <span class="card-icon">{{ icon('lucide/play') }}</span>
-  <div class="card-title">Run Gemma</div>
-  <p class="card-desc">Every engine that runs Gemma, from a laptop to a cluster.</p>
+  <div class="card-title">執行 Gemma</div>
+  <p class="card-desc">從筆電到叢集，所有能執行 Gemma 的推論引擎。</p>
 </a>
 </div>

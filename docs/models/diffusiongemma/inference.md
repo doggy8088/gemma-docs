@@ -1,21 +1,21 @@
 ---
-title: Generate output
-description: Generate text with DiffusionGemma using Hugging Face Transformers, including the GPU memory the model requires.
+title: 生成輸出
+description: 使用 Hugging Face Transformers 搭配 DiffusionGemma 生成文字，包含模型所需的 GPU 記憶體。
 models: [diffusiongemma]
 frameworks: [transformers]
 colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs/notebooks/diffusiongemma-inference.ipynb
 source_url: "https://ai.google.dev/gemma/docs/diffusiongemma/inference-diffusiongemma-with-hf.md.txt"
 ---
 
-DiffusionGemma is an experimental open model that explores text diffusion, an exceptionally fast approach to text generation. Based on the 26B (4B active) Mixture-of-Experts (MoE) Gemma 4 architecture, DiffusionGemma generates tokens using discrete diffusion.
+DiffusionGemma 是一個實驗性的開放模型，探索文字擴散（text diffusion）——一種極為快速的文字生成方式。基於 26B（4B 啟動）混合專家（MoE）Gemma 4 架構，DiffusionGemma 使用離散擴散生成詞元。
 
 !!! Note
-    This notebook requires a GPU which has more than 60GB of memory such as NVIDIA G4 or NVIDIA H100.
+    此筆記本需要記憶體超過 60GB 的 GPU，例如 NVIDIA G4 或 NVIDIA H100。
 
 
-## Install Python packages
+## 安裝 Python 套件
 
-Install the Hugging Face libraries required for running the DiffusionGemma model and making requests.
+安裝執行 DiffusionGemma 模型與發送請求所需的 Hugging Face 函式庫。
 
 ```bash { .notebook-cell }
 # Install PyTorch & other libraries
@@ -25,9 +25,9 @@ pip install torch accelerate
 pip install "transformers>=5.11.0"
 ```
 
-## Load Model
+## 載入模型
 
-Use `transformers` library to load the model.
+使用 `transformers` 函式庫載入模型。
 
 ```python { .notebook-cell }
 from transformers import DiffusionGemmaForBlockDiffusion, AutoProcessor
@@ -53,7 +53,7 @@ tokenizer_config.json:   0%|          | 0.00/2.74k [00:00<?, ?B/s]
 tokenizer.json:   0%|          | 0.00/32.2M [00:00<?, ?B/s]
 ```
 
-Use a prompt template to structure your request. A prompt template allows you to specify input from specific roles, such as `user` or `model`, and is a required format for managing multi-turn chat interactions with Gemma models.
+使用提示範本來組織您的請求。提示範本讓您可以指定特定角色（例如 `user` 或 `model`）的輸入，是管理與 Gemma 模型多輪對話互動所需的格式。
 
 ```python { .notebook-cell }
 message = [
@@ -103,7 +103,7 @@ Technically, violet light has an even shorter wavelength than blue light and sca
 When the sun is setting, the light has to travel through much more of the Earth's atmosphere to reach your eyes. By the time the light gets to you, the blue light has been scattered away completely, leaving only the long-wavelength **reds and oranges** to pass through.<turn|><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad>
 ```
 
-Use `TextDiffusionStreamer` to see the intermediate state of diffusion process.
+使用 `TextDiffusionStreamer` 來查看擴散過程的中間狀態。
 
 ```python { .notebook-cell }
 from transformers import TextDiffusionStreamer
@@ -467,9 +467,9 @@ You might wonder why the sky isn't violet, since violet has an even shorter wave
 When the sun is setting, the light has to travel through much more of the Earth's atmosphere to reach your eyes. By the time the light gets to you, the blue has been scattered away entirely, leaving only the long-wavelength **reds and oranges** to pass through.<turn|><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad>
 ```
 
-## System instructions
+## 系統指令
 
-Use the `system` role to provide the system-level instructions.
+使用 `system` 角色來提供系統層級的指令。
 
 ```python { .notebook-cell }
 message = [
@@ -502,9 +502,9 @@ But the blue light? Ah, the blue waves be short and choppy! When they hit the ai
 So, when ye look up from the deck, yer eyes be catchin' all that blue light that's been bouncing all across the great dome. Now, back to work with', before I have ye walk the plank!<turn|><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad>
 ```
 
-## A single text inference with Thinking
+## 使用思考功能的單次文字推論
 
-To generate a response using the model's thinking capabilities, pass `enable_thinking=True`, the processor will insert the correct thinking tokens into the prompt, instructing the model to think before responding.
+要使用模型的思考能力生成回覆，請傳入 `enable_thinking=True`，處理器會在提示中插入正確的思考詞元，指示模型先思考再回覆。
 
 ```python { .notebook-cell }
 message = [
@@ -543,9 +543,9 @@ This means that each molecule of water is made of:
 *   **One oxygen atom**<turn|><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad>
 ```
 
-## Image understanding
+## 影像理解
 
-The following example shows how to provide an image and ask question about it.
+以下範例示範如何提供一張影像並針對它提問。
 
 ```python { .notebook-cell }
 from PIL import Image
@@ -582,20 +582,20 @@ print(text[0])
 <channel|>This image shows the Golden Gate Bridge in San Francisco, California. In the foreground, you can see Fort Point, a historic brick fortification, and a small rock in the water with a bird perched on it. The bridge spans across the bay toward the Marin Head visible in the background.<eos><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad><pad>
 ```
 
-## Summary
+## 摘要
 
-In this guide, you learned how to use DiffusionGemma for various tasks. 
-## What's next
+在本指南中，您學會了如何使用 DiffusionGemma 執行各種任務。
+## 接下來
 
 <div class="card-grid">
 <a class="card" href="../../deployment/index.md">
   <span class="card-icon">{{ icon('lucide/play') }}</span>
-  <div class="card-title">Run Gemma</div>
-  <p class="card-desc">Every engine that runs Gemma, from a laptop to a cluster.</p>
+  <div class="card-title">執行 Gemma</div>
+  <p class="card-desc">從筆電到叢集，每種能跑 Gemma 的引擎。</p>
 </a>
 <a class="card" href="../../tuning/index.md">
   <span class="card-icon">{{ icon('lucide/graduation-cap') }}</span>
-  <div class="card-title">Fine-tune Gemma</div>
-  <p class="card-desc">QLoRA, full fine-tunes and distributed training.</p>
+  <div class="card-title">微調 Gemma</div>
+  <p class="card-desc">QLoRA、完整微調與分散式訓練。</p>
 </a>
 </div>

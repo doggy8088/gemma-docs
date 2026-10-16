@@ -1,42 +1,35 @@
 ---
 title: DataGemma
-description: DataGemma is a research tool that lets users ask questions in plain language and receive answers based on publicly available statistical data in the Data Commons repository.
+description: DataGemma 是一款研究工具，讓使用者能以淺白語言提問，並根據 Data Commons 儲存庫中公開的統計資料獲得答案。
 models: [datagemma]
 source_url: "https://ai.google.dev/gemma/docs/datagemma.md.txt"
 ---
 # DataGemma
 
-DataGemma is a research tool that lets users ask questions in plain language and receive
-answers based on publicly available statistical data in the
-[Data Commons](https://datacommons.org/) repository. The tool uses
-specially built versions of [Gemma](../gemma-4/index.md),
-the [Gemini API](https://ai.google.dev/gemini-api) with Gemini 1.5 Pro, and a set of libraries
-specifically designed to work with Data Commons.
+DataGemma 是一款研究工具，讓使用者能以淺白語言提問，並根據 [Data Commons](https://datacommons.org/) 儲存庫中公開的統計資料獲得答案。此工具使用特別打造的 [Gemma](../gemma-4/index.md) 版本、搭載 Gemini 1.5 Pro 的 [Gemini API](https://ai.google.dev/gemini-api)，以及一組專為搭配 Data Commons 設計的函式庫。
 
 
-This research tool provides two separate techniques for answering questions based on Data
-Commons statistical data:
+此研究工具提供兩種根據 Data Commons 統計資料回答問題的技術：
 
-- **Retrieval-Interleaved Generation (RIG)** - This approach uses a variant of Gemma 2 that is fine-tuned to recognize when it needs to replace a generated number with more accurate information from Data Commons. For more details, see the Colab [notebook](https://colab.research.google.com/github/datacommonsorg/llm-tools/blob/main/notebooks/datagemma_rig.ipynb){ data-model="datagemma" } and models on [Kaggle](https://www.kaggle.com/models/google/datagemma-rig){ data-model="datagemma" } or [Hugging Face](https://huggingface.co/google/datagemma-rig-27b-it){ data-model="datagemma" }.
-- **Retrieval-Augmented Generation (RAG)** - This approach uses a variant of Gemma 2 that retrieves relevant information from Data Commons and then uses that information to create an extended prompt for the Gemini 1.5 Pro model. For more details, see the Colab [notebook](https://colab.research.google.com/github/datacommonsorg/llm-tools/blob/main/notebooks/datagemma_rag.ipynb){ data-model="datagemma" } and models on [Kaggle](https://www.kaggle.com/models/google/datagemma-rag){ data-model="datagemma" } or [Hugging Face](https://huggingface.co/google/datagemma-rag-27b-it){ data-model="datagemma" }.
+- **檢索交錯生成（Retrieval-Interleaved Generation, RIG）** - 此方法使用 Gemma 2 的變體，該變體經過微調，能識別何時需要以 Data Commons 更準確的資訊取代生成的數字。詳情請見 Colab [筆記本](https://colab.research.google.com/github/datacommonsorg/llm-tools/blob/main/notebooks/datagemma_rig.ipynb){ data-model="datagemma" }，模型可於 [Kaggle](https://www.kaggle.com/models/google/datagemma-rig){ data-model="datagemma" } 或 [Hugging Face](https://huggingface.co/google/datagemma-rig-27b-it){ data-model="datagemma" } 取得。
+- **檢索增強生成（Retrieval-Augmented Generation, RAG）** - 此方法使用 Gemma 2 的變體，從 Data Commons 檢索相關資訊，再用該資訊為 Gemini 1.5 Pro 模型建立擴展提示。詳情請見 Colab [筆記本](https://colab.research.google.com/github/datacommonsorg/llm-tools/blob/main/notebooks/datagemma_rag.ipynb){ data-model="datagemma" }，模型可於 [Kaggle](https://www.kaggle.com/models/google/datagemma-rag){ data-model="datagemma" } 或 [Hugging Face](https://huggingface.co/google/datagemma-rag-27b-it){ data-model="datagemma" } 取得。
 
 
-For more research and technical details on DataGemma, see the
-[DataGemma technical paper](http://datacommons.org/link/DataGemmaPaper){ data-model="datagemma" }.
+如需 DataGemma 的更多研究與技術細節，請見 [DataGemma 技術論文](http://datacommons.org/link/DataGemmaPaper){ data-model="datagemma" }。
 
-- **Generate answers with real data** — Apply generative artificial intelligence (AI) to a vast repository of public statistical data to explore and uncover new insights.
-- **Evaluate AI data grounding techniques** — Investigate ways to guide generative AI model output with retrieval-augmented and data-interleaved techniques.
+- **以真實資料生成答案** — 將生成式人工智慧（AI）應用於龐大的公開統計資料庫，探索並發掘新的洞察。
+- **評測 AI 資料落地技術** — 研究以檢索增強與資料交錯技術引導生成式 AI 模型輸出的方法。
 
-## Learn more
+## 深入了解
 
-### [View RIG on Kaggle](https://www.kaggle.com/models/google/datagemma-rig){ data-model="datagemma" }
+### [在 Kaggle 上檢視 RIG](https://www.kaggle.com/models/google/datagemma-rig){ data-model="datagemma" }
 
-View more code, notebooks, information, and discussions about the DataGemma RIG model on Kaggle.
+在 Kaggle 上查看更多關於 DataGemma RIG 模型的程式碼、筆記本、資訊與討論。
 
-### [Run RIG in Colab](https://colab.research.google.com/github/datacommonsorg/llm-tools/blob/main/notebooks/datagemma_rig.ipynb){ data-model="datagemma" }
+### [在 Colab 中執行 RIG](https://colab.research.google.com/github/datacommonsorg/llm-tools/blob/main/notebooks/datagemma_rig.ipynb){ data-model="datagemma" }
 
-Try DataGemma using the retrieval-interleaved technique to answer questions.
+使用檢索交錯技術，試用 DataGemma 回答問題。
 
-### [Run RAG in Colab](https://colab.research.google.com/github/datacommonsorg/llm-tools/blob/main/notebooks/datagemma_rag.ipynb){ data-model="datagemma" }
+### [在 Colab 中執行 RAG](https://colab.research.google.com/github/datacommonsorg/llm-tools/blob/main/notebooks/datagemma_rag.ipynb){ data-model="datagemma" }
 
-Try DataGemma using the retrieval-augmented technique to answer questions.
+使用檢索增強技術，試用 DataGemma 回答問題。

@@ -1,28 +1,28 @@
 ---
-title: Fine-Tune Gemma for Audio Tasks using Unsloth and QLoRA
-description: This guide walks you through how to fine-tune Gemma on a custom audio dataset for a audio task (generating transcription of Kumamoto dialect Japanese) using Unsloth.
+title: 使用 Unsloth 與 QLoRA 針對音訊任務微調 Gemma
+description: 本指南將引導您使用 Unsloth 在自訂音訊資料集上微調 Gemma，以執行音訊任務（產生熊本方言日語的轉錄）。
 models: [gemma-4]
 requires: audio
 frameworks: [unsloth, peft]
 colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs/notebooks/audio-qlora-gemma-4-e2b.ipynb
 ---
-# Fine-Tune Gemma for Audio Task using Unsloth and QLoRA
+# 使用 Unsloth 與 QLoRA 針對音訊任務微調 Gemma
 
-This guide walks you through how to fine-tune Gemma on a custom audio dataset for a audio task (generating transcription of [Kumamoto dialect Japanese](https://en.wikipedia.org/wiki/Kumamoto_dialect)) using Unsloth.
+本指南將引導您使用 Unsloth 在自訂音訊資料集上微調 Gemma，以執行音訊任務（產生[熊本方言日語](https://en.wikipedia.org/wiki/Kumamoto_dialect)的轉錄）。
 
-## Overview & Objectives
-- **Base Model**: Gemma 4 PT multimodal foundation model
-- **Dataset**: [`federerjiang/dialect.kumamoto`](https://huggingface.co/datasets/federerjiang/dialect.kumamoto) on Hugging Face (1,300 speech recordings of Kumamoto dialect Japanese)
-- **Methodology**: **4-bit QLoRA** via Unsloth & PEFT, drastically reducing memory while fine-tuning language attention and MLP projections
-- **Target Metric**: **Text similarity > 80.0%**
+## 概觀與目標
+- **基底模型**：Gemma 4 PT 多模態基礎模型
+- **資料集**：Hugging Face 上的 [`federerjiang/dialect.kumamoto`](https://huggingface.co/datasets/federerjiang/dialect.kumamoto)（1,300 段熊本方言日語的語音錄音）
+- **方法**：透過 Unsloth 與 PEFT 進行 **4-bit QLoRA**，大幅降低記憶體需求，同時微調語言注意力層與 MLP 投影層
+- **目標指標**：**文字相似度 > 80.0%**
 
-## 1. Environment Setup & Dependency Installation
+## 1. 環境設定與相依套件安裝
 
-You will install:
+您將安裝：
 
-- `unsloth` for accelerated 4-bit QLoRA and memory optimization
-- `transformers`, `trl`, `peft`, `accelerate` from Hugging Face
-- `soundfile`, `librosa`, `jiwer` for audio processing and Character Error Rate (CER) evaluation
+- `unsloth`：用於加速的 4-bit QLoRA 與記憶體最佳化
+- 來自 Hugging Face 的 `transformers`、`trl`、`peft`、`accelerate`
+- `soundfile`、`librosa`、`jiwer`：用於音訊處理與字元錯誤率（CER）評估
 
 
 
@@ -32,9 +32,9 @@ You will install:
 !pip install -U torch torchvision torchaudio transformers trl peft accelerate datasets bitsandbytes soundfile librosa jiwer
 ```
 
-## 2. (Optional) Hugging Face Authentication
+## 2.（選用）Hugging Face 驗證
 
-You need a valid Hugging Face Token to publish your model. If you are running inside a Google Colab, you can securely use your Hugging Face Token using the Colab secrets otherwise you can set the token as directly in the `login` method. Make sure your token has write access too, as you push your model to the Hub during training.
+您需要有效的 Hugging Face Token 才能發布模型。如果您在 Google Colab 中執行，可以使用 Colab 密鑰安全地使用 Hugging Face Token；否則可以直接在 `login` 方法中設定 Token。請確保您的 Token 具有寫入權限，因為訓練期間會將模型推送到 Hub。
 
 
 ```python { .notebook-cell }
@@ -43,7 +43,7 @@ from huggingface_hub import login
 login()
 ```
 
-## 3. Hardware & GPU Precision Verification
+## 3. 硬體與 GPU 精度驗證
 
 
 
@@ -70,19 +70,19 @@ GPU: NVIDIA L4 (22.03 GB VRAM)
 Bfloat16 Supported: True
 ```
 
-## 4. Dataset Loading & Preparation (`federerjiang/dialect.kumamoto`)
+## 4. 資料集載入與準備 (`federerjiang/dialect.kumamoto`)
 
-You will download the `federerjiang/dialect.kumamoto` dataset directly from Hugging Face.  
+您將直接從 Hugging Face 下載 `federerjiang/dialect.kumamoto` 資料集。
 
-The dataset contains:
+資料集包含：
 
-- `audio`: Audio waveform and sampling rate (16 kHz)
-- `sentence`: Ground-truth transcription in Kumamoto dialect (*Kumamoto-ben*)
+- `audio`：音訊波形與取樣率（16 kHz）
+- `sentence`：熊本方言（*Kumamoto-ben*）的標準轉錄文字
 
-You will split the 1,300 samples into:
+您將把 1,300 個樣本分為：
 
-- **Train split**: 1,170 samples (90%)
-- **Test split**: 130 samples (10%) with fixed random seed (`seed=42`)
+- **訓練集**：1,170 個樣本（90%）
+- **測試集**：130 個樣本（10%），使用固定隨機種子（`seed=42`）
 
 
 
@@ -179,18 +179,18 @@ Processing test: 100%|██████████| 130/130 [00:02<00:00, 53.7
 Dataset prepared and saved to ./data/train.json and ./data/test.json!
 ```
 
-## 5. Model Initialization with 4-bit QLoRA
+## 5. 使用 4-bit QLoRA 初始化模型
 
-The following code loads the Gemma model and processor in 4-bit normal float (NF4) quantization using Unsloth.  
+以下程式碼使用 Unsloth 以 4-bit 正規浮點數（NF4）量化載入 Gemma 模型與處理器。
 
-Key adaptations:
+主要調整：
 
-1. **Audio Masked Scatter Patch**: PyTorch `masked_scatter` is patched to handle mismatched tensor dtypes when embedding audio representations alongside quantized weights.
-2. **LoRA Adapter Setup**:
-    - Rank ($r$): **32**
-    - Alpha ($\alpha$): **64** ($2 \times r$)
-    - Target Modules: Language model attention (`q_proj`, `k_proj`, `v_proj`, `o_proj`) and feed-forward MLP layers (`gate_proj`, `up_proj`, `down_proj`).
-    - Trainable parameters: **~48.3M** (only **~0.94%** of base model weights).
+1. **音訊遮罩散佈修補**：修補 PyTorch 的 `masked_scatter`，以在量化權重旁嵌入音訊表示時處理張量 dtype 不一致的問題。
+2. **LoRA 轉接器設定**：
+    - 秩（$r$）：**32**
+    - Alpha（$\alpha$）：**64**（$2 \times r$）
+    - 目標模組：語言模型的注意力層（`q_proj`、`k_proj`、`v_proj`、`o_proj`）與前饋 MLP 層（`gate_proj`、`up_proj`、`down_proj`）。
+    - 可訓練參數：**約 48.3M**（僅佔基底模型權重的 **約 0.94%**）。
 
 
 
@@ -254,13 +254,13 @@ Attaching LoRA adapters...
 trainable params: 48,316,416 || all params: 5,152,613,920 || trainable%: 0.9377
 ```
 
-## 6. Audio Transcription Collator & Loss Masking
+## 6. 音訊轉錄 Collator 與損失遮罩
 
-To ensure the model learns strictly to transcribe the audio rather than memorizing prompt tokens:
+為確保模型只學習轉錄音訊，而非背誦提示詞元：
 
-- The following code parses <code><span class="token-turn"><|turn></span><span class="token-role">model</span>\n</code> in each sequence.
-- All tokens prior to <code><span class="token-turn"><|turn></span><span class="token-role">model</span>\n</code>  (including audio prefix markers and user instruction) are masked to `-100`.
-- Only assistant response tokens contribute to the cross-entropy loss.
+- 以下程式碼會在每個序列中解析 <code><span class="token-turn"><|turn></span><span class="token-role">model</span>\n</code>。
+- 在 <code><span class="token-turn"><|turn></span><span class="token-role">model</span>\n</code> 之前的所有詞元（包括音訊前綴標記與使用者指令）都會被遮罩為 `-100`。
+- 只有助手回應的詞元會計入交叉熵損失。
 
 
 
@@ -321,17 +321,17 @@ print("Collate function defined successfully!")
 Collate function defined successfully!
 ```
 
-## 7. Fine-Tuning with TRL `SFTTrainer`
+## 7. 使用 TRL `SFTTrainer` 微調
 
-### Training Hyperparameters
-| Parameter | Value |
+### 訓練超參數
+| 參數 | 值 |
 | :--- | :--- |
-| **Learning Rate** | `2.0e-4` with cosine decay |
-| **Warmup Ratio** | 3% of total steps (~18 steps) |
-| **Epochs** | 4 epochs (588 optimizer steps) |
-| **Batch Size** | 4 per device $\times$ 2 gradient accumulation = 8 effective |
-| **Precision** | `bfloat16` (or `float16` fallback) |
-| **Checkpoint Strategy** | Save every epoch, `load_best_model_at_end=True` based on `eval_loss` |
+| **學習率** | `2.0e-4`，搭配餘弦衰減 |
+| **暖機比例** | 總步數的 3%（約 18 步） |
+| **訓練輪數** | 4 輪（588 個優化器步數） |
+| **批次大小** | 每裝置 4 $\times$ 2 梯度累積 = 有效批次 8 |
+| **精度** | `bfloat16`（或退回 `float16`） |
+| **檢查點策略** | 每輪儲存，並依 `eval_loss` 使用 `load_best_model_at_end=True` |
 
 
 
@@ -429,18 +429,18 @@ Unsloth: Restored added_tokens_decoder metadata in ./checkpoints/final_model/tok
 Fine-tuned QLoRA adapter saved to ./checkpoints/final_model!
 ```
 
-## 8. Evaluation on Unseen Test Split (130 Samples)
+## 8. 在未見過的測試集（130 個樣本）上評估
 
-You will evaluate the fine-tuned model on all **130 unseen test audio recordings** using greedy decoding.  
+您將使用貪心解碼，在全部 **130 段未見過的測試音訊錄音** 上評估微調後的模型。
 
-Metrics computed:
+計算的指標：
 
-1. **SequenceMatcher Similarity** (`difflib.SequenceMatcher`): Character subsequence alignment ratio.
-2. **Levenshtein Similarity**: Normalized edit distance ratio ($1 - \frac{\text{dist}}{\max(L_1, L_2)}$).
-3. **Character Accuracy**: $1 - \text{CER}$ using `jiwer.cer`.
-4. **Exact Match Rate**: Percentage of exact character matches.
+1. **SequenceMatcher 相似度**（`difflib.SequenceMatcher`）：字元子序列對齊比例。
+2. **Levenshtein 相似度**：正規化編輯距離比例（$1 - \frac{\text{dist}}{\max(L_1, L_2)}$）。
+3. **字元正確率**：$1 - \text{CER}$，使用 `jiwer.cer`。
+4. **完全比對率**：字元完全相符的百分比。
 
-> **Evaluation Goal**: Achieve > 80.0% text similarity.
+> **評估目標**：達到 > 80.0% 的文字相似度。
 
 
 
@@ -595,9 +595,9 @@ Target (> 80%) Achieved:   YES 🎉
 ==================================================
 ```
 
-## 9. Interactive Inspection & Dialect Audio Demo
+## 9. 互動式檢視與方言音訊示範
 
-Let's inspect sample predictions against ground-truth Kumamoto dialect sentences, and play an audio sample directly in Colab.
+讓我們對照標準熊本方言語句檢視預測範例，並直接在 Colab 播放一段音訊範例。
 
 
 
@@ -646,12 +646,12 @@ QLoRA Pred  : カピバラに触らるっ場所もあっばい。親子で歩き
 
 <audio class="output" controls="controls" >
     <source src="/assets/tuning/output_kumamoto_test.wav" type="audio/x-wav" />
-    Your browser does not support the audio element.
+    您的瀏覽器不支援音訊元素。
 </audio>
 
-## 10. (Optional) Save & Push LoRA Adapter to Hugging Face Hub
+## 10.（選用）儲存並將 LoRA 轉接器推送到 Hugging Face Hub
 
-You can push the fine-tuned LoRA weights directly to Hugging Face Hub for easy sharing or downstream deployment:
+您可以將微調後的 LoRA 權重直接推送到 Hugging Face Hub，方便分享或後續部署：
 
 
 
@@ -677,11 +677,10 @@ New Data Upload               : |          |  0.00B /  0.00B
 Adapter successfully pushed to https://huggingface.co/bebechien/gemma-4-kumamoto-asr-qlora
 ```
 
-## Summary and next steps
+## 摘要與後續步驟
 
-This tutorial covered how to fine-tune a Gemma model using Unsloth and QLoRA. Check out the following docs next:
+本教學介紹了如何使用 Unsloth 與 QLoRA 微調 Gemma 模型。接下來請參閱以下文件：
 
-- Learn how to [fine-tune Gemma for text tasks using Hugging Face Transformers](qlora.md).
-- Learn how to [fine-tune Gemma for vision tasks using Hugging Face Transformers](vision-qlora.md).
-- Learn how to [use Gemma open models with Vertex AI](https://cloud.google.com/vertex-ai/docs/generative-ai/open-models/use-gemma).
-
+- 瞭解如何[使用 Hugging Face Transformers 針對文字任務微調 Gemma](qlora.md)。
+- 瞭解如何[使用 Hugging Face Transformers 針對視覺任務微調 Gemma](vision-qlora.md)。
+- 瞭解如何[在 Vertex AI 上使用 Gemma 開放模型](https://cloud.google.com/vertex-ai/docs/generative-ai/open-models/use-gemma)。

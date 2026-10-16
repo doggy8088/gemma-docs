@@ -1,58 +1,46 @@
 ---
-title: Gemma 3n model card
-description: "Model card for Gemma 3n: on-device inputs and outputs, training data, evaluation results, and intended use."
+title: Gemma 3n 模型卡
+description: "Gemma 3n 的模型卡：裝置端多模態輸入與輸出規格、訓練資料、評測結果、預期用途與限制。"
 models: [gemma-3n]
 source_url: "https://ai.google.dev/gemma/docs/gemma-3n/model_card.md.txt"
 ---
-# Model card
+# 模型卡
 
-**Model Page** : [Gemma 3n](index.md)
+**模型頁面**：[Gemma 3n](index.md)
 
-**Resources and Technical Documentation**:
+**資源與技術文件**：
 
-- [Responsible Generative AI Toolkit][responsible-ai]
-- [Gemma on Kaggle](https://www.kaggle.com/models/google/gemma-3n){ data-model="gemma-3n" }
-- [Gemma on HuggingFace](https://huggingface.co/collections/google/gemma-3n-685065323f5984ef315c93f4){ data-model="gemma-3n" }
-- [Gemma on Vertex Model Garden](https://console.cloud.google.com/vertex-ai/publishers/google/model-garden/gemma3n){ data-model="gemma-3n" }
+- [負責任生成式 AI 工具包][responsible-ai]
+- [Kaggle 上的 Gemma](https://www.kaggle.com/models/google/gemma-3n){ data-model="gemma-3n" }
+- [HuggingFace 上的 Gemma](https://huggingface.co/collections/google/gemma-3n-685065323f5984ef315c93f4){ data-model="gemma-3n" }
+- [Vertex Model Garden 上的 Gemma](https://console.cloud.google.com/vertex-ai/publishers/google/model-garden/gemma3n){ data-model="gemma-3n" }
 
-**Terms of Use** : [Terms][gemma-terms]  
+**使用條款**：[條款][gemma-terms]
 
-**Authors**: Google DeepMind
+**作者**：Google DeepMind
 
-## Model Information
+## 模型資訊
 
-Summary description and brief definition of inputs and outputs.
+摘要說明，以及輸入與輸出的簡要定義。
 
-### Description
+### 說明
 
-Gemma is a family of lightweight, state-of-the-art open models from Google,
-built from the same research and technology used to create the Gemini models.
-Gemma 3n models are designed for efficient execution on low-resource devices.
-They are capable of multimodal input, handling text, image, video, and audio
-input, and generating text outputs, with open weights for pre-trained and
-instruction-tuned variants. These models were trained with data in over 140
-spoken languages.
+Gemma 是 Google 推出的輕量級、最先進的開放模型家族，採用與打造 Gemini 模型相同的技術與研究成果。Gemma 3n 模型專為在低資源裝置上高效執行而設計。它們支援多模態輸入，可處理文字、圖像、影片與音訊輸入，並生成文字輸出，提供預訓練與指令微調版本的開放權重。這些模型以超過 140 種口語語言的資料進行訓練。
 
-Gemma 3n models use selective parameter activation technology to reduce resource
-requirements. This technique allows the models to operate at an effective size
-of 2B and 4B parameters, which is lower than the total number of parameters they
-contain. For more information on Gemma 3n's efficient parameter management
-technology, see the
-[Gemma 3n](index.md#model-parameters-and-effective-parameters)
-page.
+Gemma 3n 模型使用選擇性參數啟用技術來降低資源需求。此技術讓模型能以 2B 與 4B 參數的有效規模運作，低於它們實際包含的參數總數。關於 Gemma 3n 高效參數管理技術的更多資訊，請見 [Gemma 3n](index.md#模型參數與有效參數) 頁面。
 
-### Inputs and outputs
+### 輸入與輸出
 
-- **Input:**
-    - Text string, such as a question, a prompt, or a document to be summarized
-    - Images, normalized to 256x256, 512x512, or 768x768 resolution and encoded to 256 tokens each
-    - Audio data encoded to 6.25 tokens per second from a single channel
-    - Total input context of 32K tokens
-- **Output:**
-    - Generated text in response to the input, such as an answer to a question, analysis of image content, or a summary of a document
-    - Total output length up to 32K tokens, subtracting the request input tokens
+- **輸入：**
+    - 文字字串，例如問題、提示或待摘要的文件
+    - 圖像，正規化為 256x256、512x512 或 768x768 解析度，每張編碼為 256 個詞元
+    - 音訊資料，以單聲道每秒 6.25 個詞元編碼
+    - 總輸入上下文為 32K 詞元
+- **輸出：**
+    - 針對輸入生成的文字，例如問題的答案、圖像內容分析或文件摘要
+    - 總輸出長度最高達 32K 詞元，並扣除請求的輸入詞元
 
-### Citation
+### 引用
 
 ```python
 @article{gemma_3n_2025,
@@ -64,233 +52,189 @@ page.
 }
 ```
 
-## Model Data
+## 模型資料
 
-Data used for model training and how the data was processed.
+用於模型訓練的資料，以及資料的處理方式。
 
-### Training Dataset
+### 訓練資料集
 
-These models were trained on a dataset that includes a wide variety of sources
-totalling approximately 11 trillion tokens. The knowledge cutoff date for the
-training data was June 2024. Here are the key components:
+這些模型在包含各種來源的資料集上進行訓練，共計約 11 兆個詞元。訓練資料的知識截止日期為 2024 年 6 月。主要組成如下：
 
-- **Web Documents**: A diverse collection of web text ensures the model is exposed to a broad range of linguistic styles, topics, and vocabulary. The training dataset includes content in over 140 languages.
-- **Code**: Exposing the model to code helps it to learn the syntax and patterns of programming languages, which improves its ability to generate code and understand code-related questions.
-- **Mathematics**: Training on mathematical text helps the model learn logical reasoning, symbolic representation, and to address mathematical queries.
-- **Images**: A wide range of images enables the model to perform image analysis and visual data extraction tasks.
-- Audio: A diverse set of sound samples enables the model to recognize speech, transcribe text from recordings, and identify information in audio data.
+- **網路文件**：多元的網路文字蒐集，讓模型接觸廣泛的語言風格、主題與詞彙。訓練資料集包含超過 140 種語言的內容。
+- **程式碼**：讓模型接觸程式碼有助於學習程式語言的語法與模式，進而提升生成程式碼與理解程式相關問題的能力。
+- **數學**：以數學文字訓練有助於模型學習邏輯推理、符號表示，並處理數學問題。
+- **圖像**：廣泛的圖像讓模型能執行圖像分析與視覺資料擷取任務。
+- 音訊：多元的聲音樣本讓模型能辨識語音、從錄音轉錄文字，並識別音訊資料中的資訊。
 
-The combination of these diverse data sources is crucial for training a
-powerful multimodal model that can handle a wide variety of different tasks and
-data formats.
+這些多元資料來源的組合，對於訓練出能處理各種任務與資料格式的強大多模態模型至關重要。
 
-### Data Preprocessing
+### 資料預處理
 
-Here are the key data cleaning and filtering methods applied to the training
-data:
+以下為應用於訓練資料的主要資料清理與過濾方法：
 
-- **CSAM Filtering**: Rigorous CSAM (Child Sexual Abuse Material) filtering was applied at multiple stages in the data preparation process to ensure the exclusion of harmful and illegal content.
-- **Sensitive Data Filtering**: As part of making Gemma pre-trained models safe and reliable, automated techniques were used to filter out certain personal information and other sensitive data from training sets.
-- **Additional methods** : Filtering based on content quality and safety in line with [our policies](https://ai.google/static/documents/ai-responsibility-update-published-february-2025.pdf).
+- **CSAM 過濾**：在資料準備過程的多個階段實施嚴格的 CSAM（兒童性虐待內容）過濾，以確保排除有害與非法內容。
+- **敏感資料過濾**：為使 Gemma 預訓練模型安全可靠，使用自動化技術從訓練集中過濾掉部分個人資訊與其他敏感資料。
+- **其他方法** ：依據內容品質與安全性進行過濾，符合[我們的政策](https://ai.google/static/documents/ai-responsibility-update-published-february-2025.pdf)。
 
-## Implementation Information
+## 實作資訊
 
-Details about the model internals.
+模型內部機制的詳細資訊。
 
-### Hardware
+### 硬體
 
-Gemma was trained using [Tensor Processing Unit
-(TPU)](https://cloud.google.com/tpu/docs/intro-to-tpu) hardware (TPUv4p, TPUv5p
-and TPUv5e). Training generative models requires significant computational
-power. TPUs, designed specifically for matrix operations common in machine
-learning, offer several advantages in this domain:
+Gemma 使用[張量處理單元
+（Tensor Processing Unit, TPU）](https://cloud.google.com/tpu/docs/intro-to-tpu)硬體（TPUv4p、TPUv5p
+與 TPUv5e）進行訓練。訓練生成式模型需要龐大的運算能力。TPU 專為機器學習中常見的矩陣運算而設計，在此領域具有多項優勢：
 
-- **Performance**: TPUs are specifically designed to handle the massive computations involved in training generative models. They can speed up training considerably compared to CPUs.
-- **Memory**: TPUs often come with large amounts of high-bandwidth memory, allowing for the handling of large models and batch sizes during training. This can lead to better model quality.
-- **Scalability**: TPU Pods (large clusters of TPUs) provide a scalable solution for handling the growing complexity of large foundation models. You can distribute training across multiple TPU devices for faster and more efficient processing.
-- **Cost-effectiveness**: In many scenarios, TPUs can provide a more cost-effective solution for training large models compared to CPU-based infrastructure, especially when considering the time and resources saved due to faster training.
+- **效能**：TPU 專為處理訓練生成式模型所涉及的大規模運算而設計。與 CPU 相比，可大幅加速訓練。
+- **記憶體**：TPU 通常配備大量高頻寬記憶體，可在訓練期間處理大型模型與批次大小，有助於提升模型品質。
+- **可擴展性**：TPU Pod（大型 TPU 叢集）為應對日益複雜的大型基礎模型提供了可擴展的解決方案。您可以將訓練分散到多個 TPU 裝置，以更快、更有效率地處理。
+- **成本效益**：在許多情境下，與基於 CPU 的基礎設施相比，TPU 為訓練大型模型提供了更具成本效益的方案，尤其是考量到更快的訓練所節省的時間與資源。
 
-These advantages are aligned with
-[Google's commitments to operate sustainably](https://sustainability.google/operating-sustainably/).
+這些優勢與
+[Google 永續營運的承諾](https://sustainability.google/operating-sustainably/)相符。
 
-### Software
+### 軟體
 
-Training was done using [JAX](https://github.com/jax-ml/jax) and
-[ML Pathways](https://blog.google/technology/ai/introducing-pathways-next-generation-ai-architecture/).
-JAX allows researchers to take advantage of the latest generation of hardware,
-including TPUs, for faster and more efficient training of large models. ML
-Pathways is Google's latest effort to build artificially intelligent systems
-capable of generalizing across multiple tasks. This is specially suitable for
-foundation models, including large language models like these ones.
+訓練使用 [JAX](https://github.com/jax-ml/jax) 與
+[ML Pathways](https://blog.google/technology/ai/introducing-pathways-next-generation-ai-architecture/) 進行。
+JAX 讓研究人員得以利用最新一代硬體（包括 TPU），更快、更有效率地訓練大型模型。ML
+Pathways 是 Google 為打造能跨多個任務泛化的人工智慧系統所做的最新努力。這特別適合基礎模型，包括這類大型語言模型。
 
-Together, JAX and ML Pathways are used as described in the
-[paper about the Gemini family of models](https://goo.gle/gemma2report){ data-model="gemma-2" }:
-*"the 'single controller' programming model of Jax and Pathways allows a single
-Python process to orchestrate the entire training run, dramatically simplifying
-the development workflow."*
+JAX 與 ML Pathways 的共同使用方式如[關於 Gemini 模型家族的論文](https://goo.gle/gemma2report){ data-model="gemma-2" }所述：
+*「Jax 與 Pathways 的『單一控制器』程式設計模型，讓單一 Python 行程即可編排整個訓練流程，大幅簡化了開發工作流程。」*
 
-## Evaluation
+## 評測
 
-Model evaluation metrics and results.
+模型評測指標與結果。
 
-### Benchmark Results
+### 基準測試結果
 
-These models were evaluated at full precision (float32) against a large
-collection of different datasets and metrics to cover different aspects of
-content generation. Evaluation results marked with **IT** are for
-instruction-tuned models. Evaluation results marked with **PT** are for
-pre-trained models.
+這些模型以全精度（float32）使用大量不同的資料集與指標進行評測，涵蓋內容生成的各個面向。標示 **IT** 的評測結果為指令微調模型的結果；標示 **PT** 的為預訓練模型的結果。
 
-#### Reasoning and factuality
+#### 推理與事實性
 
-| Benchmark | Metric | n-shot | E2B PT | E4B PT |
+| 基準測試 | 指標 | n-shot | E2B PT | E4B PT |
 |---|---|---|---|---|
-| [HellaSwag](https://arxiv.org/abs/1905.07830) | Accuracy | 10-shot | 72.2 | 78.6 |
-| [BoolQ](https://arxiv.org/abs/1905.10044) | Accuracy | 0-shot | 76.4 | 81.6 |
-| [PIQA](https://arxiv.org/abs/1911.11641) | Accuracy | 0-shot | 78.9 | 81.0 |
-| [SocialIQA](https://arxiv.org/abs/1904.09728) | Accuracy | 0-shot | 48.8 | 50.0 |
-| [TriviaQA](https://arxiv.org/abs/1705.03551) | Accuracy | 5-shot | 60.8 | 70.2 |
-| [Natural Questions](https://github.com/google-research-datasets/natural-questions) | Accuracy | 5-shot | 15.5 | 20.9 |
-| [ARC-c](https://arxiv.org/abs/1911.01547) | Accuracy | 25-shot | 51.7 | 61.6 |
-| [ARC-e](https://arxiv.org/abs/1911.01547) | Accuracy | 0-shot | 75.8 | 81.6 |
-| [WinoGrande](https://arxiv.org/abs/1907.10641) | Accuracy | 5-shot | 66.8 | 71.7 |
-| [BIG-Bench Hard](https://paperswithcode.com/dataset/bbh) | Accuracy | few-shot | 44.3 | 52.9 |
-| [DROP](https://arxiv.org/abs/1903.00161) | Token F1 score | 1-shot | 53.9 | 60.8 |
+| [HellaSwag](https://arxiv.org/abs/1905.07830) | 準確率 | 10-shot | 72.2 | 78.6 |
+| [BoolQ](https://arxiv.org/abs/1905.10044) | 準確率 | 0-shot | 76.4 | 81.6 |
+| [PIQA](https://arxiv.org/abs/1911.11641) | 準確率 | 0-shot | 78.9 | 81.0 |
+| [SocialIQA](https://arxiv.org/abs/1904.09728) | 準確率 | 0-shot | 48.8 | 50.0 |
+| [TriviaQA](https://arxiv.org/abs/1705.03551) | 準確率 | 5-shot | 60.8 | 70.2 |
+| [Natural Questions](https://github.com/google-research-datasets/natural-questions) | 準確率 | 5-shot | 15.5 | 20.9 |
+| [ARC-c](https://arxiv.org/abs/1911.01547) | 準確率 | 25-shot | 51.7 | 61.6 |
+| [ARC-e](https://arxiv.org/abs/1911.01547) | 準確率 | 0-shot | 75.8 | 81.6 |
+| [WinoGrande](https://arxiv.org/abs/1907.10641) | 準確率 | 5-shot | 66.8 | 71.7 |
+| [BIG-Bench Hard](https://paperswithcode.com/dataset/bbh) | 準確率 | few-shot | 44.3 | 52.9 |
+| [DROP](https://arxiv.org/abs/1903.00161) | 詞元 F1 分數 | 1-shot | 53.9 | 60.8 |
 
-#### Multilingual
+#### 多語言
 
-| Benchmark | Metric | n-shot | E2B IT | E4B IT |
+| 基準測試 | 指標 | n-shot | E2B IT | E4B IT |
 |---|---|---|---|---|
-| [MGSM](https://arxiv.org/abs/2210.03057) | Accuracy | 0-shot | 53.1 | 60.7 |
-| [WMT24++](https://arxiv.org/abs/2502.12404v1) (ChrF) | Character-level F-score | 0-shot | 42.7 | 50.1 |
-| [Include](https://arxiv.org/abs/2411.19799) | Accuracy | 0-shot | 38.6 | 57.2 |
-| [MMLU](https://arxiv.org/abs/2009.03300) (ProX) | Accuracy | 0-shot | 8.1 | 19.9 |
-| [OpenAI MMLU](https://huggingface.co/datasets/openai/MMMLU) | Accuracy | 0-shot | 22.3 | 35.6 |
-| [Global-MMLU](https://huggingface.co/datasets/CohereLabs/Global-MMLU) | Accuracy | 0-shot | 55.1 | 60.3 |
-| [ECLeKTic](https://arxiv.org/abs/2502.21228) | ECLeKTic score | 0-shot | 2.5 | 1.9 |
+| [MGSM](https://arxiv.org/abs/2210.03057) | 準確率 | 0-shot | 53.1 | 60.7 |
+| [WMT24++](https://arxiv.org/abs/2502.12404v1) (ChrF) | 字元級 F 分數 | 0-shot | 42.7 | 50.1 |
+| [Include](https://arxiv.org/abs/2411.19799) | 準確率 | 0-shot | 38.6 | 57.2 |
+| [MMLU](https://arxiv.org/abs/2009.03300) (ProX) | 準確率 | 0-shot | 8.1 | 19.9 |
+| [OpenAI MMLU](https://huggingface.co/datasets/openai/MMMLU) | 準確率 | 0-shot | 22.3 | 35.6 |
+| [Global-MMLU](https://huggingface.co/datasets/CohereLabs/Global-MMLU) | 準確率 | 0-shot | 55.1 | 60.3 |
+| [ECLeKTic](https://arxiv.org/abs/2502.21228) | ECLeKTic 分數 | 0-shot | 2.5 | 1.9 |
 
-#### STEM and code
+#### STEM 與程式設計
 
-| Benchmark | Metric | n-shot | E2B IT | E4B IT |
+| 基準測試 | 指標 | n-shot | E2B IT | E4B IT |
 |---|---|---|---|---|
 | [GPQA](https://arxiv.org/abs/2311.12022) Diamond | RelaxedAccuracy/accuracy | 0-shot | 24.8 | 23.7 |
 | [LiveCodeBench](https://arxiv.org/abs/2403.07974) v5 | pass@1 | 0-shot | 18.6 | 25.7 |
 | Codegolf v2.2 | pass@1 | 0-shot | 11.0 | 16.8 |
-| [AIME 2025](https://www.vals.ai/benchmarks/aime-2025-05-09) | Accuracy | 0-shot | 6.7 | 11.6 |
+| [AIME 2025](https://www.vals.ai/benchmarks/aime-2025-05-09) | 準確率 | 0-shot | 6.7 | 11.6 |
 
-#### Additional benchmarks
+#### 其他基準測試
 
-| Benchmark | Metric | n-shot | E2B IT | E4B IT |
+| 基準測試 | 指標 | n-shot | E2B IT | E4B IT |
 |---|---|---|---|---|
-| [MMLU](https://arxiv.org/abs/2009.03300) | Accuracy | 0-shot | 60.1 | 64.9 |
+| [MMLU](https://arxiv.org/abs/2009.03300) | 準確率 | 0-shot | 60.1 | 64.9 |
 | [MBPP](https://arxiv.org/abs/2108.07732) | pass@1 | 3-shot | 56.6 | 63.6 |
 | [HumanEval](https://arxiv.org/abs/2107.03374) | pass@1 | 0-shot | 66.5 | 75.0 |
 | [LiveCodeBench](https://arxiv.org/abs/2403.07974) | pass@1 | 0-shot | 13.2 | 13.2 |
-| HiddenMath | Accuracy | 0-shot | 27.7 | 37.7 |
-| [Global-MMLU-Lite](https://huggingface.co/datasets/CohereForAI/Global-MMLU-Lite) | Accuracy | 0-shot | 59.0 | 64.5 |
-| [MMLU](https://arxiv.org/abs/2009.03300) (Pro) | Accuracy | 0-shot | 40.5 | 50.6 |
+| HiddenMath | 準確率 | 0-shot | 27.7 | 37.7 |
+| [Global-MMLU-Lite](https://huggingface.co/datasets/CohereForAI/Global-MMLU-Lite) | 準確率 | 0-shot | 59.0 | 64.5 |
+| [MMLU](https://arxiv.org/abs/2009.03300) (Pro) | 準確率 | 0-shot | 40.5 | 50.6 |
 
-## Ethics and Safety
+## 倫理與安全
 
-Ethics and safety evaluation approach and results.
+倫理與安全評測方法及結果。
 
-### Evaluation Approach
+### 評測方法
 
-Our evaluation methods include structured evaluations and internal red-teaming
-testing of relevant content policies. Red-teaming was conducted by a number of
-different teams, each with different goals and human evaluation metrics. These
-models were evaluated against a number of different categories relevant to
-ethics and safety, including:
+我們的評測方法包括結構化評測，以及針對相關內容政策的內部紅隊測試。紅隊測試由多個不同團隊執行，各自有不同的目標與人工評測指標。這些模型針對與倫理及安全相關的多個類別進行評測，包括：
 
-- **Child Safety**: Evaluation of text-to-text and image to text prompts covering child safety policies, including child sexual abuse and exploitation.
-- **Content Safety:** Evaluation of text-to-text and image to text prompts covering safety policies including, harassment, violence and gore, and hate speech.
-- **Representational Harms**: Evaluation of text-to-text and image to text prompts covering safety policies including bias, stereotyping, and harmful associations or inaccuracies.
+- **兒童安全**：針對涵蓋兒童安全政策的文字轉文字與圖像轉文字提示進行評測，包括兒童性虐待與剝削。
+- **內容安全：**針對涵蓋安全政策的文字轉文字與圖像轉文字提示進行評測，包括騷擾、暴力與血腥，以及仇恨言論。
+- **表徵危害**：針對涵蓋安全政策的文字轉文字與圖像轉文字提示進行評測，包括偏見、刻板印象，以及有害關聯或不實內容。
 
-In addition to development level evaluations, we conduct "assurance
-evaluations" which are our 'arms-length' internal evaluations for responsibility
-governance decision making. They are conducted separately from the model
-development team, to inform decision making about release. High level findings
-are fed back to the model team, but prompt sets are held-out to prevent
-overfitting and preserve the results' ability to inform decision making. Notable
-assurance evaluation results are reported to our Responsibility \& Safety Council
-as part of release review.
+除了開發階段的評測，我們還進行「保證評測（assurance evaluations）」——這是我們為負責任治理決策所做的「保持距離（arms-length）」內部評測。這些評測由模型開發團隊以外的單位獨立執行，為發布決策提供依據。高層級發現會回饋給模型團隊，但提示集合會保留不公開，以防止過擬合，並維持結果對決策的參考價值。值得注意的保證評測結果會作為發布審查的一部分，呈報給我們的責任與安全委員會。
 
-### Evaluation Results
+### 評測結果
 
-For all areas of safety testing, we saw safe levels of performance across the
-categories of child safety, content safety, and representational harms relative
-to previous Gemma models. All testing was conducted without safety filters to
-evaluate the model capabilities and behaviors. For text-to-text, image-to-text,
-and audio-to-text, and across all model sizes, the model produced minimal policy
-violations, and showed significant improvements over previous Gemma models'
-performance with respect to high severity violations. A limitation of our
-evaluations was they included primarily English language prompts.
+在所有安全測試領域，相較於先前的 Gemma 模型，我們在兒童安全、內容安全與表徵危害等類別都看到安全的效能水準。所有測試均在未使用安全篩選器的情況下進行，以評測模型的能力與行為。在文字轉文字、圖像轉文字與音訊轉文字、以及所有模型尺寸上，模型僅產生極少的政策違規，並在高嚴重度違規方面較先前 Gemma 模型的表現有顯著改善。我們評測的一個限制是主要包含英文提示。
 
-## Usage and Limitations
+## 使用方式與限制
 
-These models have certain limitations that users should be aware of.
+這些模型存在使用者應注意的特定限制。
 
-### Intended Usage
+### 預期用途
 
-Open generative models have a wide range of applications across various
-industries and domains. The following list of potential uses is not
-comprehensive. The purpose of this list is to provide contextual information
-about the possible use-cases that the model creators considered as part of model
-training and development.
+開放生成式模型在各產業與領域有廣泛應用。以下潛在用途清單並不詳盡，目的在於提供背景資訊，說明模型建立者在模型訓練與開發過程中所考量的可能使用情境。
 
-- Content Creation and Communication
-    - **Text Generation**: Generate creative text formats such as poems, scripts, code, marketing copy, and email drafts.
-    - **Chatbots and Conversational AI**: Power conversational interfaces for customer service, virtual assistants, or interactive applications.
-    - **Text Summarization**: Generate concise summaries of a text corpus, research papers, or reports.
-    - **Image Data Extraction**: Extract, interpret, and summarize visual data for text communications.
-    - **Audio Data Extraction**: Transcribe spoken language, translate speech to text in other languages, and analyze sound-based data.
-- Research and Education
-    - **Natural Language Processing (NLP) and generative model Research**: These models can serve as a foundation for researchers to experiment with generative models and NLP techniques, develop algorithms, and contribute to the advancement of the field.
-    - **Language Learning Tools**: Support interactive language learning experiences, aiding in grammar correction or providing writing practice.
-    - **Knowledge Exploration**: Assist researchers in exploring large bodies of data by generating summaries or answering questions about specific topics.
+- 內容創作與溝通
+    - **文字生成**：生成詩歌、劇本、程式碼、行銷文案與電子郵件草稿等創意文字格式。
+    - **聊天機器人與對話式 AI**：為客戶服務、虛擬助理或互動式應用程式提供對話介面。
+    - **文字摘要**：為文字語料庫、研究論文或報告生成精簡摘要。
+    - **圖像資料擷取**：擷取、解讀與摘要視覺資料，供文字溝通使用。
+    - **音訊資料擷取**：轉錄口語、將語音翻譯為其他語言的文字，並分析基於聲音的資料。
+- 研究與教育
+    - **自然語言處理（NLP）與生成式模型研究**：這些模型可作為研究人員的基礎，用於實驗生成式模型與 NLP 技術、開發演算法，並推動該領域的發展。
+    - **語言學習工具**：支援互動式語言學習體驗，協助文法修正或提供寫作練習。
+    - **知識探索**：協助研究人員探索大量資料，透過生成摘要或回答特定主題的問題。
 
-### Limitations
+### 限制
 
-- Training Data
-    - The quality and diversity of the training data significantly influence the model's capabilities. Biases or gaps in the training data can lead to limitations in the model's responses.
-    - The scope of the training dataset determines the subject areas the model can handle effectively.
-- Context and Task Complexity
-    - Models are better at tasks that can be framed with clear prompts and instructions. Open-ended or highly complex tasks might be challenging.
-    - A model's performance can be influenced by the amount of context provided (longer context generally leads to better outputs, up to a certain point).
-- Language Ambiguity and Nuance
-    - Natural language is inherently complex. Models might struggle to grasp subtle nuances, sarcasm, or figurative language.
-- Factual Accuracy
-    - Models generate responses based on information they learned from their training datasets, but they are not knowledge bases. They may generate incorrect or outdated factual statements.
-- Common Sense
-    - Models rely on statistical patterns in language. They might lack the ability to apply common sense reasoning in certain situations.
+- 訓練資料
+    - 訓練資料的品質與多樣性會顯著影響模型的能力。訓練資料中的偏見或缺口可能導致模型回應受限。
+    - 訓練資料集的範圍決定了模型能有效處理的主題領域。
+- 上下文與任務複雜度
+    - 模型在能以明確提示與指示框架化的任務上表現較好。開放式或高度複雜的任務可能較具挑戰性。
+    - 模型的效能可能受提供的上下文量影響（上下文越長通常輸出越好，但有其上限）。
+- 語言歧義與細微差別
+    - 自然語言本質上很複雜。模型可能難以掌握細微差別、諷刺或比喻性語言。
+- 事實準確性
+    - 模型根據從訓練資料集學到的資訊生成回應，但它們並非知識庫，可能會生成錯誤或過時的事實陳述。
+- 常識
+    - 模型依賴語言中的統計模式，在某些情境下可能缺乏應用常識推理的能力。
 
-### Ethical Considerations and Risks
+### 倫理考量與風險
 
-The development of generative models raises several ethical concerns. In
-creating an open model, we have carefully considered the following:
+生成式模型的開發引發了若干倫理議題。在打造開放模型時，我們審慎考量了以下事項：
 
-- Bias and Fairness
-    - Generative models trained on large-scale, real-world text and image data can reflect socio-cultural biases embedded in the training material. These models underwent careful scrutiny, input data pre-processing described and posterior evaluations reported in this card.
-- Misinformation and Misuse
-    - Generative models can be misused to generate text that is false, misleading, or harmful.
-    - Guidelines are provided for responsible use with the model, see the [Responsible Generative AI Toolkit][responsible-ai].
-- Transparency and Accountability:
-    - This model card summarizes details on the models' architecture, capabilities, limitations, and evaluation processes.
-    - A responsibly developed open model offers the opportunity to share innovation by making generative model technology accessible to developers and researchers across the AI ecosystem.
+- 偏見與公平性
+    - 以大規模真實世界文字與圖像資料訓練的生成式模型可能反映訓練資料中蘊含的社會文化偏見。這些模型經過嚴格審查，輸入資料預處理如上所述，後續評測結果載於本卡。
+- 錯誤資訊與濫用
+    - 生成式模型可能被濫用來生成虛假、誤導或有害的文字。
+    - 我們提供負責任使用模型的指南，詳見 [負責任生成式 AI 工具包][responsible-ai]。
+- 透明度與問責制：
+    - 本模型卡彙整了模型的架構、能力、限制與評測流程的詳細資訊。
+    - 一個負責任地開發的開放模型，讓整個 AI 生態系的開發者與研究人員都能取用生成式模型技術，提供了共享創新的機會。
 
-Risks identified and mitigations:
+已識別的風險與緩解措施：
 
-- **Perpetuation of biases**: It's encouraged to perform continuous monitoring (using evaluation metrics, human review) and the exploration of de-biasing techniques during model training, fine-tuning, and other use cases.
-- **Generation of harmful content**: Mechanisms and guidelines for content safety are essential. Developers are encouraged to exercise caution and implement appropriate content safety safeguards based on their specific product policies and application use cases.
-- **Misuse for malicious purposes** : Technical limitations and developer and end-user education can help mitigate against malicious applications of generative models. Educational resources and reporting mechanisms for users to flag misuse are provided. Prohibited uses of Gemma models are outlined in the [Gemma Prohibited Use Policy][prohibited-use].
-- **Privacy violations**: Models were trained on data filtered for removal of certain personal information and other sensitive data. Developers are encouraged to adhere to privacy regulations with privacy-preserving techniques.
+- **偏見的延續**：鼓勵在模型訓練、微調與其他使用情境中持續監控（使用評測指標、人工審查），並探索去偏見技術。
+- **有害內容的生成**：內容安全機制與指南至關重要。鼓勵開發者謹慎行事，並依據其特定產品政策與應用情境實施適當的內容安全防護。
+- **惡意用途的濫用**：技術限制，以及開發者與終端使用者的教育，有助於緩解生成式模型的惡意應用。我們提供教育資源與回報機制，供使用者舉報濫用。Gemma 模型的禁用用途載於 [Gemma 禁用用途政策][prohibited-use]。
+- **隱私侵犯**：模型在經過過濾以移除部分個人資訊與其他敏感資料的資料上訓練。鼓勵開發者遵守隱私法規，並採用隱私保護技術。
 
-### Benefits
+### 優點
 
-At the time of release, this family of models provides high-performance open
-generative model implementations designed from the ground up for responsible AI
-development compared to similarly sized models.
+在發布時，與同等規模的模型相比，此模型家族提供從零開始為負責任 AI 開發而設計的高效能開放生成式模型實作。
 
-Using the benchmark evaluation metrics described in this document, these models
-have shown to provide superior performance to other, comparably-sized open model
-alternatives.
+根據本文件所述的基準測試評測指標，這些模型的表現優於其他同等規模的開放模型替代方案。

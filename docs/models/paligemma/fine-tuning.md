@@ -1,74 +1,73 @@
 ---
-title: Fine-tune PaliGemma with JAX and Flax
-description: This notebook shows how to fine-tune PaliGemma on a vision-language task with JAX.
+title: 使用 JAX 與 Flax 微調 PaliGemma
+description: 本筆記本教學說明如何使用 JAX 與 Flax，在視覺語言任務上微調 PaliGemma 模型，包含完整的訓練流程。
 models: [paligemma]
 frameworks: [jax]
 colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs/notebooks/paligemma-fine-tuning.ipynb
 source_url: "https://ai.google.dev/gemma/docs/paligemma/fine-tuning-paligemma.md.txt"
 ---
-# Fine-tune PaliGemma with JAX and Flax
+# 使用 JAX 與 Flax 微調 PaliGemma
 
 
-This notebook shows how to fine-tune [PaliGemma](index.md) on a vision-language task with [JAX](https://jax.readthedocs.io/en/latest/index.html). *Fine-tuning* is a process that can improve your model's performance on specific tasks or help the model adhere to specific output requirements when instructions aren't sufficient and you have a set of examples that demonstrate the outputs you want. Gemma-based models like PaliGemma require fine-tuning to produce expected results.
+本筆記本說明如何使用 [JAX](https://jax.readthedocs.io/en/latest/index.html) 在視覺語言任務上微調 [PaliGemma](index.md)。*微調*（fine-tuning）是一種可以提升模型在特定任務上的效能的流程，也可以在指示不足時，幫助模型符合特定的輸出需求（前提是您有一組能展示期望輸出的範例）。像 PaliGemma 這類基於 Gemma 的模型需要經過微調，才能產生符合預期的結果。
 
-### What's in this notebook
+### 本筆記本包含哪些內容
 
-This notebook uses the model reference implementation from [`big_vision`](https://github.com/google-research/big_vision)
-and shows how to:
+本筆記本使用來自 [`big_vision`](https://github.com/google-research/big_vision) 的模型參考實作，並說明如何：
 
-- Install dependencies, and download the PaliGemma model checkpoint and training data
-- Load the model onto GPU devices
-- Prepare the model's inputs for training and inference
-- Fine-tune the model
-- Inspect the output
+- 安裝相依套件，並下載 PaliGemma 模型檢查點與訓練資料
+- 將模型載入 GPU 裝置
+- 為訓練與推論準備模型的輸入
+- 微調模型
+- 檢視輸出
 
-The training data for this notebook consists of 90 pairs of images and long captions describing them. To make it runnable on a T4 colab runtime, you'll only fine-tune the attention layers of the language model and freeze the other parameters.
+本筆記本的訓練資料由 90 組圖片及其長篇描述字幕組成。為了讓它能在 T4 Colab 執行環境上運行，您只會微調語言模型的注意力層，並凍結其他參數。
 
-This example is for learning purposes only. In a real use case, the amount of data, trainable parameters, training steps and hyper-parameters, and obtained results could be significantly different.
+此範例僅供學習用途。在實際使用案例中，資料量、可訓練參數、訓練步數與超參數，以及得到的結果都可能有顯著差異。
 
-### Before you begin
+### 開始之前
 
-Before going through this notebook, you should be familiar with Python code, as well as how large language models (LLMs) are trained. You don't need to be familiar with JAX, but basic knowledge about JAX (or similar technologies such as Keras) is helpful when reading through the example code.
+在開始本筆記本之前，您應該熟悉 Python 程式碼，以及大型語言模型（LLM）的訓練方式。您不需要熟悉 JAX，但在閱讀範例程式碼時，具備 JAX（或 Keras 等類似技術）的基礎知識會很有幫助。
 
-## Setup
+## 設定
 
-The following sections explain the preliminary steps for getting a notebook to use a PaliGemma model, including model access, getting an API key, and configuring the notebook runtime.
+以下各節說明讓筆記本能使用 PaliGemma 模型的前置步驟，包括取得模型存取權、取得 API 金鑰，以及設定筆記本執行環境。
 
-### Get access to PaliGemma
+### 取得 PaliGemma 存取權
 
-Before using PaliGemma for the first time, you must request access to the model through Kaggle by completing the following steps:
+首次使用 PaliGemma 之前，您必須透過 Kaggle 完成以下步驟來申請模型存取權：
 
-1. Log in to [Kaggle](https://www.kaggle.com), or create a new Kaggle account if you don't already have one.
-2. Go to the [PaliGemma model card](https://www.kaggle.com/models/google/paligemma-2){ data-model="paligemma" } and click **Request Access**.
-3. Complete the consent form and accept the terms and conditions.
+1. 登入 [Kaggle](https://www.kaggle.com)，若尚未擁有帳號，請建立新的 Kaggle 帳號。
+2. 前往 [PaliGemma 模型卡](https://www.kaggle.com/models/google/paligemma-2){ data-model="paligemma" }，然後點選 **Request Access**。
+3. 填寫同意表單並接受條款與條件。
 
-### Configure your API key
+### 設定您的 API 金鑰
 
-To use PaliGemma, you must provide your Kaggle username and a Kaggle API key.
+要使用 PaliGemma，您必須提供 Kaggle 使用者名稱與 Kaggle API 金鑰。
 
-To generate a Kaggle API key, open your [**Settings** page in Kaggle](https://www.kaggle.com/settings) and click **Create New Token** . This triggers the download of a `kaggle.json` file containing your API credentials.
+要產生 Kaggle API 金鑰，請開啟您的 [**Kaggle 設定頁面**](https://www.kaggle.com/settings)，然後點選 **Create New Token**。這會觸發下載包含您 API 憑證的 `kaggle.json` 檔案。
 
-Then, in Colab, select **Secrets** (🔑) in the left pane and add your Kaggle username and Kaggle API key. Store your username under the name `KAGGLE_USERNAME` and your API key under the name `KAGGLE_KEY`.
+接著在 Colab 中，選取左側窗格的 **Secrets**（🔑），新增您的 Kaggle 使用者名稱與 Kaggle API 金鑰。將使用者名稱存放在 `KAGGLE_USERNAME` 名稱下，將 API 金鑰存放在 `KAGGLE_KEY` 名稱下。
 
-### Select the runtime
+### 選擇執行環境
 
-To complete this tutorial, you'll need to have a Colab runtime with sufficient resources to run the PaliGemma model. In this case, you can use a T4 GPU:
+要完成本教學課程，您需要具備足夠資源來執行 PaliGemma 模型的 Colab 執行環境。在這個案例中，您可以使用 T4 GPU：
 
-1. In the upper-right of the Colab window, click the **▾ (Additional connection options)** dropdown menu.
-2. Select **Change runtime type**.
-3. Under **Hardware accelerator** , select **T4 GPU**.
+1. 在 Colab 視窗右上角，點選 **▾ (Additional connection options)** 下拉選單。
+2. 選取 **Change runtime type**。
+3. 在 **Hardware accelerator** 下選取 **T4 GPU**。
 
-### Install Python packages
+### 安裝 Python 套件
 
-Run the below cell to install KaggleHub.
+執行以下儲存格以安裝 KaggleHub。
 
 ```bash { .notebook-cell }
 pip install -U -q kagglehub
 ```
 
-### Set environment variables
+### 設定環境變數
 
-Set the environment variables and Kaggle login.
+設定環境變數並登入 Kaggle。
 
 ```python { .notebook-cell }
 import os
@@ -81,9 +80,9 @@ import kagglehub
 kagglehub.login()
 ```
 
-### Fetch the `big_vision` repository and install related dependencies
+### 擷取 `big_vision` 存放庫並安裝相關相依套件
 
-Download the `big_vision` repository to your Colab notebook from GitHub and install dependencies related to `big_vision` by running the following code.
+執行以下程式碼，從 GitHub 將 `big_vision` 存放庫下載到您的 Colab 筆記本，並安裝與 `big_vision` 相關的相依套件。
 
 ```python { .notebook-cell }
 import os
@@ -107,9 +106,9 @@ if "big_vision_repo" not in sys.path:
 !pip3 install -q "overrides" "ml_collections" "einops~=0.7" "sentencepiece"
 ```
 
-### Import JAX and other dependencies
+### 匯入 JAX 與其他相依套件
 
-Import JAX and other dependencies required for PaliGemma, like TensorFlow and NumPy.
+匯入 PaliGemma 所需的 JAX 與其他相依套件，例如 TensorFlow 與 NumPy。
 
 ```python { .notebook-cell }
 import base64
@@ -155,15 +154,15 @@ JAX platform: gpu
 JAX devices:  1
 ```
 
-## Download and configure the model
+## 下載並設定模型
 
-In this step, you'll download the model checkpoint and configure it so that you can fine-tune it later on. This step shows you how to move model parameters into TPU memory, which is useful for fine-tuning models on devices with limited resources.
+在此步驟中，您將下載模型檢查點並進行設定，以便稍後進行微調。這個步驟也會說明如何將模型參數移入 TPU 記憶體，這對於在資源有限的裝置上微調模型很有用。
 
-### Download the model checkpoint
+### 下載模型檢查點
 
-PaliGemma includes several model variations. For this tutorial, you'll use the base [JAX/FLAX PaliGemma 3B weight model](https://www.kaggle.com/models/google/paligemma-2/jax/paligemma2-3b-pt-224){ data-model="paligemma" }.
+PaliGemma 包含數種模型變體。本教學課程使用的是基礎的 [JAX/FLAX PaliGemma 3B 權重模型](https://www.kaggle.com/models/google/paligemma-2/jax/paligemma2-3b-pt-224){ data-model="paligemma" }。
 
-Download the model checkpoint from Kaggle by running the following code. This process takes several minutes to complete.
+執行以下程式碼從 Kaggle 下載模型檢查點。這個過程需要幾分鐘才能完成。
 
 ```python { .notebook-cell }
 import os
@@ -212,22 +211,22 @@ Downloading the dataset...
 Data path: ./longcap100
 ```
 
-### Configure the model
+### 設定模型
 
-It's time to actually start configuring the model that you're going to use.
+現在開始真正設定您要使用的模型。
 
-For this notebook, you need to be able to fit your model onto a T4 GPU. Having a limited resource like space constraints means that you have to be mindful of how your model is configured.
+在本筆記本中，您需要讓模型能裝進 T4 GPU。受限於記憶體空間這類有限資源，設定模型時必須格外留意。
 
-If you fine-tune every parameter, your model won't be able to run in the notebook environment. As a result, in this part of the notebook, you'll configure your model so that it has the ability to freeze some of the parameters, and only fine-tune the parameters that really need to be fine-tuned for the model to give you accurate results. In LLMs, parameters are said to be *frozen* when they are no longer actively being used to train the model.
+如果微調所有參數，模型將無法在筆記本環境中執行。因此，在本筆記本的這一部分，您將設定模型使其能凍結部分參數，只微調真正需要微調、才能讓模型給出準確結果的參數。在 LLM 中，當參數不再主動用於訓練模型時，就稱為被*凍結*（frozen）。
 
-In order to configure your model, you need to:
+要設定模型，您需要：
 
-- Initialize the `model_config` as a [`FrozenConfigDict`](https://github.com/google/ml_collections/tree/master#frozenconfigdict) so that you can freeze some of the parameters and keep memory usage low
-- Initialize an instance of the PaliGemma `Model` class using the `model_config` as its configurations
-- Load the model parameters into RAM
-- Define a `decode` function to sample outputs from the model
+- 將 `model_config` 初始化為 [`FrozenConfigDict`](https://github.com/google/ml_collections/tree/master#frozenconfigdict)，以便凍結部分參數並降低記憶體用量
+- 使用 `model_config` 作為設定，初始化 PaliGemma `Model` 類別的實例
+- 將模型參數載入 RAM
+- 定義 `decode` 函式，從模型取樣輸出
 
-This code in this cell takes about a minute to run to completion.
+這個儲存格的程式碼執行約需一分鐘。
 
 ```python { .notebook-cell }
 # Define model
@@ -249,11 +248,11 @@ decode_fn = predict_fns.get_all(model)['decode']
 decode = functools.partial(decode_fn, devices=jax.devices(), eos_token=tokenizer.eos_id())
 ```
 
-### Move model parameters into GPU/TPU memory
+### 將模型參數移入 GPU/TPU 記憶體
 
-Now you need to move the model parameters into GPU/TPU memory. First, shard the parameters across the available GPUs, then load the parameters. Here, you'll load the parameters sequentially. This process takes longer than loading them simultaneously, but it requires more RAM than you have available in this notebook.
+現在您需要將模型參數移入 GPU/TPU 記憶體。首先，將參數分片（shard）到可用的 GPU 上，然後載入參數。在這裡，您將依序載入參數。這個過程比同時載入更耗時，但同時載入需要的 RAM 超過了本筆記本可用的量。
 
-Finally, print out all of the parameters to see what type each individual parameter is cast to. Frozen parameters are kept as `float16`, while the trainable parameters are cast to `float32`. When you inspect the list, you'll see that most of the parameters have been frozen and are `float16`.
+最後，列印出所有參數，查看每個參數被轉換為哪種型別。凍結的參數維持為 `float16`，而可訓練的參數會轉換為 `float32`。檢視清單時，您會看到大部分參數已被凍結且為 `float16`。
 
 ```python { .notebook-cell }
 # Create a pytree mask of the trainable params.
@@ -323,7 +322,7 @@ img/Transformer/encoderblock/MultiHeadDotProductAttention_0/key/kernel          
 img/Transformer/encoderblock/MultiHeadDotProductAttention_0/out/bias             (27, 1152)             float16
 img/Transformer/encoderblock/MultiHeadDotProductAttention_0/out/kernel           (27, 16, 72, 1152)     float16
 img/Transformer/encoderblock/MultiHeadDotProductAttention_0/query/bias           (27, 16, 72)           float16
-img/Transformer/encoderblock/MultiHeadDotProductAttention_0/query/kernel         (27, 1152, 16, 72)     float16
+img/Transformer/encoderblock/MultiHeadDotProductAttention_0/query/kernel        (27, 1152, 16, 72)     float16
 img/Transformer/encoderblock/MultiHeadDotProductAttention_0/value/bias           (27, 16, 72)           float16
 img/Transformer/encoderblock/MultiHeadDotProductAttention_0/value/kernel         (27, 1152, 16, 72)     float16
 img/embedding/bias                                                               (1152,)                float16
@@ -344,19 +343,19 @@ llm/layers/pre_attention_norm/scale                                             
 llm/layers/pre_ffw_norm/scale                                                    (26, 2304)             float16
 ```
 
-## Prepare to tune the model
+## 準備微調模型
 
-Now that your model is configured, you can tune it. In this step, you'll create your model's inputs as well as the training and validation iterators, view the training examples, and define the training and validation loops.
+模型設定完成後，就可以開始微調了。在此步驟中，您將建立模型的輸入以及訓練與驗證迭代器、查看訓練範例，並定義訓練與驗證迴圈。
 
-### Create model inputs
+### 建立模型輸入
 
-The model checkpoint you're using has already been trained on images of various aspect ratios that have been resized to 224x224 pixels, and to handle tokenized texts.
+您使用的模型檢查點已經在各種長寬比、已調整為 224x224 像素的圖片上訓練過，並且能處理經過詞元化的文字。
 
-The code below defines three functions that you'll use in the next step create the model's inputs:
+以下程式碼定義了三個函式，您將在下一步使用它們來建立模型的輸入：
 
-- **`preprocess_image`:** Normalizes the image data. In this case, pre-processing converts the passed-in image to greyscale, removes the alpha layer, and resizes the passed-in image to the size required by the model for image inputs (224x224 pixels).
-- **`preprocess_tokens`:** Splits the tokens up and adds flags to mark whether a token is a prefix or suffix token. These flags will be used later on in the code, during the training step and the evaluation loop.
-- **`postprocess_tokens`:** Removes any tokens left at and/or after the end-of-sequence (EOS) token and returns the remaining decoded tokens.
+- **`preprocess_image`：** 正規化圖片資料。在此案例中，前處理會將傳入的圖片轉為灰階、移除 Alpha 圖層，並將圖片調整為模型圖片輸入所需的尺寸（224x224 像素）。
+- **`preprocess_tokens`：** 拆分詞元，並加入旗標來標記詞元是前綴（prefix）還是後綴（suffix）詞元。這些旗標稍後會在程式碼中、訓練步驟與評估迴圈期間使用。
+- **`postprocess_tokens`：** 移除序列結束（EOS）詞元處及之後殘留的任何詞元，並回傳剩餘的解碼詞元。
 
 ```python { .notebook-cell }
 def preprocess_image(image, size=224):
@@ -407,13 +406,13 @@ def postprocess_tokens(tokens):
   return tokenizer.decode(tokens)
 ```
 
-### Create the training and validation iterators
+### 建立訓練與驗證迭代器
 
-Create two iterators:
+建立兩個迭代器：
 
-- A **training iterator** to allow the training process to go through the data in chunks rather than processing it all at once
-    - This allows you to do some data pre-processing before use
-- A **validation iterator** that allows the training process to iterate over the validation dataset to see how well the tuned model aligned with the provided results
+- **訓練迭代器**，讓訓練過程能分批處理資料，而非一次處理全部資料
+    - 這讓您可以在使用前進行一些資料前處理
+- **驗證迭代器**，讓訓練過程能迭代驗證資料集，以查看微調後的模型與所提供結果的吻合程度
 
 ```python { .notebook-cell }
 SEQLEN = 128
@@ -464,15 +463,15 @@ def validation_data_iterator():
     }
 ```
 
-### View training examples
+### 查看訓練範例
 
-In this notebook, the training data contains 90 images that are paired with long descriptions of what's depicted in the image.
+在本筆記本中，訓練資料包含 90 張圖片，每張都搭配描述圖片內容的長篇描述。
 
 !!! Note
-    Normal training data sets that are meant to be used for practical use cases should contain more images, but this notebook limits the number of data points so that you can train the model in a reasonable amount of time for an example.
+    用於實際案例的一般訓練資料集應包含更多圖片，但本筆記本限制了資料點數量，以便您能在合理的時間內訓練模型、作為範例。
 
 
-The code below prints a random selection of images with their descriptions from the training data set so that you can see what the images and descriptions your model is trained on looks like. Each image is displayed in as a 128x128 pixel JPEG, with the description printed next to the image to the right.
+以下程式碼會從訓練資料集中隨機選取圖片並列印其描述，讓您可以看到用來訓練模型的圖片與描述是什麼樣子。每張圖片會顯示為 128x128 像素的 JPEG，描述則列印在圖片右側。
 
 ```python { .notebook-cell }
 def render_inline(image, resize=(128, 128)):
@@ -503,23 +502,23 @@ print("Training examples")
 display(HTML(html_out))
 ```
 
-### Define the training and evaluation loops
+### 定義訓練與評估迴圈
 
-Define the training loop to train the model on the provided dataset, and the evaluation loop to look at all of the examples in the validation dataset and make its predictions.
+定義訓練迴圈來在所提供的資料集上訓練模型，並定義評估迴圈來查看驗證資料集中的所有範例並進行預測。
 
-#### Defining the training loop
+#### 定義訓練迴圈
 
-The `update_fn` function defines the training step. During the training step, the loss per example is calculated and stochastic gradient descent (SGD) is applied to the trainable parameters.
+`update_fn` 函式定義了訓練步驟。在訓練步驟期間，會計算每個範例的損失，並對可訓練參數套用隨機梯度下降（SGD）。
 
-Recall that earlier in the notebook, you included flags in the `preprocess_tokens` function that included `mask_loss`. You'll use the `mask_loss` flag here to exclude prefix and padded tokens from the loss. Without it, the loss calculation will be skewed. You also need to normalize each example, since each of them has a different number of tokens. After the prefix and padded tokens have been excluded and the examples have been normalized, you can calculate the loss per example.
+回想一下，本筆記本稍早在 `preprocess_tokens` 函式中加入了包含 `mask_loss` 的旗標。在這裡，您將使用 `mask_loss` 旗標將前綴與填充詞元排除在損失之外。若沒有它，損失計算會被扭曲。您還需要對每個範例進行正規化，因為每個範例的詞元數量不同。排除前綴與填充詞元並正規化範例之後，就可以計算每個範例的損失。
 
-The training step also includes a function to apply an SGD to optimize the training.
+訓練步驟還包含一個套用 SGD 以優化訓練的函式。
 
-#### Defining the evaluation loop
+#### 定義評估迴圈
 
-The `make_predictions` function is your evaluation loop. The evaluation loop is fairly straight forward with one notable change. If you recall from the beginning of the notebook, you only have 90 examples in your training data set. This is a very small amount of training examples, and your model ends up not having enough examples for the batch size when you run the training. This means that in the evaluation loop, you need to pad the batch by repeating examples.
+`make_predictions` 函式就是您的評估迴圈。評估迴圈相當直觀，只有一處值得注意的變化。回想一下，本筆記本開頭提到訓練資料集只有 90 個範例。這是非常少的訓練範例數，導致執行訓練時，模型的範例數不足以填滿批次大小。這表示在評估迴圈中，您需要透過重複範例來填充批次。
 
-To make sure that your evaluation loop only counts actual examples and not the padded examples, you have to apply a mask to the padded examples that excludes them from the output.
+為確保評估迴圈只計算實際範例而不計入填充範例，您必須對填充範例套用遮罩，將它們排除在輸出之外。
 
 ```python { .notebook-cell }
 # The main update_fn using a simple stochastic gradient descent (SGD).
@@ -597,15 +596,15 @@ def make_predictions(data_iterator, *, num_examples=None,
         return outputs
 ```
 
-## Tune the model
+## 微調模型
 
-Now that you've set everything up and taken a look at the training data, it's time to finally tune the model. The code below runs the training loop for the model for 64 steps and prints the learning rate (`lr` in the printed output) and loss rate for each step.
+一切設定就緒並查看過訓練資料後，終於可以開始微調模型了。以下程式碼會讓模型執行 64 步的訓練迴圈，並列印每個步驟的學習率（列印輸出中的 `lr`）與損失率。
 
-Every 16 steps, the model prints what its predictions are at that step in the training. This code prints out predictions for the same set of images so that you can see the model's ability to predict descriptions improve over time.
+每 16 步，模型會列印該訓練步驟的預測結果。這段程式碼會對同一組圖片列印預測，讓您可以看到模型預測描述的能力隨時間逐步改善。
 
-At earlier steps in the training, there's likely issues with the descriptions, such as repeated sentences as the model gets stuck in its predictive loop or unfinished sentences. The model's predictions become steadily more accurate as training progresses. By step 64, the model's predictions should closely resemble the descriptions provided by the training data.
+在訓練的早期步驟，描述可能會有問題，例如模型卡在預測迴圈中而出現重複的句子，或句子未完成。隨著訓練進行，模型的預測會穩步變得更準確。到第 64 步時，模型的預測應該會與訓練資料提供的描述非常接近。
 
-This process takes around 15 minutes to complete on T4 TPUs.
+在 T4 TPU 上，這個過程約需 15 分鐘完成。
 
 ```python { .notebook-cell }
 # Run a short training loop with cosine learning rate schedule.
@@ -652,11 +651,11 @@ for step in range(1, TRAIN_STEPS+1):
     display(HTML(html_out))
 ```
 
-## Output
+## 輸出
 
-The validation data for this notebook consists of just 10 images. In normal code, you would likely have many more data points for validation, but for this notebook, run the following code to generate descriptions for all 10 images. After tuning the model, these descriptions should be very similar in form and content coverage to the descriptions included with the training data that you looked at earlier in this notebook.
+本筆記本的驗證資料只有 10 張圖片。在一般的程式碼中，驗證的資料點可能會多得多，但在本筆記本中，請執行以下程式碼為全部 10 張圖片產生描述。微調模型之後，這些描述在形式與內容涵蓋面上，應該會與您稍早在本筆記本中查看的訓練資料描述非常相似。
 
-Run the below code to generate descriptions for the validation data set.
+執行以下程式碼，為驗證資料集產生描述。
 
 ```python { .notebook-cell }
 # The validation data consists of 10 images in a different domain than training

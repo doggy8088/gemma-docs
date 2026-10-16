@@ -1,47 +1,43 @@
 ---
 title: Gemma Scope
-description: Gemma Scope 2 is a comprehensive, open suite of interpretability tools designed for the Gemma 3 model collection.
+description: Gemma Scope 2 是為 Gemma 3 模型系列設計的全面、開放的可解釋性工具套件。
 models: [gemma-scope]
 source_url: "https://ai.google.dev/gemma/docs/gemma_scope.md.txt"
 ---
 # Gemma Scope
 
-## Analyze Gemma 3 with Gemma Scope 2
+## 使用 Gemma Scope 2 分析 Gemma 3
 
 
-Gemma Scope 2 is a comprehensive, open suite of interpretability tools designed for the
-**Gemma 3** model collection. This tool allows you to examine the behavior of
-individual layers. It allows researchers to analyze complex language model behaviors and
-debug emergent behaviors such as jailbreaks or hallucinations.
+Gemma Scope 2 是為 **Gemma 3** 模型系列設計的全面、開放的可解釋性工具套件。此工具讓您能檢視各別層的行為，協助研究人員分析複雜的語言模型行為，並除錯如越獄（jailbreak）或幻覺（hallucination）等新興行為。
 
 
-This toolkit acts as a microscope for the model, providing **Sparse Autoencoders (SAEs)**
-and **Transcoders** trained on every layer of the Gemma 3 family.
+此工具套件如同模型的顯微鏡，提供在 Gemma 3 家族每一層上訓練的**稀疏自編碼器（Sparse Autoencoders, SAEs）**與**轉換器（Transcoders）**。
 
 
-**Looking for the previous version?**
+**想找舊版嗎？**
 
 
-The original [Gemma Scope (for Gemma 2)](https://deepmind.google/discover/blog/gemma-scope-helping-the-safety-community-shed-light-on-the-inner-workings-of-language-models/)
-remains available for researchers working with the Gemma 2 family of models.
+原始的 [Gemma Scope（適用於 Gemma 2）](https://deepmind.google/discover/blog/gemma-scope-helping-the-safety-community-shed-light-on-the-inner-workings-of-language-models/)
+仍供使用 Gemma 2 模型家族的研究人員使用。
 
-- **Model behavior evaluation** — Use SAEs and Transcoders to analyze complex internal behaviors and multi-step algorithms in Gemma 3.
-- **Chatbot safety \& debugging** — Analyze specific chat behaviors, refusal mechanisms, and chain-of-thought faithfulness to build safer AI agents.
+- **模型行為評測** — 使用 SAE 與 Transcoder 分析 Gemma 3 中複雜的內部行為與多步驟演算法。
+- **聊天機器人安全與除錯** — 分析特定聊天行為、拒答機制與思維鏈忠實度，打造更安全的 AI 智慧代理。
 
-## Learn more
+## 深入了解
 
-### [Read the Gemma Scope 2 Blog](https://deepmind.google/blog/gemma-scope-2-helping-the-ai-safety-community-deepen-understanding-of-complex-language-model-behavior)
+### [閱讀 Gemma Scope 2 部落格](https://deepmind.google/blog/gemma-scope-2-helping-the-ai-safety-community-deepen-understanding-of-complex-language-model-behavior)
 
-Read about the new architecture, training data, and capabilities of Gemma Scope 2.
+了解 Gemma Scope 2 的新架構、訓練資料與能力。
 
-### [Download from Hugging Face](https://huggingface.co/collections/google/gemma-scope-2)
+### [從 Hugging Face 下載](https://huggingface.co/collections/google/gemma-scope-2)
 
-Access the weights, code, and documentation for the Gemma 3 interpretability suite.
+取得 Gemma 3 可解釋性套件的權重、程式碼與文件。
 
-### [Run in Colab](https://colab.sandbox.google.com/drive/1NhWjg7n0nhfW--CjtsOdw5A5J_-Bzn4r?usp=sharing)
+### [在 Colab 中執行](https://colab.sandbox.google.com/drive/1NhWjg7n0nhfW--CjtsOdw5A5J_-Bzn4r?usp=sharing)
 
-Try the interactive tutorial to visualize features and modify model behavior.
+試用互動式教學，視覺化特徵並修改模型行為。
 
-### [Previous Version (Scope Gemma for Gemma 2)](https://huggingface.co/collections/google/gemma-scope-release)
+### [舊版（適用於 Gemma 2 的 Gemma Scope）](https://huggingface.co/collections/google/gemma-scope-release)
 
-Access the blog and resources for the original Gemma Scope for Gemma 2.
+取得原始 Gemma Scope（適用於 Gemma 2）的部落格與資源。

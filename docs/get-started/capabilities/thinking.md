@@ -1,20 +1,20 @@
 ---
-title: Reasoning
-description: Use Gemma 4's thinking mode to reason before answering, for text and image prompts, and parse the reasoning apart from the answer.
+title: 推理
+description: 使用 Gemma 4 的思考模式，在回答前先進行推理，適用於文字與圖像提示，並將推理過程與答案分開解析。
 models: [gemma-4]
 frameworks: [transformers]
 colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs/notebooks/thinking-gemma-4-e2b.ipynb
 ---
-# Reasoning
+# 推理
 
 
-Gemma is a family of lightweight, state-of-the-art open models built from the same research and technology used to create the [Gemini](https://deepmind.google/technologies/gemini/#introduction) models. Gemma 4 is designed to be the world's most efficient open-weight model family.
+Gemma 是一系列輕量級、最先進的開放模型，建立在與建立 [Gemini](https://deepmind.google/technologies/gemini/#introduction) 模型相同的研究與技術之上。Gemma 4 旨在成為全球最具效率的開放權重模型系列。
 
-This document demonstrates how to use the thinking capabilities of Gemma 4 to generate reasoning processes before providing a final answer. You will learn how to enable thinking mode for both text-only and multimodal (image-text) tasks using the Hugging Face [`transformers`](https://github.com/huggingface/transformers) library, and how to parse the output to separate thinking from the answer.
+本文件示範如何使用 Gemma 4 的思考功能，在給出最終答案前產生推理過程。您將學會如何使用 Hugging Face [`transformers`](https://github.com/huggingface/transformers) 函式庫，為純文字與多模態（圖像＋文字）任務啟用思考模式，並解析輸出以將思考過程與答案分開。
 
-## Install Python packages
+## 安裝 Python 套件
 
-Install the Hugging Face libraries required for running the Gemma model and making requests.
+安裝執行 Gemma 模型與發出請求所需的 Hugging Face 函式庫。
 
 ```bash { .notebook-cell }
 # Install PyTorch & other libraries
@@ -24,9 +24,9 @@ pip install torch accelerate
 pip install "transformers>=5.10.1"
 ```
 
-## Load Model
+## 載入模型
 
-Use the [`transformers`](https://github.com/huggingface/transformers) libraries to create an instance of a `processor` and `model` using the `AutoProcessor` and `AutoModelForImageTextToText` classes as shown in the following code example:
+使用 [`transformers`](https://github.com/huggingface/transformers) 函式庫，如以下程式碼範例所示，使用 `AutoProcessor` 與 `AutoModelForImageTextToText` 類別建立 `processor` 與 `model` 的執行個體：
 
 ```python { .model-swap .notebook-cell }
 MODEL_ID = "google/gemma-4-E2B-it"
@@ -37,13 +37,13 @@ model = AutoModelForMultimodalLM.from_pretrained(MODEL_ID, dtype="auto", device_
 processor = AutoProcessor.from_pretrained(MODEL_ID)
 ```
 
-## A single text inference with Thinking
+## 單次文字推論搭配思考模式
 
-To generate a response using the model's thinking capabilities, pass `enable_thinking=True`, the processor will insert the correct thinking tokens into the prompt, instructing the model to think before responding.
+若要使用模型的思考功能產生回應，請傳入 `enable_thinking=True`；處理器會在提示中插入正確的思考詞元，指示模型在回應前先思考。
 !!! Note
-    We've added an empty thinking token to the chat template for `gemma-4-12B-it`, `gemma-4-26B-A4B-it` and `gemma-4-31B-it`. This stabilizes model output by suppressing "ghost" thought channels that may appear even when thinking is deactivated.
+    我們已在 `gemma-4-12B-it`、`gemma-4-26B-A4B-it` 與 `gemma-4-31B-it` 的聊天範本中加入了空白思考詞元，可抑制思考停用時仍可能出現的「幽靈」思考頻道（thought channel），使模型輸出更穩定。
 
-| Model Size | Thinking State | Template Structure / Output |
+| 模型大小 | 思考狀態 | 範本結構／輸出 |
 |---|---|---|
 | **E2B/E4B** | **OFF** | `<|turn>user\n[Prompt]<turn|>\n<|turn>model` |
 | **E2B/E4B** | **ON** | `<|turn>system\n<|think|><turn|>\n<|turn>user\n[Prompt]<turn|>\n<|turn>model` |
@@ -135,9 +135,9 @@ This equation shows that water can dissociate (break apart) into hydrogen ions (
 **If you were looking for a specific type of formula (e.g., in biochemistry, fluid dynamics, or physics), please provide more context, and I can give you a more precise answer!**<turn|>
 ```
 
-Once the text is generated, the response will contain both the reasoning blocks and the final answer bounded by special tokens. You can use the `parse_response` utility to easily extract them into a dictionary containing `thinking` and `answer`.
+文字產生後，回應將包含以特殊詞元為界的推理區塊與最終答案。您可以使用 `parse_response` 工具函式，輕鬆將它們擷取為包含 `thinking` 與 `answer` 的字典。
 !!! Note
-    `skip_special_tokens=False` is mandatory to make the reasoning parser to work correctly.
+    若要讓推理解析器正確運作，必須使用 `skip_special_tokens=False`。
 
 ```python { .notebook-cell }
 response = processor.decode(outputs[0][input_len:], skip_special_tokens=False)
@@ -222,14 +222,13 @@ This equation shows that water can dissociate (break apart) into hydrogen ions (
 
 **If you were looking for a specific type of formula (e.g., in biochemistry, fluid dynamics, or physics), please provide more context, and I can give you a more precise answer!**
 ```
+## 多輪對話範例與思考過程剝除
 
-## Multi-Turn Example with Thought Stripping
+在多輪對話中妥善管理模型產生的思考內容，對於維持效能至關重要。
 
-Properly managing the model's generated thoughts is critical for maintaining performance across multi-turn conversations.
-
-- **Standard Multi-Turn Conversations:** You must remove (strip) the model's generated thoughts from the previous turn before passing the conversation history back to the model for the next turn. If you want to disable thinking mode mid-conversation, you can remove the `<|think|>`{.token-think} token when you strip the previous thoughts.
-- **Function Calling (Exception):** If a single model turn involves function or tool calls, thoughts must **NOT** be removed between the function calls.
-- **Maintaining Conversation History:** The historical model output must only include the final response. Ensure that no generated thoughts from previous turns remain in the context window before the next user turn begins.
+- **標準多輪對話（Standard Multi-Turn Conversations）**：在將對話歷史記錄傳回模型進行下一輪對話前，您必須移除（剝除）模型在上一輪產生的思考內容。若想在對話中途停用思考模式，可在剝除先前思考內容時一併移除 `<|think|>`{.token-think} 詞元。
+- **函式呼叫（例外，Function Calling）**：如果單一模型回合涉及函式或工具呼叫，在函式呼叫之間**不得**移除思考內容。
+- **維持對話歷史記錄（Maintaining Conversation History）**：歷史模型輸出只能包含最終回應。在下一輪使用者提問開始前，請確保先前回合產生的思考內容都沒有留在上下文視窗中。
 
 ```python { .notebook-cell }
 from transformers import TextStreamer
@@ -370,9 +369,9 @@ $$\mathbf{100^\circ\text{C} }$$
 **Note:** If the atmospheric pressure is lower (e.g., at high altitudes), the boiling point will be slightly lower than \\(100^\circ\text{C}\\). If the pressure is higher, the boiling point will be higher.
 ```
 
-## A single image inference
+## 單次圖像推論
 
-The procedure for using the thinking model with visual data is very similar. You can provide an image as part of the `messages` array. Just ensure you pass the image to the processor along with the formatted text, and the model will reason about the visual input before responding.
+將思考模型用於視覺資料的程序非常類似。您可以將圖像作為 `messages` 陣列的一部分提供。只需確保將圖像與格式化的文字一同傳給處理器，模型便會在回應前對視覺輸入進行推理。
 
 ```python { .notebook-cell }
 from PIL import Image
@@ -482,31 +481,31 @@ Key elements visible in the photograph include:
 The image captures the iconic scale and grandeur of the bridge against the backdrop of the water and landscape.
 ```
 
-## Summary
+## 摘要
 
-In this guide, you learned how to use the thinking capabilities of Gemma 4 models to generate reasoning processes before final answers. You covered:
+在本指南中，您學會了如何使用 Gemma 4 模型的思考功能，在最終答案前產生推理過程。內容包括：
 
-1. **Enabling thinking mode**: Using `enable_thinking=True` in `apply_chat_template`.
-2. **Text streamer**: Using `TextStreamer` to observe the thinking process in real-time.
-3. **Parsing the combined output**: Using `parse_response` to separate `thinking` and `answer` blocks.
-4. **Multimodal tasks**: Applying thinking capabilities to multimodal tasks (image + text).
+1. **啟用思考模式（Enabling thinking mode）**：在 `apply_chat_template` 中使用 `enable_thinking=True`。
+2. **文字串流（Text streamer）**：使用 `TextStreamer` 即時觀察思考過程。
+3. **解析合併輸出（Parsing the combined output）**：使用 `parse_response` 分離 `thinking` 與 `answer` 區塊。
+4. **多模態任務（Multimodal tasks）**：將思考功能應用於多模態任務（圖像＋文字）。
 
-## What's next
+## 後續步驟
 
 <div class="card-grid">
 <a class="card" href="../prompt-formatting.md">
   <span class="card-icon">{{ icon('lucide/braces') }}</span>
-  <div class="card-title">Prompt formatting</div>
-  <p class="card-desc">The control tokens that structure a Gemma prompt.</p>
+  <div class="card-title">提示格式設定</div>
+  <p class="card-desc">建構 Gemma 提示的控制詞元。</p>
 </a>
 <a class="card" href="function-calling.md">
   <span class="card-icon">{{ icon('lucide/wrench') }}</span>
-  <div class="card-title">Tool calling</div>
-  <p class="card-desc">Give Gemma functions to call and feed the results back.</p>
+  <div class="card-title">工具呼叫</div>
+  <p class="card-desc">提供函式讓 Gemma 呼叫，並將結果回傳。</p>
 </a>
 <a class="card" href="../../deployment/index.md">
   <span class="card-icon">{{ icon('lucide/play') }}</span>
-  <div class="card-title">Run Gemma</div>
-  <p class="card-desc">Every engine that runs Gemma, from a laptop to a cluster.</p>
+  <div class="card-title">執行 Gemma</div>
+  <p class="card-desc">從筆記型電腦到叢集，執行 Gemma 的各種引擎。</p>
 </a>
 </div>

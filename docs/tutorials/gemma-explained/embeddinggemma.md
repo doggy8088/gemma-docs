@@ -1,41 +1,41 @@
 ---
-title: EmbeddingGemma Architecture
-description: Text embedding model for search and retrieval.
+title: EmbeddingGemma 架構
+description: 深入解說 EmbeddingGemma 的模型架構與訓練配方：專為搜尋與檢索任務設計的高品質文字嵌入模型。
 models: [embeddinggemma]
 source_url: https://developers.googleblog.com/gemma-explained-embeddinggemma-architecture-and-recipe/
 ---
 
-# Gemma Explained: EmbeddingGemma Architecture and Recipe
+# Gemma 詳解：EmbeddingGemma 架構與配方
 
 !!! note
-    Originally published on the
-    [Google Developers Blog](https://developers.googleblog.com/gemma-explained-embeddinggemma-architecture-and-recipe/).
+    最初發表於
+    [Google Developers 部落格](https://developers.googleblog.com/gemma-explained-embeddinggemma-architecture-and-recipe/)。
 
 ![banner](../../assets/gemma-explained/embeddinggemma-banner.png)
 
-The previous posts in the “Gemma explained” series provided a detailed overview of the Gemma model family's architectures. You can find links to each post below:
+「Gemma 詳解」系列先前的文章詳細介紹了 Gemma 模型家族的架構。各篇文章的連結如下：
 
-- [Gemma explained: An overview of Gemma model family architectures](/tutorials/gemma-explained/overview/)
-- [Gemma explained: What’s new in Gemma 2](/tutorials/gemma-explained/gemma-2/)
-- [Gemma explained: RecurrentGemma architecture](/tutorials/gemma-explained/recurrentgemma/)
-- [Gemma explained: PaliGemma architecture](/tutorials/gemma-explained/paligemma/)
-- [Gemma explained: What’s new in Gemma 3](/tutorials/gemma-explained/gemma-3/)
+- [Gemma 詳解：Gemma 模型家族架構總覽](/tutorials/gemma-explained/overview/)
+- [Gemma 詳解：Gemma 2 的新變化](/tutorials/gemma-explained/gemma-2/)
+- [Gemma 詳解：RecurrentGemma 架構](/tutorials/gemma-explained/recurrentgemma/)
+- [Gemma 詳解：PaliGemma 架構](/tutorials/gemma-explained/paligemma/)
+- [Gemma 詳解：Gemma 3 的新變化](/tutorials/gemma-explained/gemma-3/)
 
-In this post, you will explore the new [EmbeddingGemma](../../models/embeddinggemma/index.md)’s architecture and its recipe. For a high-level introduction, you can read [this announcement blog](https://developers.googleblog.com/introducing-embeddinggemma/). For a comprehensive look at the methodology, experiments, and evaluation, please see the [full technical report](https://arxiv.org/abs/2509.20354). Let’s get started.
+在這篇文章中，你將探索全新的 [EmbeddingGemma](../../models/embeddinggemma/index.md) 架構及其配方。若想快速了解，可以閱讀[這篇公告部落格](https://developers.googleblog.com/introducing-embeddinggemma/)。若想全面了解其方法論、實驗與評估，請參閱[完整技術報告](https://arxiv.org/abs/2509.20354)。讓我們開始吧。
 
-## Unpacking EmbeddingGemma
+## 深入解析 EmbeddingGemma
 
-Have you ever wondered how computers are trained to interpret the meaning and context within your words, phrases, or even entire documents? The magic often lies in something called “embeddings” - numerical representations that capture the essence and meaning of text. EmbeddingGemma is an embedding model that can turn text into embeddings. These embeddings can be used for tasks like searching, retrieval augmented generation, and understanding.
+你是否好奇過，電腦是如何被訓練來解讀文字、片語、甚至整份文件中的含義與上下文？其中的奧妙往往在於一種稱為「嵌入」（embeddings）的東西——一種能捕捉文字本質與含義的數值表示。EmbeddingGemma 是一個能把文字轉換成嵌入的嵌入模型。這些嵌入可以用於搜尋、檢索增強生成，以及語意理解等任務。
 
-## From Gemma to EmbeddingGemma
+## 從 Gemma 到 EmbeddingGemma
 
-EmbeddingGemma wasn’t created from scratch. It started as a pretrained 300M parameter Gemma 3 model. It was then transformed using [T5Gemma](https://developers.googleblog.com/t5gemma/)’s adaptation method, which converts the original decoder-only Gemma model into an encoder-decoder architecture. We then initialized EmbeddingGemma from the encoder of this new model, ensuring it is able to produce expressive representations from the start. This approach allows EmbeddingGemma to inherit a lot of “world knowledge” from its predecessor without having to do additional training
+EmbeddingGemma 並非從零打造。它起初是一個擁有 3 億參數的預訓練 Gemma 3 模型。接著，我們使用 [T5Gemma](https://developers.googleblog.com/t5gemma/) 的適配方法進行轉換，將原本僅含解碼器（decoder-only）的 Gemma 模型轉換為編碼器-解碼器（encoder-decoder）架構。然後，我們以這個新模型的編碼器來初始化 EmbeddingGemma，確保它從一開始就能產出富有表現力的表示。這種做法讓 EmbeddingGemma 無需額外訓練，就能從前代模型繼承大量「世界知識」。
 
 ![training](../../assets/gemma-explained/training.original.png)
 
-## How Embeddings Are Formed
+## 嵌入是如何形成的
 
-You can [use EmbeddingGemma](../../models/embeddinggemma/index.md) to generate embeddings using frameworks such as [Sentence Transformers](https://www.sbert.net/). Given an input sequence of text, EmbeddingGemma processes it through a series of carefully designed steps to produce a concise vector representation.
+你可以使用 [EmbeddingGemma](../../models/embeddinggemma/index.md)，透過 [Sentence Transformers](https://www.sbert.net/) 等框架來產生嵌入。給定一段輸入文字序列，EmbeddingGemma 會經過一系列精心設計的步驟來處理，最終產出一個簡潔的向量表示。
 
 ```python
 SentenceTransformer(
@@ -49,107 +49,107 @@ SentenceTransformer(
 
 **(0): Transformer**
 
-An input sequence passes through this encoder-only transformer model. This transformer utilizes bidirectional attention to understand the meaning of each token in the provided context, producing a sequence of 768-dimensional vectors, one for each token in your input sequence.
+輸入序列會經過這個僅含編碼器的 Transformer 模型。這個 Transformer 利用雙向注意力來理解每個詞元在其所處上下文中的含義，為輸入序列中的每個詞元各產生一個 768 維向量。
 
 **(1): Pooling**
 
-The output of the transformer is a sequence of token embeddings. The pooling layer’s job is to convert this variable-length sequence into a single, fixed-size embedding for the entire input. EmbeddingGemma is using a pooling strategy called “Mean Pooling”. This is the most common approach, where the average of all token embeddings is calculated.
+Transformer 的輸出是一系列詞元嵌入。池化層的任務是將這個長度不定的序列，轉換成整個輸入的單一固定大小嵌入。EmbeddingGemma 使用的池化策略稱為「平均池化」（Mean Pooling）。這是最常見的做法：計算所有詞元嵌入的平均值。
 
 **(2): Dense**
 
-Next, we apply a linear projection to scale the embedding (768) up to a larger embedding dimension (3072).
+接著，我們套用一個線性投影，將嵌入（768 維）擴展到更大的嵌入維度（3072 維）。
 
 **(3): Dense**
 
-Then we apply another linear projection to scale the learned 3072-dimensional embedding to the final target dimension (768).
+然後，再套用另一個線性投影，將學習到的 3072 維嵌入縮放到最終的目標維度（768 維）。
 
 **(4): Normalize**
 
-Finally, we apply Euclidean normalization, enabling efficient similarity comparisons. This is a simpler and cheaper operation compared to the more complex RMSNorm that you might recall from other Gemma models.
+最後，我們套用歐幾里德正規化，以支援高效率的相似度比較。相較於其他 Gemma 模型中更複雜的 RMSNorm，這是一個更簡單、成本更低的操作。
 
 ![embeddinggemma](../../assets/gemma-explained/embeddinggemma.original.png)
 
-## How EmbeddingGemma Learns
+## EmbeddingGemma 如何學習
 
-EmbeddingGemma learns to create its powerful embeddings by optimizing a combination of three distinct, weighted loss functions during its training.
+在訓練過程中，EmbeddingGemma 透過最佳化三種不同的加權損失函數組合，學會產生強大的嵌入。
 
-### 1. Noise-Contrastive Estimation (NCE) Loss
+### 1. 噪聲對比估計（Noise-Contrastive Estimation，NCE）損失
 
-The NCE loss teaches the model the fundamental concepts of similarity and contrast. For each input (e.g., a query), it learns to:
+NCE 損失教導模型相似與對比的基本概念。對於每個輸入（例如一個查詢），它會學習：
 
-- **Pull "positive pairs" closer together:** The model is trained to minimize the distance between the query and its correct answer in the embedding space.
-- **Push "negative pairs" further apart:** Simultaneously, it maximizes the distance between the query and incorrect answers from the same training batch.
+- **拉近「正樣本對」：**模型被訓練為在嵌入空間中最小化查詢與正確答案之間的距離。
+- **推遠「負樣本對」：**同時，它會最大化查詢與同一訓練批次中錯誤答案之間的距離。
 
-The key is the inclusion of "hard negatives" (answers that are semantically similar to the query but are incorrect or incomplete). By training on these tricky examples, the model is forced to learn the subtle, fine-grained distinctions that separate correct from nearly-correct ones.
+關鍵在於引入「困難負樣本」（hard negatives）：語意上與查詢相似但錯誤或不完整的答案。透過這些棘手的範例進行訓練，模型被迫學會區分正確答案與近似正確答案之間的細微差別。
 
-It’s like building a well-organized library, where related items are placed near each other, while unrelated items are kept distant.
+這就像建造一座井然有序的圖書館：相關的書籍放在一起，無關的則保持距離。
 
-### 2. Global Orthogonal Regularizer (GOR)
+### 2. 全域正交正則化器（Global Orthogonal Regularizer，GOR）
 
-This loss is designed to encourage EmbeddingGemma to produce embeddings that are **spread out over the embedding space**. Even if the model learned to separate similar and dissimilar things, it might still get lazy and just stack all embeddings in the same small corner.
+這個損失函數的設計目的是鼓勵 EmbeddingGemma 產出在嵌入空間中**廣泛分布**的嵌入。即使模型已經學會區分相似與不相似的事物，它仍可能偷懶，把所有嵌入都擠在同一個小角落。
 
-This Regularizer makes embeddings robust to quantization and enables efficient search in vector databases using Approximate Nearest Neighbor (ANN) algorithms.
+這個正則化器讓嵌入對量化更具穩健性，並能在使用近似最近鄰（ANN）演算法的向量資料庫中進行高效率搜尋。
 
-### 3. Geometric Embedding Distillation
+### 3. 幾何嵌入蒸餾（Geometric Embedding Distillation）
 
-This loss serves as a form of **knowledge distillation**, where EmbeddingGemma learns from a larger, more powerful Gemini Embedding model as a teacher.
+這個損失函數是一種**知識蒸餾**形式：EmbeddingGemma 以更大、更強的 Gemini Embedding 模型為教師，從中學習。
 
-The loss minimizes the L2 distance (a measure of difference) between the two embedding models’ embeddings for queries and passages. This enables EmbeddingGemma to learn from the teacher model, effectively inheriting much of its knowledge and capabilities.
+這個損失函數最小化兩個嵌入模型在查詢與段落嵌入之間的 L2 距離（差異的量測）。這讓 EmbeddingGemma 能向教師模型學習，有效繼承其大部分知識與能力。
 
 ![loss](../../assets/gemma-explained/loss.original.png)
 
-By combining these three loss functions, EmbeddingGemma learns to produce representations that are well-structured, expressive, and robust, enabling strong performance in real-world search and retrieval tasks.
+結合這三種損失函數，EmbeddingGemma 學會產生結構良好、富有表現力且穩健的表示，從而在真實世界的搜尋與檢索任務中表現出色。
 
-## Matryoshka Representation Learning (MRL)
+## Matryoshka 表示學習（Matryoshka Representation Learning，MRL）
 
-MRL is a technique that allows nesting smaller, high-quality representations within a larger one. For example, even though EmbeddingGemma’s embeddings have 768 dimensions, you can truncate the embeddings and get smaller ones with 512, 256, or even 128 dimensions which retain high quality.
+MRL 是一種能在較大表示中嵌套較小、高品質表示的技術。舉例來說，即使 EmbeddingGemma 的嵌入有 768 維，你也可以將其截斷，得到 512、256 甚至 128 維的較小嵌入，而且品質依然很高。
 
-During training, the loss functions are not just applied to the final 768-dimensional embedding, but also to the overlapping subsets of that embedding (the first 512, 256, and 128 dimensions). This ensures that even a truncated version of the full embedding is a powerful and complete representation.
+在訓練期間，損失函數不僅套用於最終的 768 維嵌入，也套用於該嵌入的交疊子集（前 512、256 和 128 維）。這確保即使是完整嵌入的截斷版本，也依然是強大而完整的表示。
 
-For you, this means you can choose the right trade-off between performance and efficiency for your application without needing to train or manage multiple models. Simply [select the embedding size](../../models/embeddinggemma/inference.md#matryoshka-representation-learning-mrl) that best fits your needs, ranging from the full 768 dimensions for maximum quality to smaller sizes for increased speed and lower storage costs.
+對你來說，這意味著可以為應用程式在效能與效率之間選擇合適的權衡，而不必訓練或管理多個模型。只需[選擇最符合需求的嵌入大小](../../models/embeddinggemma/inference.md#matryoshka-representation-learning-mrl)，從完整 768 維的最高品質，到較小維度以獲得更快速度與更低儲存成本，任君挑選。
 
 ![mrl](../../assets/gemma-explained/mrl.original.png)
 
-## Development Recipe
+## 開發配方
 
-The model’s journey includes several stages
+模型的旅程包含以下幾個階段：
 
-- **Encoder-Decoder Training:** Adapting Gemma 3 as described above, further pretraining on Gemma 3 data with [UL2](https://arxiv.org/abs/2205.05131).
-- **Pre Fine-tuning:** Training on a large, diverse mixture of tasks (question answering, sentence similarity, code retrieval, web search) and languages, using larger batch sizes and (query, target) pairs without hard negatives.
-- **Fine-tuning:** Refining the model on a smaller, higher-quality mixture of task-specific datasets, utilizing hard negatives and smaller batch sizes. Task mixture rates are optimized using Bayesian optimization.
-- **Model Souping:** Combining models from fine-tuning runs by averaging their parameters to improve quality and robustness. The final model is an unweighted average of checkpoints from fine-tuning runs with multiple different fine-tuning mixtures.
-- **Quantization-Aware Training (QAT):** Applied during fine tuning to provide quantized versions (e.g., int4 per-block and mixed-precision per-channel), which have a reduced memory footprint, with minimal quality degradation.
+- **編碼器-解碼器訓練：**如上所述適配 Gemma 3，使用 [UL2](https://arxiv.org/abs/2205.05131) 在 Gemma 3 資料上進一步預訓練。
+- **預微調：**在大型、多樣化的任務（問答、句子相似度、程式碼檢索、網路搜尋）與語言混合資料上訓練，使用較大的批次大小與（查詢，目標）樣本對，且不使用困難負樣本。
+- **微調：**在較小但更高品質的任務特定資料集混合上精煉模型，使用困難負樣本與較小的批次大小。任務混合比例透過貝氏最佳化進行最佳化。
+- **模型混合（Model Souping）：**透過對微調運行產生的模型取參數平均值，來提升品質與穩健性。最終模型是來自多個使用不同微調混合資料的微調運行的檢查點的無加權平均值。
+- **量化感知訓練（Quantization-Aware Training，QAT）：**在微調期間套用，以提供量化版本（例如 int4 逐區塊與混合精度逐通道），用更小的記憶體佔用換取極小的品質損失。
 
-By carefully adapting a powerful base model and refining it with a multi-faceted training approach, EmbeddingGemma's architecture is engineered to deliver highly effective and versatile text representations suitable for a wide range of applications.
+透過精心適配強大的基礎模型，並以多面向的訓練方式精煉，EmbeddingGemma 的架構旨在提供高效且通用的文字表示，適用於各種應用場景。
 
-## Summary
+## 總結
 
-We explored the architecture of EmbeddingGemma, a powerful model for generating text embeddings. We learned its origins, the process of generating embeddings, and the development recipe. For an in-depth dive into our training methodology, evaluation benchmarks, and the full experimental results, we encourage you to read the [official technical report](https://arxiv.org/abs/2509.20354).
+我們探索了 EmbeddingGemma 的架構——一個產生文字嵌入的強大模型。我們了解了它的起源、嵌入的產生過程，以及開發配方。若想深入了解我們的訓練方法論、評估基準測試與完整實驗結果，建議閱讀[官方技術報告](https://arxiv.org/abs/2509.20354)。
 
-Models like EmbeddingGemma lead the way for more efficient and powerful semantic technologies. As these models become more capable and accessible, we can expect to see advancements in several key areas like Retrieval-Augmented Generation (RAG), on-device AI, and hyper-personalization.
+像 EmbeddingGemma 這樣的模型為更高效、更強大的語意技術開闢了道路。隨著這些模型變得更加強大與普及，我們預期將在檢索增強生成（RAG）、裝置端 AI 與超個人化等關鍵領域看到進展。
 
-Find the model weights on [Hugging Face](https://huggingface.co/collections/google/embeddinggemma-68b9ae3a72a82f0562a80dc4), [Kaggle](https://www.kaggle.com/models/google/embeddinggemma/), [Vertex AI](https://console.cloud.google.com/vertex-ai/publishers/google/model-garden/embeddinggemma) and start tinkering today.
+現在就前往 [Hugging Face](https://huggingface.co/collections/google/embeddinggemma-68b9ae3a72a82f0562a80dc4)、[Kaggle](https://www.kaggle.com/models/google/embeddinggemma/)、[Vertex AI](https://console.cloud.google.com/vertex-ai/publishers/google/model-garden/embeddinggemma) 下載模型權重，開始動手玩玩看吧。
 
-Thanks for reading!
+感謝閱讀！
 
-## References
+## 參考資料
 
-### Papers
+### 論文
 
-- [EmbeddingGemma: Powerful and Lightweight Text Representations](https://arxiv.org/abs/2509.20354)
+- [EmbeddingGemma：強大且輕量的文字表示](https://arxiv.org/abs/2509.20354)
 
-### Code Examples
+### 程式碼範例
 
-- [Generate Embeddings with Sentence Transformers](../../models/embeddinggemma/inference.md)
-- [Fine-tune EmbeddingGemma](../../models/embeddinggemma/fine-tuning.md)
-- [RAG with EmbeddingGemma](https://colab.research.google.com/github/google-gemma/cookbook/blob/main/tutorials/RAG_with_EmbeddingGemma.ipynb)
-- [Mood Palette Generator](https://huggingface.co/spaces/google/mood-palette), an interactive application using EmbeddingGemma
+- [使用 Sentence Transformers 產生嵌入](../../models/embeddinggemma/inference.md)
+- [微調 EmbeddingGemma](../../models/embeddinggemma/fine-tuning.md)
+- [使用 EmbeddingGemma 的 RAG](https://colab.research.google.com/github/google-gemma/cookbook/blob/main/tutorials/RAG_with_EmbeddingGemma.ipynb)
+- [Mood Palette Generator](https://huggingface.co/spaces/google/mood-palette)，一個使用 EmbeddingGemma 的互動應用
 
-### The complete Gemma architecture series
+### 完整的 Gemma 架構系列
 
-- [Gemma explained: An overview of Gemma model family architectures](/tutorials/gemma-explained/overview/)
-- [Gemma explained: What’s new in Gemma 2](/tutorials/gemma-explained/gemma-2/)
-- [Gemma explained: RecurrentGemma architecture](/tutorials/gemma-explained/recurrentgemma/)
-- [Gemma explained: PaliGemma architecture](/tutorials/gemma-explained/paligemma/)
-- [Gemma explained: What’s new in Gemma 3](/tutorials/gemma-explained/gemma-3/)
-- Gemma explained: EmbeddingGemma architecture
+- [Gemma 詳解：Gemma 模型家族架構總覽](/tutorials/gemma-explained/overview/)
+- [Gemma 詳解：Gemma 2 的新變化](/tutorials/gemma-explained/gemma-2/)
+- [Gemma 詳解：RecurrentGemma 架構](/tutorials/gemma-explained/recurrentgemma/)
+- [Gemma 詳解：PaliGemma 架構](/tutorials/gemma-explained/paligemma/)
+- [Gemma 詳解：Gemma 3 的新變化](/tutorials/gemma-explained/gemma-3/)
+- Gemma 詳解：EmbeddingGemma 架構

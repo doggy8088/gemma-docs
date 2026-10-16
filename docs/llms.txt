@@ -4,120 +4,120 @@ Official documentation for building with the Gemma family of open models.
 Start with Gemma 4 unless a page or the user's request names another generation.
 Follow the Markdown links below to read canonical page content without cloning the repository.
 
-## Home
-- [Google Gemma 4 Open Models](https://gemma.ai/index.md): Official technical documentation portal for Google Gemma 4 open-weight AI models. Explore multimodal capabilities, interactive WebGPU playgrounds, and partner integrations.
+## 首頁
+- [Google Gemma 4 開放模型](https://gemma.ai/index.md): Google Gemma 4 開放權重 AI 模型的官方技術文件入口。探索多模態能力、互動式 WebGPU 遊樂場與合作夥伴整合。
 
-## Get started
-- [Quickstart](https://gemma.ai/get-started.md): Run your first Gemma 4 generation in one command, then pick the engine, model size and checkpoint that fit your hardware.
-- [Best practices](https://gemma.ai/get-started/best-practices.md): Sampling parameters, thinking-mode tokens, modality order and image token budgets that get the best results out of Gemma 4.
-- [Inference](https://gemma.ai/get-started/capabilities/text.md): Basic text inference with Gemma 4 in Hugging Face Transformers: single-turn prompts, multi-turn conversations, and system instructions.
-- [Reasoning](https://gemma.ai/get-started/capabilities/thinking.md): Use Gemma 4's thinking mode to reason before answering, for text and image prompts, and parse the reasoning apart from the answer.
-- [Tool calling](https://gemma.ai/get-started/capabilities/function-calling.md): When using a generative artificial intelligence (AI) model such as Gemma, you may want to use the model to operate programming interfaces in order to complete tasks or answer questions.
-- [Vision overview](https://gemma.ai/get-started/capabilities/vision.md): Prepare and pass visual data to Gemma 4 for object detection, OCR, visual question answering, captioning, and multi-image reasoning.
-- [Image understanding](https://gemma.ai/get-started/capabilities/image.md): You can use Gemma 3 and later models to analyze and understand the content of images.
-- [Video understanding](https://gemma.ai/get-started/capabilities/video.md): Video data is a rich source of information that can help you accomplish tasks and understand the world around you.
-- [Audio understanding](https://gemma.ai/get-started/capabilities/audio.md): Starting with Gemma 3n, you can use audio directly into your prompts and workflows.
-- [Prompt Formatting](https://gemma.ai/get-started/prompt-formatting.md): The control tokens Gemma 4 uses to structure a prompt, and the older start_of_turn format used by Gemma 1 to 3.
-- [Speed-up Gemma 4 with Multi-Token Prediction](https://gemma.ai/get-started/capabilities/mtp.md): In Gemma 4, Multi-Token Prediction (MTP) is the specific architecture used to enable highly efficient Speculative Decoding.
-- [Quantization-Aware Training](https://gemma.ai/get-started/qat.md): Which Gemma 4 quantized weights to download for each engine, and why QAT beats post-training quantization at 4-bit.
+## 開始使用
+- [快速入門](https://gemma.ai/get-started.md): 用一條指令完成第一次 Gemma 4 生成，再挑選適合您硬體的引擎、模型尺寸與檢查點。
+- [最佳做法](https://gemma.ai/get-started/best-practices.md): 能讓 Gemma 4 發揮最佳效果的取樣參數、思考模式詞元、模態順序與圖像詞元預算。
+- [推論](https://gemma.ai/get-started/capabilities/text.md): 在 Hugging Face Transformers 中使用 Gemma 4 進行基本文字推論：單輪提示、多輪對話與系統指令。
+- [推理](https://gemma.ai/get-started/capabilities/thinking.md): 使用 Gemma 4 的思考模式，在回答前先進行推理，適用於文字與圖像提示，並將推理過程與答案分開解析。
+- [工具呼叫](https://gemma.ai/get-started/capabilities/function-calling.md): 當您使用像 Gemma 這樣的生成式人工智慧（AI）模型時，您可能會希望使用模型來操作程式設計介面，以完成任務或回答問題。
+- [視覺總覽](https://gemma.ai/get-started/capabilities/vision.md): 準備視覺資料並傳遞給 Gemma 4，以執行物件偵測、光學字元辨識（OCR）、視覺問答、圖說生成與多圖推理。
+- [圖像理解](https://gemma.ai/get-started/capabilities/image.md): 使用 Gemma 3 及更新版本的模型分析與理解圖像內容，支援多種長寬比與解析度的視覺輸入。
+- [影片理解](https://gemma.ai/get-started/capabilities/video.md): 影片資料是豐富的資訊來源：了解 Gemma 模型如何理解影片內容，協助您完成分析任務並理解周遭世界。
+- [音訊理解](https://gemma.ai/get-started/capabilities/audio.md): 從 Gemma 3n 開始，您可以直接在提示與工作流程中使用音訊輸入，打造語音辨識、翻譯等各類音訊應用。
+- [提示格式](https://gemma.ai/get-started/prompt-formatting.md): Gemma 4 用於建構提示的控制詞元，以及 Gemma 1 至 3 使用的舊版 start_of_turn 格式。
+- [使用多詞元預測加速 Gemma 4](https://gemma.ai/get-started/capabilities/mtp.md): 在 Gemma 4 中，多詞元預測（Multi-Token Prediction, MTP）是實現高效推測式解碼（Speculative Decoding）所採用的特定架構。
+- [量化感知訓練（Quantization-Aware Training）](https://gemma.ai/get-started/qat.md): 說明各引擎應下載哪一組 Gemma 4 量化權重，以及在 4 位元下 QAT 為何優於訓練後量化。
 
-## Models
-- [Gemma Model Family](https://gemma.ai/models.md): What Gemma is, how the generations relate, and which variant was built from which base model.
-- [Gemma 4](https://gemma.ai/models/gemma-4.md): Gemma is a family of generative artificial intelligence models and you can use them in a wide variety of generation tasks, including question answering, summarization, and reasoning.
-- [Gemma 4 — Model card](https://gemma.ai/models/gemma-4/model-card.md): Gemma is a family of open models built by Google DeepMind.
-- [Gemma 3 model card](https://gemma.ai/models/gemma-3.md): Model card for the multimodal Gemma 3 models: 128K context, 140+ languages, inputs and outputs, training data, and evaluation.
-- [Gemma 2 model card](https://gemma.ai/models/gemma-2.md): Model card for Gemma 2 text-to-text models: description, inputs and outputs, training data, and evaluation.
-- [Gemma model card](https://gemma.ai/models/gemma-1.md): Model card for the first-generation Gemma text-to-text models: description, inputs and outputs, training data, and evaluation.
-- [Gemma 3n model overview](https://gemma.ai/models/gemma-3n.md): Gemma 3n is a generative AI model optimized for use in everyday devices, such as phones, laptops, and tablets.
-- [Gemma 3n model card](https://gemma.ai/models/gemma-3n/model-card.md): Model card for Gemma 3n: on-device inputs and outputs, training data, evaluation results, and intended use.
-- [DiffusionGemma model overview](https://gemma.ai/models/diffusiongemma.md): DiffusionGemma is an experimental open model that explores text diffusion, an exceptionally fast approach to text generation.
-- [DiffusionGemma model card](https://gemma.ai/models/diffusiongemma/model-card.md): DiffusionGemma is a generative model built by Google DeepMind.
-- [Diffusion in Text Generation Explained](https://gemma.ai/models/diffusiongemma/explained.md): To understand DiffusionGemma, it helps to examine the core limitations of standard language models and how text-based diffusion differs.
-- [Generate output](https://gemma.ai/models/diffusiongemma/inference.md): Generate text with DiffusionGemma using Hugging Face Transformers, including the GPU memory the model requires.
-- [FunctionGemma model overview](https://gemma.ai/models/functiongemma.md): FunctionGemma is a specialized version of our Gemma 3 270M model tuned for function calling.
-- [FunctionGemma model card](https://gemma.ai/models/functiongemma/model-card.md): Model card for FunctionGemma: function-calling inputs and outputs, training data, evaluation results, and intended use.
-- [FunctionGemma formatting and best practices](https://gemma.ai/models/functiongemma/formatting.md): FunctionGemma is a specialized version of the Gemma 3 270M model, trained specifically for function calling (i.e., tool use).
-- [Function calling with Hugging Face Transformers](https://gemma.ai/models/functiongemma/inference.md): Call functions with FunctionGemma in Hugging Face Transformers, passing tools as manual JSON schemas or as raw Python functions.
-- [Full function calling sequence with FunctionGemma](https://gemma.ai/models/functiongemma/full-sequence.md): The complete FunctionGemma tool-calling cycle: the model's call, the developer's execution, and the final response built from the tool's output.
-- [Fine-tuning with FunctionGemma](https://gemma.ai/models/functiongemma/fine-tuning.md): This guide demonstrates how to fine-tune FunctionGemma for tool calling.
-- [EmbeddingGemma model overview](https://gemma.ai/models/embeddinggemma.md): EmbeddingGemma 2 is a lightweight, open-source 740M parameter model designed for unified multimodal embeddings.
-- [EmbeddingGemma model card](https://gemma.ai/models/embeddinggemma/model-card-v1.md): Model card for EmbeddingGemma: embedding inputs and outputs, training data, evaluation results, and intended use.
-- [EmbeddingGemma 2 model card](https://gemma.ai/models/embeddinggemma/model-card-v2.md): Model card for EmbeddingGemma 2: architecture, multimodal capabilities, benchmarks, best practices, training data, and intended use.
-- [Generate Embeddings with Sentence Transformers](https://gemma.ai/models/embeddinggemma/inference.md): Generate text embeddings, compute semantic similarity, apply task prompts, and build RAG and zero-shot classifiers with EmbeddingGemma 2 and Sentence Transformers.
-- [Multimodal Embeddings with Sentence Transformers](https://gemma.ai/models/embeddinggemma/multimodal.md): Generate unified image, audio, video, and interleaved multimodal embeddings with EmbeddingGemma 2 and Sentence Transformers.
-- [Fine-tune EmbeddingGemma with Sentence Transformers](https://gemma.ai/models/embeddinggemma/fine-tuning.md): Adapt EmbeddingGemma 2 to specialized domain terminology using contrastive triplet fine-tuning with Sentence Transformers.
-- [Fine-Tune Multimodal EmbeddingGemma 2 with Sentence Transformers](https://gemma.ai/models/embeddinggemma/fine-tuning-multimodal.md): Adapt EmbeddingGemma 2 across text and visual inputs using contrastive multimodal triplet fine-tuning with Sentence Transformers.
-- [PaliGemma](https://gemma.ai/models/paligemma.md): PaliGemma 2 and PaliGemma are lightweight open vision-language models (VLM) inspired by PaLI-3, and based on open components like the SigLIP vision model and the Gemma language model.
-- [PaliGemma model card](https://gemma.ai/models/paligemma/model-card-v1.md): PaliGemma is a versatile and lightweight vision-language model (VLM) inspired by PaLI-3 and based on open components such as the SigLIP vision model and the Gemma language model.
-- [PaliGemma 2 model card](https://gemma.ai/models/paligemma/model-card-v2.md): PaliGemma 2 is an update of the PaliGemma vision-language model (VLM) which incorporates the capabilities of the Gemma 2 models.
-- [PaliGemma prompt and system instructions](https://gemma.ai/models/paligemma/prompting.md): This page describes prompt formatting and system instructions for PaliGemma models.
-- [Generate PaliGemma output with Keras](https://gemma.ai/models/paligemma/inference.md): PaliGemma models have multimodal capabilities, allowing you to generate output using both text and image input data.
-- [Fine-tune PaliGemma with JAX and Flax](https://gemma.ai/models/paligemma/fine-tuning.md): This notebook shows how to fine-tune PaliGemma on a vision-language task with JAX.
-- [ShieldGemma](https://gemma.ai/models/shieldgemma.md): ShieldGemma is a set of instruction tuned models for evaluating the safety of text and images against a set of defined safety policies.
-- [ShieldGemma model card](https://gemma.ai/models/shieldgemma/model-card-v1.md): Model card for ShieldGemma: safety-classification inputs and outputs, training data, evaluation results, and intended use.
-- [ShieldGemma 2 model card](https://gemma.ai/models/shieldgemma/model-card-v2.md): ShieldGemma 2 is a model trained on Gemma 3's 4B IT checkpoint for image safety classification across key categories that takes in images and outputs safety labels per policy.
-- [RecurrentGemma](https://gemma.ai/models/recurrentgemma.md): RecurrentGemma is an open model based on Griffin, a hybrid model architecture that mixes gated linear recurrences with local sliding window attention.
-- [RecurrentGemma model card](https://gemma.ai/models/recurrentgemma/model-card.md): RecurrentGemma is a family of open language models built on a novel recurrent architecture developed at Google.
-- [Inference with RecurrentGemma using JAX and Flax](https://gemma.ai/models/recurrentgemma/inference.md): Run sampling and inference with RecurrentGemma 2B Instruct using Google DeepMind's recurrentgemma library and JAX.
-- [Fine-tuning using JAX and Flax](https://gemma.ai/models/recurrentgemma/fine-tuning.md): Fine-tune RecurrentGemma 2B Instruct for English-French translation using JAX, Flax, and the MTNT noisy-text dataset.
-- [DataGemma](https://gemma.ai/models/datagemma.md): DataGemma is a research tool that lets users ask questions in plain language and receive answers based on publicly available statistical data in the Data Commons repository.
-- [Gemma Scope](https://gemma.ai/models/gemma-scope.md): Gemma Scope 2 is a comprehensive, open suite of interpretability tools designed for the Gemma 3 model collection.
-- [Gemma for abstractive proposition segmentation (APS)](https://gemma.ai/models/gemma-aps.md): Abstractive proposition segmentation (APS) is an analysis technique that breaks down text information into component parts.
-- [Releases](https://gemma.ai/models/releases.md): Dated release history for every Gemma model, from Gemma 1 through Gemma 4 and the specialized variants.
+## 模型
+- [Gemma 模型家族](https://gemma.ai/models.md): 認識 Gemma 模型家族：介紹 Gemma 是什麼、各世代之間的演進關係，以及每個變體衍生自哪個基礎模型。
+- [Gemma 4](https://gemma.ai/models/gemma-4.md): Gemma 是生成式人工智慧模型的家族，可用於各種生成任務，包括問答、摘要與推理。
+- [模型卡](https://gemma.ai/models/gemma-4/model-card.md): Gemma 4 開放模型家族的模型卡：密集與混合專家架構規格、基準測試成績、核心能力、最佳實務與倫理安全說明。
+- [Gemma 3 模型卡](https://gemma.ai/models/gemma-3.md): Gemma 3 多模態模型的模型卡：128K 上下文、140 種以上語言、輸入與輸出、訓練資料與評測。
+- [Gemma 2 模型卡](https://gemma.ai/models/gemma-2.md): Gemma 2 文字轉文字模型的模型卡：模型說明、輸入與輸出格式、訓練資料、評測結果與安全評估。
+- [Gemma 模型卡](https://gemma.ai/models/gemma-1.md): 第一代 Gemma 文字轉文字模型的模型卡：模型說明、輸入與輸出格式、訓練資料、評測結果與使用限制。
+- [Gemma 3n 模型總覽](https://gemma.ai/models/gemma-3n.md): Gemma 3n 是針對日常裝置（如手機、筆記型電腦與平板）使用而優化的生成式 AI 模型。
+- [Gemma 3n 模型卡](https://gemma.ai/models/gemma-3n/model-card.md): Gemma 3n 的模型卡：裝置端多模態輸入與輸出規格、訓練資料、評測結果、預期用途與限制。
+- [DiffusionGemma 模型總覽](https://gemma.ai/models/diffusiongemma.md): DiffusionGemma 是一個實驗性的開放模型，探索文字擴散（text diffusion）——一種極為快速的文字生成方式。
+- [DiffusionGemma 模型卡](https://gemma.ai/models/diffusiongemma/model-card.md): DiffusionGemma 是由 Google DeepMind 打造的生成式模型。
+- [文字生成中的擴散模型解析](https://gemma.ai/models/diffusiongemma/explained.md): 要理解 DiffusionGemma，有助於先檢視標準語言模型的核心限制，以及文字擴散（text-based diffusion）有何不同。
+- [生成輸出](https://gemma.ai/models/diffusiongemma/inference.md): 使用 Hugging Face Transformers 搭配 DiffusionGemma 生成文字，包含模型所需的 GPU 記憶體。
+- [FunctionGemma 模型總覽](https://gemma.ai/models/functiongemma.md): FunctionGemma 是我們的 Gemma 3 270M 模型的專門版本，針對函式呼叫微調。
+- [FunctionGemma 模型卡](https://gemma.ai/models/functiongemma/model-card.md): FunctionGemma 模型卡：函式呼叫的輸入與輸出、訓練資料、評估結果與預期用途。
+- [FunctionGemma 格式與最佳實務](https://gemma.ai/models/functiongemma/formatting.md): FunctionGemma 是 Gemma 3 270M 模型的專門版本，專為函式呼叫（function calling，即工具使用）訓練。
+- [使用 Hugging Face Transformers 進行函式呼叫](https://gemma.ai/models/functiongemma/inference.md): 使用 Hugging Face Transformers 搭配 FunctionGemma 呼叫函式，以手動 JSON schema 或原始 Python 函式傳遞工具。
+- [FunctionGemma 完整函式呼叫序列](https://gemma.ai/models/functiongemma/full-sequence.md): FunctionGemma 完整的工具呼叫循環：模型的呼叫、開發者的執行，以及用工具輸出建構的最終回覆。
+- [使用 FunctionGemma 微調](https://gemma.ai/models/functiongemma/fine-tuning.md): 本指南示範如何使用 TRL 與 SFTTrainer，針對工具呼叫與函式呼叫任務微調 FunctionGemma 模型。
+- [EmbeddingGemma 模型概覽](https://gemma.ai/models/embeddinggemma.md): EmbeddingGemma 2 是一個輕量、開源的 740M 參數模型，專為統一多模態嵌入而設計。
+- [EmbeddingGemma 模型卡](https://gemma.ai/models/embeddinggemma/model-card-v1.md): EmbeddingGemma 模型卡：嵌入輸入與輸出、訓練資料、評估結果與預期用途。
+- [EmbeddingGemma 2 模型卡](https://gemma.ai/models/embeddinggemma/model-card-v2.md): EmbeddingGemma 2 模型卡：架構、多模態能力、基準測試、最佳實務、訓練資料與預期用途。
+- [使用 Sentence Transformers 產生嵌入](https://gemma.ai/models/embeddinggemma/inference.md): 使用 EmbeddingGemma 2 與 Sentence Transformers 產生文字嵌入、計算語義相似度、套用任務提示，並打造 RAG 與零樣本分類器。
+- [使用 Sentence Transformers 的多模態嵌入](https://gemma.ai/models/embeddinggemma/multimodal.md): 使用 EmbeddingGemma 2 與 Sentence Transformers 產生統一的圖像、音訊、影片與交錯式多模態嵌入。
+- [使用 Sentence Transformers 微調 EmbeddingGemma](https://gemma.ai/models/embeddinggemma/fine-tuning.md): 使用 Sentence Transformers 的對比式三元組微調（triplet fine-tuning），讓 EmbeddingGemma 2 適應特定領域術語。
+- [使用 Sentence Transformers 微調多模態 EmbeddingGemma 2](https://gemma.ai/models/embeddinggemma/fine-tuning-multimodal.md): 使用 Sentence Transformers 透過對比式多模態三元組微調（triplet fine-tuning），讓 EmbeddingGemma 2 適應文字與視覺輸入。
+- [PaliGemma](https://gemma.ai/models/paligemma.md): PaliGemma 2 與 PaliGemma 是輕量級開放視覺語言模型（VLM），受 PaLI-3 啟發，並基於 SigLIP 視覺模型與 Gemma 語言模型等開放元件構建。
+- [PaliGemma 模型卡](https://gemma.ai/models/paligemma/model-card-v1.md): PaliGemma 是一款多功能、輕量的視覺語言模型（VLM），設計靈感來自 PaLI-3，並以 SigLIP 視覺模型與 Gemma 語言模型等開放元件為基礎。
+- [PaliGemma 2 模型卡](https://gemma.ai/models/paligemma/model-card-v2.md): PaliGemma 2 是 PaliGemma 視覺語言模型（VLM）的更新版本，納入了 Gemma 2 模型的能力。
+- [PaliGemma 提示與系統指示](https://gemma.ai/models/paligemma/prompting.md): 本頁說明 PaliGemma 視覺語言模型的提示格式、任務語法與系統指示的撰寫方式，並提供實用範例。
+- [使用 Keras 產生 PaliGemma 輸出](https://gemma.ai/models/paligemma/inference.md): PaliGemma 模型具備多模態能力，讓您能同時使用文字與圖片輸入資料來產生輸出。
+- [使用 JAX 與 Flax 微調 PaliGemma](https://gemma.ai/models/paligemma/fine-tuning.md): 本筆記本教學說明如何使用 JAX 與 Flax，在視覺語言任務上微調 PaliGemma 模型，包含完整的訓練流程。
+- [ShieldGemma](https://gemma.ai/models/shieldgemma.md): ShieldGemma 是一組指令微調（instruction-tuned）模型，用於依據一組定義好的安全政策，評估文字與圖片的安全性。
+- [ShieldGemma 模型卡](https://gemma.ai/models/shieldgemma/model-card-v1.md): ShieldGemma 的模型卡：安全分類輸入與輸出、訓練資料、評估結果與預期用途。
+- [ShieldGemma 2 模型卡](https://gemma.ai/models/shieldgemma/model-card-v2.md): ShieldGemma 2 是在 Gemma 3 的 4B IT 檢查點上訓練的模型，用於跨關鍵類別的影像安全分類：接收影像，依政策輸出安全標籤。
+- [RecurrentGemma](https://gemma.ai/models/recurrentgemma.md): RecurrentGemma 是基於 Griffin 的開放模型；Griffin 是一種混合模型架構，結合門控線性遞迴（gated linear recurrences）與局部滑動視窗注意力（local sliding window attention）。
+- [RecurrentGemma 模型卡](https://gemma.ai/models/recurrentgemma/model-card.md): RecurrentGemma 是在 Google 開發的全新遞迴架構上打造的開放語言模型家族。
+- [使用 JAX 與 Flax 以 RecurrentGemma 執行推論](https://gemma.ai/models/recurrentgemma/inference.md): 使用 Google DeepMind 的 recurrentgemma 函式庫與 JAX，執行 RecurrentGemma 2B Instruct 的取樣與推論。
+- [使用 JAX 與 Flax 進行微調](https://gemma.ai/models/recurrentgemma/fine-tuning.md): 使用 JAX、Flax 與 MTNT 噪聲文本資料集，將 RecurrentGemma 2B Instruct 微調為英法翻譯模型。
+- [DataGemma](https://gemma.ai/models/datagemma.md): DataGemma 是一款研究工具，讓使用者能以淺白語言提問，並根據 Data Commons 儲存庫中公開的統計資料獲得答案。
+- [Gemma Scope](https://gemma.ai/models/gemma-scope.md): Gemma Scope 2 是為 Gemma 3 模型系列設計的全面、開放的可解釋性工具套件。
+- [Gemma 抽象命題分割（APS）](https://gemma.ai/models/gemma-aps.md): 抽象命題分割（APS）是一種將文字資訊拆解為原子命題要素的分析技術，可提升檢索與事實查核的精確度。
+- [版本發布紀錄](https://gemma.ai/models/releases.md): Gemma 模型家族的日期化發布歷史，從 Gemma 1 到 Gemma 4 以及專用變體。
 
-## Run
-- [Gemma 4 — Overview](https://gemma.ai/deployment.md): Choose an execution framework and a Gemma variant for your hardware, then run your first generation request.
-- [Ollama](https://gemma.ai/deployment/ollama.md): Run Gemma 4 locally with Ollama — model tags, image input, and the OpenAI-compatible server.
-- [llama.cpp](https://gemma.ai/deployment/llamacpp.md): Run Gemma 4 with llama.cpp — GGUF repos for every size, image/audio/video input, and the OpenAI-compatible server.
-- [LM Studio](https://gemma.ai/deployment/lmstudio.md): Run Gemma 4 with LM Studio — desktop app, lms CLI, and the OpenAI-compatible local server.
-- [Apple MLX](https://gemma.ai/deployment/mlx.md): Run Gemma 4 on Apple silicon with MLX — text and vision generation, model repos, and the OpenAI-compatible server.
-- [Run Gemma with Hugging Face Transformers](https://gemma.ai/deployment/huggingface.md): Generating text, summarizing, and analysing content are just some of the tasks you can accomplish with Gemma open models.
-- [Run Gemma with Keras](https://gemma.ai/deployment/keras.md): Generating content, summarizing, and analysing content are just some of the tasks you can accomplish with Gemma open models.
-- [LiteRT-LM](https://gemma.ai/deployment/litert.md): Run Gemma 4 on-device with LiteRT-LM — CLI install, prebuilt .litertlm weights, and exporting your own fine-tune.
-- [AI Edge Gallery](https://gemma.ai/deployment/ai-edge-gallery.md): Run Gemma 4 on an Android or iOS phone with no code — chat, vision, audio transcription and benchmarking, fully offline.
-- [vLLM](https://gemma.ai/deployment/vllm.md): Serve Gemma 4 with vLLM — install, vllm serve, model repositories, and the OpenAI-compatible API.
-- [SGLang](https://gemma.ai/deployment/sglang.md): Serve Gemma 4 with SGLang — install, launch_server, model repositories, and the OpenAI-compatible API.
-- [Gemini API](https://gemma.ai/deployment/gemini-api.md): Call hosted Gemma 4 models through the Gemini API instead of running and serving your own instance.
-- [Google Cloud](https://gemma.ai/deployment/google-cloud.md): Deploy, serve, and fine-tune Gemma 4 on Google Cloud: Cloud Run, GKE, the Agent Development Kit, vLLM on TPUs, MaxText, and Sovereign Cloud.
-- [Get started with Gemma and LangChain](https://gemma.ai/deployment/langchain.md): This tutorial shows you how to get started with Gemma and LangChain, running in Google Cloud or in your Colab environment.
-- [Unsloth](https://gemma.ai/deployment/unsloth.md): Run Gemma 4 with Unsloth — the desktop Studio app, dynamic-quant GGUFs for llama.cpp, and 2x faster fine-tuning.
+## 執行
+- [總覽](https://gemma.ai/deployment.md): 依您的硬體選擇合適的執行框架與 Gemma 模型變體，逐步完成環境設定並執行您的第一個文字生成與推論請求。
+- [Ollama](https://gemma.ai/deployment/ollama.md): 使用 Ollama 在本機執行 Gemma 4 —— 模型標籤、圖像輸入，以及 OpenAI 相容伺服器。
+- [llama.cpp](https://gemma.ai/deployment/llamacpp.md): 使用 llama.cpp 執行 Gemma 4 —— 各尺寸的 GGUF 儲存庫、圖像/音訊/視訊輸入，以及 OpenAI 相容伺服器。
+- [LM Studio](https://gemma.ai/deployment/lmstudio.md): 使用 LM Studio 執行 Gemma 4 —— 桌面應用程式、lms CLI 與 OpenAI 相容的本機伺服器。
+- [Apple MLX](https://gemma.ai/deployment/mlx.md): 在 Apple 晶片上使用 MLX 執行 Gemma 4 —— 文本與視覺生成、模型儲存庫，以及 OpenAI 相容伺服器。
+- [使用 Hugging Face Transformers 執行 Gemma](https://gemma.ai/deployment/huggingface.md): 生成文本、摘要與分析內容，只是您可以用 Gemma 開放模型完成的其中一些任務。
+- [使用 Keras 執行 Gemma](https://gemma.ai/deployment/keras.md): 生成內容、摘要與分析內容，只是您可以用 Gemma 開放模型完成的其中一些任務。
+- [LiteRT-LM](https://gemma.ai/deployment/litert.md): 使用 LiteRT-LM 在裝置端執行 Gemma 4 —— CLI 安裝、預建的 .litertlm 權重，以及匯出您自己的微調模型。
+- [AI Edge Gallery](https://gemma.ai/deployment/ai-edge-gallery.md): 在 Android 或 iOS 手機上免寫程式碼執行 Gemma 4 —— 聊天、視覺、音訊轉錄與基準測試，完全離線。
+- [vLLM](https://gemma.ai/deployment/vllm.md): 使用 vLLM 服務 Gemma 4 —— 安裝、vllm serve、模型儲存庫，以及 OpenAI 相容 API。
+- [SGLang](https://gemma.ai/deployment/sglang.md): 使用 SGLang 服務 Gemma 4 —— 安裝、launch_server、模型儲存庫，以及 OpenAI 相容 API。
+- [Gemini API](https://gemma.ai/deployment/gemini-api.md): 透過 Gemini API 呼叫託管的 Gemma 4 模型，而無需自行執行與服務執行個體。
+- [Google Cloud](https://gemma.ai/deployment/google-cloud.md): 在 Google Cloud 上部署、服務與微調 Gemma 4：Cloud Run、GKE、Agent Development Kit、TPU 上的 vLLM、MaxText 與主權雲。
+- [開始使用 Gemma 與 LangChain](https://gemma.ai/deployment/langchain.md): 本教學說明如何在 Google Cloud 或 Colab 環境中開始使用 Gemma 與 LangChain。
+- [Unsloth](https://gemma.ai/deployment/unsloth.md): 使用 Unsloth 執行 Gemma 4 —— 桌面 Studio 應用程式、適用於 llama.cpp 的動態量化 GGUF，以及快 2 倍的微調。
 
-## Fine-tune
-- [Gemma model fine-tuning](https://gemma.ai/tuning.md): Fine-tuning a generative artificial intelligence (AI) model such as Gemma modifies the behavior of the model.
-- [Fine-Tune Gemma using Hugging Face Transformers and QloRA](https://gemma.ai/tuning/qlora.md): This guide walks you through how to fine-tune Gemma on a custom text-to-sql dataset using Hugging Face Transformers and TRL.
-- [Fine-Tune Gemma for Audio Tasks using Unsloth and QLoRA](https://gemma.ai/tuning/audio-qlora.md): This guide walks you through how to fine-tune Gemma on a custom audio dataset for a audio task (generating transcription of Kumamoto dialect Japanese) using Unsloth.
-- [Fine-Tune Gemma for Vision Tasks using Hugging Face Transformers and QLoRA](https://gemma.ai/tuning/vision-qlora.md): This guide walks you through how to fine-tune Gemma on a custom image and text dataset for a vision task (generating product descriptions) using Hugging Face Transformers and TRL.
-- [Full Model Fine-Tune using Hugging Face Transformers](https://gemma.ai/tuning/full-finetune.md): This guide walks you through how to fine-tune Gemma on a mobile game NPC dataset using Hugging Face Transformers and TRL.
-- [Master Local Fine-Tuning with gemma-trainer](https://gemma.ai/tuning/gemma-trainer.md): Take control of your AI models with our newest skill, designed to make local fine-tuning efficient.
+## 微調
+- [Gemma 模型微調](https://gemma.ai/tuning.md): 微調 Gemma 這類生成式 AI 模型會改變模型的行為：了解各種微調方法，選擇最適合您需求的微調路徑。
+- [使用 Hugging Face Transformers 與 QLoRA 微調 Gemma](https://gemma.ai/tuning/qlora.md): 本指南將引導您使用 Hugging Face Transformers 與 TRL 在自訂 text-to-sql 資料集上微調 Gemma。
+- [使用 Unsloth 與 QLoRA 針對音訊任務微調 Gemma](https://gemma.ai/tuning/audio-qlora.md): 本指南將引導您使用 Unsloth 在自訂音訊資料集上微調 Gemma，以執行音訊任務（產生熊本方言日語的轉錄）。
+- [使用 Hugging Face Transformers 與 QLoRA 針對視覺任務微調 Gemma](https://gemma.ai/tuning/vision-qlora.md): 本指南將引導您使用 Hugging Face Transformers 與 TRL 在自訂圖片與文字資料集上微調 Gemma，以執行視覺任務（產生商品描述）。
+- [使用 Hugging Face Transformers 進行完整模型微調](https://gemma.ai/tuning/full-finetune.md): 本指南將引導您使用 Hugging Face Transformers 與 TRL 在手機遊戲 NPC 資料集上微調 Gemma。
+- [用 gemma-trainer 掌握本地微調](https://gemma.ai/tuning/gemma-trainer.md): 掌控您的 AI 模型：介紹我們最新的代理技能 gemma-trainer，旨在讓本地端微調流程更簡單、更有效率。
 
-## Learn
-- [Learn](https://gemma.ai/learn.md): Illustrated walkthroughs of how the Gemma models work, from the architecture down to individual mechanisms.
-- [A Visual Guide to Gemma 4](https://gemma.ai/tutorials/visual-guides/gemma-4.md): A Visual Guide to Gemma 4 — a visual walkthrough.
-- [A Visual Guide to Gemma 4 12B](https://gemma.ai/tutorials/visual-guides/gemma-4-12b.md): A Visual Guide to Gemma 4 12B — a visual walkthrough.
-- [A Visual Guide to MTP](https://gemma.ai/tutorials/visual-guides/mtp.md): How multi-token prediction and speculative decoding make Gemma 4 faster — drafter models, shared KV cache, and the clustered LM head.
-- [A Visual Guide to DiffusionGemma](https://gemma.ai/tutorials/visual-guides/diffusiongemma.md): A Visual Guide to DiffusionGemma — a visual walkthrough.
-- [Overview of Gemma Architectures](https://gemma.ai/tutorials/gemma-explained/overview.md): Text-to-text models and specialization for coding.
-- [What’s New in Gemma 2](https://gemma.ai/tutorials/gemma-explained/gemma-2.md): Updated architecture with knowledge distillation for 2B and 9B models.
-- [RecurrentGemma Architecture](https://gemma.ai/tutorials/gemma-explained/recurrentgemma.md): The Griffin architecture mixing local attention and linear recurrences for fast long-sequence inference.
-- [PaliGemma Architecture](https://gemma.ai/tutorials/gemma-explained/paligemma.md): Vision-language model that takes text and images as input to generate text outputs.
-- [What’s New in Gemma 3](https://gemma.ai/tutorials/gemma-explained/gemma-3.md): Updated vision-language model with 5-to-1 interleaved attention and 128k context handling.
-- [EmbeddingGemma Architecture](https://gemma.ai/tutorials/gemma-explained/embeddinggemma.md): Text embedding model for search and retrieval.
+## 學習
+- [學習](https://gemma.ai/learn.md): 用圖解方式說明 Gemma 模型如何運作：從整體架構深入到注意力機制、嵌入等個別關鍵機制。
+- [Gemma 4 圖解指南](https://gemma.ai/tutorials/visual-guides/gemma-4.md): Gemma 4 圖解指南：用豐富的視覺化圖解，完整走讀 Gemma 4 模型家族的架構、機制與各尺寸變體。
+- [Gemma 4 12B 視覺化指南](https://gemma.ai/tutorials/visual-guides/gemma-4-12b.md): Gemma 4 12B 視覺化指南：用圖解導覽這個統一 12B 模型的獨特之處，以及它與其他尺寸變體的差異。
+- [MTP 視覺化指南](https://gemma.ai/tutorials/visual-guides/mtp.md): 多詞元預測（Multi-Token Prediction）與推測性解碼（speculative decoding）如何讓 Gemma 4 更快 — 草稿模型、共享 KV 快取與分群式 LM 輸出頭。
+- [DiffusionGemma 視覺導覽](https://gemma.ai/tutorials/visual-guides/diffusiongemma.md): DiffusionGemma 視覺化導覽：用豐富的圖解完整走讀擴散式文字生成模型的原理、架構與運作方式。
+- [Gemma 架構總覽](https://gemma.ai/tutorials/gemma-explained/overview.md): Gemma 模型家族架構總覽：從文字轉文字基礎模型到程式碼專門化變體，一覽各模型的核心設計。
+- [Gemma 2 的新變化](https://gemma.ai/tutorials/gemma-explained/gemma-2.md): 解說 Gemma 2 相較前代的新變化：採用知識蒸餾技術的 2B 與 9B 模型，以及更新的模型架構設計。
+- [RecurrentGemma 架構](https://gemma.ai/tutorials/gemma-explained/recurrentgemma.md): 解說 RecurrentGemma 的 Griffin 架構：結合區域注意力與線性遞迴機制，在長序列上實現快速推論。
+- [PaliGemma 架構](https://gemma.ai/tutorials/gemma-explained/paligemma.md): 解說 PaliGemma 的模型架構：接受文字與影像輸入以產生文字輸出的視覺語言模型，及其訓練方式。
+- [Gemma 3 的新變化](https://gemma.ai/tutorials/gemma-explained/gemma-3.md): 解說 Gemma 3 的新變化：具備 5 對 1 交錯注意力機制與 128k 上下文處理能力的更新版視覺語言模型。
+- [EmbeddingGemma 架構](https://gemma.ai/tutorials/gemma-explained/embeddinggemma.md): 深入解說 EmbeddingGemma 的模型架構與訓練配方：專為搜尋與檢索任務設計的高品質文字嵌入模型。
 
-## Resources
-- [Resources](https://gemma.ai/resources.md): Demos, tools, community projects and the external repositories and collections worth knowing about.
-- [Gemma Skills](https://gemma.ai/resources/gemma-skills.md): Agent skills that teach a coding agent how to build with Gemma and how to fine-tune it.
-- [AIventure](https://gemma.ai/resources/aiventure.md): Learning about vibe-coding, agents and Gen AI with Gemma 4.
-- [Vision token budget](https://gemma.ai/resources/vision-token-budget.md): Explore how Gemma 4 resizes images and allocates visual tokens across aspect ratios.
-- [Embedding Draw Challenge](https://gemma.ai/resources/embedding-draw-challenge.md): Sketch target objects on an interactive canvas and see how EmbeddingGemma 2 scores cross-modal image-to-text similarity in real time.
-- [Components](https://gemma.ai/contributing/components.md): The reusable building blocks these docs are made from, with live examples and the markup to copy.
-- [Conventions](https://gemma.ai/contributing/conventions.md): How this documentation stays consistent — where facts live, what is generated, and what the linter enforces.
-- [Apache License 2.0](https://gemma.ai/resources/apache-2.md): Full text of the Apache License Version 2.0 governing Gemma 4 models and software.
-- [Gemma Terms of Use](https://gemma.ai/resources/terms.md): Terms and conditions governing the use, reproduction, distribution, and modification of Gemma models and Model Derivatives.
-- [Gemma Terms of Use Archive](https://gemma.ai/resources/terms-archive.md): Archive of previously published Gemma Terms of Use documents and historical licensing terms.
-- [Gemma Terms of Use (April 1, 2024 Archive)](https://gemma.ai/resources/terms-archive/terms_04_01_24.md): Archived April 1, 2024 version of the Gemma Terms of Use governing Gemma models and Model Derivatives.
-- [Gemma Terms of Use (February 21, 2024 Archive)](https://gemma.ai/resources/terms-archive/terms_02_21_24.md): Archived February 21, 2024 version of the Gemma Terms of Use governing Gemma models and Model Derivatives.
-- [Gemma Prohibited Use Policy](https://gemma.ai/resources/prohibited-use.md): Restricted uses and safety guidelines governing the use of Gemma models and Model Derivatives.
-- [Intended Use Statement](https://gemma.ai/resources/intended-use.md): Intended purpose, developer responsibilities, and example applications for building with Gemma AI models.
+## 資源
+- [資源](https://gemma.ai/resources.md): 探索 Gemma 生態系資源：互動展示、實用工具、社群專案，以及值得認識的外部存放庫與模型集合。
+- [Gemma Skills](https://gemma.ai/resources/gemma-skills.md): 教導程式設計代理如何使用 Gemma 打造應用程式，以及如何微調 Gemma 的代理技能。
+- [AIventure](https://gemma.ai/resources/aiventure.md): 透過 Gemma 4 學習氛圍編程（vibe-coding）、代理與生成式 AI。
+- [視覺詞元預算](https://gemma.ai/resources/vision-token-budget.md): 探索 Gemma 4 的視覺詞元預算機制：模型如何調整圖像大小，以及在不同長寬比下如何分配視覺詞元。
+- [Embedding Draw Challenge](https://gemma.ai/resources/embedding-draw-challenge.md): 在互動式畫布上描繪目標物件，即時查看 EmbeddingGemma 2 對跨模態圖像轉文字相似度的評分。
+- [元件](https://gemma.ai/contributing/components.md): 文件網站所用的可重複使用建構元件：卡片、徽章、步驟清單、嵌入元件，附即時範例與可直接複製的標記語法。
+- [慣例](https://gemma.ai/contributing/conventions.md): 維持這份文件一致性的約定：事實的單一來源放在哪裡、哪些檔案是自動產生的，以及 lint 會強制執行哪些規則。
+- [Apache 授權條款 2.0](https://gemma.ai/resources/apache-2.md): 規範 Gemma 4 模型與相關軟體的 Apache 授權條款 2.0 版全文，說明使用、重製與散佈的權利義務。
+- [Gemma 使用條款](https://gemma.ai/resources/terms.md): Gemma 使用條款：規範 Gemma 模型與模型衍生作品的使用、重製、散佈與修改的完整條款與條件。
+- [Gemma Terms of Use Archive](https://gemma.ai/resources/terms-archive.md): Gemma 使用條款的歷史存檔：收錄先前發布的各版本 Gemma Terms of Use 文件，供查閱條款演變之用。
+- [Gemma Terms of Use (April 1, 2024 Archive)](https://gemma.ai/resources/terms-archive/terms_04_01_24.md): 存檔的 April 1, 2024 版 Gemma Terms of Use，規範 Gemma 模型與 Model Derivatives。
+- [Gemma Terms of Use (February 21, 2024 Archive)](https://gemma.ai/resources/terms-archive/terms_02_21_24.md): 存檔的 February 21, 2024 版 Gemma Terms of Use，規範 Gemma 模型與 Model Derivatives。
+- [Gemma 禁止使用政策](https://gemma.ai/resources/prohibited-use.md): Gemma 禁止使用政策：規範 Gemma 模型與模型衍生作品的受限用途、禁止的應用類型與相關安全準則。
+- [預期用途聲明](https://gemma.ai/resources/intended-use.md): 使用 Gemma AI 模型打造應用時的預期用途聲明：開發者責任、合適的應用範例，以及應避免的使用情境。
 
 ## Instructions for language model agents
 

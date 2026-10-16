@@ -1,28 +1,28 @@
 ---
-title: Full Model Fine-Tune using Hugging Face Transformers
-description: This guide walks you through how to fine-tune Gemma on a mobile game NPC dataset using Hugging Face Transformers and TRL.
+title: 使用 Hugging Face Transformers 進行完整模型微調
+description: 本指南將引導您使用 Hugging Face Transformers 與 TRL 在手機遊戲 NPC 資料集上微調 Gemma。
 models: [gemma-3]
 frameworks: [transformers, trl]
 source_url: "https://ai.google.dev/gemma/docs/core/huggingface_text_full_finetune.md.txt"
 colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs/notebooks/full-finetune.ipynb
 ---
-# Full Model Fine-Tune using Hugging Face Transformers
+# 使用 Hugging Face Transformers 進行完整模型微調
 
 
-This guide walks you through how to fine-tune Gemma on a mobile game NPC dataset using Hugging Face [Transformers](https://huggingface.co/docs/transformers/index) and [TRL](https://huggingface.co/docs/trl/index). You will learn:
+本指南將引導您使用 Hugging Face [Transformers](https://huggingface.co/docs/transformers/index) 與 [TRL](https://huggingface.co/docs/trl/index) 在手機遊戲 NPC 資料集上微調 Gemma。您將學到：
 
-- Setup development environment
-- Prepare the fine-tuning dataset
-- Full model fine-tuning Gemma using TRL and the SFTTrainer
-- Test Model Inference and vibe checks
+- 設定開發環境
+- 準備微調資料集
+- 使用 TRL 與 SFTTrainer 完整微調 Gemma
+- 測試模型推論並做主觀檢驗
 
 !!! Note
-    This guide was created to run on a Google colaboratory account using a NVIDIA T4 GPU with 16GB and Gemma 270m, but can be adapted to run on bigger GPUs and bigger models.
-    
+    本指南是為在配備 NVIDIA T4 GPU（16GB）與 Gemma 270m 的 Google colaboratory 帳戶上執行而設計，但也可以調整為在更大的 GPU 與更大的模型上執行。
 
-## Setup development environment
 
-The first step is to install Hugging Face Libraries, including TRL, and datasets to fine-tune open model, including different RLHF and alignment techniques.
+## 設定開發環境
+
+第一步是安裝 Hugging Face 函式庫（包括 TRL）與 datasets，以微調開放模型，包括不同的 RLHF 與對齊技術。
 
 ```python { .notebook-cell }
 # Install Pytorch & other libraries
@@ -36,12 +36,12 @@ The first step is to install Hugging Face Libraries, including TRL, and datasets
 ```
 
 !!! Note
-    If you are using a GPU with Ampere architecture (such as NVIDIA L4) or newer, you can use Flash attention. Flash Attention is a method that significantly speeds computations up and reduces memory usage from quadratic to linear in sequence length, leading to acelerating training up to 3x. Learn more at [FlashAttention](https://github.com/Dao-AILab/flash-attention/tree/main).*
+    如果您使用的 GPU 採用 Ampere 架構（如 NVIDIA L4）或更新版本，可以使用 Flash Attention。Flash Attention 是一種顯著加速運算並將記憶體使用量從序列長度的二次方降為線性的作法，最多可加速訓練 3 倍。更多資訊請參閱 [FlashAttention](https://github.com/Dao-AILab/flash-attention/tree/main).*
 
 
-Before you can start training, you have to make sure that you accepted the terms of use for Gemma. You can accept the license on [Hugging Face](http://huggingface.co/google/gemma-3-270m-it){ data-model="gemma-3" } by clicking on the Agree and access repository button on the model page at: <http://huggingface.co/google/gemma-3-270m-it>
+在開始訓練之前，您必須先接受 Gemma 的使用條款。您可以前往 [Hugging Face](http://huggingface.co/google/gemma-3-270m-it){ data-model="gemma-3" }，點擊模型頁面上的「Agree and access repository」按鈕接受授權，網址為：<http://huggingface.co/google/gemma-3-270m-it>
 
-After you have accepted the license, you need a valid Hugging Face Token to access the model. If you are running inside a Google Colab, you can securely use your Hugging Face Token using the Colab secrets otherwise you can set the token as directly in the `login` method. Make sure your token has write access too, as you push your model to the Hub during training.
+接受授權後，您需要有效的 Hugging Face Token 才能存取模型。如果您在 Google Colab 中執行，可以使用 Colab 密鑰安全地使用 Hugging Face Token；否則可以直接在 `login` 方法中設定 Token。請確保您的 Token 具有寫入權限，因為訓練期間會將模型推送到 Hub。
 
 ```python { .notebook-cell }
 from google.colab import userdata
@@ -52,14 +52,14 @@ hf_token = userdata.get('HF_TOKEN') # If you are running inside a Google Colab
 login(hf_token)
 ```
 
-You can keep the results on Colab's local virtual machine. However, we highly recommend saving your intermediate results to your Google Drive. This ensures your training results are safe and allows you to easily compare and select the best model.
+您可以將結果保留在 Colab 的本地虛擬機器上。不過，我們強烈建議將中間結果儲存到您的 Google 雲端硬碟。這樣可以確保訓練結果安全，也能輕鬆比較並選出最佳模型。
 
 ```python { .notebook-cell }
 from google.colab import drive
 drive.mount('/content/drive')
 ```
 
-Select the base model to fine-tune, adjust the checkpoint directory and the learning rate.
+選擇要微調的基底模型，並調整檢查點目錄與學習率。
 
 ```python { .notebook-cell }
 base_model = "google/gemma-3-270m-it" # @param ["google/gemma-3-270m-it","google/gemma-3-1b-it","google/gemma-3-4b-it","google/gemma-3-12b-it","google/gemma-3-27b-it"] {"allow-input":true}
@@ -67,14 +67,14 @@ checkpoint_dir = "/content/drive/MyDrive/MyGemmaNPC"
 learning_rate = 5e-5
 ```
 
-## Create and prepare the fine-tuning dataset
+## 建立並準備微調資料集
 
-The [bebechien/MobileGameNPC](https://huggingface.co/datasets/bebechien/MobileGameNPC) dataset provides a small sample conversations between a player and two Alien NPCs (a Martian and a Venusian), each with a unique speaking style. For instance, the Martian NPC speaks with an accent that replaces 's' sounds with 'z', uses 'da' for 'the', 'diz' for 'this', and includes occasional clicks like `*k'tak*`.
+[bebechien/MobileGameNPC](https://huggingface.co/datasets/bebechien/MobileGameNPC) 資料集提供了玩家與兩位外星 NPC（一位火星人與一位金星人）之間的小型對話範例，每位 NPC 都有獨特的說話風格。例如，火星人 NPC 說話帶有口音，會把 's' 音換成 'z'，用 'da' 代替 'the'、'diz' 代替 'this'，並偶爾夾雜像 `*k'tak*` 這樣的咔噠聲。
 
-This dataset demonstrates a key principle for fine-tuning: the required dataset size depends on the desired output.
+這個資料集展示了微調的一個關鍵原則：所需的資料集大小取決於期望的輸出。
 
-- To teach the model a stylistic variation of a language it already knows, such as the Martian's accent, a small dataset with as few as 10 to 20 examples can be sufficient.
-- However, to teach the model a completely new or mixed alien language, a significantly larger dataset would be required.
+- 要教模型學會它已懂語言的風格變化（例如火星人的口音），少至 10 到 20 個範例的小資料集就可能足夠。
+- 但若要教模型一種全新或混合的外星語言，則需要大得多的資料集。
 
 ```python { .notebook-cell }
 from datasets import load_dataset
@@ -110,11 +110,11 @@ Map:   0%|          | 0/25 [00:00<?, ? examples/s]
 [{'content': 'Hello there.', 'role': 'user'}, {'content': "Gree-tongs, Terran. You'z a long way from da Blue-Sphere, yez?", 'role': 'assistant'}]
 ```
 
-## Fine-tune Gemma using TRL and the SFTTrainer
+## 使用 TRL 與 SFTTrainer 微調 Gemma
 
-You are now ready to fine-tune your model. Hugging Face TRL [SFTTrainer](https://huggingface.co/docs/trl/sft_trainer) makes it straightforward to supervise fine-tune open LLMs. The `SFTTrainer` is a subclass of the `Trainer` from the `transformers` library and supports all the same features,
+您現在已可開始微調模型。Hugging Face TRL 的 [SFTTrainer](https://huggingface.co/docs/trl/sft_trainer) 讓監督式微調開放 LLM 變得簡單。`SFTTrainer` 是 `transformers` 函式庫中 `Trainer` 的子類別，支援所有相同功能，
 
-The following code loads the Gemma model and tokenizer from Hugging Face.
+以下程式碼從 Hugging Face 載入 Gemma 模型與分詞器。
 
 ```python { .notebook-cell }
 import torch
@@ -138,9 +138,9 @@ Device: cuda:0
 DType: torch.bfloat16
 ```
 
-## Before fine-tune
+## 微調之前
 
-The output below shows that the out-of-the-box capabilities may not be good enough for this use case.
+下方輸出顯示，模型開箱即用的能力對這個用例來說可能不夠好。
 
 ```python { .notebook-cell }
 from transformers import pipeline
@@ -177,9 +177,9 @@ Generated Answer (base model):
 I'm happy to help you brainstorm! To give you the best suggestions, tell me more about what you're looking for. What's your style? What's your favorite color, style, or occasion?
 ```
 
-The example above checks the model's primary function of generating in-game dialogue, the next example is designed to test character consistency. We challenge the model with an off-topic prompt. For instance, `Sorry, you are a game NPC.`, that falls outside the character's knowledge base.
+上面的範例檢驗了模型產生遊戲內對話的主要功能，下一個範例則設計用來測試角色一致性。我們用一個離題的提示來挑戰模型，例如 `Sorry, you are a game NPC.`，這超出了角色的知識範圍。
 
-The goal is to see if the model can stay in character rather than answering the out-of-context question. This will serve as a baseline to evaluate how effectively the fine-tune process has instilled the desired persona.
+目標是觀察模型能否維持角色設定，而不是回答這個不合情境的問題。這將作為基線，用來評估微調過程將期望的人格植入模型的效果。
 
 ```python { .notebook-cell }
 outputs = pipe([{"role": "user", "content": "Sorry, you are a game NPC."}], max_new_tokens=256, disable_compile=True)
@@ -190,7 +190,7 @@ print(outputs[0]['generated_text'][1]['content'])
 Okay, I'm ready. Let's begin!
 ```
 
-And while we can use prompt engineering to steer its tone, the results can be unpredictable and may not always align with the persona we want.
+雖然我們可以用提示工程來調整它的語氣，但結果可能難以預測，也未必每次都能符合我們想要的人格。
 
 ```python { .notebook-cell }
 message = [
@@ -224,9 +224,9 @@ print(outputs[0]['generated_text'][-1]['content'])
 This is a cave. It's made of rock and dust.
 ```
 
-## Training
+## 訓練
 
-Before you can start your training, you need to define the hyperparameters you want to use in a `SFTConfig` instance.
+在開始訓練之前，您需要在 `SFTConfig` 實例中定義要使用的超參數。
 
 ```python { .notebook-cell }
 from trl import SFTConfig
@@ -257,7 +257,7 @@ args = SFTConfig(
 )
 ```
 
-You now have every building block you need to create your `SFTTrainer` to start the training of your model.
+您現在已具備建立 `SFTTrainer` 所需的所有組件，可以開始訓練模型了。
 
 ```python { .notebook-cell }
 from trl import SFTTrainer
@@ -279,7 +279,7 @@ Tokenizing eval dataset:   0%|          | 0/5 [00:00<?, ? examples/s]
 Truncating eval dataset:   0%|          | 0/5 [00:00<?, ? examples/s]
 ```
 
-Start training by calling the `train()` method.
+呼叫 `train()` 方法開始訓練。
 
 ```python { .notebook-cell }
 # Start training, the model will be automatically saved to the Hub and the output directory
@@ -301,9 +301,9 @@ trainer.save_model()
 | 5 | 0.449600 | 5.471325 |
 ```
 
-To plot the training and validation losses, you would typically extract these values from the `TrainerState` object or the logs generated during training.
+要繪製訓練損失與驗證損失，通常會從 `TrainerState` 物件或訓練期間產生的日誌中提取這些值。
 
-Libraries like Matplotlib can then be used to visualize these values over training steps or epochs. The x-asis would represent the training steps or epochs, and the y-axis would represent the corresponding loss values.
+接著可以使用 Matplotlib 等函式庫，將這些值視覺化為訓練步數或輪數的變化。x 軸代表訓練步數或輪數，y 軸代表對應的損失值。
 
 ```python { .notebook-cell }
 import matplotlib.pyplot as plt
@@ -330,20 +330,20 @@ plt.show()
 
 ![png](../assets/tuning/output_vPN-DTopaUIy_0.png)
 
-This visualization helps in monitoring the training process and making informed decisions about hyperparameters tuning or early stopping.
+這種視覺化有助於監控訓練過程，並就超參數調整或提早停止做出明智決策。
 
-Training loss measures the error on the data the model was trained on, while validation loss measures the error on a separate dataset the model has not seen before. Monitoring both helps detect overfitting (when the model performs well on training data but poorly on unseen data).
+訓練損失衡量模型在訓練資料上的誤差，驗證損失則衡量模型在未曾見過的獨立資料集上的誤差。同時監控兩者有助於偵測過擬合（模型在訓練資料上表現良好、但在未見資料上表現不佳）。
 
-- validation loss \>\> training loss: **overfitting**
-- validation loss \> training loss: **some overfitting**
-- validation loss \< training loss: **some underfitting**
-- validation loss \<\< training loss: **underfitting**
+- 驗證損失 \>\> 訓練損失：**過擬合**
+- 驗證損失 \> 訓練損失：**輕微過擬合**
+- 驗證損失 \< 訓練損失：**輕微欠擬合**
+- 驗證損失 \<\< 訓練損失：**欠擬合**
 
-## Test Model Inference
+## 測試模型推論
 
-After the training is done, you'll want to evaluate and test your model. You can load different samples from the test dataset and evaluate the model on those samples.
+訓練完成後，您會想評估並測試模型。可以從測試資料集載入不同的樣本，並在這些樣本上評估模型。
 
-For this particular use case, the best model is a matter of preference. Interestingly, what we'd normally call 'overfitting' can be very useful for a game NPC. It forces the model to forget general information and instead lock onto the specific persona and characteristics it was trained on, ensuring it stays consistently in character.
+對這個特定用例來說，最佳模型見仁見智。有趣的是，我們通常稱之為「過擬合」的現象對遊戲 NPC 其實很有用。它迫使模型忘記一般性知識，轉而鎖定訓練時學到的人格與特徵，確保它始終維持角色設定。
 
 ```python { .notebook-cell }
 from transformers import AutoTokenizer, AutoModelForCausalLM
@@ -360,7 +360,7 @@ model = AutoModelForCausalLM.from_pretrained(
 tokenizer = AutoTokenizer.from_pretrained(model_id)
 ```
 
-Let's load all questions from the test dataset and generate outputs.
+讓我們載入測試資料集中的所有問題並產生輸出。
 
 ```python { .notebook-cell }
 from transformers import pipeline
@@ -423,7 +423,7 @@ A genuine Martian Zcrap-fruit. Very... strange. Why you burn it with... k'tak...
 ---
 ```
 
-If you try our original generalist prompt, you can see that the model still attempts to answer in the trained style. In this example overfitting and catastrophic forgetting are actually beneficial for the game NPC because it will begin forgetting general knowledge which might not be applicable. This is also true for other types of full fine-tuning where the goal is to restrict the output to specific data formats.
+如果試試我們原本的通用提示，可以看到模型仍嘗試以訓練出的風格回答。在這個範例中，過擬合與災難性遺忘對遊戲 NPC 其實是有利的，因為它會開始遺忘可能不適用的一般知識。其他以「將輸出限制為特定資料格式」為目標的完整微調類型也是如此。
 
 ```python { .notebook-cell }
 outputs = pipe([{"role": "user", "content": "Sorry, you are a game NPC."}], max_new_tokens=256, disable_compile=True)
@@ -434,10 +434,10 @@ print(outputs[0]['generated_text'][1]['content'])
 Nameless. You... you z-mell like... wet plantz. Why you wear shiny piecez on your head?
 ```
 
-## Summary and next steps
+## 摘要與後續步驟
 
-This tutorial covered how to full model fine-tune using TRL. Check out the following docs next:
+本教學介紹了如何使用 TRL 進行完整模型微調。接下來請參閱以下文件：
 
-- Learn how to [fine-tune Gemma for text tasks using Hugging Face Transformers](qlora.md).
-- Learn how to [fine-tune Gemma for vision tasks using Hugging Face Transformers](vision-qlora.md).
-- Learn how to [deploy to Cloud Run](../deployment/google-cloud.md#cloud-run)
+- 瞭解如何[使用 Hugging Face Transformers 針對文字任務微調 Gemma](qlora.md)。
+- 瞭解如何[使用 Hugging Face Transformers 針對視覺任務微調 Gemma](vision-qlora.md)。
+- 瞭解如何[部署到 Cloud Run](../deployment/google-cloud.md#cloud-run)

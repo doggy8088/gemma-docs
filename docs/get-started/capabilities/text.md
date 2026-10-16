@@ -1,19 +1,19 @@
 ---
-title: Inference
-description: "Basic text inference with Gemma 4 in Hugging Face Transformers: single-turn prompts, multi-turn conversations, and system instructions."
+title: 推論
+description: "在 Hugging Face Transformers 中使用 Gemma 4 進行基本文字推論：單輪提示、多輪對話與系統指令。"
 models: [gemma-4]
 frameworks: [transformers]
 colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs/notebooks/text-gemma-4-e2b.ipynb
 ---
-# Inference
+# 推論
 
-Gemma is a family of lightweight, state-of-the-art open models built from the same research and technology used to create the [Gemini](https://deepmind.google/technologies/gemini/#introduction) models. Gemma 4 is designed to be the world's most efficient open-weight model family.
+Gemma 是一個輕量級的頂尖開放模型家族，採用與創建 [Gemini](https://deepmind.google/technologies/gemini/#introduction) 模型相同的研發與技術打造而成。Gemma 4 旨在成為全球最具效率的開放權重模型家族。
 
-This document provides a guide to performing basic text inference with Gemma 4 using the Hugging Face [`transformers`](https://huggingface.co/docs/transformers/installation) library. It covers environment setup, model loading, and various text generation scenarios including single-turn prompts, structured multi-turn conversations, and applying system instructions.
+本文件提供使用 Hugging Face [`transformers`](https://huggingface.co/docs/transformers/installation) 函式庫，以 Gemma 4 進行基本文字推論的指南。內容涵蓋環境設定、模型載入，以及各種文字生成情境，包括單輪提示、結構化多輪對話，以及套用系統指令。
 
-## Install Python packages
+## 安裝 Python 套件
 
-Install the Hugging Face libraries required for running the Gemma model and making requests.
+安裝執行 Gemma 模型與發送請求所需的 Hugging Face 函式庫。
 
 ```bash { .notebook-cell }
 # Install PyTorch & other libraries
@@ -23,15 +23,15 @@ pip install torch accelerate
 pip install "transformers>=5.10.1"
 ```
 
-[`Dialog`](https://github.com/google-deepmind/dialog) is a library to manipulate and display conversations.
+[`Dialog`](https://github.com/google-deepmind/dialog) 是一個用於操作與顯示對話的函式庫。
 
 ```bash { .notebook-cell }
 pip install dialog
 ```
 
-## Load Model
+## 載入模型
 
-Use [`transformers`](https://huggingface.co/docs/transformers/installation) library to load the pipeline
+使用 [`transformers`](https://huggingface.co/docs/transformers/installation) 函式庫載入管線（pipeline）
 
 ```python { .notebook-cell .model-swap }
 MODEL_ID = "google/gemma-4-E2B-it"
@@ -47,9 +47,9 @@ txt_pipe = pipeline(
 ```
 
 
-## Run text generation
+## 執行文字生成
 
-Once you have the Gemma model loaded and configured in a `pipeline` object, you can send prompts to the model. The following example code shows a basic request using the `text_inputs` parameter:
+一旦您已將 Gemma 模型載入並設定為 `pipeline` 物件，就可以向模型發送提示。以下範例程式碼展示了使用 `text_inputs` 參數的基本請求：
 
 ```python { .notebook-cell }
 output = txt_pipe(text_inputs="<|turn>user\nRoses are..<turn|>\n<|turn>model\n")
@@ -81,7 +81,7 @@ Here are a few ways to complete the phrase "Roses are...":
 **Which one feels right to you? 😊**
 ```
 
-## Use Dialog library
+## 使用 Dialog 函式庫
 
 ```python { .notebook-cell }
 import dialog
@@ -127,9 +127,9 @@ Here are a few ways to complete the phrase "Roses are...":
 **"Roses are beautiful."** or **"Roses are a symbol of love."**
 ```
 
-## Use a prompt template
+## 使用提示範本
 
-When generating content with more complex prompting, use a prompt template to structure your request. A prompt template allows you to specify input from specific roles, such as `user`{.token-role} or `model`{.token-role}, and is a required format for managing multi-turn chat interactions with Gemma models. The following example code shows how to construct a prompt template for Gemma:
+在使用更複雜的提示生成內容時，請使用提示範本來建構您的請求。提示範本讓您能指定來自特定角色的輸入，例如 `user`{.token-role} 或 `model`{.token-role}，是管理與 Gemma 模型多輪聊天互動所需的格式。以下範例程式碼展示如何為 Gemma 建構提示範本：
 
 ```python { .notebook-cell }
 from transformers import GenerationConfig
@@ -161,9 +161,9 @@ A legend spun of ink and brine,
 A primal fear, a dark design.
 ```
 
-## Multi-turn conversation
+## 多輪對話
 
-In a multi-turn setup, the conversation history is preserved as a sequence of alternating `user`{.token-role} and `model`{.token-role} roles. This cumulative list serves as the model's memory, ensuring that each new output is informed by the preceding dialogue.
+在多輪設定中，對話記錄會保留為交替出現的 `user`{.token-role} 與 `model`{.token-role} 角色序列。這個累積的清單充當模型的記憶，確保每次新的輸出都以前述對話為依據。
 
 ```python { .notebook-cell }
 import dialog
@@ -214,7 +214,7 @@ A siren's kiss, a deadly art,
 That breaks the sailor's guarded heart.
 ```
 
-And here's the conversation exported as text.
+以下是以文字匯出的對話。
 
 ```python { .notebook-cell }
 chat_history = conv.as_text(training=True)
@@ -251,12 +251,12 @@ That breaks the sailor's guarded heart.<turn|>
 
 
 !!! Note
-    If you set `training=True`, the conversation is assumed to be the full complete example. Always ends with `<turn|>`
+    如果您設定 `training=True`，該對話會被視為完整範例，結尾一定是 `<turn|>`
 
 
-## System instructions
+## 系統指令
 
-Use the `system`{.token-role} role to provide the system-level instructions.
+使用 `system`{.token-role} 角色來提供系統層級的指令。
 
 ```python { .notebook-cell }
 import dialog
@@ -295,31 +295,31 @@ So, next time ye look up, ye can tell the secret: it be the **sunlight** bein' *
 **Shiver me timbers!** That's the pirate explanation!
 ```
 
-## Summary
-In this guide, you learned how to perform basic text inference with Gemma 4 using the Hugging Face `transformers` library. You covered:
+## 摘要
+在本指南中，您學會了如何使用 Hugging Face `transformers` 函式庫以 Gemma 4 進行基本文字推論，內容包括：
 
-1. **Environment**: Setting up the environment and installing dependencies.
-2. **Loading the model**: Using the `pipeline` abstraction.
-3. **Inference**: Running basic text generation.
-4. **Conversation**: Using the [`dialog`](https://github.com/google-deepmind/dialog) library for conversation tracking.
-5. **Multi-turn conversations**: Multi-turn conversations and applying system instructions.
+1. **環境**：設定環境並安裝相依套件。
+2. **載入模型**：使用 `pipeline` 抽象層。
+3. **推論**：執行基本文字生成。
+4. **對話**：使用 [`dialog`](https://github.com/google-deepmind/dialog) 函式庫追蹤對話。
+5. **多輪對話**：多輪對話與套用系統指令。
 
-## What's next
+## 後續步驟
 
 <div class="card-grid">
 <a class="card" href="../prompt-formatting.md">
   <span class="card-icon">{{ icon('lucide/braces') }}</span>
-  <div class="card-title">Prompt formatting</div>
-  <p class="card-desc">The control tokens that structure a Gemma prompt.</p>
+  <div class="card-title">提示格式</div>
+  <p class="card-desc">建構 Gemma 提示的控制詞元。</p>
 </a>
 <a class="card" href="function-calling.md">
   <span class="card-icon">{{ icon('lucide/wrench') }}</span>
-  <div class="card-title">Tool calling</div>
-  <p class="card-desc">Give Gemma functions to call and feed the results back.</p>
+  <div class="card-title">工具呼叫</div>
+  <p class="card-desc">賦予 Gemma 可呼叫的函式，並將結果回饋。</p>
 </a>
 <a class="card" href="../../deployment/index.md">
   <span class="card-icon">{{ icon('lucide/play') }}</span>
-  <div class="card-title">Run Gemma</div>
-  <p class="card-desc">Every engine that runs Gemma, from a laptop to a cluster.</p>
+  <div class="card-title">執行 Gemma</div>
+  <p class="card-desc">從筆電到叢集，所有能執行 Gemma 的推論引擎。</p>
 </a>
 </div>

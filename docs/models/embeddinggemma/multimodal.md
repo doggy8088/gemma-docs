@@ -1,43 +1,43 @@
 ---
-title: Multimodal Embeddings with Sentence Transformers
-description: Generate unified image, audio, video, and interleaved multimodal embeddings with EmbeddingGemma 2 and Sentence Transformers.
+title: 使用 Sentence Transformers 的多模態嵌入
+description: 使用 EmbeddingGemma 2 與 Sentence Transformers 產生統一的圖像、音訊、影片與交錯式多模態嵌入。
 models: [embeddinggemma]
 frameworks: [sentence-transformers, transformers]
 colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs/notebooks/embeddinggemma-multimodal.ipynb
 source_url: "https://ai.google.dev/gemma/docs/embeddinggemma/multimodal-embeddinggemma-with-sentence-transformers.md.txt"
 ---
-# Multimodal Embeddings with Sentence Transformers
+# 使用 Sentence Transformers 的多模態嵌入
 
-**EmbeddingGemma 2** is a lightweight, open-source 740M parameter model designed for unified multimodal embeddings. Built on the Gemma 4 decoder architecture, it maps **text, images, audio, and video** into a single 768-dimensional vector space.
+**EmbeddingGemma 2** 是一個輕量、開源的 740M 參數模型，專為統一多模態嵌入而設計。它基於 Gemma 4 解碼器架構，能將**文字、圖像、音訊和影片**映射到單一 768 維向量空間。
 
-Because all modalities share the same semantic space, you can compare inputs within the same modality (e.g. image-to-image similarity) or across different modalities (e.g. text-to-image, text-to-audio, and text-to-video retrieval) locally on consumer GPUs or CPUs.
+由於所有模態共用同一語義空間，您可以在同一模態內（例如圖像對圖像相似度）或跨不同模態（例如文字轉圖像、文字轉音訊與文字轉影片檢索）比較輸入，並在消費級 GPU 或 CPU 上本機執行。
 
-**What this guide covers:**
+**本指南涵蓋：**
 
-- Installing multimedia dependencies and loading **EmbeddingGemma 2**
-- Selective modality loading to reduce GPU memory usage
-- **Image embeddings** and cross-modal **text-to-image search** (with soft-token budget tuning)
-- **Audio embeddings** and cross-modal **text-to-audio retrieval**
-- **Video embeddings** and cross-modal **text-to-video retrieval**
-- **Interleaved multimodal inputs** (combining text + images/audio/video in a single representation)
-- Building a **unified cross-modal search index** across text, image, audio, and video
+- 安裝多媒體相依套件並載入 **EmbeddingGemma 2**
+- 選擇性模態載入以減少 GPU 記憶體使用量
+- **圖像嵌入**與跨模態**文字轉圖像搜尋**（含軟詞元預算調整）
+- **音訊嵌入**與跨模態**文字轉音訊檢索**
+- **影片嵌入**與跨模態**文字轉影片檢索**
+- **交錯式多模態輸入**（在單一表示中結合文字 + 圖像/音訊/影片）
+- 打造跨文字、圖像、音訊與影片的**統一跨模態搜尋索引**
 
-!!! tip "New to EmbeddingGemma 2?"
-    For text-only basics, task prompts, zero-shot classification, RAG, and Matryoshka Representation Learning (MRL), start with the [Generate Embeddings with Sentence Transformers](inference.md) guide.
+!!! tip "第一次接觸 EmbeddingGemma 2？"
+    如需純文字基礎、任務提示、零樣本分類、RAG 與 Matryoshka Representation Learning (MRL)，請先從 [使用 Sentence Transformers 產生嵌入](inference.md)指南開始。
 
-## Setup and Installation
+## 設定與安裝
 
-Install `sentence-transformers`, `transformers`, and the multimedia libraries (`pillow`, `soundfile`, `torchcodec`) required for processing images, audio, and video.
+安裝 `sentence-transformers`、`transformers`，以及處理圖像、音訊和影片所需的多媒體函式庫（`pillow`、`soundfile`、`torchcodec`）。
 
-Sentence Transformers is a Python framework for using and training embedding and reranker models. For more details on the framework, see the [Sentence Transformers documentation](https://www.sbert.net/).
+Sentence Transformers 是一個用於使用與訓練嵌入（embedding）及重排序（reranker）模型的 Python 框架。如需更多框架細節，請參閱 [Sentence Transformers 文件](https://www.sbert.net/)。
 
 ```bash { .notebook-cell }
 pip install -U sentence-transformers transformers pillow soundfile torchcodec
 ```
 
-## Model Initialization
+## 模型初始化
 
-Instantiate EmbeddingGemma 2 directly using the `SentenceTransformer` class. By default, it loads the text backbone alongside both the vision and audio encoders.
+直接使用 `SentenceTransformer` 類別實例化 EmbeddingGemma 2。預設會載入文字主幹，同時載入視覺與音訊編碼器。
 
 ```python { .notebook-cell }
 from sentence_transformers import SentenceTransformer
@@ -59,14 +59,14 @@ Supported modalities: ['text', 'image', 'audio', 'video', 'message']
 Total number of parameters in the model: 744371488
 ```
 
-!!! note "Note on Precision"
-    EmbeddingGemma 2 activations are incompatible with `float16`. Always run inference in `bfloat16` (default on supported GPUs) or `float32`.
+!!! note "精度說明"
+    EmbeddingGemma 2 的激活值與 `float16` 不相容。推論一律使用 `bfloat16`（支援的 GPU 上為預設值）或 `float32`。
 
-### Optional: Selective Encoder Loading
+### 選用：選擇性編碼器載入
 
-If your workflow only requires specific modalities (for example, audio-only retrieval), you can selectively load only the encoders you need via `config_kwargs` to optimize memory usage and initialization speed.
+如果您的工作流程只需要特定模態（例如純音訊檢索），可以透過 `config_kwargs` 只選擇性載入所需的編碼器，以最佳化記憶體使用量與初始化速度。
 
-Pass `"vision_config": None` and/or `"audio_config": None` when initializing the model to load only the active encoders.
+初始化模型時傳入 `"vision_config": None` 和/或 `"audio_config": None`，即可只載入啟用的編碼器。
 
 ```python
 from sentence_transformers import SentenceTransformer
@@ -85,15 +85,15 @@ Loading weights:   0%|          | 0/1165 [00:00<?, ?it/s]
 Total parameters (audio-only): 576613664
 ```
 
-*(For the remainder of this tutorial, we use the full multimodal `model` initialized above.)*
+*（本教學的其餘部分使用上方初始化的完整多模態 `model`。）*
 
-## Multimodal & Cross-Modal Embeddings
+## 多模態與跨模態嵌入
 
-Because EmbeddingGemma 2 maps all modalities into a unified 768-dimensional vector space, you can compute similarity both **within** a modality (e.g., image-to-image) and **across** modalities (e.g., text-to-image, image-to-audio, or text-to-video).
+由於 EmbeddingGemma 2 將所有模態映射到統一的 768 維向量空間，您可以在模態**內**（例如圖像對圖像）與**跨**模態（例如文字轉圖像、圖像轉音訊或文字轉影片）計算相似度。
 
-### Working with Images
+### 處理圖像
 
-Pass an image as a dictionary `{"image": <source>}`, where `<source>` can be a file path, URL, or `PIL.Image` object.
+將圖像以字典 `{"image": <source>}` 傳入，其中 `<source>` 可以是檔案路徑、URL 或 `PIL.Image` 物件。
 
 ```python { .notebook-cell }
 from PIL import Image
@@ -159,11 +159,11 @@ a friendly dog sitting in the grass
  `-> 🤖 score: 0.509
 ```
 
-Notice that the text query `"San Francisco"` achieves the highest cross-modal similarity with the Golden Gate Bridge photo.
+請注意，文字查詢 `"San Francisco"` 與金門大橋照片的跨模態相似度最高。
 
-#### Customizing Image Processing Parameters
+#### 自訂圖像處理參數
 
-You can adjust vision token budget per inference call via `processing_kwargs`:
+您可以透過 `processing_kwargs` 調整每次推論呼叫的視覺詞元預算：
 
 ```python { .notebook-cell }
 img_processing_args = {
@@ -205,11 +205,11 @@ a friendly dog sitting in the grass
  `-> 🤖 score: 0.531
 ```
 
-You can decide between budget sizes of 70, 140, 280, 560, or 1120 tokens. Increasing the vision budget for input images trades latency and token count for quality.
+您可以選擇 70、140、280、560 或 1120 詞元的預算大小。提高輸入圖像的視覺預算會以延遲與詞元數換取品質。
 
-### Working with Audio
+### 處理音訊
 
-Pass audio inputs as `{"audio": <source>}`. Supported audio sources include local file paths, URLs, or in-memory waveforms (1D/2D `float32` NumPy arrays or PyTorch tensors). Audio files are automatically decoded and resampled to 16 kHz.
+以 `{"audio": <source>}` 傳入音訊輸入。支援的音訊來源包括本機檔案路徑、URL，或記憶體內波形（1D/2D `float32` NumPy 陣列或 PyTorch 張量）。音訊檔案會自動解碼並重新取樣為 16 kHz。
 
 ```python { .notebook-cell }
 from IPython.display import display, Audio
@@ -259,9 +259,9 @@ Roses are red, violets are blue.
  `-> 🤖 score: 0.876
 ```
 
-### Working with Video
+### 處理影片
 
-Pass video inputs as `{"video": <source>}`. The model natively decodes MP4 files/URLs and samples video frames. You can also pass pre-extracted frames as a list of `PIL.Image` objects or 4D/5D tensors.
+以 `{"video": <source>}` 傳入影片輸入。模型原生解碼 MP4 檔案/URL 並取樣影片幀。您也可以傳入預先擷取的幀，作為 `PIL.Image` 物件列表或 4D/5D 張量。
 
 ```python { .notebook-cell }
 from IPython.display import display, Video
@@ -311,12 +311,12 @@ a sports car racing on a highway
  `-> 🤖 score: 0.440
 ```
 
-!!! note "Note on FPS"
-    By default, video is processed as sampled frames through the vision encoder at **1 frame per second**; FPS sampling rate is configurable.
+!!! note "FPS 說明"
+    預設情況下，影片以 **每秒 1 幀**的取樣幀透過視覺編碼器處理；FPS 取樣率可設定。
 
-#### Customizing Video Processing Parameters
+#### 自訂影片處理參數
 
-You can adjust frame sampling behavior per inference call via `processing_kwargs`:
+您可以透過 `processing_kwargs` 調整每次推論呼叫的幀取樣行為：
 
 ```python { .notebook-cell }
 # Override video processing parameters for a specific encode() call
@@ -353,12 +353,12 @@ a sports car racing on a highway
  `-> 🤖 score: 0.492
 ```
 
-### Interleaved Multimodal Inputs
+### 交錯式多模態輸入
 
-EmbeddingGemma 2 supports rich, mixed-modality inputs within a single query pass:
+EmbeddingGemma 2 在單次查詢中支援豐富的混合模態輸入：
 
-* **Multimodal dictionary:** Pass multiple keys (`"text"`, `"image"`, `"audio"`, `"video"`) in the same dictionary to combine modalities automatically.
-* **Explicit placeholder interleaving:** Use `<|image|>`, `<|audio|>`, and `<|video|>` tags inside the `"text"` string to control the exact token positions where media items are inserted.
+* **多模態字典：** 在同一字典中傳入多個鍵（`"text"`、`"image"`、`"audio"`、`"video"`）以自動組合模態。
+* **顯式佔位符交錯：** 在 `"text"` 字串中使用 `<|image|>`、`<|audio|>` 與 `<|video|>` 標籤，控制媒體項目插入的精確詞元位置。
 
 ```python { .notebook-cell }
 img_url = "https://raw.githubusercontent.com/google-gemma/cookbook/refs/heads/main/apps/sample-data/GoldenGate.png"
@@ -401,15 +401,15 @@ Interleaved embedding shape: (768,)
 Media sequence embedding shape: (768,)
 ```
 
-## Summary and Next Steps
+## 摘要與後續步驟
 
-You now know how to generate unified multimodal and cross-modal embeddings across **text, images, audio, and video** using **EmbeddingGemma 2** and the `sentence-transformers` library, as well as how to configure modality encoders and customize video processing parameters.
+您現在已經知道如何使用 **EmbeddingGemma 2** 與 `sentence-transformers` 函式庫，產生跨**文字、圖像、音訊和影片**的統一多模態與跨模態嵌入，以及如何設定模態編碼器與自訂影片處理參數。
 
-### Further Reading
+### 延伸閱讀
 
-- [EmbeddingGemma 2 Model Card](model-card-v2.md)
-- [Fine-tune EmbeddingGemma with Sentence Transformers](fine-tuning.md)
-- [Vision Tune EmbeddingGemma with Sentence Transformers](fine-tuning-multimodal.md)
-- [Sentence Transformers Documentation](https://www.sbert.net/)
+- [EmbeddingGemma 2 模型卡](model-card-v2.md)
+- [使用 Sentence Transformers 微調 EmbeddingGemma](fine-tuning.md)
+- [使用 Sentence Transformers 視覺微調 EmbeddingGemma](fine-tuning-multimodal.md)
+- [Sentence Transformers 文件](https://www.sbert.net/)
 
 --8<-- "glossary.md"

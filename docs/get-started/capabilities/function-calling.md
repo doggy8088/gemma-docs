@@ -1,28 +1,24 @@
 ---
-title: Tool calling
-description: When using a generative artificial intelligence (AI) model such as Gemma, you may want to use the model to operate programming interfaces in order to complete tasks or answer questions.
+title: 工具呼叫
+description: 當您使用像 Gemma 這樣的生成式人工智慧（AI）模型時，您可能會希望使用模型來操作程式設計介面，以完成任務或回答問題。
 models: [gemma-4]
 frameworks: [transformers]
 colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs/notebooks/function-calling-gemma-4-e2b.ipynb
 ---
 <!-- TODO: Rename this to "tool calling"? -->
-# Tool calling
+# 工具呼叫
 
-When using a generative artificial intelligence (AI) model such as Gemma, you
-may want to use the model to operate programming interfaces in order to complete
-tasks or answer questions. Instructing a model by defining a programming
-interface and then making a request that uses that interface is called *function
-calling* or *tool calling*.
+當您使用像 Gemma 這樣的生成式人工智慧（AI）模型時，您可能會希望使用模型來操作程式設計介面，以完成任務或回答問題。透過定義程式設計介面來指示模型，再提出使用該介面的請求，這種做法稱為*函式呼叫*（function calling）或*工具呼叫*（tool calling）。
 
-!!! Tip "Important"
-    *A Gemma model cannot execute code on its own.* When you generate code with function calling, you must run the generated code yourself or run it as part of your application. Always put safeguards in place to validate any generated code before executing it.
+!!! Tip "重要"
+    *Gemma 模型無法自行執行程式碼。*使用函式呼叫產生程式碼後，您必須自行執行產生的程式碼，或將其作為應用程式的一部分來執行。在執行前，請一律採取保護措施，驗證所有產生的程式碼。
 
-This guide shows the process of using Gemma 4 within the Hugging Face ecosystem.
+本指南說明在 Hugging Face 生態系中使用 Gemma 4 的流程。
 
 
-## Install Python packages
+## 安裝 Python 套件
 
-Install the Hugging Face libraries required for running the Gemma model and making requests.
+安裝執行 Gemma 模型與發出請求所需的 Hugging Face 函式庫。
 
 ```bash { .notebook-cell }
 # Install PyTorch & other libraries
@@ -32,9 +28,9 @@ pip install torch accelerate
 pip install "transformers>=5.10.1"
 ```
 
-## Load Model
+## 載入模型
 
-Use the `transformers` libraries to create an instance of a `processor` and `model` using the `AutoProcessor` and `AutoModelForImageTextToText` classes as shown in the following code example:
+使用以下程式碼範例中的 `AutoProcessor` 與 `AutoModelForImageTextToText` 類別，透過 `transformers` 函式庫建立 `processor` 與 `model` 的執行個體：
 
 ```python { .notebook-cell .model-swap }
 MODEL_ID = "google/gemma-4-E2B-it"
@@ -45,14 +41,14 @@ model = AutoModelForMultimodalLM.from_pretrained(MODEL_ID, dtype="auto", device_
 processor = AutoProcessor.from_pretrained(MODEL_ID)
 ```
 
-## Passing Tools
+## 傳入工具
 
-You can pass tools to the model using the `apply_chat_template()` function via the `tools` argument. There are two methods for defining these tools:
+您可以使用 `apply_chat_template()` 函式，透過 `tools` 參數將工具傳入模型。定義這些工具有兩種方法：
 
-- **JSON schema**: You can manually construct a JSON dictionary defining the function name, description, and parameters (including types and required fields).
-- **Raw Python Functions** : You can pass actual Python functions. The system automatically generates the required JSON schema by parsing the function's type hints, arguments, and docstrings. For best results, docstrings should adhere to the [Google Python Style Guide](https://google.github.io/styleguide/pyguide.html#38-comments-and-docstrings).
+- **JSON schema**：您可以手動建構 JSON 字典，定義函式名稱、說明與參數（包含型別與必填欄位）。
+- **原始 Python 函式（Raw Python Functions）**：您可以直接傳入實際的 Python 函式。系統會自動解析函式的型別提示、引數與文件字串，產生所需的 JSON schema。為了獲得最佳效果，文件字串應遵循 [Google Python 風格指南](https://google.github.io/styleguide/pyguide.html#38-comments-and-docstrings)。
 
-Below is the example with the JSON schema.
+以下是使用 JSON schema 的範例。
 
 ```python { .notebook-cell }
 from transformers import TextStreamer
@@ -99,7 +95,7 @@ What's the temperature in London?<turn|>
 <|tool_call>call:get_current_temperature{location:<|"|>London<|"|>}<tool_call|><|tool_response>
 ```
 
-And the same example with the raw Python function.
+以下是使用原始 Python 函式的相同範例。
 
 ```python { .notebook-cell }
 from transformers.utils import get_json_schema
@@ -134,13 +130,13 @@ What's the temperature in London?<turn|>
 <|tool_call>call:get_current_temperature{location:<|"|>London<|"|>}<tool_call|><|tool_response>
 ```
 
-## Full function calling sequence
+## 完整的函式呼叫流程
 
-This section demonstrates a three-stage cycle for connecting the model to external tools: the **Model's Turn** to generate function call objects, the **Developer's Turn** to parse and execute code (such as a weather API), and the **Final Response** where the model uses the tool's output to answer the user.
+本節示範將模型連接至外部工具的三階段循環：**模型的回合**（Model's Turn）產生函式呼叫物件，**開發者的回合**（Developer's Turn）解析並執行程式碼（例如天氣 API），以及**最終回應**（Final Response）——模型使用工具的輸出回答使用者。
 
-### Model's Turn
+### 模型的回合
 
-Here's the user prompt `"Hey, what's the weather in Tokyo right now?"`, and the tool `[get_current_weather]`. Gemma generates a function call object as follows.
+以下是使用者提示 `"Hey, what's the weather in Tokyo right now?"` 與工具 `[get_current_weather]`。Gemma 會產生如下的函式呼叫物件。
 
 ```python { .notebook-cell }
 # Define a function that our model can use.
@@ -186,12 +182,11 @@ Prompt: Hey, what's the weather in Tokyo right now?
 Tools: [<function get_current_weather at 0x7bbe91d18180>]
 Output: <|tool_call>call:get_current_weather{location:<|"|>Tokyo, JP<|"|>}<tool_call|><|tool_response>
 ```
+### 開發者的回合
 
-### Developer's Turn
-
-Your application should parse the model's response to extract the function name and argments, and append `tool_calls`{.token-tool} and `tool_responses`{.token-tool} with the `assistant`{.token-role} role.
+您的應用程式應解析模型的回應，擷取函式名稱與引數，並以 `assistant`{.token-role} 角色附加 `tool_calls`{.token-tool} 與 `tool_responses`{.token-tool}。
 !!! Note
-    Always validate function names and arguments before execution.
+    執行前請一律驗證函式名稱與引數。
 
 ```python { .notebook-cell }
 import re
@@ -262,7 +257,7 @@ if calls:
 }
 ```
 !!! Note
-    For optimal results, append the tool execution result to your message history using the specific format below. This ensures the chat template correctly generates the required token structure (e.g., `response:get_current_weather{temperature:15,weather:<|"|>sunny<|"|>}`).
+    為了獲得最佳效果，請使用以下特定格式，將工具執行結果附加到您的訊息歷史記錄中。這可確保聊天範本正確產生所需的詞元結構（例如 `response:get_current_weather{temperature:15,weather:<|"|>sunny<|"|>}`）。
 
 ```python { .notebook-cell }
 "tool_responses": [
@@ -273,7 +268,7 @@ if calls:
 ]
 ```
 
-In case of multiple independent requests:
+如有多個獨立請求：
 
 ```python { .notebook-cell }
 "tool_responses": [
@@ -288,9 +283,9 @@ In case of multiple independent requests:
 ]
 ```
 
-### Final Response
+### 最終回應
 
-Finally, Gemma reads the tool response and reply to the user.
+最後，Gemma 會讀取工具回應並回覆使用者。
 
 ```python { .notebook-cell }
 text = processor.apply_chat_template(message, tools=tools, tokenize=False, add_generation_prompt=True)
@@ -306,7 +301,7 @@ message[-1]["content"] = output
 Output: The current weather in Tokyo is 15 degrees Celsius and sunny.
 ```
 
-You can see the full chat history below.
+您可以在下方看到完整的聊天歷史記錄。
 
 ```python { .notebook-cell }
 # full history
@@ -360,9 +355,9 @@ Hey, what's the weather in Tokyo right now?<turn|>
 <|tool_call>call:get_current_weather{location:<|"|>Tokyo, JP<|"|>}<tool_call|><|tool_response>response:get_current_weather{temperature:15,weather:<|"|>sunny<|"|>}<tool_response|>The current weather in Tokyo is 15 degrees Celsius and sunny.<turn|>
 ```
 
-### Function calling with Thinking
+### 函式呼叫搭配思考模式
 
-By utilizing an internal reasoning process, the model significantly enhances its function-calling accuracy. This allows for more precise decision-making regarding when to trigger a tool and how to define its parameters.
+透過利用內部推理流程，模型可大幅提升函式呼叫的準確度，讓模型在何時觸發工具、如何定義參數方面做出更精確的決策。
 
 ```python { .notebook-cell }
 prompt = "Hey, I'm in Seoul. Is it good for running now?"
@@ -429,7 +424,7 @@ Role: assistant
 [{'type': 'function', 'function': {'name': 'get_current_weather', 'arguments': {'location': 'Seoul'} } }]
 ```
 
-Process the tool call and get the final answer.
+處理工具呼叫並取得最終答案。
 
 ```python { .notebook-cell }
 calls = extract_tool_calls(output)
@@ -509,13 +504,13 @@ Full History
 ]
 ```
 
-## Important Caveat: Automatic vs. Manual Schemas
+## 重要注意事項：自動 Schema 與手動 Schema
 
-When relying on automatic conversion from Python functions to JSON schema, the generated output may not always meet specific expectations regarding complex parameters.
+仰賴從 Python 函式自動轉換為 JSON schema 時，產生的輸出可能不完全符合對複雜參數的特定期望。
 
-If a function uses a custom object (like a Config class) as an argument, the automatic converter may describe it simply as a generic "object" without detailing its internal properties.
+如果函式使用自訂物件（例如 Config 類別）作為引數，自動轉換器可能只會將其描述為一般的 "object"，而不說明其內部屬性。
 
-In these cases, manually defining the JSON schema is preferred to ensure nested properties (such as theme or font_size within a config object) are explicitly defined for the model.
+在這些情況下，建議手動定義 JSON schema，以確保巢狀屬性（例如設定物件中的 theme 或 font_size）能明確地為模型定義。
 
 ```python { .notebook-cell }
 import json
@@ -615,30 +610,30 @@ print(json.dumps(update_config_schema, indent=2))
 }
 ```
 
-## Summary
+## 摘要
 
-You have established how to build an application that can call functions with Gemma 4. The workflow is established through a four-stage cycle:
+您已學會如何使用 Gemma 4 建構可呼叫函式的應用程式。工作流程由以下四個階段組成：
 
-1. **Define Tools**: Create the functions your model can use, specifying arguments and descriptions (e.g., a weather lookup function).
-2. **Model's Turn**: The model receives the user's prompt and a list of available tools, returning a structured function call object instead of plain text.
-3. **Developer's Turn**: The developer parses this output using regular expressions to extract function names and arguments, executes the actual Python code, and appends the results to the chat history using the specific tool role.
-4. **Final Response**: The model processes the tool's execution result to generate a final, natural language answer for the user.
-## What's next
+1. **定義工具（Define Tools）**：建立模型可使用的函式，並指定引數與說明（例如天氣查詢函式）。
+2. **模型的回合（Model's Turn）**：模型接收使用者的提示與可用工具清單，回傳結構化的函式呼叫物件而非純文字。
+3. **開發者的回合（Developer's Turn）**：開發者使用正規表示式解析此輸出，擷取函式名稱與引數，執行實際的 Python 程式碼，並使用特定的工具角色將結果附加到聊天歷史記錄中。
+4. **最終回應（Final Response）**：模型處理工具的執行結果，為使用者產生最終的自然語言答案。
+## 後續步驟
 
 <div class="card-grid">
 <a class="card" href="vision.md">
   <span class="card-icon">{{ icon('lucide/eye') }}</span>
-  <div class="card-title">Vision overview</div>
-  <p class="card-desc">Detection, OCR, visual question answering and captioning.</p>
+  <div class="card-title">視覺總覽</div>
+  <p class="card-desc">偵測、OCR、視覺問答與圖像描述。</p>
 </a>
 <a class="card" href="audio.md">
   <span class="card-icon">{{ icon('lucide/audio-lines') }}</span>
-  <div class="card-title">Audio understanding</div>
-  <p class="card-desc">Transcribe, translate and reason over speech.</p>
+  <div class="card-title">音訊理解</div>
+  <p class="card-desc">轉錄、翻譯語音並進行推理。</p>
 </a>
 <a class="card" href="../../deployment/index.md">
   <span class="card-icon">{{ icon('lucide/play') }}</span>
-  <div class="card-title">Run Gemma</div>
-  <p class="card-desc">Every engine that runs Gemma, from a laptop to a cluster.</p>
+  <div class="card-title">執行 Gemma</div>
+  <p class="card-desc">從筆記型電腦到叢集，執行 Gemma 的各種引擎。</p>
 </a>
 </div>

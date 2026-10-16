@@ -1,121 +1,121 @@
 ---
-title: A Visual Guide to MTP
-description: How multi-token prediction and speculative decoding make Gemma 4 faster — drafter models, shared KV cache, and the clustered LM head.
+title: MTP 視覺化指南
+description: 多詞元預測（Multi-Token Prediction）與推測性解碼（speculative decoding）如何讓 Gemma 4 更快 — 草稿模型、共享 KV 快取與分群式 LM 輸出頭。
 models: [gemma-4]
 source_url: https://newsletter.maartengrootendorst.com/p/a-visual-guide-to-gemma-4
 ---
 
-# A Visual Guide to Multi-Token Prediction
+# 多詞元預測視覺化指南
 
 !!! note
-    Originally published as part of
-    [A Visual Guide to Gemma 4](https://newsletter.maartengrootendorst.com/p/a-visual-guide-to-gemma-4){ data-model="gemma-4" } on Exploring Language Models.
-    For the rest of the architecture, see [A Visual Guide to Gemma 4](gemma-4.md).
+    原文為
+    [Gemma 4 視覺化指南](https://newsletter.maartengrootendorst.com/p/a-visual-guide-to-gemma-4){ data-model="gemma-4" }（發表於 Exploring Language Models）的一部分。
+    關於其餘架構，請見[Gemma 4 視覺化指南](gemma-4.md)。
 
-To improve the inference speed of the Gemma 4 models, a new series of autoregressive “**drafter**” models has been released alongside the main lineup ([E2B](https://huggingface.co/google/gemma-4-E2B-it-assistant){ data-model="gemma-4" }, [E4B](https://huggingface.co/google/gemma-4-E4B-it-assistant){ data-model="gemma-4" }, [31B](https://huggingface.co/google/gemma-4-31B-it-assistant){ data-model="gemma-4" }, and [26B A4B](https://huggingface.co/google/gemma-4-26B-A4B-it-assistant){ data-model="gemma-4" }). Instead of solely relying on the primary Gemma 4 models (referred to as the “**target**” models), the draft model predicts several tokens in the time it takes the target model to process just one. This technique is also known as **speculative decoding**.
+為了提升 Gemma 4 模型的推論速度，一系列自迴歸「**草稿（drafter）**」模型隨主力陣容一同發布（[E2B](https://huggingface.co/google/gemma-4-E2B-it-assistant){ data-model="gemma-4" }、[E4B](https://huggingface.co/google/gemma-4-E4B-it-assistant){ data-model="gemma-4" }、[31B](https://huggingface.co/google/gemma-4-31B-it-assistant){ data-model="gemma-4" } 與 [26B A4B](https://huggingface.co/google/gemma-4-26B-A4B-it-assistant){ data-model="gemma-4" }）。草稿模型在目標模型處理一個詞元的時間內就能預測多個詞元，而非只依賴主要的 Gemma 4 模型（稱為「**目標（target）**」模型）。這項技術也稱為**推測性解碼（speculative decoding）**。
 
-After the drafter has predicted multiple draft tokens, the target model now only has to verify those suggested draft tokens. The verification is done in parallel thereby drastically speeding up inference. It reduces the number of forward passes the target model has to do for each token. Because our drafter generates a sequence of tokens for verification, we refer to it as the **Multi-Token Prediction** (MTP) head.
+草稿模型預測出多個草稿詞元後，目標模型只需驗證這些建議的草稿詞元。驗證以並行方式進行，大幅加快推論速度。每個詞元需要的目標模型前向傳播次數也因此減少。由於草稿模型會為驗證產生一串詞元，我們稱之為**多詞元預測（Multi-Token Prediction，MTP）**輸出頭。
 
-The draft models released for the Gemma 4 family are small and introduce several enhancements to improve the quality of drafted tokens and to further speed up inference, like using the target model activations and KV-cache to get better predictions.
+Gemma 4 系列發布的草稿模型很小，並引入多項增強來提升草稿詞元品質、進一步加快推論，例如利用目標模型的激活值與 KV 快取來獲得更好的預測。
 
-These enhancements result in significant decoding speedups while guaranteeing similar quality, making these checkpoints perfect for low-latency and on-device applications.
+這些增強帶來顯著的解碼加速，同時保證相近的品質，讓這些檢查點非常適合低延遲與裝置端應用。
 
 ![](https://substackcdn.com/image/fetch/$s_!4JnF!,w_1456,c_limit,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F8c3bcafd-1b5e-4367-bbf3-6c221054d06d_1223x2048.png)
 
-There is a lot to unpack here, so let’s go through speculative decoding, MTP, and the drafters!
+這裡有很多值得拆解的內容，讓我們逐一看看推測性解碼、MTP 與草稿模型！
 
-## What is Speculative Decoding?
-Gemma 4 models generate text autoregressively and produce one token at a time. Roughly the same amount of compute is needed for each token, regardless of how difficult it is to predict a given token. As such, this can be an unnecessarily slow process when the tokens are quite easy to predict.
+## 什麼是推測性解碼？
+Gemma 4 模型以自迴歸方式生成文字，一次產生一個詞元。每個詞元所需的計算量大致相同，無論該詞元有多難預測。因此，當詞元很容易預測時，這會是一個不必要的慢速過程。
 
-Imagine that the larger model is generating text and has already created “*Actions speak*”. For those that recognize the start of this sentence, it is a common proverb in the English language and extends to “*Actions speak *louder *than words.*”. Since it is quite common, smaller models are likely to generate the exact same completion (“*louder than words*”) as a larger model would. As such, it would be a waste of time and compute for the larger model to predict “*louder than words*” one token at a time.
+想像大型模型正在生成文字，已經產生了「*Actions speak*」。認出這句話開頭的人都知道，這是英文中的一句常見諺語，後面是「*Actions speak *louder *than words.*」。由於很常見，小型模型很可能會生成與大型模型完全相同的續寫（「*louder than words*」）。因此，讓大型模型逐詞元預測「*louder than words*」是浪費時間和算力。
 
-With speculative decoding, we can use a smaller draft model to predict several tokens ahead of time. The draft model will receive the same input “*Actions speak*” and still autoregressively predict a number of tokens, let’s say four tokens. The drafted tokens are generated much faster than the larger model would as the draft model is only a fraction of its size.
+有了推測性解碼，我們可以用較小的草稿模型提前預測多個詞元。草稿模型會收到同樣的輸入「*Actions speak*」，仍以自迴歸方式預測若干詞元，比如說四個詞元。由於草稿模型只有大型模型的一小部分，草稿詞元的生成速度遠快於大型模型。
 
 ![](https://substackcdn.com/image/fetch/$s_!aYx_!,w_1456,c_limit,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F370343ee-ecbd-425f-9e7e-4323da9113fc_1208x990.png)
 
-## What is Multi-Token Prediction?
-However, the drafted tokens are not necessarily correct, otherwise we could just have used the smaller model. Instead, these tokens are given to the target model to verify in parallel. Since the target model can do this in one forward pass, it doesn’t have to do a forward pass for each token. The drafter is what we call the Multi-Token Prediction (MTP) head. Each forward pass of the target model performs regular next-token prediction (NTP) and produces intermediate hidden states. The drafter (MTP Head) uses those hidden states and runs several autoregressive forward passes to general multiple tokens. As such, a single forward pass of the target model results in multiple tokens instead of one. There is one from next-token prediction of the target model and multiple ones from the drafter (MTP head).
+## 什麼是多詞元預測？
+然而，草稿詞元不一定正確，否則我們大可以直接用小模型。這些詞元會交給目標模型以並行方式驗證。由於目標模型一次前向傳播就能完成，不必為每個詞元都做一次前向傳播。草稿模型就是我們所說的多詞元預測（MTP）輸出頭。目標模型的每次前向傳播都會做一般的下一個詞元預測（NTP），並產生中間隱藏狀態。草稿模型（MTP 輸出頭）使用這些隱藏狀態，跑多次自迴歸前向傳播來生成多個詞元。因此，目標模型的單次前向傳播會產生多個詞元，而非一個：一個來自目標模型的下一個詞元預測，多個來自草稿模型（MTP 輸出頭）。
 
-If the target model agrees with the suggestions of the draft model, then all tokens are accepted. Instead of having to generate four tokens, the smaller model did that in a fraction of the time. The target model only had to verify them in the time it would have taken the target model to generate one token. Moreover, if all draft tokens were accepted, the target model would still generate one additional token by itself.
+如果目標模型同意草稿模型的建議，所有詞元都會被接受。小模型只用了一小部分時間就生成了四個詞元；目標模型只需用它生成一個詞元的時間來驗證。而且，如果所有草稿詞元都被接受，目標模型還會自己再多生成一個詞元。
 
-If the target model disagrees with only part of the draft tokens, it will accept them until it disagrees. The target model will then replace the rejected token with a token of its own.
+如果目標模型只不同意部分草稿詞元，它會接受到不同意為止。目標模型會用自己的一個詞元取代被拒絕的詞元。
 
 ![](https://substackcdn.com/image/fetch/$s_!Wpc-!,w_1456,c_limit,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fb9b7b2a2-d758-48ea-a8c8-eb74cee9fadc_1226x1530.png)
 
-This process is actually quite fast considering the model can verify the quality of the drafted tokens all at once instead of having to verify each of the drafted tokens one at a time. Since the draft model is so small, it takes much less time to predict a single token compared to the target model. This means that the target model can verify multiple tokens at almost the same time it takes to generate a single token! Note that the draft model, like most language models, generates those tokens sequentially but can do this much faster due to its small size.
+考慮到模型可以一次驗證所有草稿詞元的品質，而不必逐個驗證，這個過程其實相當快。由於草稿模型很小，預測單個詞元花的時間比目標模型少得多。這表示目標模型驗證多個詞元的時間，幾乎和生成單個詞元一樣！注意，草稿模型和大多數語言模型一樣是逐個順序生成這些詞元，但因為體積小而快得多。
 
-All tokens that the target model deem to be good enough are selected. The first token it rejects and all others that follow are not included are discarded. However, since the target model has done a forward pass it can still perform a next token prediction. So although a token, like “pens”, is rejected the target model would still come with an alternative of the rejected token.
+目標模型認為夠好的所有詞元都會被選中。它拒絕的第一個詞元及其後的所有詞元都不會被收錄、會被捨棄。不過，由於目標模型已做過一次前向傳播，它仍能做一次下一個詞元預測。所以即使像「pens」這樣的詞元被拒絕，目標模型還是會給出被拒絕詞元的替代方案。
 
 ![](https://substackcdn.com/image/fetch/$s_!WPTL!,w_1456,c_limit,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F6e33b067-7d4c-47b6-8868-b88d400f5735_1196x1222.png)
 
-As a result, any number of drafted tokens might be selected by the target model. The full process is quite interesting to visualize considering the draft model performs its processing autoregressively and generates tokens sequence by sequence, the target model can verify all drafted tokens in parallel. The target model is still autoregressive but instead of having to generate those draft tokens one by one, it can now verify them all at once.
+因此，目標模型可能選中任意數量的草稿詞元。整個過程用圖呈現很有意思：草稿模型以自迴歸方式處理、逐個序列生成詞元，目標模型則能以並行方式驗證所有草稿詞元。目標模型仍然是自迴歸的，但不必逐個生成這些草稿詞元，可以一次全部驗證。
 
-![](https://substackcdn.com/image/fetch/$s_!ukO7!,w_1456,c_limit,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F882747df-a368-4a95-b6f8-e950db65e6c6_1196x1214.png)
+![](https://substackcdn.com/image/fetch/$s_!ukO7!,w_1456,c_limit,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F882747df-a368-4a95-b6f8-e950db65e6c_1196x1214.png)
 
-## MTP with Gemma 4
-The draft models released for the Gemma 4 family are most similar to the dense Gemma 4 models, but much much smaller. In fact, the draft model for the Gemma 4 E2B has only about 76M parameters, four layers, and a smaller input embedding size (256 compared to 1536).
+## Gemma 4 的 MTP
+Gemma 4 系列發布的草稿模型與稠密 Gemma 4 模型最為相似，但小得多得多。事實上，Gemma 4 E2B 的草稿模型只有約 7600 萬參數、四層，輸入嵌入維度也較小（256，相較於 1536）。
 
 ![](https://substackcdn.com/image/fetch/$s_!HJl6!,w_1456,c_limit,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F6cacdb5a-a144-4cc6-852d-3d401831ab92_1974x2048.png)
 
-Note how the decoder itself is similar to that of a dense Gemma 4 model. However, there is a lot happening before and after the decoder!
+注意解碼器本身與稠密 Gemma 4 模型的解碼器相似。但解碼器前後還有很多事情發生！
 
-The draft models have various enhancements specifically to make it more efficient and to further speed up inference. Likewise, there are also some interesting techniques used to improve the quality of the drafted tokens and decreases drafter latency. After all, we want the drafted tokens to be as accurate as possible, and to be generated as fast as possible.
+草稿模型有各種增強，專門為了更有效率、進一步加快推論。同樣，也有許多有趣的技術用來提升草稿詞元的品質、降低草稿延遲。畢竟，我們希望草稿詞元盡可能準確、生成得盡可能快。
 
-These changes can be summarized as follows:
+這些變更可以總結如下：
 
-- **Target Activations**: The draft model uses the activations from the last layer of the target model, concatenates them with the token embeddings, and down-projects them to the drafter model’s dimension.
-- **KV Cache Sharing**: The draft model cross-attends to the target model’s KV cache rather than building its own.
-- **Efficient Embedder**: The LM Head performs a sparse decoding technique that identifies the most likely clusters of tokens to predict (E2B and E4B only).
+- **目標激活值（Target Activations）**：草稿模型使用目標模型最後一層的激活值，與詞元嵌入拼接，再下投影到草稿模型的維度。
+- **KV 快取共享（KV Cache Sharing）**：草稿模型對目標模型的 KV 快取做交叉注意力，而非自己建立。
+- **高效嵌入器（Efficient Embedder）**：LM 輸出頭採用稀疏解碼技術，找出最可能包含預測詞元的群集（僅 E2B 與 E4B）。
 
-Let’s explore each of these in more detail!
+讓我們逐一深入探討！
 
-### Target Activations
-To improve the quality of the tokens generated by the draft model, the final activations of the target model (e.g., E2B) are fed to the draft model. These are concatenated with the token embedding of the draft model both having 1,536 values assuming the E2B model. The concatenated embeddings are quite large and for efficiency reasons they are projected down to only 256 values. This is essentially a compression of the processed state of the large draft model and the newly initialized embeddings of the draft model. Why let previous activations go to waste?
+### 目標激活值
+為了提升草稿模型生成詞元的品質，目標模型（例如 E2B）的最終激活值會餵給草稿模型。這些會與草稿模型的詞元嵌入拼接，假設是 E2B 模型，兩者都有 1,536 個值。拼接後的嵌入相當大，基於效率考量會投影到只剩 256 個值。這基本上是對大型目標模型處理後狀態與草稿模型新初始化嵌入的壓縮。既然前面的激活值都算出來了，何必浪費？
 
 ![](https://substackcdn.com/image/fetch/$s_!TUb3!,w_1456,c_limit,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F5c74db32-f2fe-4dfb-8d50-22ba5793bdb5_2048x923.png)
 
-These activations are only given to the draft model in the first round of processing. Remember that after the draft starts with an initial round, it may produce several tokens by passing them back to itself autoregressively. As such, in round 2, the activations that the draft model generated in round 1 are used since a new token was generated. Since the intermediate activations of the small draft model are only 256 values, they are projected up to match the dimensions of its input embedding table (namely 1,536 values). Note that to further improve efficiency, the input embedding table is shared between the target model and the draft model.
+這些激活值只在第一輪處理時給草稿模型。別忘了，草稿模型在首輪之後，會把詞元回傳給自己、以自迴歸方式產生多個詞元。因此在第二輪，由於生成了新詞元，會使用草稿模型在第一輪生成的激活值。由於小型草稿模型的中間激活值只有 256 個值，會上投影以匹配其輸入嵌入表的維度（即 1,536 個值）。注意，為了進一步提升效率，輸入嵌入表在目標模型與草稿模型之間是共享的。
 
 ![](https://substackcdn.com/image/fetch/$s_!HMZT!,w_1456,c_limit,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Fa10e62de-252f-4460-9c91-80ee0306dc1e_2048x910.png)
 
-Then, in round 3, the draft model uses the activations that were generated in round 2, and so on!
+然後第三輪，草稿模型使用第二輪生成的激活值，依此類推！
 
-### KV Cache Sharing
-The KV cache can take up quite a bit of space since it contains the key and value representations for every token in the sequence, across every layer. Although Gemma 4 has already taken many steps to reduce this (like setting K=V in the global attention layer), the draft model takes it a step further.
+### KV 快取共享
+KV 快取可能佔用不少空間，因為它包含序列中每個詞元、每一層的鍵與值表示。雖然 Gemma 4 已經採取許多措施來縮減（例如在全域注意力層中讓 K=V），草稿模型更進一步。
 
-Instead of the draft model needing to process the full prompt and build its own KV cache, it cross-attends to the already-computed KV cache of the target model. For its local attention layers, the draft model simply reuses the last computed local KV cache of the target model. Since the last layer of any Gemma 4 model is always global, that global KV cache is reused for the draft model’s global attention layer.
+草稿模型不必處理完整提示、自己建立 KV 快取，而是對目標模型已算好的 KV 快取做交叉注意力。對於局部注意力層，草稿模型直接重用目標模型最後算出的局部 KV 快取。由於任何 Gemma 4 模型的最後一層都是全域層，該全域 KV 快取會重用於草稿模型的全域注意力層。
 
 ![](https://substackcdn.com/image/fetch/$s_!iFHU!,w_1456,c_limit,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F85f7bad4-4fad-4958-8023-127c833b79be_2048x2037.png)
 
-As before, since the target model already did much of the heavy lifting, it would be a waste to throw that away!
+和之前一樣，既然目標模型已經做了大部分繁重的工作，丟掉就太浪費了！
 
-### The Efficient Embedder
-Finally, there is an efficient embedder that reduces the compute needed to generate the drafted tokens from the Language Model Head (LM Head). In traditional models, the LM Head would convert the hidden state generated by the decoders to logits (token probabilities) by multiplying it with a large weights matrix (the same used in the embedding layer, namely the lookup table). For such a small model, this process can be quite expensive!
+### 高效嵌入器
+最後，有一個高效嵌入器，能減少從語言模型輸出頭（LM Head）生成草稿詞元所需的計算。在傳統模型中，LM 輸出頭會把解碼器產生的隱藏狀態乘上一個大型權重矩陣（與嵌入層用的相同，也就是查詢表），轉換成對數機率（logits，詞元機率）。對這麼小的模型來說，這個過程可能相當昂貴！
 
 ![](https://substackcdn.com/image/fetch/$s_!usUF!,w_1456,c_limit,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F9da3f327-0015-43a8-b655-d8c634fe07f9_1052x1070.png)
 
-The question you might ask yourself is whether we really need to calculate the logits for all 262,144 tokens when most of them are likely to be irrelevant?
+你可能會問自己：當大多數詞元都可能無關時，我們真的需要為全部 262,144 個詞元計算對數機率嗎？
 
-In the drafter for Gemma 4 E2B and E4B models, this process is made more efficient through a classic technique, namely clustering. All token embeddings have been clustered separately into large groups of tokens that have similar meaning. We then find an embedding representation for each cluster.
+在 Gemma 4 E2B 與 E4B 模型的草稿器中，這個過程透過一個經典技術——分群（clustering）——變得更有效率。所有詞元嵌入會先分別分群成語義相近的詞元大群集，然後為每個群集找出一個嵌入表示。
 
 ![](https://substackcdn.com/image/fetch/$s_!Dc_M!,w_1456,c_limit,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Ff6716388-6616-4678-ace0-c96333618657_1536x1276.png)
 
-This new lookup table is then used in the LM Head where it is multiplied by the hidden state. This results in cluster logits instead of token logits. This means that the cluster logits tell us the clusters that most likely contain the next token. The clusters that are most likely to contain the correct token are selected. Then, all tokens within those clusters are used to calculate the final token logits.
+這個新的查詢表接著用於 LM 輸出頭，與隱藏狀態相乘。結果是群集對數機率，而非詞元對數機率。這表示群集對數機率告訴我們最可能包含下一個詞元的群集。選出最可能包含正確詞元的群集後，再用這些群集內的所有詞元計算最終的詞元對數機率。
 
-![](https://substackcdn.com/image/fetch/$s_!v7BV!,w_1456,c_limit,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F755089fb-51ad-4a4e-bfc1-16b1986f2c9d_812x1228.png)
+![](https://substackcdn.com/image/fetch/$s_!v7BV!,w_1456,c_limit,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F755089fb-51ad-4a4e-bfc1-16b1986f2c9_812x1228.png)
 
-This computation is much easier and instead tells us that the next token is almost certainly in the chosen clusters. This efficient embedder allows for speeding up the draft model even more!
-## What's next
+這個計算簡單得多，而且告訴我們下一個詞元幾乎肯定在選出的群集中。這個高效嵌入器讓草稿模型更快！
+## 接下來
 
 <div class="card-grid">
 <a class="card" href="diffusiongemma.md">
   <span class="card-icon">{{ icon('lucide/book-open') }}</span>
-  <div class="card-title">A Visual Guide to DiffusionGemma</div>
-  <p class="card-desc">How denoising produces text instead of pixels.</p>
+  <div class="card-title">DiffusionGemma 視覺化指南</div>
+  <p class="card-desc">去噪如何生成文字而非像素。</p>
 </a>
 <a class="card" href="../../resources/index.md">
   <span class="card-icon">{{ icon('lucide/library') }}</span>
-  <div class="card-title">Resources</div>
-  <p class="card-desc">Demos, tools and the repositories worth bookmarking.</p>
+  <div class="card-title">資源</div>
+  <p class="card-desc">值得加入書籤的展示、工具與程式碼倉庫。</p>
 </a>
 </div>

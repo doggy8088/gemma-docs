@@ -1,115 +1,102 @@
 ---
-title: Vision overview
-description: Prepare and pass visual data to Gemma 4 for object detection, OCR, visual question answering, captioning, and multi-image reasoning.
+title: 視覺總覽
+description: 準備視覺資料並傳遞給 Gemma 4，以執行物件偵測、光學字元辨識（OCR）、視覺問答、圖說生成與多圖推理。
 models: [gemma-4, gemma-3, gemma-3n, paligemma]
 source_url: "https://ai.google.dev/gemma/docs/capabilities/vision.md.txt"
 ---
-# Vision overview
+# 視覺總覽
 
-Gemma 4, the latest model from the Gemma family, can perform a wide range of
-vision-language tasks such as object detection, Optical Character Recognition
-(OCR), visual question answering, image captioning, and reasoning across
-multiple images. It also supports variable resolution processing, allowing you
-to balance inference speed and output accuracy.
+Gemma 4 是 Gemma 家族的最新模型，可執行廣泛的
+視覺語言任務，例如物件偵測、光學字元辨識（Optical Character Recognition, OCR）、視覺問答、圖說生成，以及跨多張影像的推理。它也支援可變解析度處理，讓您
+能在推論速度與輸出準確度之間取得平衡。
 
-This section explores how to effectively prepare and use visual data in your
-prompts.
+本節說明如何有效地在提示中準備與使用視覺資料。
 
-## Visual data
+## 視覺資料
 
-Visual data can come in many formats and resolution. The specific file formats
-supported (such as JPEG and PNG) depend on the framework you choose to convert
-your visual data into tensors.
+視覺資料有許多格式與解析度。支援的具體檔案格式
+（例如 JPEG 與 PNG）取決於您選擇用來將視覺資料轉換為張量的框架。
 
-Here are the key considerations when preparing visual data for Gemma:
+以下是為 Gemma 準備視覺資料時的關鍵考量：
 
-- **Token cost:** Each image typically uses 256 tokens, though PaliGemma image token costs vary depending on the specific model selected.
-- **Resolution:** The interpreted resolution---meaning the number of pixels encoded into tokens and processed by the model---depends on the Gemma version you are using:
-    - **Gemma 4:** Variable resolution based on token budget. You can decide between budget sizes of 70, 140, 280, 560, or 1120 tokens, which determines how much the input image is resized and processed.
-    - **Gemma 3:** (4B and higher) 896x896 resolution, with pan-and-scan options for larger images.
-    - **Gemma 3n:** 256x256, 512x512, or 768x768 resolution
-    - **PaliGemma 2:** 224x224, 448x448, or 896x896 resolution
+- **詞元成本：** 每張影像通常使用 256 個詞元，不過 PaliGemma 的影像詞元成本會依所選的具體模型而異。
+- **解析度：** 解讀的解析度——意即編碼為詞元並由模型處理的像素數——取決於您使用的 Gemma 版本：
+    - **Gemma 4：** 依詞元預算調整的可變解析度。您可以從 70、140、280、560 或 1120 個詞元的預算大小中選擇，這決定了輸入影像縮放與處理的程度。
+    - **Gemma 3：**（4B 及以上）896x896 解析度，較大影像可使用全景掃描（pan-and-scan）選項。
+    - **Gemma 3n：** 256x256、512x512 或 768x768 解析度
+    - **PaliGemma 2：** 224x224、448x448 或 896x896 解析度
 
-Lower-resolution images process faster but capture fewer visual details. To
-optimize inference speed, you should aim to provide visual data matching one of
-the built-in interpreted resolutions of your chosen Gemma model.
+低解析度影像處理速度更快，但能捕捉的視覺細節較少。為了
+最佳化推論速度，您應盡量提供符合所選 Gemma 模型內建解讀解析度的視覺資料。
 
-## Variable resolution and token budgets
+## 可變解析度與詞元預算
 
-Gemma 4 models introduce the ability to process images at varying resolutions,
-allowing you to tailor the visual input to your specific task. For example, you
-might opt for a high resolution to pinpoint small details in object detection,
-whereas a lower resolution might be preferable for analyzing individual video
-frames to speed up processing. Ultimately, this feature lets you balance
-inference speed against the accuracy of the visual representation.
+Gemma 4 模型引入了以不同解析度處理影像的能力，
+讓您可以依具體任務調整視覺輸入。例如，您
+可能會選擇高解析度以在物件偵測中精準定位細小細節，
+而分析單一影片影格時，較低的解析度可能更適合用來加速處理。歸根結底，這項功能讓您能在推論速度與視覺呈現的準確度之間取得平衡。
 
-You manage this tradeoff using a **token budget**. This budget sets a hard limit
-on the number of visual tokens (also known as visual token embeddings) the model
-can generate for a single image.
+您可以使用**詞元預算**來管理這項取捨。此預算為模型針對單張影像可生成的視覺詞元（亦稱為視覺詞元嵌入）數量設定了硬性上限。
 
-You can choose a budget of 70, 140, 280, 560, or 1120 tokens:
+您可以選擇 70、140、280、560 或 1120 個詞元的預算：
 
-- **High budgets (e.g., 1120 tokens):** Preserve a higher image resolution. This generates more patches for the model to process, making it ideal for capturing fine, intricate details.
-- **Low budgets (e.g., 70 tokens):** Downscale the image, resulting in fewer patches. This significantly accelerates inference times.
+- **高預算（例如 1120 個詞元）：** 保留較高的影像解析度。這會為模型生成更多圖塊進行處理，非常適合捕捉精細、複雜的細節。
+- **低預算（例如 70 個詞元）：** 縮小影像尺寸，產生的圖塊較少。這會顯著加快推論時間。
 
-**How the budget works** The token budget directly controls how much an image is
-resized by dictating the maximum number of initial image patches. The system
-generates nine times as many patches as your selected budget. For example, a
-budget of 280 tokens yields up to 2,520 patches (280 × 9).
+**預算的運作方式** 詞元預算直接透過決定初始影像圖塊的數量上限，來控制影像縮放的程度。系統生成的圖塊數量是所選預算的九倍。例如，
+280 個詞元的預算最多可產生 2,520 個圖塊（280 × 9）。
 
-The multiplier of 9 exists because of how the patches are compressed: during
-processing, the model takes every 3x3 grid of adjacent patches and averages them
-together to create a single embedding. These consolidated embeddings become your
-final visual tokens. Consequently, a higher token budget yields more final
-embeddings, allowing the model to extract richer, more granular information from
-your visual data.
+之所以有 9 倍的乘數，是因為圖塊的壓縮方式：在
+處理過程中，模型會將每個相鄰的 3x3 圖塊網格取平均值，合併為
+一個嵌入。這些合併後的嵌入成為最終的
+視覺詞元。因此，較高的詞元預算會產生更多的最終
+嵌入，讓模型能從您的視覺資料中擷取更豐富、更細緻的資訊。
 
-## Do's
+## 建議做法
 
-Here are some best practices to follow when prompting Gemma with visual data.
+以下是在用視覺資料提示 Gemma 時應遵循的一些最佳實務。
 
-- **Be specific**: If you have any specific tasks, provide sufficient context
-  and guidance. Instead of "describe this image", try "describe the scene in this
-  image, focusing on the relationship between the people and the objects."
+- **具體明確**：如果您有任何具體任務，請提供充分的脈絡
+  與指引。與其說「描述這張影像」，不如說「描述這張影像中的場景，
+  專注於人物與物體之間的關係。」
 
-- **Provide constraints**: To achieve a particular style or tone, be sure to
-  specify it in your prompt. For example, instead of a general story request, ask
-  Gemma to "Write a short story about this image in the style of a film noir."
+- **提供限制條件**：要達到特定的風格或語氣，請務必
+  在提示中明確指定。例如，與其提出籠統的故事請求，不如要求
+  Gemma「用黑色電影的風格為這張影像寫一個短篇故事。」
 
-- **Iterative Refinement**: Getting the intended output often requires
-  experimentation and refining the prompts. Begin with a basic prompt and
-  gradually add complexity.
+- **迭代精煉**：要獲得理想的輸出，通常需要
+  實驗並精煉提示。先從基本的提示開始，
+  再逐步增加複雜度。
 
-## Don'ts
+## 應避免的做法
 
-Here are some things to avoid when prompting Gemma with visual data.
+以下是在用視覺資料提示 Gemma 時應避免的一些事項。
 
-- **Expect Exact Counts for Extremely Dense Objects**: While Gemma 4 excels at
-  object detection and OCR, it may still provide approximations rather than
-  exact counts for extremely dense or tiny objects (such as counting
-  individual blades of grass). To achieve the best accuracy for visual tasks,
-  use a higher token budget.
+- **期待極密集物件的精確計數**：雖然 Gemma 4 擅長
+  物件偵測與 OCR，但對於極度密集或微小的物件（例如計算
+  個別草葉），它仍可能給出近似值而非精確計數。為了在視覺任務中獲得最佳準確度，
+  請使用較高的詞元預算。
 
-- **Vague or Ambiguous Prompts**: Instead of general prompts like "Generate
-  something based on this image", provide specific instructions to achieve
-  intended outputs. Clearly define what "something" is. For example, a poem,
-  recipe, or code snippet.
-## What's next
+- **模糊或含糊的提示**：與其使用「根據這張影像生成
+  某樣東西」這類籠統提示，不如提供具體指示以達成
+  預期的輸出。清楚定義「某樣東西」是什麼，例如一首詩、
+  一份食譜或一段程式碼片段。
+## 下一步
 
 <div class="card-grid">
 <a class="card" href="image.md">
   <span class="card-icon">{{ icon('lucide/image') }}</span>
-  <div class="card-title">Image understanding</div>
-  <p class="card-desc">Analyse and describe the contents of an image.</p>
+  <div class="card-title">影像理解</div>
+  <p class="card-desc">分析並描述影像的內容。</p>
 </a>
 <a class="card" href="video.md">
   <span class="card-icon">{{ icon('lucide/film') }}</span>
-  <div class="card-title">Video understanding</div>
-  <p class="card-desc">Pass video as frames and reason over what happens.</p>
+  <div class="card-title">影片理解</div>
+  <p class="card-desc">以影格方式傳入影片並推理發生的事件。</p>
 </a>
 <a class="card" href="../prompt-formatting.md">
   <span class="card-icon">{{ icon('lucide/braces') }}</span>
-  <div class="card-title">Prompt formatting</div>
-  <p class="card-desc">The control tokens that structure a Gemma prompt.</p>
+  <div class="card-title">提示格式設定</div>
+  <p class="card-desc">構成 Gemma 提示的控制詞元。</p>
 </a>
 </div>

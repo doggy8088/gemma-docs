@@ -1,75 +1,72 @@
 ---
-title: Learn
-description: Illustrated walkthroughs of how the Gemma models work, from the architecture down to individual mechanisms.
+title: 學習
+description: 用圖解方式說明 Gemma 模型如何運作：從整體架構深入到注意力機制、嵌入等個別關鍵機制。
 ---
 
-# Learn
+# 學習
 
-This section explains how the Gemma models actually work. Where the rest of the documentation
-shows you what to run, these pages take an architecture apart and draw it — what the layers do,
-why a design choice was made, and where a model's behaviour comes from.
+這個章節說明 Gemma 模型的實際運作方式。文件其他部分告訴您要執行什麼，而這些頁面會把架構拆解並畫出來——層做了什麼、為何做出某個設計選擇，以及模型行為來自何處。
 
-Read them in any order. Nothing here is a prerequisite for using Gemma.
+閱讀順序不限。這裡的內容都不是使用 Gemma 的先決條件。
 
-## What's next
+## 接下來
 
 <div class="card-grid">
 <a class="card" href="../tutorials/visual-guides/gemma-4.md">
   <span class="card-icon">{{ icon('lucide/book-open') }}</span>
-  <div class="card-title">A Visual Guide to Gemma 4</div>
-  <p class="card-desc">How the architecture works, drawn out step by step.</p>
+  <div class="card-title">Gemma 4 圖解指南</div>
+  <p class="card-desc">逐步繪製架構的運作方式。</p>
 </a>
 <a class="card" href="../tutorials/visual-guides/gemma-4-12b.md">
   <span class="card-icon">{{ icon('lucide/book-open') }}</span>
-  <div class="card-title">A Visual Guide to Gemma 4 12B</div>
-  <p class="card-desc">What the unified 12B model does differently.</p>
+  <div class="card-title">Gemma 4 12B 圖解指南</div>
+  <p class="card-desc">統一的 12B 模型有何不同。</p>
 </a>
 <a class="card" href="../tutorials/visual-guides/mtp.md">
   <span class="card-icon">{{ icon('lucide/book-open') }}</span>
-  <div class="card-title">A Visual Guide to MTP</div>
-  <p class="card-desc">Drafter models and speculative decoding, illustrated.</p>
+  <div class="card-title">MTP 圖解指南</div>
+  <p class="card-desc">用圖解說明草稿模型與推測解碼。</p>
 </a>
 <a class="card" href="../tutorials/visual-guides/diffusiongemma.md">
   <span class="card-icon">{{ icon('lucide/book-open') }}</span>
-  <div class="card-title">A Visual Guide to DiffusionGemma</div>
-  <p class="card-desc">How denoising produces text instead of pixels.</p>
+  <div class="card-title">DiffusionGemma 圖解指南</div>
+  <p class="card-desc">去噪如何產生文字而非像素。</p>
 </a>
 </div>
 
-## Previous Gemma Explained Series
+## 先前的 Gemma 解說系列
 
 <div class="card-grid">
 <a class="card" href="../tutorials/gemma-explained/overview.md">
   <span class="card-icon">{{ icon('lucide/book-open') }}</span>
-  <div class="card-title">Overview of Gemma Architectures</div>
-  <p class="card-desc">Text-to-text models and specialization for coding.</p>
+  <div class="card-title">Gemma 架構總覽</div>
+  <p class="card-desc">文字轉文字模型與程式碼專門化。</p>
 </a>
 <a class="card" href="../tutorials/gemma-explained/gemma-2.md">
   <span class="card-icon">{{ icon('lucide/book-open') }}</span>
-  <div class="card-title">What’s New in Gemma 2</div>
-  <p class="card-desc">Updated architecture with knowledge distillation for 2B and 9B models.</p>
+  <div class="card-title">Gemma 2 新功能</div>
+  <p class="card-desc">2B 與 9B 模型採用知識蒸餾的更新架構。</p>
 </a>
 <a class="card" href="../tutorials/gemma-explained/recurrentgemma.md">
   <span class="card-icon">{{ icon('lucide/book-open') }}</span>
-  <div class="card-title">RecurrentGemma Architecture</div>
-  <p class="card-desc">The Griffin architecture mixing local attention and linear recurrences for fast long-sequence inference.</p>
+  <div class="card-title">RecurrentGemma 架構</div>
+  <p class="card-desc">混合局部注意力與線性遞迴的 Griffin 架構，實現快速長序列推論。</p>
 </a>
 <a class="card" href="../tutorials/gemma-explained/paligemma.md">
   <span class="card-icon">{{ icon('lucide/book-open') }}</span>
-  <div class="card-title">PaliGemma Architecture</div>
-  <p class="card-desc">Vision-language model that takes text and images as input to generate text outputs.</p>
+  <div class="card-title">PaliGemma 架構</div>
+  <p class="card-desc">以文字與圖片為輸入、產生文字輸出的視覺語言模型。</p>
 </a>
 <a class="card" href="../tutorials/gemma-explained/gemma-3.md">
   <span class="card-icon">{{ icon('lucide/book-open') }}</span>
-  <div class="card-title">What’s New in Gemma 3</div>
-  <p class="card-desc">Updated vision-language model with 5-to-1 interleaved attention and 128k context handling.</p>
+  <div class="card-title">Gemma 3 新功能</div>
+  <p class="card-desc">5 比 1 交錯注意力與 128k 上下文處理的更新視覺語言模型。</p>
 </a>
 <a class="card" href="../tutorials/gemma-explained/embeddinggemma.md">
   <span class="card-icon">{{ icon('lucide/book-open') }}</span>
-  <div class="card-title">EmbeddingGemma Architecture</div>
-  <p class="card-desc">Text embedding model for search and retrieval.</p>
+  <div class="card-title">EmbeddingGemma 架構</div>
+  <p class="card-desc">用於搜尋與檢索的文字嵌入模型。</p>
 </a>
 </div>
 
 --8<-- "glossary.md"
-

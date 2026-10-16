@@ -1,18 +1,18 @@
 ---
-title: Video understanding
-description: Video data is a rich source of information that can help you accomplish tasks and understand the world around you.
+title: 影片理解
+description: 影片資料是豐富的資訊來源：了解 Gemma 模型如何理解影片內容，協助您完成分析任務並理解周遭世界。
 models: [gemma-4]
 frameworks: [transformers]
 colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs/notebooks/video-gemma-4-e2b.ipynb
 ---
-# Video understanding
+# 影片理解
 
-Video data is a rich source of information that can help you accomplish tasks and understand the world around you. Using Gemma with video data can help you understand spatial relationships, interpret human interactions, and assist with situational awareness. This tutorial shows you how to get started processing video data with Gemma using Hugging Face Transformers.
+影片資料是豐富的資訊來源，可協助您完成任務並理解周遭世界。將 Gemma 與影片資料搭配使用，能幫助您理解空間關係、解讀人類互動，並支援情境感知。本教學示範如何使用 Hugging Face Transformers 開始用 Gemma 處理影片資料。
 
 
-## Install Python packages
+## 安裝 Python 套件
 
-Install the Hugging Face libraries required for running the Gemma model and making requests.
+安裝執行 Gemma 模型與發出請求所需的 Hugging Face 程式庫。
 
 ```bash { .notebook-cell }
 # Install PyTorch & other libraries
@@ -22,9 +22,9 @@ pip install torch accelerate
 pip install "transformers>=5.10.1"
 ```
 
-## Load Model
+## 載入模型
 
-Use the [`transformers`](https://huggingface.co/docs/transformers/installation) libraries to create an instance of a `processor` and `model` using the `AutoProcessor` and `AutoModelForImageTextToText` classes as shown in the following code example:
+使用 [`transformers`](https://huggingface.co/docs/transformers/installation) 程式庫，透過 `AutoProcessor` 與 `AutoModelForImageTextToText` 類別建立 `processor` 與 `model` 的實例，如以下程式碼範例所示：
 
 ```python { .notebook-cell .model-swap }
 MODEL_ID = "google/gemma-4-E2B-it"
@@ -35,9 +35,9 @@ model = AutoModelForMultimodalLM.from_pretrained(MODEL_ID, dtype="auto", device_
 processor = AutoProcessor.from_pretrained(MODEL_ID)
 ```
 
-## Run video data request
+## 執行影片資料請求
 
-You can reference the location of the file in the chat template. The `processor` will then take care of loading in the video and processing it. The following example code shows a request using a chat template, output generation, and decoding the response:
+您可以在對話範本中引用檔案位置。`processor` 接著會負責載入影片並進行處理。以下範例程式碼示範使用對話範本提出請求、生成輸出並解碼回應：
 
 ```python { .notebook-cell }
 from transformers import AutoProcessor
@@ -84,25 +84,25 @@ Here's a breakdown of the key moments:
 **In summary, the video promotes the HBO GO streaming service, emphasizing its presence on TVs and Chromecast devices, and presenting a subscription price.**<turn|>
 ```
 
-## Summary
+## 總結
 
-In this guide, you learned how to process video data using Gemma 4 models. The examples demonstrated how to use the `processor` to automatically process the input video and generate textual understanding of the video content.
-## What's next
+在本指南中，您學會了如何使用 Gemma 4 模型處理影片資料。範例示範了如何使用 `processor` 自動處理輸入影片，並生成影片內容的文字理解。
+## 下一步
 
 <div class="card-grid">
 <a class="card" href="audio.md">
   <span class="card-icon">{{ icon('lucide/audio-lines') }}</span>
-  <div class="card-title">Audio understanding</div>
-  <p class="card-desc">Transcribe, translate and reason over speech.</p>
+  <div class="card-title">音訊理解</div>
+  <p class="card-desc">轉錄、翻譯與推理語音內容。</p>
 </a>
 <a class="card" href="../prompt-formatting.md">
   <span class="card-icon">{{ icon('lucide/braces') }}</span>
-  <div class="card-title">Prompt formatting</div>
-  <p class="card-desc">The control tokens that structure a Gemma prompt.</p>
+  <div class="card-title">提示格式設定</div>
+  <p class="card-desc">構成 Gemma 提示的控制詞元。</p>
 </a>
 <a class="card" href="../../deployment/index.md">
   <span class="card-icon">{{ icon('lucide/play') }}</span>
-  <div class="card-title">Run Gemma</div>
-  <p class="card-desc">Every engine that runs Gemma, from a laptop to a cluster.</p>
+  <div class="card-title">執行 Gemma</div>
+  <p class="card-desc">從筆記型電腦到叢集，各種能執行 Gemma 的引擎。</p>
 </a>
 </div>

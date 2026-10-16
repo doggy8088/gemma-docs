@@ -1,91 +1,70 @@
 ---
-title: Conventions
-description: How this documentation stays consistent — where facts live, what is generated, and what the linter enforces.
+title: 慣例
+description: 維持這份文件一致性的約定：事實的單一來源放在哪裡、哪些檔案是自動產生的，以及 lint 會強制執行哪些規則。
 ---
 
-# Conventions
+# 慣例
 
-[Components](components.md) covers what pages look like. This page covers how they stay
-correct: where a fact is allowed to live, what is generated from it, and which of these rules a
-machine enforces rather than a reviewer.
+[元件](components.md) 說明頁面長什麼樣子。本頁說明它們如何保持正確：事實被允許放在哪裡、什麼是從它產生的，以及這些規則中哪些由機器而非審查者強制執行。
 
-The through-line is simple. **A fact belongs in exactly one place.** Everything that repeats it
-is generated from that place, and a linter fails when the two drift apart.
+主軸很簡單。**一個事實只屬於一個地方。**所有重複它的東西都從那個地方產生，兩者漂移時 lint 就會失敗。
 
-## Where facts live
+## 事實放在哪裡
 
-Four YAML files under `data/` own everything that would otherwise be repeated across pages.
+`data/` 下的四個 YAML 檔案擁有所有原本會在各頁重複的內容。
 
-| File | Owns | Read by |
+| 檔案 | 擁有 | 讀取者 |
 |---|---|---|
-| `models.yml` | Every family, its sizes, lineage, context windows, memory, and per-engine checkpoint ids | Model tables, the family tree, the model selector, frontmatter validation |
-| `frameworks.yml` | Every engine: display name, home page, our page, blurb, logo — plus `tuning_paths`, the routes shown on the fine-tuning overview | The engine grids on Run and Fine-tune, the page context strip, frontmatter validation |
-| `links.yml` | Any URL used on more than one page | Reference links on every page, the pinned-link sweep |
-| `glossary.yml` | Acronym definitions | Abbreviation tooltips on pages that opt in |
+| `models.yml` | 每個家族、其尺寸、血緣、上下文視窗、記憶體，以及各引擎的檢查點 id | 模型表格、家族樹、模型選擇器、frontmatter 驗證 |
+| `frameworks.yml` | 每個引擎：顯示名稱、首頁、我們的頁面、簡介、標誌——外加 `tuning_paths`，即微調總覽上顯示的路線 | Run 與 Fine-tune 上的引擎網格、頁面資訊列、frontmatter 驗證 |
+| `links.yml` | 用於多個頁面的任何 URL | 每頁的參照連結、釘選連結掃描 |
+| `glossary.yml` | 縮寫定義 | 選擇加入頁面上的縮寫工具提示 |
 
-**Hand-editing a model table, an engine list or a repeated URL in a page is a bug**, not a
-shortcut. Change the data file; the page follows.
+**在頁面上手動編輯模型表格、引擎清單或重複的 URL 是錯誤**，不是捷徑。改資料檔；頁面會跟著變。
 
-Two rules keep the data honest:
+兩條規則讓資料保持誠實：
 
-- **Never invent a value to fill a gap.** KerasHub publishes no 12B preset and LiteRT-LM ships
-  only E2B and E4B. Those absences are recorded by omission, and the selector simply offers
-  fewer sizes on those pages. An invented id produces a command that 404s.
-- **Cite anything inferred.** Every `based_on` in `models.yml` carries a comment naming the
-  claim on that model's own page. A family whose page states no Gemma base has no `based_on`.
+- **絕不為了填補空缺而捏造值。**KerasHub 沒有發布 12B 預設，LiteRT-LM 只有 E2B 與 E4B。這些缺席以「省略」來記錄，選擇器在那些頁面就只提供較少的尺寸。捏造的 id 會產生 404 的指令。
+- **推斷的東西都要註明出處。**`models.yml` 中的每個 `based_on` 都帶有註解，指名該模型自身頁面上的主張。頁面未提及 Gemma 基礎的家族就沒有 `based_on`。
 
-## What is generated
+## 什麼是產生的
 
-Nothing in this list should ever be edited by hand. Each has a generator, and
-`lint_docs.py --check generated` fails when a committed file no longer matches its source.
+這份清單中的東西絕不該手動編輯。每個都有產生器，當已提交的檔案與其來源不符時，`lint_docs.py --check generated` 就會失敗。
 
-| Output | Generator | From |
+| 輸出 | 產生器 | 來源 |
 |---|---|---|
 | `overrides/partials/model-names.html` | `generate_model_names.py` | `models.yml` |
-| `docs/javascripts/model-data.js` | `generate_model_names.py` | `models.yml`, `frameworks.yml` |
-| `snippets/links.md`, `snippets/glossary.md` | `generate_snippets.py` | `links.yml`, `glossary.yml` |
-| `docs/llms.txt` and the raw `.md` routes | `agent_docs.py` | Page frontmatter and the nav |
-| `docs/notebooks/*.ipynb` | `notebooks.py` | Registered tutorial pages (model-adapted variants for swappable pages) |
-| `overrides/.icons/**.svg` | `vendor_icons.py` | The icons pages actually reference |
+| `docs/javascripts/model-data.js` | `generate_model_names.py` | `models.yml`、`frameworks.yml` |
+| `snippets/links.md`、`snippets/glossary.md` | `generate_snippets.py` | `links.yml`、`glossary.yml` |
+| `docs/llms.txt` 與原始 `.md` 路由 | `agent_docs.py` | 頁面 frontmatter 與導覽 |
+| `docs/notebooks/*.ipynb` | `notebooks.py` | 已註冊的教學頁面（可切換頁面的模型適配變體） |
+| `overrides/.icons/**.svg` | `vendor_icons.py` | 頁面實際參照的圖示 |
 
-Icons are the one entry checked by `--check icons` rather than `--check generated`, because
-they are copied out of Zensical rather than rendered from our own data. They have to be
-committed: the lint workflow installs only PyYAML and Jinja2, so an icon that exists solely
-inside the Zensical package is missing there and takes the whole test suite down with it.
-Referencing a new icon works immediately while authoring, then fails lint until it is vendored.
+圖示是唯一由 `--check icons` 而非 `--check generated` 檢查的項目，因為它們是從 Zensical 複製出來的，而不是從我們自己的資料渲染的。它們必須提交：lint 工作流程只安裝 PyYAML 與 Jinja2，所以只存在於 Zensical 套件內的圖示在那裡會遺失，連帶拖垮整個測試套件。參照新圖示在撰寫時立即生效，但在圖示被收錄（vendored）之前 lint 會失敗。
 
-## Imported pages are frozen
+## 匯入的頁面已凍結
 
-Most pages were ported from the upstream documentation. A port changes formatting, never prose
-or code.
+多數頁面從上游文件移植而來。移植只改格式，絕不改文字或程式碼。
 
-- Every imported page records `source_url` in frontmatter.
-- Every entry in `scripts/importers/sources.toml` is `frozen = true`. Frozen pages are never
-  reconverted in bulk.
-- A new page is added to the manifest unfrozen, imported, reviewed **once**, then frozen before
-  any documentation-specific editing begins.
-- Converter improvements affect future imports only. Repair existing pages by hand.
+- 每個匯入的頁面都在 frontmatter 記錄 `source_url`。
+- `scripts/importers/sources.toml` 中的每個項目都是 `frozen = true`。凍結的頁面絕不會被大量重新轉換。
+- 新頁面以未凍結狀態加入清單、匯入、審查**一次**，然後在任何文件專屬編輯開始前凍結。
+- 轉換器的改進只影響未來的匯入。既有頁面用手修。
 
-When a page is retired or merged, the manifest keeps a comment saying where it went, so the
-upstream source is still findable.
+頁面退役或合併時，清單會保留註解說明它去了哪裡，讓上游來源仍然找得到。
 
 ## Frontmatter
 
-`scripts/frontmatter_schema.py` is the single source of truth, and the linter enforces it. The
-distinction it draws matters:
+`scripts/frontmatter_schema.py` 是唯一的真實來源，由 lint 強制執行。它劃分的區別很重要：
 
-- **Authored** keys are facts only a person knows — `title`, `description`, `models`,
-  `frameworks`, `prerequisites`, `requires` (modality constraints), `colab` (direct notebook link).
-- **Computed** keys are derivable from the file. Writing one by hand is an *error*, because a
-  hand-written token count is wrong the moment the page is edited.
+- **Authored** 鍵是只有人知道的事實——`title`、`description`、`models`、`frameworks`、`prerequisites`、`requires`（模態限制）、`colab`（筆記本直接連結）。
+- **Computed** 鍵可從檔案衍生。手寫一個是*錯誤*，因為手寫的詞元計數在頁面被編輯的那一刻就錯了。
 
-Vocabularies come from the data files rather than a hardcoded list, so adding a size to
-`models.yml` extends what `models:` accepts automatically.
+詞彙來自資料檔而非寫死的清單，因此在 `models.yml` 新增尺寸會自動擴充 `models:` 接受的值。
 
-## Links that name a model
+## 帶有模型名稱的連結
 
-Some external URLs embed a generation and go stale when the next one ships. They are tagged so
-they can be found later, in whichever form the context allows:
+有些外部 URL 內嵌世代名稱，新一代發布後就會過時。它們會被標記以便日後找到，用情境允許的任何形式：
 
 ```yaml
 # data/links.yml — preferred, declares it once beside the URL
@@ -98,38 +77,27 @@ hf-gemma4:
 [Kaggle](https://www.kaggle.com/models/google/gemma-4){ data-model="gemma-4" }
 ```
 
-Inside a card grid, which is raw HTML, `attr_list` does not apply — put `data-model` on the
-anchor as a plain attribute instead.
+在卡片網格內（原始 HTML），`attr_list` 不適用——改用純屬性形式把 `data-model` 放在錨點上。
 
 ```bash
 uv run python scripts/pinned_links.py --model gemma-4
 ```
 
-lists every one of them. Tag only genuinely version-pinned URLs: a project's home page is not
-one, and marking it up buries the links that do need revisiting.
+列出所有這類連結。只標記真正版本釘選的 URL：專案首頁不是，標記它只會淹沒真正需要回顧的連結。
 
-## Markdown is the source, notebooks are output
+## Markdown 是來源，筆記本是輸出
 
-Ten tutorial pages in `SOURCES` are exported to Jupyter. Markdown owns every subsequent edit; the
-`.ipynb` files are build artifacts.
+`SOURCES` 中的十個教學頁面匯出到 Jupyter。之後的每次編輯都以 Markdown 為準；`.ipynb` 檔案是建置產物。
 
-Only fences marked `.notebook-cell` become executable cells. When a tutorial contains
-`{ .model-swap }` code blocks, `notebooks.py` exports separate model-specific notebooks named
-`<stem>-gemma-4-<size>.ipynb` (e.g., `thinking-gemma-4-e2b.ipynb`) for all candidate models
-matching the tutorial's engines and `requires:` modality constraint. Non-swappable tutorials
-export a single `<stem>.ipynb`.
+只有標記 `.notebook-cell` 的圍欄會成為可執行儲存格。當教學包含 `{ .model-swap }` 程式碼區塊時，`notebooks.py` 會為所有符合教學引擎與 `requires:` 模態限制的候選模型，匯出獨立的模型專用筆記本，命名為 `<stem>-gemma-4-<size>.ipynb`（例如 `thinking-gemma-4-e2b.ipynb`）。不可切換的教學只匯出單一的 `<stem>.ipynb`。
 
-For swappable tutorials, frontmatter specifies the default model notebook in `colab:`, and the
-page context switcher dynamically updates the link when readers select a different model.
+對於可切換的教學，frontmatter 在 `colab:` 指定預設模型筆記本，頁面資訊切換器會在讀者選擇不同模型時動態更新連結。
 
-Everything else in the page is site chrome, and `notebooks.py` strips what Jupyter cannot render —
-`attr_list` annotations, card grids, `{ .output }` blocks, snippet includes, abbreviation definitions,
-and skip blocks (`<!-- notebook:skip-start -->` ... `<!-- notebook:skip-end -->`). **Anything added
-to the authoring vocabulary needs a matching strip**, or it lands in the notebook as literal text.
+頁面的其餘部分都是網站外框，`notebooks.py` 會剝除 Jupyter 無法渲染的東西——`attr_list` 註記、卡片網格、`{ .output }` 區塊、片段引入、縮寫定義，以及跳過區塊（`<!-- notebook:skip-start -->` ... `<!-- notebook:skip-end -->`）。**加入撰寫詞彙的任何東西都需要對應的剝除**，否則它會以字面文字落入筆記本。
 
-## Verification
+## 驗證
 
-Three commands, and CI runs all three:
+三個指令，CI 會全部執行：
 
 ```bash
 uv run --frozen python -m unittest discover -s tests -p "test_*.py"
@@ -137,16 +105,13 @@ uv run --frozen python scripts/lint_docs.py --baseline
 uv run --frozen python scripts/build_docs.py
 ```
 
-`lint_docs.py --list` shows every check. The baseline in `.lintbaseline.json` is **empty**, and
-should stay that way: it exists to let a known problem be carried temporarily, not to hide one.
+`lint_docs.py --list` 顯示所有檢查。`.lintbaseline.json` 中的基準是**空的**，而且應該保持如此：它的存在是為了讓已知問題可以暫時帶著走，而不是藏起來。
 
-Two extra tools answer questions rather than gate anything:
+另外兩個工具是回答問題用的，不做把關：
 
 ```bash
 uv run python scripts/pinned_links.py      # what breaks when a new generation ships
 uv run python scripts/check_contrast.py    # whether a new brand colour is legible
 ```
 
-Visual work is not finished until it has been measured in a browser. Source inspection does not
-tell you that a card's hover state puts a dark icon on a dark fill, or that a heading's
-specificity loses to the theme's.
+視覺工作在瀏覽器中量測過之前都不算完成。只看原始碼看不出卡片的懸停狀態會把深色圖示放在深色填色上，也看不出標題的特異性會輸給主題。

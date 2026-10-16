@@ -1,22 +1,22 @@
 ---
 name: gemma-docs
-description: Authoring, editing, and maintaining the Google DeepMind Gemma documentation website built with Zensical. Use when adding or updating documentation pages, modifying model/framework metadata, creating tutorials with executable notebooks, styling with design tokens and components, or running verification checks.
+description: 撰寫、編輯與維護以 Zensical 建置的 Google DeepMind Gemma 文件網站。用於新增或更新文件頁面、修改模型/框架中繼資料、建立含可執行 notebook 的教學、使用設計 tokens 與元件設計樣式，或執行驗證檢查。
 ---
 
-# Gemma Documentation Authoring & Maintenance
+# Gemma 文件撰寫與維護
 
-This skill guides coding agents and contributors in maintaining and authoring documentation for the Google DeepMind Gemma documentation repository built on [Zensical](https://github.com/zensical/zensical).
+這個 skill 指導程式碼代理與貢獻者，維護與撰寫建置於 [Zensical](https://github.com/zensical/zensical) 的 Google DeepMind Gemma 文件儲存庫中的文件。
 
-## Core Principles
+## 核心原則
 
-1. **Single Source of Truth**: A fact belongs in exactly one place under `data/`. Pages and scripts read from that source; never duplicate or hardcode model specs, framework lists, or repeated URLs in pages.
-2. **Import Once, Then Hand-Maintain**: Imported pages from upstream sources are recorded in `scripts/importers/sources.toml` and frozen (`frozen = true`). Never bulk-reconvert frozen pages.
-3. **Markdown-First Notebooks**: Markdown is the single source of truth for tutorials. Jupyter notebooks (`docs/notebooks/*.ipynb`) are generated build artifacts, never authored directly.
-4. **Zero-Warning CI**: All lint checks (`scripts/lint_docs.py`), tests (`tests/`), and builds (`scripts/build_docs.py`) must pass with zero new or unresolved findings.
+1. **單一事實來源**：一個事實在 `data/` 下只屬於一個地方。頁面與指令碼從該來源讀取；絕不要在頁面中重複或硬編碼模型規格、框架清單或重複的 URL。
+2. **匯入一次，然後手動維護**：來自上游來源的匯入頁面記錄於 `scripts/importers/sources.toml` 並凍結（`frozen = true`）。絕不要大量重新轉換已凍結的頁面。
+3. **Markdown 優先的 Notebook**：Markdown 是教學的單一事實來源。Jupyter notebook（`docs/notebooks/*.ipynb`）是產生的建置產物，絕不直接撰寫。
+4. **零警告 CI**：所有 lint 檢查（`scripts/lint_docs.py`）、測試（`tests/`）與建置（`scripts/build_docs.py`）都必須以零新增、零未解決的發現通過。
 
 ---
 
-## Repository Structure
+## 儲存庫結構
 
 ```text
 ├── data/                  # Single sources of truth (YAML)
@@ -53,31 +53,31 @@ This skill guides coding agents and contributors in maintaining and authoring do
 
 ---
 
-## Where Facts Live & How to Update Them
+## 事實存放位置與更新方式
 
-| Data File | Governs | Generator / Consumer |
+| 資料檔 | 管轄範圍 | 產生器／消費者 |
 |---|---|---|
-| `data/models.yml` | Model families, parameter sizes, context lengths, memory requirements, framework-specific checkpoint IDs | `scripts/generate_model_names.py` -> `docs/javascripts/model-data.js` and `overrides/partials/model-names.html`; `scripts/notebooks.py` -> `docs/notebooks/*.ipynb` |
-| `data/frameworks.yml` | Engine metadata, blurbs, icons, URLs, `tuning_paths` | Rendered by Jinja macros (`{{ engines(...) }}`, `{{ paths(...) }}`) in pages |
-| `data/links.yml` | URLs used on more than one page, model version tags | `scripts/generate_snippets.py` -> `snippets/links.md` (auto-appended to all pages) |
-| `data/glossary.yml` | Acronyms and term definitions | `scripts/generate_snippets.py` -> `snippets/glossary.md` (opt-in via `--8<-- "glossary.md"`) |
+| `data/models.yml` | 模型家族、參數規模、上下文長度、記憶體需求、框架專屬檢查點 ID | `scripts/generate_model_names.py` -> `docs/javascripts/model-data.js` and `overrides/partials/model-names.html`; `scripts/notebooks.py` -> `docs/notebooks/*.ipynb` |
+| `data/frameworks.yml` | 引擎中繼資料、簡介、圖示、URL、`tuning_paths` | 由頁面中的 Jinja 巨集（`{{ engines(...) }}`、`{{ paths(...) }}`）渲染 |
+| `data/links.yml` | 在多個頁面使用的 URL、模型版本標籤 | `scripts/generate_snippets.py` -> `snippets/links.md`（自動附加到所有頁面） |
+| `data/glossary.yml` | 縮寫與術語定義 | `scripts/generate_snippets.py` -> `snippets/glossary.md`（透過 `--8<-- "glossary.md"` 選擇性啟用） |
 
-### Regenerating Data Artifacts
-Whenever editing files in `data/`, run:
+### 重新產生資料產物
+編輯 `data/` 中的檔案後，請執行：
 ```bash
 uv run --frozen python scripts/generate_model_names.py
 uv run --frozen python scripts/generate_snippets.py
 uv run --frozen python scripts/agent_docs.py
 uv run --frozen python scripts/notebooks.py
 ```
-`scripts/lint_docs.py --check generated` will fail if generated files are out of sync with `data/`.
+如果產生的檔案與 `data/` 不同步，`scripts/lint_docs.py --check generated` 會失敗。
 
 ---
 
-## Authoring Documentation Pages
+## 撰寫文件頁面
 
-### Frontmatter Conventions
-Every page must have valid YAML frontmatter matching `scripts/frontmatter_schema.py`:
+### Front matter 慣例
+每個頁面都必須有符合 `scripts/frontmatter_schema.py` 的有效 YAML front matter：
 
 ```yaml
 ---
@@ -92,77 +92,77 @@ prerequisites:             # Optional: list of prerequisite topics
 source_url: "https://..."  # Mandatory on imported pages; omitted on original pages
 ---
 ```
-- **Authored keys only**: Do NOT add computed keys (e.g. token counts).
-- **Vocabularies**: Model and framework identifiers must exist in `data/models.yml` and `data/frameworks.yml`.
-- **Modality gating**: Use `requires:` to restrict model selection and notebook export to models supporting that modality (e.g., `audio` excludes 26B/31B).
-- **Colab link**: For swappable tutorials, link to the default model notebook (`-gemma-4-e2b.ipynb`). The model switcher updates the link dynamically when readers select other models.
+- **只寫作者鍵**：不要加入計算得出的鍵（例如 token 計數）。
+- **詞彙表**：模型與框架識別碼必須存在於 `data/models.yml` 與 `data/frameworks.yml` 中。
+- **模態閘控**：使用 `requires:` 將模型選擇與 notebook 匯出限制在支援該模態的模型（例如 `audio` 排除 26B/31B）。
+- **Colab 連結**：對於可切換的教學，連結到預設模型 notebook（`-gemma-4-e2b.ipynb`）。當讀者選擇其他模型時，模型切換器會動態更新連結。
 
-### Headings and Anchor Links
-- Use standard markdown headings (`# H1`, `## 1. Step`, `### Substep`).
-- When referencing numbered sections (e.g. `## 1. Choose a framework`), remember Python-Markdown generates slugs with the number (e.g., `index.md#1-choose-a-framework`).
-- Verify relative links and anchors with `uv run --frozen python scripts/lint_docs.py --check internal`.
+### 標題與錨點連結
+- 使用標準的 Markdown 標題（`# H1`、`## 1. Step`、`### Substep`）。
+- 引用編號章節時（例如 `## 1. Choose a framework`），記得 Python-Markdown 會產生包含編號的 slug（例如 `index.md#1-choose-a-framework`）。
+- 以 `uv run --frozen python scripts/lint_docs.py --check internal` 驗證相對連結與錨點。
 
-### Model Switching Code Blocks
-To enable interactive model switching in code examples:
+### 模型切換程式碼區塊
+要在程式碼範例中啟用互動式模型切換：
 ```python { .model-swap }
 # Use default model name in authoring; the JS switcher replaces it dynamically:
 model_id = "google/gemma-4-E2B-it"
 ```
 
-### Shared Links & Citations
-- For URLs referenced on multiple pages, add to `data/links.yml` and reference by ID: `[Link text][link-id]`.
-- For model-pinned external links:
+### 共用連結與引用
+- 對於在多個頁面引用的 URL，將其加入 `data/links.yml` 並以 ID 引用：`[Link text][link-id]`。
+- 對於鎖定到特定模型的外部連結：
   ```markdown
   [Kaggle](https://www.kaggle.com/models/google/gemma-4){ data-model="gemma-4" }
   ```
 
 ---
 
-## Markdown-First Notebook Workflows
+## Markdown 優先的 Notebook 工作流程
 
-To create or edit a tutorial that exports to a Jupyter notebook:
+要建立或編輯可匯出為 Jupyter notebook 的教學：
 
-1. **Executable Code Cells**: Add `{ .notebook-cell }` to fences that should execute in Jupyter:
+1. **可執行程式碼儲存格**：在應於 Jupyter 中執行的圍欄加上 `{ .notebook-cell }`：
    ````markdown
    ```python { .notebook-cell }
    import torch
    from transformers import AutoModelForCausalLM
    ```
    ````
-2. **Model-Swappable Cells**: Combine with `{ .model-swap }` to export multi-model notebooks:
+2. **可切換模型儲存格**：搭配 `{ .model-swap }` 以匯出多模型 notebook：
    ````markdown
    ```python { .notebook-cell .model-swap }
    model_id = "google/gemma-4-E2B-it"
    ```
    ````
-   During export, `scripts/notebooks.py` detects swappable engines in marked blocks and candidate models matching any `requires:` frontmatter. For swappable tutorials, it generates model-specific notebooks named `<stem>-gemma-4-<size>.ipynb` (e.g., `thinking-gemma-4-e2b.ipynb`, `thinking-gemma-4-12b.ipynb`). Non-swappable tutorials generate a single `<stem>.ipynb`.
-3. **Display-Only Code**: Normal fences (without `.notebook-cell`) stay in Markdown and become text cells in notebooks.
-4. **Outputs**: Fences marked `{ .output }` are omitted during notebook export.
-5. **Site-Only Blocks**: Wrap web-only elements (such as interactive widgets or card grids) in skip comments:
+   匯出期間，`scripts/notebooks.py` 會偵測標記區塊中的可切換引擎，以及符合任何 `requires:` front matter 的候選模型。對於可切換的教學，它會產生名為 `<stem>-gemma-4-<size>.ipynb` 的模型專屬 notebook（例如 `thinking-gemma-4-e2b.ipynb`、`thinking-gemma-4-12b.ipynb`）。不可切換的教學只產生單一 `<stem>.ipynb`。
+3. **僅顯示的程式碼**：一般圍欄（沒有 `.notebook-cell`）保留在 Markdown 中，並在 notebook 中成為文字儲存格。
+4. **輸出**：標記 `{ .output }` 的圍欄在 notebook 匯出時會被省略。
+5. **僅網站區塊**：將僅限網頁的元素（如互動小工具或卡片網格）包在跳過註解中：
    ```markdown
    <!-- notebook:skip-start -->
    {{ engines(["ollama", "vllm"]) }}
    <!-- notebook:skip-end -->
    ```
-6. **Registration**: Register new notebook source tutorials in `SOURCES` in `scripts/notebooks.py`.
-7. **Colab Link**: For swappable tutorials, add the default model notebook's Colab URL to frontmatter (`colab: .../<stem>-gemma-4-e2b.ipynb`). The page context switcher dynamically updates the link when readers select a different model.
-8. **Export & Verify**: Run `uv run --frozen python scripts/notebooks.py` to regenerate `docs/notebooks/*.ipynb`, and verify with `uv run --frozen python scripts/notebooks.py --check`.
+6. **註冊**：在 `scripts/notebooks.py` 的 `SOURCES` 中註冊新的 notebook 來源教學。
+7. **Colab 連結**：對於可切換的教學，在 front matter 中加入預設模型 notebook 的 Colab URL（`colab: .../<stem>-gemma-4-e2b.ipynb`）。當讀者選擇不同模型時，頁面情境切換器會動態更新連結。
+8. **匯出與驗證**：執行 `uv run --frozen python scripts/notebooks.py` 以重新產生 `docs/notebooks/*.ipynb`，並以 `uv run --frozen python scripts/notebooks.py --check` 驗證。
 
 ---
 
-## Design System & Styling Rules
+## 設計系統與樣式規則
 
-- **Tokens**: All colors, spacing, and border-radii live in `docs/stylesheets/gemma.css`.
-  - Brand blue is controlled solely by `--gemma-blue-seed: #0B57D0`.
-  - Test new seeds with `uv run --frozen python scripts/check_contrast.py --seed "#0B57D0"`.
-  - **No raw hex colors** are allowed in any stylesheet other than `gemma.css` (enforced by `scripts/lint_docs.py --check css`).
-- **Components**: Use existing components from `docs/contributing/components.md` (cards, engine grids, steps lists, tabs, admonitions).
+- **Token**：所有顏色、間距與圓角都位於 `docs/stylesheets/gemma.css`。
+  - 品牌藍僅由 `--gemma-blue-seed: #0B57D0` 控制。
+  - 以 `uv run --frozen python scripts/check_contrast.py --seed "#0B57D0"` 測試新的 seed。
+  - **不允許**在 `gemma.css` 以外的任何樣式表中使用原始 hex 色彩（由 `scripts/lint_docs.py --check css` 強制執行）。
+- **元件**：使用 `docs/contributing/components.md` 中的現有元件（卡片、引擎網格、步驟清單、分頁、admonition）。
 
 ---
 
-## Verification & CI Workflow
+## 驗證與 CI 工作流程
 
-Always run the full test and lint suite before submitting changes:
+提交變更前務必執行完整的測試與 lint 套件：
 
 ```bash
 # 1. Run unit tests
@@ -175,9 +175,9 @@ uv run --frozen python scripts/lint_docs.py --baseline
 uv run --frozen python scripts/build_docs.py
 ```
 
-### Individual Linter Checks
-Run specific checks during development:
+### 個別 Linter 檢查
+開發期間執行特定檢查：
 ```bash
 uv run --frozen python scripts/lint_docs.py --check internal,links,frontmatter,orphans
 ```
-Available checks: `links`, `references`, `icons`, `images`, `internal`, `stubs`, `frontmatter`, `orphans`, `fences`, `model-swap`, `admonitions`, `size`, `modeldata`, `css`, `generated`.
+可用的檢查：`links`、`references`、`icons`、`images`、`internal`、`stubs`、`frontmatter`、`orphans`、`fences`、`model-swap`、`admonitions`、`size`、`modeldata`、`css`、`generated`。

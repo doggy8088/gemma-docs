@@ -1,69 +1,69 @@
 ---
-title: RecurrentGemma Architecture
-description: The Griffin architecture mixing local attention and linear recurrences for fast long-sequence inference.
+title: RecurrentGemma 架構
+description: 解說 RecurrentGemma 的 Griffin 架構：結合區域注意力與線性遞迴機制，在長序列上實現快速推論。
 models: [recurrentgemma]
 source_url: https://developers.googleblog.com/gemma-explained-recurrentgemma-architecture/
 ---
 
-# Gemma Explained: RecurrentGemma Architecture
+# Gemma 詳解：RecurrentGemma 架構
 
 !!! note
-    Originally published on the
-    [Google Developers Blog](https://developers.googleblog.com/gemma-explained-recurrentgemma-architecture/).
+    最初發表於
+    [Google Developers 部落格](https://developers.googleblog.com/gemma-explained-recurrentgemma-architecture/)。
 
 ![banner](../../assets/gemma-explained/gemma-var-banner.png)
 
-In the [previous post](/tutorials/gemma-explained/gemma-2/) of the Gemma explained series, we discussed the latest Gemma 2 architecture. In this post, you will explore the RecurrentGemma architecture. Let’s get started!
+在「Gemma 詳解」系列的[上一篇文章](/tutorials/gemma-explained/gemma-2/)中，我們討論了最新的 Gemma 2 架構。在這篇文章中，你將探索 RecurrentGemma 架構。讓我們開始吧！
 
 ## RecurrentGemma 2B, 9B
 
-RecurrentGemma is based on [Griffin](https://arxiv.org/abs/2402.19427), a hybrid model that mixes gated linear recurrences with local sliding window attention. This change improves computation and memory and it's better suited for long context prompts.
+RecurrentGemma 基於 [Griffin](https://arxiv.org/abs/2402.19427)，這是一個混合模型，結合了門控線性遞迴與區域滑動視窗注意力。這種改變改善了運算與記憶體效率，更適合長上下文提示。
 
-![Griffin hybrid model architecture](../../assets/gemma-explained/image5_REGZE1l.original.png)
+![Griffin 混合模型架構](../../assets/gemma-explained/image5_REGZE1l.original.png)
 
-However it comes with the downside of reduced needle in haystack performance due to the fixed-sized state of the Griffin architecture. While it is possible to provide the entire text from a book as input, this approach may not be optimal. Recurrent Neural Networks (RNNs) can encounter difficulties in learning long-range dependencies in exceedingly long sequences, and the model has a limited context window. This means that it can only effectively consider a certain number of preceding tokens when making predictions.
+然而，由於 Griffin 架構的狀態大小固定，它在「大海撈針」（needle-in-a-haystack）測試中的效能有所下降。雖然可以將整本書的文字作為輸入提供給模型，但這種做法未必是最佳的。遞迴神經網路（RNN）在極長序列中學習長程依賴時可能遇到困難，且模型的上下文視窗有限。這表示它在做預測時，只能有效考慮一定數量的前文詞元。
 
-Moreover, recurrent models have not yet received as much attention in terms of inference time optimizations compared to their transformer counterparts. And there’s less research and community support available compared to the well-established transformer architecture.
+此外，與 Transformer 相比，遞迴模型在推論時間最佳化方面尚未受到同等關注。相較於成熟的 Transformer 架構，可用的研究與社群支援也較少。
 
-So, this model will be highly valuable in scenarios when you are concerned about exhausting your LLM’s context window. By prioritizing the most recent information and strategically discarding older data, RecurrentGemma ensures that the LLM's performance remains strong as the context expands.
+因此，當你擔心 LLM 的上下文視窗被耗盡時，這個模型會非常有價值。透過優先保留最新資訊並策略性地捨棄舊資料，RecurrentGemma 確保隨著上下文擴大，LLM 的效能依然強勁。
 
-Below is the architecture diagram for the Recurrent Gemma 2B model.
+以下是 Recurrent Gemma 2B 模型的架構圖。
 
-![Recurrent Gemma 2B model architecture](../../assets/gemma-explained/image7_oX4tL8v.original.png)
+![Recurrent Gemma 2B 模型架構](../../assets/gemma-explained/image7_oX4tL8v.original.png)
 
-Griffin follows the same residual pattern and MLP block as other Transformer baseline. However, unlike both the MQA Transformer baseline and the Hawk model, Griffin uses a blend of recurrent and MQA blocks.
+Griffin 遵循與其他 Transformer 基準模型相同的殘差模式與 MLP 區塊。然而，不同於 MQA Transformer 基準模型與 Hawk 模型，Griffin 混合使用了遞迴區塊與 MQA 區塊。
 
-![Layered structure of recurrent and MQA blocks](../../assets/gemma-explained/image2_MB1Gg03.original.png)
+![遞迴區塊與 MQA 區塊的分層結構](../../assets/gemma-explained/image2_MB1Gg03.original.png)
 
-Griffin uses a layered structure by alternating two residual blocks with a recurrent block, followed by a residual block that incorporates the local MQA attention block.
+Griffin 採用分層結構：以兩個含遞迴區塊的殘差區塊交替排列，接著是一個包含區域 MQA 注意力區塊的殘差區塊。
 
-The [core parameters](https://storage.googleapis.com/deepmind-media/gemma/recurrentgemma-report.pdf) of the architecture are summarized in the table below.
+架構的[核心參數](https://storage.googleapis.com/deepmind-media/gemma/recurrentgemma-report.pdf)摘要於下表。
 
-![Core parameters of the architecture of 2B and 9B models](../../assets/gemma-explained/Screenshot_2024-08-21_at_4.29.54PM.original.png)
+![2B 與 9B 模型架構的核心參數](../../assets/gemma-explained/Screenshot_2024-08-21_at_4.29.54PM.original.png)
 
-### **Non-Embedding params and Embedding params**
+### **非嵌入參數與嵌入參數（Non-Embedding params and Embedding params）**
 
-Non-embedding parameters are distributed throughout the hidden layers of the model, in components like attention mechanisms and feedforward networks.
+非嵌入參數分布於模型的隱藏層中，例如注意力機制與前饋網路等元件。
 
-**Note:** The naming of the model “2B” comes from this parameter
+**注意：**模型名稱「2B」來自這個參數。
 
-Embedding Parameters are usually found in the dedicated layer called an embedding layer. This layer is responsible for mapping discrete tokens (like words or characters) into continuous vector representations (embeddings).
+嵌入參數通常位於稱為嵌入層的專用層中。這一層負責將離散的詞元（如單字或字元）映射為連續的向量表示（嵌入）。
 
-**Note:** 0.7B can be calculated as 256k (vocabulary size) x 2560 (model width)
+**注意：**0.7B 可計算為 256k（詞彙表大小）x 2560（模型寬度）。
 
-### **Model width and RNN width**
+### **模型寬度與 RNN 寬度（Model width and RNN width）**
 
-Model width refers to the size of the hidden layers in the model, determining the model’s capacity to represent complex patterns, just like the base Gemma Models.
+模型寬度指的是模型隱藏層的大小，決定了模型表示複雜模式的能力，就像基礎的 Gemma 模型一樣。
 
-Recurrent neural network (RNN) width is the size of the hidden state maintained by the Real-Gated Linear Recurrent Unit (RG-LRU). Unlike traditional Transformers, the recurrent block maintains a fixed-size internal state, regardless of the input length. This allows RecurrentGemma to process longer sequences with less memory, making it more efficient for tasks like generating long articles or code.
+遞迴神經網路（RNN）寬度是 Real-Gated Linear Recurrent Unit（RG-LRU）所維護的隱藏狀態大小。與傳統 Transformer 不同，遞迴區塊維護一個固定大小的內部狀態，不隨輸入長度變化。這讓 RecurrentGemma 能以更少的記憶體處理更長的序列，在生成長篇文章或程式碼等任務上更有效率。
 
-### **MLP expansion factor**
+### **MLP 擴展因子（MLP expansion factor）**
 
-It’s the same as feedforward hidden dimensions in the base Gemma model. For simplicity, we applied an expansion factor of 3 in the Recurrent Gemma model, resulting in an MLP dimension of 7680 (calculated as 2560 x 3).
+它與基礎 Gemma 模型中的前饋隱藏層維度相同。為求簡潔，我們在 Recurrent Gemma 模型中套用了 3 的擴展因子，得到 MLP 維度為 7680（由 2560 x 3 計算而得）。
 
-### **Local attention window size**
+### **區域注意力視窗大小（Local attention window size）**
 
-The state maintained by RecurrentGemma has a finite size and does not grow with sequences longer than the local attention window of 2k tokens. This means that while the maximum length of samples generated autoregressively by Gemma is limited by the host system's memory capacity, RecurrentGemma can generate sequences of arbitrary length, overcoming this constraint.
+RecurrentGemma 維護的狀態大小有限，不會隨超過 2k 詞元區域注意力視窗的序列增長。這表示，雖然 Gemma 以自迴歸方式生成的樣本最大長度受主機系統記憶體容量限制，RecurrentGemma 卻能生成任意長度的序列，克服了這項限制。
 
 ```python
 RecurrentGemmaForCausalLM(
@@ -150,68 +150,68 @@ RecurrentGemmaForCausalLM(
 )
 ```
 
-### **embed_tokens (Embedding Layer)**
+### **embed_tokens（嵌入層）**
 
-Takes the input text as a sequence of tokens and maps each token to a continuous vector representation of size 2560. It has a vocabulary size of 256000 which is the same with base Gemma models.
+接受輸入文字作為詞元序列，並將每個詞元映射為 2560 維的連續向量表示。它的詞彙表大小為 256000，與基礎 Gemma 模型相同。
 
-### **layers**
+### **layers（層）**
 
-There are 26 decoder layers in total, grouped into repeating patterns.
+總共有 26 個解碼器層，以重複模式分組排列。
 
-The model begins with two residual blocks with a recurrent block (0-1). This sequence is then followed by a residual block (2) and a series of continuous blocks that alternate until the end of the layer (25).
+模型從兩個含遞迴區塊的殘差區塊（0-1）開始，接著是一個殘差區塊（2），以及一系列交替排列的連續區塊，直到最後一層（25）。
 
-![Recurrent block architecture](../../assets/gemma-explained/image4_7W5j3q2.original.png)
+![遞迴區塊架構](../../assets/gemma-explained/image4_7W5j3q2.original.png)
 
-#### **Residual block with a recurrent block**
+#### **含遞迴區塊的殘差區塊**
 
-In the recurrent block (Temporal mixing block), the model takes the input of dimension (Model width) 2560 and applies two linear layers with output dimension (RNN width) 2560 in parallel, creating two branches.
+在遞迴區塊（時間混合區塊，Temporal mixing block）中，模型接受維度為 2560（模型寬度）的輸入，並並行套用兩個輸出維度為 2560（RNN 寬度）的線性層，形成兩個分支。
 
-On the first branch (right side), it applies a small separable Conv1D layer with a temporal filter dimension of 4. And the RG-LRU(Real-Gated Linear Recurrent Unit) layer follows.
+在第一個分支（右側），它套用一個時間濾波器維度為 4 的小型可分離 Conv1D 層，接著是 RG-LRU（Real-Gated Linear Recurrent Unit）層。
 
-On the second branch (left side), it applies a GeLU nonlinearity.
+在第二個分支（左側），它套用 GeLU 非線性函數。
 
-And then merge the branches by element-wise multiplication, apply a final linear layer with output dimension (Model width) 2560.
+然後以逐元素相乘合併兩個分支，再套用最終的線性層，輸出維度為 2560（模型寬度）。
 
-![RecurrentGemma-Residual-block](../../assets/gemma-explained/RecurrentGemma-Residual-block.original.png)
+![RecurrentGemma 殘差區塊](../../assets/gemma-explained/RecurrentGemma-Residual-block.original.png)
 
-After applying RMSNorm, the MLP block follows.
+套用 RMSNorm 之後，接著是 MLP 區塊。
 
-#### **Residual Block with a local MQA**
+#### **含區域 MQA 的殘差區塊**
 
-After having two residual blocks with a recurrent block (0-1), a residual block with a local MQA (2) follows. One of the key disadvantages of using global attention is that its computational complexity grows quadratically in the sequence length. To address this, RecurrentGemma uses a local sliding window attention. It allows each position to attend only to a fixed number of tokens in the past.
+在兩個含遞迴區塊的殘差區塊（0-1）之後，接著是一個含區域 MQA 的殘差區塊（2）。使用全域注意力的一個主要缺點是，其計算複雜度隨序列長度二次增長。為了解決這個問題，RecurrentGemma 使用區域滑動視窗注意力，只允許每個位置關注過去固定數量的詞元。
 
-In the local MQA block (Temporal mixing block), the model takes the input of dimension (Model width) 2560. It uses linear projections (*q_proj*, *k_proj*, *v_proj*, *o_proj*) to create query, key, value, and output representations. Note that *out_features* for *k_proj* and *v_proj* is 256 as they share the same head with a size of 256, while *q_proj* and *o_proj* have 10 heads (256 x 10 = 2560) in parallel.
+在區域 MQA 區塊（時間混合區塊）中，模型接受維度為 2560（模型寬度）的輸入。它使用線性投影（*q_proj*、*k_proj*、*v_proj*、*o_proj*）來產生查詢、鍵、值與輸出的表示。注意 *k_proj* 與 *v_proj* 的 *out_features* 為 256，因為它們共用大小為 256 的同一個頭，而 *q_proj* 與 *o_proj* 並行使用 10 個頭（256 x 10 = 2560）。
 
-It incorporates *rotary_emb* (RecurrentGemmaRotaryEmbedding) for rotary positional embeddings (RoPE) just like the base Gemma models.
+它使用 *rotary_emb*（RecurrentGemmaRotaryEmbedding）做旋轉位置嵌入（RoPE），與基礎 Gemma 模型相同。
 
-Applying RMSNorm and the MLP block is the same with the previous residual block.
+RMSNorm 與 MLP 區塊的套用方式與前一個殘差區塊相同。
 
-## **What’s Next?**
+## **下一步？**
 
-In this article, you learned about RecurrentGemma.
+在這篇文章中，你認識了 RecurrentGemma。
 
-In the next post, you will explore PaliGemma which is a lightweight open vision-language model (VLM).
+在下一篇文章中，你將探索 PaliGemma——一個輕量的開放視覺語言模型（VLM）。
 
-Stay tuned and thank you for reading!
+敬請期待，感謝閱讀！
 
-## 
+##
 
-## References
+## 參考資料
 
-### **Papers**
+### **論文**
 
-- [Griffin: Mixing Gated Linear Recurrences with Local Attention for Efficient Language Models](https://arxiv.org/abs/2402.19427)
-- [RecurrentGemma: Moving Past Transformers for Efficient Open Language Models](https://storage.googleapis.com/deepmind-media/gemma/recurrentgemma-report.pdf)
+- [Griffin：混合門控線性遞迴與區域注意力打造高效語言模型](https://arxiv.org/abs/2402.19427)
+- [RecurrentGemma：超越 Transformer 的高效開放語言模型](https://storage.googleapis.com/deepmind-media/gemma/recurrentgemma-report.pdf)
 
-### **Code Examples**
+### **程式碼範例**
 
-- [Getting started with RecurrentGemma](https://colab.research.google.com/github/google-deepmind/recurrentgemma/blob/main/colabs/sampling_tutorial_jax.ipynb)
+- [RecurrentGemma 入門](https://colab.research.google.com/github/google-deepmind/recurrentgemma/blob/main/colabs/sampling_tutorial_jax.ipynb)
 
-## 📋 The complete Gemma architecture series
+## 📋 完整的 Gemma 架構系列
 
-- [Gemma explained: An overview of Gemma model family architectures](/tutorials/gemma-explained/overview/)
-- [Gemma explained: What’s new in Gemma 2](/tutorials/gemma-explained/gemma-2/)
-- Gemma explained: RecurrentGemma architecture
-- [Gemma explained: PaliGemma architecture](/tutorials/gemma-explained/paligemma/)
-- [Gemma explained: What’s new in Gemma 3](/tutorials/gemma-explained/gemma-3/)
-- [Gemma explained: EmbeddingGemma architecture](/tutorials/gemma-explained/embeddinggemma/)
+- [Gemma 詳解：Gemma 模型家族架構總覽](/tutorials/gemma-explained/overview/)
+- [Gemma 詳解：Gemma 2 的新變化](/tutorials/gemma-explained/gemma-2/)
+- Gemma 詳解：RecurrentGemma 架構
+- [Gemma 詳解：PaliGemma 架構](/tutorials/gemma-explained/paligemma/)
+- [Gemma 詳解：Gemma 3 的新變化](/tutorials/gemma-explained/gemma-3/)
+- [Gemma 詳解：EmbeddingGemma 架構](/tutorials/gemma-explained/embeddinggemma/)
