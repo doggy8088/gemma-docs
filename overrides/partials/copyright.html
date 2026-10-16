@@ -15,13 +15,8 @@
 -#}
 
 <div class="md-copyright">
-  {% if config.copyright %}
-    <div class="md-copyright__highlight">
-      {{ config.copyright }}
-    </div>
-  {% endif %}
   <div class="md-copyright__highlight">
-    繁體中文翻譯：<a href="https://www.facebook.com/will.fans/" target="_blank" rel="noopener">Will 保哥的技術交流中心</a>
+    {% if config.copyright %}{{ config.copyright }} ｜ {% endif %}繁體中文翻譯：<a href="https://www.facebook.com/will.fans/" target="_blank" rel="noopener">Will 保哥的技術交流中心</a>
   </div>
   {% if config.extra.consent and config.extra.analytics and config.extra.analytics.property %}
     <a href="#__consent">Change cookie settings</a>
