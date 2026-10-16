@@ -1,35 +1,35 @@
 ---
 title: RecurrentGemma
-description: RecurrentGemma is an open model based on Griffin, a hybrid model architecture that mixes gated linear recurrences with local sliding window attention.
+description: RecurrentGemma 是基於 Griffin 的開放模型；Griffin 是一種混合模型架構，結合門控線性遞迴（gated linear recurrences）與局部滑動視窗注意力（local sliding window attention）。
 models: [recurrentgemma]
 source_url: "https://ai.google.dev/gemma/docs/recurrentgemma.md.txt"
 ---
 # RecurrentGemma
 
-RecurrentGemma is an open model based on
-[Griffin](https://arxiv.org/abs/2402.19427), a hybrid model architecture that
-mixes gated linear recurrences with local sliding window attention.
+RecurrentGemma 是基於
+[Griffin](https://arxiv.org/abs/2402.19427) 的開放模型；Griffin 是一種混合模型架構，
+結合門控線性遞迴與局部滑動視窗注意力。
 
 
-Like Gemma, RecurrentGemma is well-suited for a
-variety of text generation tasks, including question answering, summarization, and
-reasoning. However, RecurrentGemma's unique architecture offers the following additional
-advantages:
+如同 Gemma，RecurrentGemma 非常適合
+多種文字生成任務，包括問答、摘要與
+推理。不過，RecurrentGemma 獨特的架構還帶來以下額外
+優勢：
 
-- **Reduced memory usage** — Lower memory requirements allow for the generation of longer samples on devices with limited memory, like single GPUs or CPUs.
-- **Higher throughput** — RecurrentGemma can perform inference at significantly higher batch sizes, meaning it can generate substantially more tokens per second --- especially when generating long sequences.
-- **High performance** — RecurrentGemma matches Gemma's performance while requiring less memory and achieving faster inference.
+- **記憶體用量降低** — 較低的記憶體需求讓記憶體有限的裝置（如單張 GPU 或 CPU）也能生成較長的樣本。
+- **吞吐量更高** — RecurrentGemma 可以用顯著更高的批次大小執行推論，意味著每秒能生成更多詞元——尤其是在生成長序列時。
+- **高效能** — RecurrentGemma 在記憶體需求更低、推論速度更快的同時，效能與 Gemma 相當。
 
-## More resources
+## 更多資源
 
-### [View the model card](model-card.md)
+### [查看模型卡](model-card.md)
 
-RecurrentGemma's model card contains detailed information about the model, implementation information, evaluation information, model usage and limitations, and more.
+RecurrentGemma 的模型卡包含模型的詳細資訊，包括實作資訊、評估資訊、模型用途與限制等。
 
-### [View on Kaggle](https://www.kaggle.com/models/google/recurrentgemma){ data-model="recurrentgemma" }
+### [在 Kaggle 上查看](https://www.kaggle.com/models/google/recurrentgemma){ data-model="recurrentgemma" }
 
-View more code, Colab notebooks, information, and discussions about RecurrentGemma on Kaggle.
+在 Kaggle 上查看更多關於 RecurrentGemma 的程式碼、Colab 筆記本、資訊與討論。
 
-### [Run on GitHub](https://github.com/google-deepmind/recurrentgemma/blob/main/colabs/){ data-model="recurrentgemma" }
+### [在 GitHub 上執行](https://github.com/google-deepmind/recurrentgemma/blob/main/colabs/){ data-model="recurrentgemma" }
 
-Run example Colab notebooks for JAX and PyTorch on GitHub.
+在 GitHub 上執行 JAX 與 PyTorch 的範例 Colab 筆記本。

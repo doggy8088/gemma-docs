@@ -1,39 +1,38 @@
 ---
-title: Quickstart
-description: Run your first Gemma 4 generation in one command, then pick the engine, model size and checkpoint that fit your hardware.
+title: 快速入門
+description: 用一條指令完成第一次 Gemma 4 生成，再挑選適合您硬體的引擎、模型尺寸與檢查點。
 models: [gemma-4]
 frameworks: [transformers, llamacpp, ollama, mlx, vllm, lmstudio]
 ---
 
-# Quickstart
+# 快速入門
 
 <img class="page-mark" src="../assets/gemma-mark.png"
      alt="" width="132" height="132">
 
-Gemma is a family of lightweight, state-of-the-art open models built from the same research and technology used to create the [Gemini](https://deepmind.google/models/gemini/) models. Developed by Google DeepMind and other teams across Google, Gemma is named after the Latin *gemma*, meaning precious stone. The Gemma model weights are supported by developer tools that promote innovation, collaboration, and the responsible use of artificial intelligence (AI). 
+Gemma 是輕量且技術領先的開放模型家族，基於開發 [Gemini](https://deepmind.google/models/gemini/) 模型的相同研究與技術打造。Gemma 由 Google DeepMind 與 Google 其他團隊共同開發，名稱源自拉丁文 *gemma*，意為寶石。Gemma 模型權重搭配開發者工具，促進創新、協作，以及人工智慧（AI）的負責任使用。
 
-The latest in the Gemma family is [Gemma 4](../models/gemma-4/index.md) featuring multimodal (text, image, audio) inputs.
+Gemma 家族的最新成員是 [Gemma 4](../models/gemma-4/index.md)，支援多模態（文字、圖像、音訊）輸入。
 
-!!! tip "New to Gemma?"
-    To learn more about the Gemma family of models, visit the [model family](../models/index.md) page for a tour.
+!!! tip "第一次接觸 Gemma？"
+    想深入了解 Gemma 模型家族，請造訪[模型家族](../models/index.md)頁面一覽。
 
-## Choose a model
+## 選擇模型
 
-Gemma 4 ships in five sizes. They share a tokenizer and prompt format, so you can start small
-and move up without rewriting anything.
+Gemma 4 提供五種尺寸。它們共用相同的分詞器與提示格式，因此您可以從小尺寸開始，日後無需改寫任何內容即可升級。
 
 <!-- Generated from data/models.yml -- edit that file, not this table. -->
 
-| Size | Input ➔ Output | Context | Intended Platform |
+| 尺寸 | 輸入 ➔ 輸出 | 上下文 | 適用平台 |
 |---|---|---|---|
 {% for size in modeldata.gemma4.sizes -%}
 | **{{ size.name }}** | {{ size.modalities.input | map('capitalize') | join(', ') }} ➔ {{ size.modalities.output | map('capitalize') | join(', ') }} | {{ size.context }} | {{ size.platform }} |
 {% endfor %}
 
-## Run your first inference
+## 執行第一次推論
 
 === "Hugging Face Transformers"
-    Install [`transformers`](https://huggingface.co/docs/transformers/installation), then run:
+    安裝 [`transformers`](https://huggingface.co/docs/transformers/installation)，然後執行：
 
     ```python { .model-swap }
     from transformers import pipeline
@@ -48,14 +47,14 @@ and move up without rewriting anything.
     ```
 
 === "llama.cpp"
-    Install [`llama.cpp`](https://llama.app/), then run:
+    安裝 [`llama.cpp`](https://llama.app/)，然後執行：
 
     ```bash { .model-swap }
     llama-cli -hf google/gemma-4-12B-it-qat-q4_0-gguf --prompt "Write a poem about the Kraken."
     ```
 
 === "Ollama"
-    Install [`ollama`](https://ollama.com/download), then run:
+    安裝 [`ollama`](https://ollama.com/download)，然後執行：
 
     ```bash { .model-swap }
     ollama run gemma4:12b "Explain quantum computing simply:"
@@ -63,7 +62,7 @@ and move up without rewriting anything.
 
 === "Apple MLX"
 
-    Install [`MLX LM`](https://github.com/ml-explore/mlx-lm), then run:
+    安裝 [`MLX LM`](https://github.com/ml-explore/mlx-lm)，然後執行：
 
     ```bash { .model-swap }
     mlx_lm.generate --model mlx-community/gemma-4-12B-it-qat-4bit \
@@ -72,30 +71,30 @@ and move up without rewriting anything.
 
 === "vLLM"
 
-    Install [`vLLM`](https://docs.vllm.ai/en/latest/getting_started/installation/), then run:
+    安裝 [`vLLM`](https://docs.vllm.ai/en/latest/getting_started/installation/)，然後執行：
 
     ```bash { .model-swap }
     vllm serve google/gemma-4-26B-A4B-it
     ```
 
 === "LMStudio"
-    Install [`LMStudio`](https://lmstudio.ai/), then run:
+    安裝 [`LMStudio`](https://lmstudio.ai/)，然後執行：
 
     ```bash { .model-swap }
     lms chat google/gemma-4-12b
     ```
 
-!!! example "Using a coding agent?"
+!!! example "使用程式碼代理？"
 
-    Install the gemma-dev skill so your agent stays current with the latest models:
+    安裝 gemma-dev skill，讓您的代理始終跟上最新模型：
 
     ```bash
     npx skills add google-gemma/gemma-skills --skill gemma-dev --global
     ```
 
-## Providers
+## 供應商
 
-If you want to run Gemma 4 on a different stack, you can choose from the following:
+若想在其他堆疊上執行 Gemma 4，可從以下選項中選擇：
 
 <!-- Generated from data/frameworks.yml -- edit that file, not this list. -->
 {% set featured = ["ollama", "llamacpp", "lmstudio", "mlx", "litert", "transformers",
@@ -109,47 +108,46 @@ If you want to run Gemma 4 on a different stack, you can choose from the followi
     <span class="engine-name">{{ fw.short_name | default(fw.name) }}</span>
   </a></li>
 {% endfor %}{% endfor %}
-  <li><a class="engine engine--all" href="../deployment/index.md">All ways to run →</a></li>
+  <li><a class="engine engine--all" href="../deployment/index.md">全部執行方式 →</a></li>
 </ul>
 
 
-## Get the weights
+## 取得權重
 
-Every size ships full-precision weights plus [Quantization-Aware Training](qat.md) (QAT) checkpoints,
-which hold up far better at 4-bit than a generic post-training quant.
+每種尺寸都提供全精度權重與[量化感知訓練（Quantization-Aware Training）](qat.md)（QAT）檢查點；在 4 位元下，QAT 檢查點的表現遠優於一般的訓練後量化。
 
-| Where | What's there |
+| 哪裡 | 有什麼 |
 |---|---|
-| [Hugging Face][hf-gemma4] | Safetensors, GGUF and QAT collections |
-| [Kaggle][kaggle-gemma4] | The same checkpoints, mirrored |
-| [Ollama][ollama-gemma4] | Prebuilt tags, pulled on first run |
+| [Hugging Face][hf-gemma4] | Safetensors、GGUF 與 QAT 集合 |
+| [Kaggle][kaggle-gemma4] | 相同的檢查點，鏡像版本 |
+| [Ollama][ollama-gemma4] | 預先建置的標籤，首次執行時自動拉取 |
 
-Checkpoint names follow `google/gemma-4-{SIZE}-it{SUFFIX}` — pick the suffix your engine wants:
+檢查點命名遵循 `google/gemma-4-{SIZE}-it{SUFFIX}` —— 請依引擎選擇適合的後綴：
 
-| Running on | Suffix |
+| 執行環境 | 後綴 |
 |---|---|
 | llama.cpp, LM Studio, Ollama | `-qat-q4_0-gguf` |
 | vLLM, SGLang | `-qat-w4a16-ct` |
-| Mobile | `-qat-mobile-transformers`, `-qat-mobile-ct` |
+| 行動裝置 | `-qat-mobile-transformers`, `-qat-mobile-ct` |
 
 
-## What's next
+## 接下來
 
 <div class="card-grid">
 <a class="card" href="best-practices.md">
   <span class="card-icon">{{ icon('lucide/sliders-horizontal') }}</span>
-  <div class="card-title">Best practices</div>
-  <p class="card-desc">Sampling parameters, thinking-mode tokens, modality order and image token budgets.</p>
+  <div class="card-title">最佳做法</div>
+  <p class="card-desc">取樣參數、思考模式詞元、模態順序與圖像詞元預算。</p>
 </a>
 <a class="card" href="capabilities/text.md">
   <span class="card-icon">{{ icon('lucide/type') }}</span>
-  <div class="card-title">Capabilities</div>
-  <p class="card-desc">Text, reasoning, tool calling, vision, video and audio — each with runnable code.</p>
+  <div class="card-title">功能</div>
+  <p class="card-desc">文字、推理、工具呼叫、視覺、影片與音訊——皆附可執行的程式碼。</p>
 </a>
 <a class="card" href="../models/index.md">
   <span class="card-icon">{{ icon('lucide/boxes') }}</span>
-  <div class="card-title">The model family</div>
-  <p class="card-desc">Every generation and variant, and which base model each one came from.</p>
+  <div class="card-title">模型家族</div>
+  <p class="card-desc">每一代與每個變體，以及各自源自哪個基礎模型。</p>
 </a>
 </div>
 

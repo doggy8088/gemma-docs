@@ -1,23 +1,23 @@
 ---
-title: Audio understanding
-description: Starting with Gemma 3n, you can use audio directly into your prompts and workflows.
+title: 音訊理解
+description: 從 Gemma 3n 開始，您可以直接在提示與工作流程中使用音訊輸入，打造語音辨識、翻譯等各類音訊應用。
 models: [gemma-4]
 requires: audio
 frameworks: [transformers]
 colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs/notebooks/audio-gemma-4-e2b.ipynb
 ---
 
-# Audio understanding
+# 音訊理解
 
-Starting with [Gemma 3n](../../models/gemma-3n/index.md), you can use audio directly into your prompts and workflows. Audio and spoken language are rich sources of data for capturing user intents, recording information about the world around us, and understanding
-specific problems to be solved.
+從 [Gemma 3n](../../models/gemma-3n/index.md) 開始，您可以在提示與工作流程中直接使用音訊。音訊與口說語言是豐富的資料來源，可用於捕捉使用者意圖、記錄周遭世界的資訊，以及理解
+需要解決的具體問題。
 
-This guide provides an overview of the audio processing capabilities of [Gemma 4](../../models/gemma-4/index.md), including automatic speech recognition (ASR), translation, and general speech understanding.
+本指南概覽 [Gemma 4](../../models/gemma-4/index.md) 的音訊處理能力，包括自動語音辨識（ASR）、翻譯與通用語音理解。
 
 
-## Install Python packages
+## 安裝 Python 套件
 
-Install the Hugging Face libraries required for running the Gemma model and making requests.
+安裝執行 Gemma 模型與發出請求所需的 Hugging Face 程式庫。
 
 ```bash { .notebook-cell }
 # Install PyTorch & other libraries
@@ -27,9 +27,9 @@ pip install torch accelerate
 pip install "transformers>=5.10.1"
 ```
 
-## Load Model
+## 載入模型
 
-Use the [`transformers`](https://huggingface.co/docs/transformers/installation) library to create an instance of a `processor` and `model` using the `AutoProcessor` and `AutoModelForImageTextToText` classes as shown in the following code example:
+使用 [`transformers`](https://huggingface.co/docs/transformers/installation) 程式庫，透過 `AutoProcessor` 與 `AutoModelForImageTextToText` 類別建立 `processor` 與 `model` 的實例，如以下程式碼範例所示：
 
 ```python { .notebook-cell .model-swap }
 MODEL_ID = "google/gemma-4-E2B-it"
@@ -44,45 +44,42 @@ pipe = pipeline(
 )
 ```
 
-## Audio data
+## 音訊資料
 
-Digital audio data can come in many formats and levels of resolution. The actual audio formats you can use with Gemma, such as MP3 and WAV formats, are determined by the framework you choose to convert sound data into tensors. Here are some specific considerations for preparing audio data for processing with Gemma:
+數位音訊資料有許多格式與解析度等級。實際能搭配 Gemma 使用的音訊格式（例如 MP3 與 WAV 格式）取決於您選擇用來將聲音資料轉換為張量的框架。以下是為 Gemma 準備音訊資料時的一些具體考量：
 
-- **Token cost:** Each second of audio is 25 tokens for Gemma 4. (6.25 tokens for Gemma 3n).
-- **Clip length:** Audio supports a maximum length of 30 seconds.
-- **Audio channels:** Audio data is processed as a single audio channel. If you are using multi-channel audio, such as left and right channels, consider reducing the data to a single channel by removing channels or combining the sound data into a single channel.
-- **Technical Encoding:**
-  - **Sample Rate:** 16kHz
-  - **Bit Depth:** 32-bit float format, with samples normalized within the range of \[-1, 1\].
+- **詞元成本：** Gemma 4 每秒音訊消耗 25 個詞元（Gemma 3n 為每秒 6.25 個詞元）。
+- **片段長度：** 音訊支援的最大長度為 30 秒。
+- **音訊聲道：** 音訊資料會以單聲道處理。如果您使用多聲道音訊（例如左右聲道），建議移除聲道或將聲音資料混合為單一聲道，藉此將資料縮減為單聲道。
+- **技術編碼：**
+  - **取樣率：** 16kHz
+  - **位元深度：** 32 位元浮點數格式，樣本已正規化於 \[-1, 1\] 範圍內。
 
-If the audio data you plan to process is significantly different from the input
-processing, particularly in terms of channels, sample rate and bit depth,
-consider resampling or trimming your audio data to match the data
-resolution handled by the model.
+如果您打算處理的音訊資料與輸入
+處理方式有顯著差異，特別是在聲道、取樣率與位元深度方面，
+建議重新取樣或裁剪音訊資料，使其符合模型
+可處理的資料解析度。
 
-## Audio encoding
+## 音訊編碼
 
-While high-level libraries (such as Hugging Face `AutoProcessor`) often handle audio preprocessing automatically, you may sometimes need to implement custom encoding.
+雖然高階程式庫（例如 Hugging Face `AutoProcessor`）通常會自動處理音訊前處理，但有時您可能需要實作自訂編碼。
 
-When encoding audio data with your own code implementation for use with Gemma, you should follow the recommended conversion process. If you are working
-with audio files encoded in a specific format, such as MP3 or WAV encoded data,
-you must first decode these to samples using a library such as `ffmpeg`. Once
-the data is decoded, convert the audio into mono-channel, 16 kHz float32
-waveforms in the range \[-1, 1\]. For example, if you are working with stereo
-signed 16-bit PCM integer WAV files at 44.1 kHz, follow these steps:
+當您自行編寫程式碼為 Gemma 編碼音訊資料時，應遵循建議的轉換流程。如果您
+處理的是以特定格式編碼的音訊檔案，例如 MP3 或 WAV 編碼資料，
+必須先使用 `ffmpeg` 等程式庫將其解碼為樣本。解碼後，將音訊轉換為範圍介於 \[-1, 1\] 之間的單聲道、16 kHz float32 波形。例如，如果您處理的是 44.1 kHz、立體聲、有號 16 位元 PCM 整數 WAV 檔案，請依下列步驟處理：
 
-- Resample the audio data to 16 kHz
-- Downmix from stereo to mono by averaging the 2 channels
-- Convert from int16 to float32, and divide by 32768.0 to scale to the range \[-1, 1\]
+- 將音訊資料重新取樣為 16 kHz
+- 對 2 個聲道取平均，將立體聲降混為單聲道
+- 將 int16 轉換為 float32，並除以 32768.0 以縮放至 \[-1, 1\] 範圍
 
 !!! Note
-    When resampling audio to 16 kHz, you should use a Fourier method for best results, such as `scipy.signal.resample` or `librosa.sample(res_type ='scipy')`.
+    將音訊重新取樣為 16 kHz 時，為了獲得最佳結果應使用傅立葉方法，例如 `scipy.signal.resample` 或 `librosa.sample(res_type ='scipy')`。
 
-## Speech to text
+## 語音轉文字
 
-Gemma 4 E2B, E4B, and 12B Unified are trained for multilingual speech recognition, allowing you to transcribe audio input in various languages into text.
+Gemma 4 E2B、E4B 與 12B Unified 經過多語言語音辨識訓練，能將各種語言的音訊輸入轉錄為文字。
 
-Use the following prompt structure for **Audio Speech Recognition (ASR)**.
+請使用以下提示結構進行**語音辨識（Audio Speech Recognition, ASR）**。
 
 ```text
 Transcribe the following speech segment in {LANGUAGE} into {LANGUAGE} text.
@@ -92,7 +89,7 @@ Follow these specific instructions for formatting the answer:
 *   When transcribing numbers, write the digits, i.e. write 1.7 and not one point seven, and write 3 instead of three.
 ```
 
-The following code examples show how to prompt the model to transcribe text from audio files using Hugging Face Transformers:
+以下程式碼範例示範如何使用 Hugging Face Transformers 提示模型，從音訊檔案轉錄文字：
 
 ```python { .notebook-cell }
 from transformers import GenerationConfig
@@ -161,18 +158,18 @@ Here is a concise overview of each audio file:
 <turn|>
 ```
 
-## Automated speech translation
+## 自動語音翻譯
 
-Gemma 4 E2B, E4B and 12B Unified are trained for multilingual speech translation tasks, allowing you to translate spoken audio directly into another language.
+Gemma 4 E2B、E4B 與 12B Unified 經過多語言語音翻譯訓練，能將口說音訊直接翻譯成另一種語言。
 
-Use the following prompt structure for **Automatic Speech Translation (AST)**.
+請使用以下提示結構進行**自動語音翻譯（Automatic Speech Translation, AST）**。
 
 ```text
 Transcribe the following speech segment in {SOURCE_LANGUAGE}, then translate it into {TARGET_LANGUAGE}.
 When formatting the answer, first output the transcription in {SOURCE_LANGUAGE}, then one newline, then output the string '{TARGET_LANGUAGE}: ', then the translation in {TARGET_LANGUAGE}.
 ```
 
-The following code examples show how to prompt the model to translate spoken audio into text using Hugging Face Transformers:
+以下程式碼範例示範如何使用 Hugging Face Transformers 提示模型，將口說音訊翻譯成文字：
 
 ```python { .notebook-cell }
 from transformers import GenerationConfig
@@ -199,15 +196,15 @@ Roses are red, violets are blue.
 Korean: 장미는 빨갛고, 제비꽃은 파랗다.<turn|>
 ```
 
-## Automatic Speech Translation / Automatic Speech Recognition
+## 自動語音翻譯 / 自動語音辨識
 
-Try this by yourself
+自己動手試試
 
 ```bash { .notebook-cell }
 pip install ipywebrtc
 ```
 
-Press the circle button and start speaking. Click the circle button again when you are finished. The widget will immediately begin to play back what it captured.
+按下圓形按鈕開始說話。說完後再按一次圓形按鈕。小工具會立即播放它錄下的內容。
 
 ```python { .notebook-cell }
 from google.colab import output
@@ -220,7 +217,7 @@ recorder = AudioRecorder(stream=camera)
 recorder
 ```
 
-Convert webm file to wav format that PyTorch can understand.
+將 webm 檔案轉換為 PyTorch 能理解的 wav 格式。
 
 ```python { .notebook-cell }
 with open('/content/recording.webm', 'wb') as f:
@@ -231,7 +228,7 @@ with open('/content/recording.webm', 'wb') as f:
 ``` { .no-copy .output }
 ffmpeg version 4.4.2-0ubuntu0.22.04.1 Copyright (c) 2000-2021 the FFmpeg developers
   built with gcc 11 (Ubuntu 11.2.0-19ubuntu1)
-  configuration: --prefix=/usr --extra-version=0ubuntu0.22.04.1 --toolchain=hardened --libdir=/usr/lib/x86_64-linux-gnu --incdir=/usr/include/x86_64-linux-gnu --arch=amd64 --enable-gpl --disable-stripping --enable-gnutls --enable-ladspa --enable-libaom --enable-libass --enable-libbluray --enable-libbs2b --enable-libcaca --enable-libcdio --enable-libcodec2 --enable-libdav1d --enable-libflite --enable-libfontconfig --enable-libfreetype --enable-libfribidi --enable-libgme --enable-libgsm --enable-libjack --enable-libmp3lame --enable-libmysofa --enable-libopenjpeg --enable-libopenmpt --enable-libopus --enable-libpulse --enable-librabbitmq --enable-librubberband --enable-libshine --enable-libsnappy --enable-libsoxr --enable-libspeex --enable-libsrt --enable-libssh --enable-libtheora --enable-libtwolame --enable-libvidstab --enable-libvorbis --enable-libvpx --enable-libwebp --enable-libx265 --enable-libxml2 --enable-libxvid --enable-libzimg --enable-libzmq --enable-libzvbi --enable-lv2 --enable-omx --enable-openal --enable-opencl --enable-opengl --enable-sdl2 --enable-pocketsphinx --enable-librsvg --enable-libmfx --enable-libdc1394 --enable-libdrm --enable-libiec61883 --enable-chromaprint --enable-frei0r --enable-libx264 --enable-shared
+  configuration: --prefix=/usr --extra-version=0ubuntu0.22.04.1 --toolchain=hardened --libdir=/usr/lib/x86_64-linux-gnu --incdir=/usr/include/x86_64-linux-gnu --arch=amd64 --enable-gpl --disable-stripping --enable-gnutls --enable-ladspa --enable-libass --enable-libbluray --enable-libbs2b --enable-libcaca --enable-libcdio --enable-libcodec2 --enable-libdav1d --enable-libflite --enable-libfontconfig --enable-libfreetype --enable-libfribidi --enable-libgme --enable-libgsm --enable-libjack --enable-libmp3lame --enable-libmysofa --enable-libopenjpeg --enable-libopenmpt --enable-libopus --enable-libpulse --enable-librabbitmq --enable-librubberband --enable-libshine --enable-libsnappy --enable-libsoxr --enable-libspeex --enable-libsrt --enable-libssh --enable-libtheora --enable-libtwolame --enable-libvidstab --enable-libvorbis --enable-libvpx --enable-libwebp --enable-libx265 --enable-libxml2 --enable-libxvid --enable-libzimg --enable-libzmq --enable-libzvbi --enable-lv2 --enable-omx --enable-openal --enable-opencl --enable-opengl --enable-sdl2 --enable-pocketsphinx --enable-librsvg --enable-libmfx --enable-libdc1394 --enable-libdrm --enable-libiec61883 --enable-chromaprint --enable-frei0r --enable-libx264 --enable-shared
   libavutil      56. 70.100 / 56. 70.100
   libavcodec     58.134.100 / 58.134.100
   libavformat    58. 76.100 / 58. 76.100
@@ -302,25 +299,25 @@ How can I get to the station?
 Korean: 역에 어떻게 가나요?<turn|>
 ```
 
-## Summary
+## 總結
 
-In this guide, you learned how to process audio using Gemma 4 models. The examples demonstrated how to perform Speech-to-Text (ASR) to transcribe spoken language, as well as Automated Speech Translation (AST) to translate spoken audio directly into another language. You also saw how to capture audio from a microphone in a notebook environment for processing.
-## What's next
+在本指南中，您學會了如何使用 Gemma 4 模型處理音訊。範例示範了如何執行語音轉文字（Speech-to-Text, ASR）來轉錄口說語言，以及如何執行自動語音翻譯（Automated Speech Translation, AST）將口說音訊直接翻譯成另一種語言。您也看到了如何在筆記本環境中透過麥克風擷取音訊進行處理。
+## 下一步
 
 <div class="card-grid">
 <a class="card" href="../prompt-formatting.md">
   <span class="card-icon">{{ icon('lucide/braces') }}</span>
-  <div class="card-title">Prompt formatting</div>
-  <p class="card-desc">The control tokens that structure a Gemma prompt.</p>
+  <div class="card-title">提示格式設定</div>
+  <p class="card-desc">構成 Gemma 提示的控制詞元。</p>
 </a>
 <a class="card" href="mtp.md">
   <span class="card-icon">{{ icon('lucide/zap') }}</span>
-  <div class="card-title">Multi-Token Prediction</div>
-  <p class="card-desc">Speculative decoding for faster inference at identical quality.</p>
+  <div class="card-title">多詞元預測</div>
+  <p class="card-desc">在相同品質下以投機解碼加速推論。</p>
 </a>
 <a class="card" href="../../deployment/index.md">
   <span class="card-icon">{{ icon('lucide/play') }}</span>
-  <div class="card-title">Run Gemma</div>
-  <p class="card-desc">Every engine that runs Gemma, from a laptop to a cluster.</p>
+  <div class="card-title">執行 Gemma</div>
+  <p class="card-desc">從筆記型電腦到叢集，各種能執行 Gemma 的引擎。</p>
 </a>
 </div>

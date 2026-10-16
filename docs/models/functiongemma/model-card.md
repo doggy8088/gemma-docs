@@ -1,145 +1,98 @@
 ---
-title: FunctionGemma model card
-description: "Model card for FunctionGemma: function-calling inputs and outputs, training data, evaluation results, and intended use."
+title: FunctionGemma 模型卡
+description: "FunctionGemma 模型卡：函式呼叫的輸入與輸出、訓練資料、評估結果與預期用途。"
 models: [functiongemma]
 source_url: "https://ai.google.dev/gemma/docs/functiongemma/model_card.md.txt"
 ---
-# Model card
+# 模型卡
 
-**Model Page** : [FunctionGemma](index.md)
+**模型頁面** : [FunctionGemma](index.md)
 
-**Resources and Technical Documentation**:
+**資源與技術文件**:
 
 - [Responsible Generative AI Toolkit][responsible-ai]
-- [FunctionGemma on Kaggle](https://www.kaggle.com/models/google/functiongemma/){ data-model="functiongemma" }
-- [FunctionGemma on Vertex Model Garden](https://console.cloud.google.com/vertex-ai/publishers/google/model-garden/functiongemma){ data-model="functiongemma" }
+- [Kaggle 上的 FunctionGemma](https://www.kaggle.com/models/google/functiongemma/){ data-model="functiongemma" }
+- [Vertex Model Garden 上的 FunctionGemma](https://console.cloud.google.com/vertex-ai/publishers/google/model-garden/functiongemma){ data-model="functiongemma" }
 
-**Terms of Use** : [Terms][gemma-terms]  
+**使用條款** : [Terms][gemma-terms]  
 
-**Authors**: Google DeepMind
+**作者**：Google DeepMind
 
-## Model Information
+## 模型資訊
 
-Summary description and brief definition of inputs and outputs.
+輸入與輸出的摘要說明與簡要定義。
 
-### Description
+### 描述
 
 !!! Note
-    FunctionGemma is intended to be fine-tuned for your specific function-calling task, including multi-turn use cases.
+    FunctionGemma 預期會針對您的特定函式呼叫任務進行微調，包括多回合的使用場景。
 
 
-FunctionGemma is a lightweight, open model from Google, built as a foundation
-for creating your own specialized function calling models. FunctionGemma is not
-intended for use as a direct dialogue model, and is designed to be highly
-performant after further fine-tuning, as is typical of models this size. Built
-on the Gemma 3 270M model and with the same research and technology used to
-create the Gemini models, FunctionGemma has been trained specifically for
-function calling. The model has the same architecture as Gemma 3, but uses a
-different chat format. The model is well suited for text-only function calling.
-The uniquely small size makes it possible to deploy in environments with limited
-resources such as laptops, desktops or your own cloud infrastructure,
-democratizing access to state of the art AI models and helping foster innovation
-for everyone. Furthermore, akin to the base Gemma 270M, the model has been
-optimized to be extremely versatile, performant on a variety of hardware in
-single turn scenarios, but should be finetuned on single turn or multiturn task
-specific data to achieve best accuracy in specific domains.
-To demonstrate how specializing the 270M parameter model can achieve high
-performance on specific agentic workflows, we have highlighted two use cases in
-the
-[Google AI Edge Gallery app](https://play.google.com/store/apps/details?id=com.google.ai.edge.gallery&pcampaignid=web_share).
+FunctionGemma 是來自 Google 的輕量級開放模型，作為打造您自己專門函式呼叫模型的基礎。FunctionGemma 不適合直接作為對話模型使用，並且像這個大小的模型一樣，經過進一步微調後效能會非常出色。FunctionGemma 基於 Gemma 3 270M 模型，並使用打造 Gemini 模型的相同研究與技術，專為函式呼叫訓練。模型的架構與 Gemma 3 相同，但使用不同的聊天格式。模型非常適合純文字的函式呼叫。獨特的小體積讓它能部署在資源有限的環境中，例如筆電、桌機或您自己的雲端基礎設施，讓尖端 AI 模型更容易取得、促進人人創新。此外，與基礎 Gemma 270M 類似，模型經過最佳化，極為靈活，在單回合情境下於多種硬體上效能出色，但應在單回合或多回合的任務專用資料上微調，才能在特定領域達到最佳準確度。
+為了展示將 270M 參數模型專門化後能在特定代理式工作流程上達到高效能，我們在 [Google AI Edge Gallery app](https://play.google.com/store/apps/details?id=com.google.ai.edge.gallery&pcampaignid=web_share) 中凸顯了兩個使用場景。
 
-- **Tiny Garden:** A model fine-tuned to power a voice-controlled
-  interactive game. It handles game logic to manage a virtual plot of land,
-  decomposing commands like "Plant sunflowers in the top row" and "Water the
-  flowers in plots 1 and 2" into app-specific functions (e.g., plant_seed,
-  water_plots) and coordinate targets. This demonstrates the model's capacity
-  to drive custom app mechanics without server connectivity.
+- **Tiny Garden：**一個微調來驅動語音控制互動遊戲的模型。它處理遊戲邏輯來管理一塊虛擬田地，把「在最上面那一排種向日葵」、「給 1 號和 2 號田澆水」這類指令拆解成應用程式專用的函式（例如 plant_seed、water_plots）與座標目標。這展示了模型在無需伺服器連線的情況下驅動自訂應用程式機制的能力。
 
-- **Mobile Actions:** To empower developers to build their own expert
-  agents, we have published [a
-  dataset](https://huggingface.co/datasets/google/mobile-actions) and
-  [fine-tuning recipe](https://github.com/google-gemma/cookbook/blob/main/.archive/FunctionGemma/%5BFunctionGemma%5DFinetune_FunctionGemma_270M_for_Mobile_Actions_with_Hugging_Face.ipynb){ data-model="functiongemma" }
-  to demonstrate fine-tuning FunctionGemma. It translates user inputs (e.g.,
-  "Create a calendar event for lunch," "Turn on the flashlight") into
-  function calls that trigger Android OS system tools. This interactive
-  notebook demonstrates how to take the base FunctionGemma model and build a
-  "Mobile Actions" fine tune from scratch for use in the
-  [Google AI Edge gallery app](https://play.google.com/store/apps/details?id=com.google.ai.edge.gallery&pcampaignid=web_share).
-  This use case demonstrates the model's ability to act as an offline,
-  private agent for personal device tasks.
+- **Mobile Actions：**為了讓開發者能打造自己的專家代理，我們發布了[資料集](https://huggingface.co/datasets/google/mobile-actions)與[微調配方](https://github.com/google-gemma/cookbook/blob/main/.archive/FunctionGemma/%5BFunctionGemma%5DFinetune_FunctionGemma_270M_for_Mobile_Actions_with_Hugging_Face.ipynb){ data-model="functiongemma" }
+  來示範微調 FunctionGemma。它把使用者輸入（例如「建立一個午餐行事曆事件」、「打開手電筒」）翻譯成觸發 Android 系統工具的函式呼叫。這個互動式筆記本示範如何從基礎 FunctionGemma 模型出發，從零打造「Mobile Actions」微調版本，用於 [Google AI Edge gallery app](https://play.google.com/store/apps/details?id=com.google.ai.edge.gallery&pcampaignid=web_share)。
+  這個使用場景展示了模型作為離線、隱私的個人裝置代理的能力。
 
-### Inputs and outputs
+### 輸入與輸出
 
-- **Input:**
-    - Text string, such as a question, a prompt, or a document to be summarized
-    - Total input context of 32K tokens
-- **Output:**
-    - Generated text in response to the input, such as an answer to a question, or a summary of a document
-    - Total output context up to 32K tokens per request, subtracting the request input tokens
+- **輸入：**
+    - 文字字串，例如問題、提示，或要摘要的文件
+    - 總輸入上下文 32K 詞元
+- **輸出：**
+    - 針對輸入生成的文字，例如問題的答案，或文件的摘要
+    - 每次請求的總輸出上下文最多 32K 詞元（需扣除請求輸入的詞元）
 
-## Model Data
+## 模型資料
 
-Data used for model training and how the data was processed.
+模型訓練所用的資料與資料處理方式。
 
-### Training Dataset
+### 訓練資料集
 
-These models were trained on a dataset of text data that includes a wide
-variety of sources. The model was trained with 6T tokens. The knowledge cutoff
-date for the training data was August 2024. There are the key components:
+這些模型在包含廣泛來源的文字資料資料集上訓練。模型以 6T 詞元訓練。訓練資料的知識截止日期為 2024 年 8 月。主要組成如下：
 
-- Public Tool Definitions - Common APIs found on the web
-- Tool Use Interactions - These are a mix of prompts, function calls, function responses, and natural language responses from the model to summarise the function call response, or request clarifications when the prompt is ambiguous or incomplete.
+- Public Tool Definitions - 網路上常見的 API
+- Tool Use Interactions - 混合了提示、函式呼叫、函式回覆，以及模型用來摘要函式呼叫回覆或在提示模糊或不完整時請求澄清的自然語言回覆。
 
-### Data Preprocessing
+### 資料預處理
 
-Here are the key data cleaning and filtering methods applied to the training
-data:
+以下是在訓練資料上套用的主要資料清理與篩選方法：
 
-- CSAM Filtering: Rigorous CSAM (Child Sexual Abuse Material) filtering was applied at multiple stages in the data preparation process to ensure the exclusion of harmful and illegal content.
-- Sensitive Data Filtering: As part of making Gemma pre-trained models safe and reliable, automated techniques were used to filter out certain personal information and other sensitive data from training sets.
-- Additional methods: Filtering based on content quality and safety in line with [our policies](https://ai.google/static/documents/ai-responsibility-update-published-february-2025.pdf).
+- CSAM 篩選：在資料準備流程的多個階段套用嚴格的 CSAM（兒童性虐待素材）篩選，確保排除有害與非法內容。
+- 敏感資料篩選：為了讓 Gemma 預訓練模型安全可靠，使用自動化技術從訓練集中篩除特定個人資訊與其他敏感資料。
+- 其他方法：依循[我們的政策](https://ai.google/static/documents/ai-responsibility-update-published-february-2025.pdf)基於內容品質與安全進行篩選。
 
-## Implementation Information
+## 實作資訊
 
-Details about the model internals.
+關於模型內部的細節。
 
-### Hardware
+### 硬體
 
-Gemma was trained using [Tensor Processing Unit
-(TPU)](https://cloud.google.com/tpu/docs/intro-to-tpu) hardware (TPUv4p, TPUv5p
-and TPUv5e). Training vision-language models (VLMs) requires significant
-computational power. TPUs, designed specifically for matrix operations common in
-machine learning, offer several advantages in this domain:
+Gemma 使用 [Tensor Processing Unit (TPU)](https://cloud.google.com/tpu/docs/intro-to-tpu) 硬體（TPUv4p、TPUv5p 與 TPUv5e）訓練。訓練視覺語言模型（VLM）需要可觀的運算能力。TPU 專為機器學習中常見的矩陣運算設計，在這個領域有幾項優勢：
 
-- Performance: TPUs are specifically designed to handle the massive computations involved in training VLMs. They can speed up training considerably compared to CPUs.
-- Memory: TPUs often come with large amounts of high-bandwidth memory, allowing for the handling of large models and batch sizes during training. This can lead to better model quality.
-- Scalability: TPU Pods (large clusters of TPUs) provide a scalable solution for handling the growing complexity of large foundation models. You can distribute training across multiple TPU devices for faster and more efficient processing.
-- Cost-effectiveness: In many scenarios, TPUs can provide a more cost-effective solution for training large models compared to CPU-based infrastructure, especially when considering the time and resources saved due to faster training.
-- These advantages are aligned with [Google's commitments to operate sustainably](https://sustainability.google/operating-sustainably/).
+- 效能：TPU 專為處理訓練 VLM 所涉及的大規模運算設計。相較於 CPU，它們能大幅加速訓練。
+- 記憶體：TPU 通常配備大量高頻寬記憶體，能在訓練期間處理大型模型與批次大小，有助於提升模型品質。
+- 可擴展性：TPU Pod（大型 TPU 叢集）為處理日益複雜的大型基礎模型提供可擴展的解決方案。您可以把訓練分散到多個 TPU 裝置上，獲得更快、更有效率的處理。
+- 成本效益：在許多情境下，考量到因更快訓練而節省的時間與資源，TPU 能提供比 CPU 基礎設施更具成本效益的大型模型訓練方案。
+- 這些優勢符合 [Google 永續營運的承諾](https://sustainability.google/operating-sustainably/)。
 
-### Software
+### 軟體
 
-Training was done using [JAX](https://github.com/jax-ml/jax) and
-[ML Pathways](https://blog.google/technology/ai/introducing-pathways-next-generation-ai-architecture/).
-JAX allows researchers to take advantage of the latest generation of hardware,
-including TPUs, for faster and more efficient training of large models. ML
-Pathways is Google's latest effort to build artificially intelligent systems
-capable of generalizing across multiple tasks. This is specially suitable for
-foundation models, including large language models like these ones.  
+訓練使用 [JAX](https://github.com/jax-ml/jax) 與 [ML Pathways](https://blog.google/technology/ai/introducing-pathways-next-generation-ai-architecture/) 進行。
+JAX 讓研究人員能利用最新一代硬體（包括 TPU），更快、更有效率地訓練大型模型。ML Pathways 是 Google 最新打造能跨多任務泛化的人工智慧系統的努力。這特別適合基礎模型，包括這些大型語言模型。
 
-Together, JAX and ML Pathways are used as described in the [paper about the
-Gemini family of models](https://goo.gle/gemma2report); *"the 'single
-controller' programming model of Jax and Pathways allows a single Python process
-to orchestrate the entire training run, dramatically simplifying the development
-workflow."*
+JAX 與 ML Pathways 如 [Gemini 模型家族論文](https://goo.gle/gemma2report) 所述一起使用；*「Jax 與 Pathways 的『單一控制器』程式設計模型，讓單一 Python 程序能編排整個訓練流程，大幅簡化開發工作流程。」*
 
-## Evaluation
+## 評估
 
-Model evaluation metrics and results.
+模型評估指標與結果。
 
-### Benchmark Results
+### 基準測試結果
 
-| **Benchmark** | **n-shot** | **Function Gemma 270m** |
+| **基準測試** | **n-shot** | **Function Gemma 270m** |
 |---|---|---|
 | BFCL Simple | 0-shot | 61.6 |
 | BFCL Multiple | 0-shot | 63.5 |
@@ -152,126 +105,104 @@ Model evaluation metrics and results.
 | BFCL Relevance | 0-shot | 61.1 |
 | BFCL Irrelevance | 0-shot | 73.7 |
 
-**Impact on Performance after Fine-tuning on Mobile Actions Dataset**   
+**在 Mobile Actions 資料集上微調後的效能影響**   
 
-To demonstrate the value of specialization for small language models, we
-compared the base FunctionGemma model against the fine-tuned model using the
-"Mobile Actions"
-[recipe](https://github.com/google-gemma/cookbook/blob/main/.archive/FunctionGemma/%5BFunctionGemma%5DFinetune_FunctionGemma_270M_for_Mobile_Actions_with_Hugging_Face.ipynb){ data-model="functiongemma" }.
-Fine-tuning significantly improved the base FunctionGemma model's ability to
-correctly identify and format mobile system calls.
+為了展示專門化對小型語言模型的價值，我們使用「Mobile Actions」[配方](https://github.com/google-gemma/cookbook/blob/main/.archive/FunctionGemma/%5BFunctionGemma%5DFinetune_FunctionGemma_270M_for_Mobile_Actions_with_Hugging_Face.ipynb){ data-model="functiongemma" } 比較了基礎 FunctionGemma 模型與微調後的模型。微調大幅提升了基礎 FunctionGemma 模型正確識別與格式化行動系統呼叫的能力。
 
-| Model | Eval results for Mobile Actions |
+| 模型 | Mobile Actions 評估結果 |
 |---|---|
-| Base FunctionGemma model | 58% |
-| Mobile Actions Fine-Tune | 85% |
+| 基礎 FunctionGemma 模型 | 58% |
+| Mobile Actions 微調 | 85% |
 
-**On-Device Performance of the Gemma 270m Fine-tuned Use Cases**   
+**Gemma 270m 微調使用場景的裝置端效能**   
 
-We evaluated the fine-tuned use cases on a Samsung S25 Ultra to assess on-device
-latency and memory footprint.
+我們在 Samsung S25 Ultra 上評估微調後的使用場景，測量裝置端延遲與記憶體佔用量。
 
-- **Context:** 512 prefill tokens and 32 decode tokens.
-- **Hardware:** S25 Ultra CPU using LiteRT XNNPACK delegate with 4 threads.
+- **情境：**512 個預填充詞元與 32 個解碼詞元。
+- **硬體：**S25 Ultra CPU，使用 LiteRT XNNPACK delegate，4 執行緒。
 
-Mobile Actions On Device Performance
+Mobile Actions 裝置端效能
 
-| Backend | Quantization scheme | Context length | Prefill (tokens per second) | Decode (tokens per second) | Time-to-first-token (seconds) | Model Size (MB) | Peak RSS Memory (MB) |
+| 後端 | 量化方案 | 上下文長度 | 預填充（每秒詞元數） | 解碼（每秒詞元數） | 首詞元時間（秒） | 模型大小（MB） | 峰值 RSS 記憶體（MB） |
 |---|---|---|---|---|---|---|---|
 | CPU | dynamic_int8 | 1024 | 1718 | 125.9 | 0.3 | 288 | 551 |
 
-Tiny Garden On Device Performance
+Tiny Garden 裝置端效能
 
-| Backend | Quantization scheme | Context length | Prefill (tokens per second) | Decode (tokens per second) | Time-to-first-token (seconds) | Model Size (MB) | Peak RSS Memory (MB) |
+| 後端 | 量化方案 | 上下文長度 | 預填充（每秒詞元數） | 解碼（每秒詞元數） | 首詞元時間（秒） | 模型大小（MB） | 峰值 RSS 記憶體（MB） |
 |---|---|---|---|---|---|---|---|
 | CPU | dynamic_int8 | 1024 | 1743 | 125.7 | 0.3 | 288 | 549 |
 
-## Ethics and Safety
+## 倫理與安全
 
-Ethics and safety evaluation approach and results.
+倫理與安全評估方法與結果。
 
-### Evaluation Approach
+### 評估方法
 
-Our evaluation methods include structured evaluations and internal red-teaming
-testing of relevant content policies. Red-teaming was conducted by a number of
-different teams, each with different goals and human evaluation metrics. These
-models were evaluated against a number of different categories relevant to
-ethics and safety, including:
+我們的評估方法包括結構化評估，以及針對相關內容政策的內部紅隊測試。紅隊測試由數個不同的團隊執行，每個團隊有不同的目標與人工評估指標。這些模型針對與倫理安全相關的多個類別進行評估，包括：
 
-- **Child Safety**: Evaluation of text-to-text and image to text prompts covering child safety policies, including child sexual abuse and exploitation.
-- **Content Safety:** Evaluation of text-to-text and image to text prompts covering safety policies including, harassment, violence and gore, and hate speech.
-- **Representational Harms**: Evaluation of text-to-text and image to text prompts covering safety policies including bias, stereotyping, and harmful associations or inaccuracies.
+- **兒童安全**：評估涵蓋兒童安全政策的文字對文字與影像對文字提示，包括兒童性虐待與剝削。
+- **內容安全：**評估涵蓋安全政策的文字對文字與影像對文字提示，包括騷擾、暴力與血腥、仇恨言論。
+- **代表性傷害**：評估涵蓋安全政策的文字對文字與影像對文字提示，包括偏見、刻板印象、有害的關聯或不準確內容。
 
-### Evaluation Results
+### 評估結果
 
-For all areas of safety testing, we saw major improvements in the categories of
-child safety, content safety, and representational harms relative to previous
-Gemma models. All testing was conducted without safety filters to evaluate the
-model capabilities and behaviors. The model produced minimal policy violations,
-and showed significant improvements over previous Gemma models' performance
-with respect to ungrounded inferences. A limitation of our evaluations was they
-included only English language prompts.
+在所有安全測試領域，相較於前幾代 Gemma 模型，兒童安全、內容安全與代表性傷害類別都有顯著改善。所有測試都是在無安全篩選器的情況下進行的，以評估模型能力與行為。模型產生的政策違規極少，並較前幾代 Gemma 模型在無根據推論方面有顯著改善。我們評估的限制是僅包含英文提示。
 
-## Usage and Limitations
+## 使用方式與限制
 
-These models have certain limitations that users should be aware of.
+這些模型有一些使用者應注意的限制。
 
-### Intended Usage
+### 預期用途
 
-This model is not intended for use as a direct dialogue model.  
+此模型不適合直接作為對話模型使用。  
 
-Open Large Language Models (LLMs) have a wide range of applications across
-various industries and domains. The following list of potential uses is not
-comprehensive. The purpose of this list is to provide contextual information
-about the possible use-cases that the model creators considered as part of model
-training and development.
+開放式大型語言模型（LLM）在各行各業與領域有廣泛的應用。以下潛在用途清單並非詳盡無遺，目的在於提供關於模型創建者在模型訓練與開發過程中考慮過的可能使用場景的背景資訊。
 
-- Content Creation and Communication
-    - Text Generation: These models can be used to generate creative text formats such as poems, scripts, code, marketing copy, and email drafts.
-    - Chatbots and Conversational AI: Power conversational interfaces for customer service, virtual assistants, or interactive applications.
-    - Text Summarization: Generate concise summaries of a text corpus, research papers, or reports.
-- Research and Education
-    - Natural Language Processing (NLP) Research: These models can serve as a foundation for researchers to experiment with NLP techniques, develop algorithms, and contribute to the advancement of the field.
-    - Language Learning Tools: Support interactive language learning experiences, aiding in grammar correction or providing writing practice.
-    - Knowledge Exploration: Assist researchers in exploring large bodies of text by generating summaries or answering questions about specific topics.
+- 內容創作與溝通
+    - 文字生成：這些模型可用來生成創意文字格式，如詩歌、腳本、程式碼、行銷文案與電子郵件草稿。
+    - 聊天機器人與對話式 AI：為客服、虛擬助理或互動應用提供對話介面。
+    - 文字摘要：為文字語料庫、研究論文或報告生成簡潔摘要。
+- 研究與教育
+    - 自然語言處理（NLP）研究：這些模型可作為研究人員的基礎，用於實驗 NLP 技術、開發演算法，為領域進展做出貢獻。
+    - 語言學習工具：支援互動式語言學習體驗，協助文法修正或提供寫作練習。
+    - 知識探索：透過生成摘要或回答特定主題的問題，協助研究人員探索大量文本。
 
-### Limitations
+### 限制
 
-- Training Data
-    - The quality and diversity of the training data significantly influence the model's capabilities. Biases or gaps in the training data can lead to limitations in the model's responses.
-    - The scope of the training dataset determines the subject areas the model can handle effectively.
-- Context and Task Complexity
-    - Models are better at tasks that can be framed with clear prompts and instructions. Open-ended or highly complex tasks might be challenging.
-    - A model's performance can be influenced by the amount of context provided (longer context generally leads to better outputs, up to a certain point).
-- Language Ambiguity and Nuance
-    - Natural language is inherently complex. Models might struggle to grasp subtle nuances, sarcasm, or figurative language.
-- Factual Accuracy
-    - Models generate responses based on information they learned from their training datasets, but they are not knowledge bases. They may generate incorrect or outdated factual statements.
-- Common Sense
-    - Models rely on statistical patterns in language. They might lack the ability to apply common sense reasoning in certain situations.
+- 訓練資料
+    - 訓練資料的品質與多樣性顯著影響模型能力。訓練資料中的偏見或缺口可能導致模型回覆的限制。
+    - 訓練資料集的範疇決定了模型能有效處理的主題領域。
+- 上下文與任務複雜度
+    - 模型在能以清楚的提示與指令框架化的任務上表現較好。開放式或高度複雜的任務可能具有挑戰性。
+    - 提供上下文的量會影響模型效能（上下文越長通常輸出越好，但有一定上限）。
+- 語言歧義與細微差別
+    - 自然語言本質上很複雜。模型可能難以掌握細微差別、諷刺或比喻。
+- 事實正確性
+    - 模型根據從訓練資料集學到的資訊生成回覆，但它們不是知識庫。可能產生不正確或過時的事實陳述。
+- 常識
+    - 模型仰賴語言中的統計模式。在某些情況下可能缺乏運用常識推理的能力。
 
-### Ethical Considerations and Risks
+### 倫理考量與風險
 
-The development of large language models (LLMs) raises several ethical
-concerns. In creating an open model, we have carefully considered the
-following:
+大型語言模型（LLM）的開發引發了幾項倫理關切。在創建開放模型時，我們審慎考慮了以下事項：
 
-- Bias and Fairness
-    - LLMs trained on large-scale, real-world text data can reflect socio-cultural biases embedded in the training material. These models underwent careful scrutiny, input data pre-processing described and posterior evaluations reported in this card.
-- Misinformation and Misuse
-    - LLMs can be misused to generate text that is false, misleading, or harmful.
-    - Guidelines are provided for responsible use with the model, see the [Responsible Generative AI Toolkit][responsible-ai].
-- Transparency and Accountability:
-    - This model card summarizes details on the models' architecture, capabilities, limitations, and evaluation processes.
-    - A responsibly developed open model offers the opportunity to share innovation by making LLM technology accessible to developers and researchers across the AI ecosystem.
+- 偏見與公平性
+    - 在大規模真實世界文字資料上訓練的 LLM，可能反映訓練素材中嵌入的社會文化偏見。這些模型經過審慎檢視、本卡所述的輸入資料預處理與事後評估。
+- 錯誤資訊與濫用
+    - LLM 可能被濫用來產生虛假、誤導或有害的文字。
+    - 本模型提供負責任使用的指引，請參閱 [Responsible Generative AI Toolkit][responsible-ai]。
+- 透明度與可歸責性：
+    - 本模型卡彙整了模型架構、能力、限制與評估流程的詳細資訊。
+    - 一個負責任開發的開放模型，讓整個 AI 生態系的開發者與研究人員都能取得 LLM 技術，提供了分享創新的機會。
 
-Risks identified and mitigations:
+已識別的風險與緩解措施：
 
-- Perpetuation of biases: It's encouraged to perform continuous monitoring (using evaluation metrics, human review) and the exploration of de-biasing techniques during model training, fine-tuning, and other use cases.
-- Generation of harmful content: Mechanisms and guidelines for content safety are essential. Developers are encouraged to exercise caution and implement appropriate content safety safeguards based on their specific product policies and application use cases.
-- Misuse for malicious purposes: Technical limitations and developer and end-user education can help mitigate against malicious applications of LLMs. Educational resources and reporting mechanisms for users to flag misuse are provided. Prohibited uses of Gemma models are outlined in the [Gemma Prohibited Use Policy][prohibited-use]..
-- Privacy violations: Models were trained on data filtered for removal of PII (Personally Identifiable Information). Developers are encouraged to adhere to privacy regulations with privacy-preserving techniques.
+- 偏見的延續：鼓勵在模型訓練、微調及其他使用場景中持續監控（使用評估指標、人工審查）並探索去偏見技術。
+- 產生有害內容：內容安全機制與指引至關重要。鼓勵開發者依其特定產品政策與應用場景，謹慎行事並實施適當的內容安全防護措施。
+- 用於惡意目的的濫用：技術限制，以及對開發者與終端使用者的教育，可幫助減輕 LLM 的惡意應用。我們提供教育資源與通報機制，讓使用者能標記濫用行為。Gemma 模型的禁止用途列於 [Gemma Prohibited Use Policy][prohibited-use]。
+- 侵犯隱私：模型在訓練資料上篩除了 PII（個人可識別資訊）。鼓勵開發者遵守隱私法規，並採用隱私保護技術。
 
-### Benefits
+### 優點
 
-At the time of release, this family of models provides high-performance open large language model implementations designed from the ground up for Responsible AI development compared to similarly sized models.
+在發布時，這個模型家族提供了高效能的開放大型語言模型實作，相較於同級模型，從頭開始就為負責任的 AI 開發而設計。

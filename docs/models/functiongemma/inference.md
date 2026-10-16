@@ -1,28 +1,28 @@
 ---
-title: Function calling with Hugging Face Transformers
-description: Call functions with FunctionGemma in Hugging Face Transformers, passing tools as manual JSON schemas or as raw Python functions.
+title: 使用 Hugging Face Transformers 進行函式呼叫
+description: 使用 Hugging Face Transformers 搭配 FunctionGemma 呼叫函式，以手動 JSON schema 或原始 Python 函式傳遞工具。
 models: [functiongemma]
 frameworks: [transformers]
 colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs/notebooks/functiongemma-inference.ipynb
 source_url: "https://ai.google.dev/gemma/docs/functiongemma/function-calling-with-hf.md.txt"
 ---
-# Function calling with Hugging Face Transformers
+# 使用 Hugging Face Transformers 進行函式呼叫
 
-FunctionGemma is a specialized version of the Gemma 3 270M model, trained specifically for function calling improvements. It has the same architecture as Gemma, but uses a different chat format and tokenizer.
+FunctionGemma 是 Gemma 3 270M 模型的專門版本，專為函式呼叫的改進而訓練。它的架構與 Gemma 相同，但使用不同的聊天格式與分詞器。
 
-This guide shows the process of using FunctionGemma within the Hugging Face ecosystem. It covers essential setup steps, such as installing the `torch` and `transformers` libraries and loading the model using `AutoProcessor` and `AutoModelForCausalLM`. Additionally, the guide explains how to pass tools to the model using either manual JSON schemas or raw Python functions and advises on when to use manual schemas to handle complex custom objects effectively.
+本指南示範在 Hugging Face 生態系中使用 FunctionGemma 的流程。涵蓋必要的設定步驟，例如安裝 `torch` 與 `transformers` 函式庫，以及使用 `AutoProcessor` 與 `AutoModelForCausalLM` 載入模型。此外，本指南說明如何透過手動 JSON schema 或原始 Python 函式將工具傳遞給模型，並建議何時使用手動 schema 來有效處理複雜的自訂物件。
 
-## Setup
+## 設定
 
-Before starting this tutorial, complete the following steps:
+開始本教學之前，請完成以下步驟：
 
-- Get access to FunctionGemma by logging into [Hugging Face](https://huggingface.co/google/functiongemma-270m-it){ data-model="functiongemma" } and selecting **Acknowledge license** for a FunctionGemma model.
-- Generate a Hugging Face [Access Token](https://huggingface.co/docs/hub/en/security-tokens#how-to-manage-user-access-token) and add it to your Colab environment.
+- 登入 [Hugging Face](https://huggingface.co/google/functiongemma-270m-it){ data-model="functiongemma" } 並為 FunctionGemma 模型選擇 **Acknowledge license** 以取得存取權。
+- 生成 Hugging Face [Access Token](https://huggingface.co/docs/hub/en/security-tokens#how-to-manage-user-access-token) 並加入您的 Colab 環境。
 
 
-## Install Python packages
+## 安裝 Python 套件
 
-Install the Hugging Face libraries required for running the FunctionGemma model and making requests.
+安裝執行 FunctionGemma 模型與發送請求所需的 Hugging Face 函式庫。
 
 ```bash { .notebook-cell }
 # Install PyTorch & other libraries
@@ -32,7 +32,7 @@ pip install torch
 pip install transformers
 ```
 
-After you have accepted the license, you need a valid Hugging Face Token to access the model.
+接受授權後，您需要有效的 Hugging Face 權杖才能存取模型。
 
 ```python { .notebook-cell }
 # Login into Hugging Face Hub
@@ -40,9 +40,9 @@ from huggingface_hub import login
 login()
 ```
 
-## Load Model
+## 載入模型
 
-Use the `torch` and `transformers` libraries to create an instance of a `processor` and `model` using the `AutoProcessor` and `AutoModelForCausalLM` classes as shown in the following code example:
+使用 `torch` 與 `transformers` 函式庫，透過 `AutoProcessor` 與 `AutoModelForCausalLM` 類別建立 `processor` 與 `model` 實例，如以下程式碼範例所示：
 
 ```python { .notebook-cell }
 from transformers import AutoProcessor, AutoModelForCausalLM
@@ -53,14 +53,14 @@ processor = AutoProcessor.from_pretrained(GEMMA_MODEL_ID, device_map="auto")
 model = AutoModelForCausalLM.from_pretrained(GEMMA_MODEL_ID, dtype="auto", device_map="auto")
 ```
 
-## Passing tools
+## 傳遞工具
 
-You can pass tools to the model using the `apply_chat_template()` function via the `tools` argument. There are two methods for defining these tools:
+您可以透過 `apply_chat_template()` 函式的 `tools` 引數將工具傳遞給模型。定義工具的方法有兩種：
 
-- **JSON schema**: You can manually construct a JSON dictionary defining the function name, description, and parameters (including types and required fields).
-- **Raw Python Functions** : You can pass actual Python functions. The system automatically generates the required JSON schema by parsing the function's type hints, arguments, and docstrings. For best results, docstrings should adhere to the [Google Python Style Guide](https://google.github.io/styleguide/pyguide.html#38-comments-and-docstrings).
+- **JSON schema**：您可以手動建構 JSON 字典，定義函式名稱、描述與參數（包括型別與必填欄位）。
+- **原始 Python 函式**：您可以直接傳遞實際的 Python 函式。系統會自動解析函式的型別提示、引數與 docstring 來生成所需的 JSON schema。為獲得最佳結果，docstring 應遵循 [Google Python 風格指南](https://google.github.io/styleguide/pyguide.html#38-comments-and-docstrings)。
 
-Below is the example with the JSON schema.
+以下是使用 JSON schema 的範例。
 
 ```python { .notebook-cell }
 weather_function_schema = {
@@ -104,7 +104,7 @@ print(f"Output: {output}")
 Output: <start_function_call>call:get_current_temperature{location:<escape>London<escape>}<end_function_call>
 ```
 !!! Note
-    To ensure FunctionGemma correctly interprets the available tools and generates a structured call instead of plain text, the **developer** message is essential. This specific system prompt instructs the model that it has permission and capability to perform function calling.
+    為確保 FunctionGemma 正確解讀可用工具並生成結構化呼叫而非純文字，**developer** 訊息至關重要。這個特定的系統提示指示模型它有權限與能力執行函式呼叫。
     
 
 ```python
@@ -116,7 +116,7 @@ message = [
 ]
 ```
 
-And the same example with the raw Python function.
+以下是同一個範例使用原始 Python 函式的版本。
 
 ```python { .notebook-cell }
 def get_current_temperature(location: str):
@@ -146,13 +146,13 @@ print(f"Output: {output}")
 Output: <start_function_call>call:get_current_temperature{location:<escape>London<escape>}<end_function_call>
 ```
 
-## Important Caveat: Automatic vs. Manual Schemas
+## 重要提醒：自動與手動 Schema
 
-When relying on automatic conversion from Python functions to JSON schema, the generated output may not always meet specific expectations regarding complex parameters.
+仰賴從 Python 函式自動轉換為 JSON schema 時，生成的輸出在複雜參數方面可能不完全符合預期。
 
-If a function uses a custom object (like a Config class) as an argument, the automatic converter may describe it simply as a generic "object" without detailing its internal properties.
+如果函式使用自訂物件（例如 Config 類別）作為引數，自動轉換器可能只會把它描述為通用的「object」，而不說明其內部屬性。
 
-In these cases, manually defining the JSON schema is preferred to ensure nested properties (such as theme or font_size within a config object) are explicitly defined for the model.
+在這些情況下，建議手動定義 JSON schema，確保巢狀屬性（例如 config 物件內的 theme 或 font_size）為模型明確定義。
 
 ```python { .notebook-cell }
 import json
@@ -252,24 +252,24 @@ print(json.dumps(update_config_schema, indent=2))
 }
 ```
 
-## Summary
+## 摘要
 
-Now you understand function calling with FunctionGemma. Key takeaways from this include:
+現在您已經了解如何使用 FunctionGemma 進行函式呼叫。重點包括：
 
-- **Defining Tools**: You can define tools using two methods: creating a manual JSON schema or passing raw Python functions, where the system parses type hints and docstrings.
-- **Schema Caveats**: While automatic conversion works for simple types, it struggles with complex custom objects. In these cases, manual JSON schema definition is required to ensure nested properties are visible to the model.
+- **定義工具**：可以用兩種方法定義工具：建立手動 JSON schema，或傳遞原始 Python 函式（系統會解析型別提示與 docstring）。
+- **Schema 提醒**：雖然自動轉換對簡單型別有效，但處理複雜的自訂物件時會遇到困難。在這些情況下，需要手動定義 JSON schema，確保巢狀屬性對模型可見。
 
-## What's next
+## 接下來
 
 <div class="card-grid">
 <a class="card" href="full-sequence.md">
   <span class="card-icon">{{ icon('lucide/split') }}</span>
-  <div class="card-title">Full calling sequence</div>
-  <p class="card-desc">The complete cycle, from the model's call to the final answer.</p>
+  <div class="card-title">完整呼叫序列</div>
+  <p class="card-desc">從模型的呼叫到最終答案的完整循環。</p>
 </a>
 <a class="card" href="fine-tuning.md">
   <span class="card-icon">{{ icon('lucide/graduation-cap') }}</span>
-  <div class="card-title">Fine-tune FunctionGemma</div>
-  <p class="card-desc">Teach it to pick the right tool for your policies.</p>
+  <div class="card-title">微調 FunctionGemma</div>
+  <p class="card-desc">教它依您的政策挑選正確的工具。</p>
 </a>
 </div>

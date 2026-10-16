@@ -1,36 +1,36 @@
 ---
-title: Fine-tuning using JAX and Flax
-description: Fine-tune RecurrentGemma 2B Instruct for English-French translation using JAX, Flax, and the MTNT noisy-text dataset.
+title: 使用 JAX 與 Flax 進行微調
+description: 使用 JAX、Flax 與 MTNT 噪聲文本資料集，將 RecurrentGemma 2B Instruct 微調為英法翻譯模型。
 models: [recurrentgemma]
 frameworks: [jax]
 colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs/notebooks/recurrentgemma-fine-tuning.ipynb
 source_url: "https://ai.google.dev/gemma/docs/recurrentgemma/recurrentgemma_jax_finetune.md.txt"
 ---
-# Fine-tuning using JAX and Flax
+# 使用 JAX 與 Flax 進行微調
 
-This tutorial demonstrates how to fine-tune the [RecurrentGemma](index.md) 2B Instruct model for an English-French translation task using [Google DeepMind's `recurrentgemma` library](https://github.com/google-deepmind/recurrentgemma){ data-model="recurrentgemma" }, [JAX](https://jax.readthedocs.io) (a high-performance numerical computing library), [Flax](https://flax.readthedocs.io) (the JAX-based neural network library), [Chex](https://chex.readthedocs.io/en/latest/) (a library of utilities for writing reliable JAX code), [Optax](https://optax.readthedocs.io/en/latest/) (the JAX-based gradient processing and optimization library), and the [MTNT (Machine Translation of Noisy Text) dataset](https://arxiv.org/abs/1809.00388). Although Flax is not used directly in this notebook, Flax was used to create Gemma.
+本教學示範如何使用 [Google DeepMind 的 `recurrentgemma` 函式庫](https://github.com/google-deepmind/recurrentgemma){ data-model="recurrentgemma" }、[JAX](https://jax.readthedocs.io)（高效能數值運算函式庫）、[Flax](https://flax.readthedocs.io)（基於 JAX 的類神經網路函式庫）、[Chex](https://chex.readthedocs.io/en/latest/)（用於撰寫可靠 JAX 程式碼的工具函式庫）、[Optax](https://optax.readthedocs.io/en/latest/)（基於 JAX 的梯度處理與最佳化函式庫），以及 [MTNT（噪聲文本機器翻譯，Machine Translation of Noisy Text）資料集](https://arxiv.org/abs/1809.00388)，將 [RecurrentGemma](index.md) 2B Instruct 模型微調為英法翻譯任務。雖然本筆記本未直接使用 Flax，但 Gemma 正是用 Flax 建立的。
 
-The `recurrentgemma` library was written with JAX, Flax, [Orbax](https://orbax.readthedocs.io/) (a JAX-based library for training utilities like checkpointing), and [SentencePiece](https://github.com/google/sentencepiece) (a tokenizer/detokenizer library).
+`recurrentgemma` 函式庫以 JAX、Flax、[Orbax](https://orbax.readthedocs.io/)（基於 JAX 的訓練工具函式庫，例如檢查點）與 [SentencePiece](https://github.com/google/sentencepiece)（分詞/還原詞元函式庫）撰寫。
 
-This notebook can run on Google Colab with the T4 GPU (go to **Edit** \> **Notebook settings** \> Under **Hardware accelerator** select **T4 GPU**).
+這本筆記本可在 Google Colab 上使用 T4 GPU 執行（前往**編輯** \> **筆記本設定** \> 在**硬體加速器**下方選取 **T4 GPU**）。
 
-## Setup
+## 設定
 
-The following sections explain the steps for preparing a notebook to use a RecurrentGemma model, including model access, getting an API key, and configuring the notebook runtime.
+以下各節說明準備筆記本以使用 RecurrentGemma 模型的步驟，包括模型存取、取得 API 金鑰，以及設定筆記本執行環境。
 
-### Set up Kaggle access for Gemma
+### 設定 Kaggle 存取以使用 Gemma
 
-To complete this tutorial, you first need to follow the setup instructions *similar* to [Gemma setup](../../get-started/index.md) with a few exceptions:
+要完成本教學，您首先需要依照與 [Gemma 設定](../../get-started/index.md)「類似」的設定說明進行，但有以下例外：
 
-- Get access to RecurrentGemma (instead of Gemma) on [kaggle.com](https://www.kaggle.com/models/google/recurrentgemma){ data-model="recurrentgemma" }.
-- Select a Colab runtime with sufficient resources to run the RecurrentGemma model.
-- Generate and configure a Kaggle username and API key.
+- 在 [kaggle.com](https://www.kaggle.com/models/google/recurrentgemma){ data-model="recurrentgemma" } 取得 RecurrentGemma（而非 Gemma）的存取權。
+- 選取資源足以執行 RecurrentGemma 模型的 Colab 執行環境。
+- 產生並設定 Kaggle 使用者名稱與 API 金鑰。
 
-After you've completed the RecurrentGemma setup, move on to the next section, where you'll set environment variables for your Colab environment.
+完成 RecurrentGemma 設定後，請繼續下一節，在 Colab 環境中設定環境變數。
 
-### Set environment variables
+### 設定環境變數
 
-Set environment variables for `KAGGLE_USERNAME` and `KAGGLE_KEY`. When prompted with the "Grant access?" messages, agree to provide secret access.
+設定 `KAGGLE_USERNAME` 與 `KAGGLE_KEY` 的環境變數。當出現「是否授權存取？」的提示時，請同意提供密鑰存取權。
 
 ```python { .notebook-cell }
 import os
@@ -40,23 +40,23 @@ os.environ["KAGGLE_USERNAME"] = userdata.get('KAGGLE_USERNAME')
 os.environ["KAGGLE_KEY"] = userdata.get('KAGGLE_KEY')
 ```
 
-### Install the `recurrentgemma` library
+### 安裝 `recurrentgemma` 函式庫
 
-Free Colab hardware acceleration is currently *insufficient* to run this notebook. If you are using [Colab Pay As You Go or Colab Pro](https://colab.research.google.com/signup), click on **Edit** \> **Notebook settings** \> Select **A100 GPU** \> **Save** to enable hardware acceleration.
+免費的 Colab 硬體加速目前*不足以*執行本筆記本。如果您使用 [Colab 隨用隨付或 Colab Pro](https://colab.research.google.com/signup)，請點選**編輯** \> **筆記本設定** \> 選取 **A100 GPU** \> **儲存**以啟用硬體加速。
 
-Next, you need to install the Google DeepMind `recurrentgemma` library from [`github.com/google-deepmind/recurrentgemma`](https://github.com/google-deepmind/recurrentgemma){ data-model="recurrentgemma" }. If you get an error about "pip's dependency resolver", you can usually ignore it.
+接著，您需要從 [`github.com/google-deepmind/recurrentgemma`](https://github.com/google-deepmind/recurrentgemma){ data-model="recurrentgemma" } 安裝 Google DeepMind 的 `recurrentgemma` 函式庫。如果看到關於「pip 依賴解析器」的錯誤，通常可以忽略。
 
 !!! Note
-    By installing `recurrentgemma`, you will also install [`flax`](https://flax.readthedocs.io), core [`jax`](https://jax.readthedocs.io), [`optax`](https://optax.readthedocs.io/en/latest/) (the JAX-based gradient processing and optimization library), [`orbax`](https://orbax.readthedocs.io/), and [`sentencepiece`](https://github.com/google/sentencepiece).
+    安裝 `recurrentgemma` 時，也會一併安裝 [`flax`](https://flax.readthedocs.io)、核心 [`jax`](https://jax.readthedocs.io)、[`optax`](https://optax.readthedocs.io/en/latest/)（基於 JAX 的梯度處理與最佳化函式庫）、[`orbax`](https://orbax.readthedocs.io/) 與 [`sentencepiece`](https://github.com/google/sentencepiece)。
 
 
 ```bash { .notebook-cell }
 pip install -q git+https://github.com/google-deepmind/recurrentgemma.git
 ```
 
-### Import libraries
+### 匯入函式庫
 
-This notebook uses [Flax](https://flax.readthedocs.io) (for neural networks), core [JAX](https://jax.readthedocs.io), [SentencePiece](https://github.com/google/sentencepiece) (for tokenization), [Chex](https://chex.readthedocs.io/en/latest/) (a library of utilities for writing reliable JAX code), [Optax](https://optax.readthedocs.io/en/latest/) (the gradient processing and optimization library), and TensorFlow Datasets.
+本筆記本使用 [Flax](https://flax.readthedocs.io)（類神經網路）、核心 [JAX](https://jax.readthedocs.io)、[SentencePiece](https://github.com/google/sentencepiece)（分詞）、[Chex](https://chex.readthedocs.io/en/latest/)（用於撰寫可靠 JAX 程式碼的工具函式庫）、[Optax](https://optax.readthedocs.io/en/latest/)（梯度處理與最佳化函式庫）與 TensorFlow Datasets。
 
 ```python { .notebook-cell }
 import pathlib
@@ -77,16 +77,16 @@ import sentencepiece as spm
 from recurrentgemma import jax as recurrentgemma
 ```
 
-## Load the RecurrentGemma model
+## 載入 RecurrentGemma 模型
 
-1. Load the RecurrentGemma model with [`kagglehub.model_download`](https://github.com/Kaggle/kagglehub/blob/bddefc718182282882b72f814d407d89e5d178c4/src/kagglehub/models.py#L12), which takes three arguments:
+1. 使用 [`kagglehub.model_download`](https://github.com/Kaggle/kagglehub/blob/bddefc718182282882b72f814d407d89e5d178c4/src/kagglehub/models.py#L12) 載入 RecurrentGemma 模型，它接受三個參數：
 
-- `handle`: The model handle from Kaggle
-- `path`: (Optional string) The local path
-- `force_download`: (Optional boolean) Forces to re-download the model
+- `handle`：來自 Kaggle 的模型代碼
+- `path`：（選用字串）本機路徑
+- `force_download`：（選用布林值）強制重新下載模型
 
 !!! Note
-    Be mindful that the RecurrentGemma 2B (IT) model is around 3.85Gb in size.
+    請注意，RecurrentGemma 2B (IT) 模型大小約為 3.85Gb。
 
 
 ```python { .notebook-cell }
@@ -112,13 +112,13 @@ RECURRENTGEMMA_VARIANT: 2b-it
 ```
 
 !!! Note
-    The path from the output above is where the model weights and tokenizer are saved locally, you will need them for later.
+    上方的輸出路徑是模型權重與分詞器在本機的儲存位置，稍後會用到。
 
 
-1. Check the location of the model weights and the tokenizer, then set the path variables. The tokenizer directory will be in the main directory where you downloaded the model, while the model weights will be in a sub-directory. For example:
+1. 檢查模型權重與分詞器的位置，然後設定路徑變數。分詞器目錄位於您下載模型的主目錄中，而模型權重則位於子目錄中。例如：
 
-- The `tokenizer.model` file will be in `/LOCAL/PATH/TO/recurrentgemma/flax/2b-it/1`).
-- The model checkpoint will be in `/LOCAL/PATH/TO/recurrentgemma/flax/2b-it/1/2b-it`).
+- `tokenizer.model` 檔案位於 `/LOCAL/PATH/TO/recurrentgemma/flax/2b-it/1`。
+- 模型檢查點位於 `/LOCAL/PATH/TO/recurrentgemma/flax/2b-it/1/2b-it`。
 
 ```python { .notebook-cell }
 CKPT_PATH = os.path.join(RECURRENTGEMMA_PATH, RECURRENTGEMMA_VARIANT)
@@ -131,12 +131,11 @@ print('TOKENIZER_PATH:', TOKENIZER_PATH)
 CKPT_PATH: /root/.cache/kagglehub/models/google/recurrentgemma/flax/2b-it/1/2b-it
 TOKENIZER_PATH: /root/.cache/kagglehub/models/google/recurrentgemma/flax/2b-it/1/tokenizer.model
 ```
+## 載入並準備 MTNT 資料集與 Gemma 分詞器
 
-## Load and prepare the MTNT dataset and the Gemma tokenizer
+您將使用 [MTNT（噪聲文本機器翻譯）](https://arxiv.org/abs/1809.00388) 資料集，可從 [TensorFlow Datasets](https://www.tensorflow.org/datasets/catalog/mtnt) 取得。
 
-You will use the [MTNT (Machine Translation of Noisy Text)](https://arxiv.org/abs/1809.00388) dataset, which is available from [TensorFlow Datasets](https://www.tensorflow.org/datasets/catalog/mtnt).
-
-Download the English-to-French dataset portion of the MTNT dataset, and then sample two examples. Each sample in the dataset contains two entries: `src`: the original English sentence; and `dst`: the corresponding French translation.
+下載 MTNT 資料集中的英翻法部分，然後取兩個範例。資料集中的每個樣本包含兩個欄位：`src`：原始英文句子；`dst`：對應的法文翻譯。
 
 ```python { .notebook-cell }
 ds = tfds.load("mtnt/en-fr", split="train")
@@ -160,7 +159,7 @@ Generating splits...:   0%|          | 0/3 [00:00<?, ? splits/s]
 Generating train examples...:   0%|          | 0/35692 [00:00<?, ? examples/s]
 Shuffling /root/tensorflow_datasets/mtnt/en-fr/1.0.0.incompleteJLH33K/mtnt-train.tfrecord*...:   0%|          …
 Generating test examples...:   0%|          | 0/1020 [00:00<?, ? examples/s]
-Shuffling /root/tensorflow_datasets/mtnt/en-fr/1.0.0.incompleteJLH33K/mtnt-test.tfrecord*...:   0%|          |…
+Shuffling /root/tensorflow_datasets/mtnt/en-fr/1.0.0.incompleteJLH33K/mtnt-test.tfrecord*...:   0%|          …
 Generating valid examples...:   0%|          | 0/811 [00:00<?, ? examples/s]
 Shuffling /root/tensorflow_datasets/mtnt/en-fr/1.0.0.incompleteJLH33K/mtnt-valid.tfrecord*...:   0%|          …
 Dataset mtnt downloaded and prepared to /root/tensorflow_datasets/mtnt/en-fr/1.0.0. Subsequent calls will reuse this data.
@@ -173,7 +172,7 @@ dst: b"Kameron est-elle un peu aigrie de son manque de temps \xc3\xa0 l'\xc3\xa9
 src: b'Is Kameron a Little Salty About Her Lack of Air Time?'
 ```
 
-Load the Gemma tokenizer, constructed using [`sentencepiece.SentencePieceProcessor`](https://github.com/google/sentencepiece/blob/4d6a1f41069c4636c51a5590f7578a0dbed83450/python/src/sentencepiece/__init__.py#L423):
+使用 [`sentencepiece.SentencePieceProcessor`](https://github.com/google/sentencepiece/blob/4d6a1f41069c4636c51a5590f7578a0dbed83450/python/src/sentencepiece/__init__.py#L423) 建構的 Gemma 分詞器載入：
 
 ```python { .notebook-cell }
 vocab = spm.SentencePieceProcessor()
@@ -184,15 +183,15 @@ vocab.Load(TOKENIZER_PATH)
 True
 ```
 
-Customize the[`SentencePieceProcessor`](https://github.com/google/sentencepiece/blob/4d6a1f41069c4636c51a5590f7578a0dbed83450/python/src/sentencepiece/__init__.py#L423) for the English-to-French translation task. Since you will be fine-tuning the English portion of the RecurrentGemma (Griffin) model, you need to make a few adjustments, such as:
+為英法翻譯任務客製化 [`SentencePieceProcessor`](https://github.com/google/sentencepiece/blob/4d6a1f41069c4636c51a5590f7578a0dbed83450/python/src/sentencepiece/__init__.py#L423)。由於您將微調 RecurrentGemma（Griffin）模型的英文部分，需要做一些調整，例如：
 
-- *The input prefix* : Adding a common prefix to each input signals the translation task. For example, you could use a prompt with a prefix like `Translate this into French: [INPUT_SENTENCE]`.
+- *輸入前綴*：在每個輸入前加上共同的前綴，以標示翻譯任務。例如，您可以使用帶有前綴的提示，例如 `Translate this into French: [INPUT_SENTENCE]`。
 
-- *The translation start suffix*: Adding a suffix at the end of each prompt instructs the Gemma model exactly when to begin the translation process. A new line should do the job.
+- *翻譯起始後綴*：在每個提示末尾加上後綴，指示 Gemma 模型何時開始翻譯。一個換行字元即可。
 
-- *Language model tokens*: RecurrentGemma (Griffin) models expect a "beginning of sequence" token at the beginning of each sequence. Similarly, you need to add an "end of sequence" token at the end of each training example.
+- *語言模型詞元*：RecurrentGemma（Griffin）模型預期每個序列開頭有一個「序列開始」詞元。同樣地，您需要在每個訓練範例的結尾加上一個「序列結束」詞元。
 
-Build a custom wrapper around the `SentencePieceProcessor` as follows:
+以下列方式為 `SentencePieceProcessor` 建立自訂包裝器：
 
 ```python { .notebook-cell }
 class GriffinTokenizer:
@@ -252,7 +251,7 @@ class GriffinTokenizer:
     return self._spm_processor.EncodeIds(tokens.tolist())
 ```
 
-Try it out by instantiating your new custom `GriffinTokenizer`, and then applying it on a small sample of the MTNT dataset:
+具現化您新建立的自訂 `GriffinTokenizer`，並將它套用在 MTNT 資料集的一小部分樣本上試試：
 
 ```python { .notebook-cell }
 def tokenize_source(tokenizer, example: tf.Tensor):
@@ -300,8 +299,7 @@ dst: [     2 213606    477   1455 235290   3510    748   8268 191017   2809
     581   2032  69972    581  11495   1305    533 235303  65978   1654
       1]
 ```
-
-Build a data loader for the entire MTNT dataset:
+為整個 MTNT 資料集建立資料載入器：
 
 ```python { .notebook-cell }
 @chex.dataclass(frozen=True)
@@ -431,7 +429,7 @@ class MTNTDatasetBuilder:
     return ds
 ```
 
-Try the `MTNTDatasetBuilder` out by instantiating the custom `GriffinTokenizer` again, then applying it on the MTNT dataset, and sampling two examples:
+再次具現化自訂 `GriffinTokenizer` 並將它套用在 MTNT 資料集上，試用 `MTNTDatasetBuilder` 並取兩個範例：
 
 ```python { .notebook-cell }
 dataset_builder = MTNTDatasetBuilder(tokenizer, max_seq_len=20)
@@ -478,53 +476,52 @@ target_mask: [[False False False False False False False False False False False
  [False False False False False False False False False False False False
    True  True  True  True  True  True False False]]
 ```
+## 設定模型
 
-## Configure the model
+在開始微調 Gemma 模型之前，您需要先設定它。
 
-Before you begin fine-tuning the Gemma model, you need to configure it.
-
-Load the RecurrentGemma (Griffin) model checkpoint with the [`recurrentgemma.jax.utils.load_parameters`](https://github.com/google-deepmind/recurrentgemma/blob/e4939f9b7edf8baa1d512fb86bfc2e206044d66b/recurrentgemma/jax/utils.py#L31){ data-model="recurrentgemma" } method:
+使用 [`recurrentgemma.jax.utils.load_parameters`](https://github.com/google-deepmind/recurrentgemma/blob/e4939f9b7edf8baa1d512fb86bfc2e206044d66b/recurrentgemma/jax/utils.py#L31){ data-model="recurrentgemma" } 方法載入 RecurrentGemma（Griffin）模型檢查點：
 
 ```python { .notebook-cell }
 params =  recurrentgemma.load_parameters(CKPT_PATH, "single_device")
 ```
 
-To automatically load the correct configuration from the RecurrentGemma model checkpoint, use [`recurrentgemma.GriffinConfig.from_flax_params_or_variables`](https://github.com/google-deepmind/recurrentgemma/blob/e4939f9b7edf8baa1d512fb86bfc2e206044d66b/recurrentgemma/common.py#L128){ data-model="recurrentgemma" }:
+若要從 RecurrentGemma 模型檢查點自動載入正確的設定，請使用 [`recurrentgemma.GriffinConfig.from_flax_params_or_variables`](https://github.com/google-deepmind/recurrentgemma/blob/e4939f9b7edf8baa1d512fb86bfc2e206044d66b/recurrentgemma/common.py#L128){ data-model="recurrentgemma" }：
 
 ```python { .notebook-cell }
 config = recurrentgemma.GriffinConfig.from_flax_params_or_variables(params)
 ```
 
-Instantiate the [Griffin](https://arxiv.org/abs/2402.19427) model with [`recurrentgemma.jax.Griffin`](https://github.com/google-deepmind/recurrentgemma/blob/e4939f9b7edf8baa1d512fb86bfc2e206044d66b/recurrentgemma/jax/griffin.py#L29){ data-model="recurrentgemma" }:
+使用 [`recurrentgemma.jax.Griffin`](https://github.com/google-deepmind/recurrentgemma/blob/e4939f9b7edf8baa1d512fb86bfc2e206044d66b/recurrentgemma/jax/griffin.py#L29){ data-model="recurrentgemma" } 具現化 [Griffin](https://arxiv.org/abs/2402.19427) 模型：
 
 ```python { .notebook-cell }
 model = recurrentgemma.Griffin(config)
 ```
 
-Create a `sampler` with [`recurrentgemma.jax.Sampler`](https://github.com/google-deepmind/recurrentgemma/blob/e4939f9b7edf8baa1d512fb86bfc2e206044d66b/recurrentgemma/jax/sampler.py#L74){ data-model="recurrentgemma" } on top of the RecurrentGemma model checkpoint/weights and the tokenizer to check if your model can perform translation:
+在 RecurrentGemma 模型檢查點/權重與分詞器之上，使用 [`recurrentgemma.jax.Sampler`](https://github.com/google-deepmind/recurrentgemma/blob/e4939f9b7edf8baa1d512fb86bfc2e206044d66b/recurrentgemma/jax/sampler.py#L74){ data-model="recurrentgemma" } 建立 `sampler`，檢查您的模型是否能執行翻譯：
 
 ```python { .notebook-cell }
 sampler = recurrentgemma.Sampler(model=model, vocab=vocab, params=params)
 ```
 
-## Fine-tune the model
+## 微調模型
 
-In this section, you will:
+在本節中，您將：
 
-- Use the `gemma.transformer.Transformer` class to create the forward pass and loss function.
-- Build the position and attention mask vectors for tokens
-- Build a training step function with Flax.
-- Build the validation step without the backwards pass.
-- Create the training loop.
-- Fine-tune the Gemma model.
+- 使用 `gemma.transformer.Transformer` 類別建立前向傳遞與損失函數。
+- 為詞元建立位置與注意力遮罩向量。
+- 使用 Flax 建立訓練步階函數。
+- 建立不含反向傳遞的驗證步階。
+- 建立訓練迴圈。
+- 微調 Gemma 模型。
 
-Define the forward pass and the loss function using the [`recurrentgemma.jax.griffin.Griffin`](https://github.com/google-deepmind/recurrentgemma/blob/e4939f9b7edf8baa1d512fb86bfc2e206044d66b/recurrentgemma/jax/griffin.py#L29){ data-model="recurrentgemma" }
-class. The RecurrentGemma `Griffin` inherits from [`flax.linen.Module`](https://flax.readthedocs.io/en/latest/api_reference/flax.linen/module.html), and offers two essential methods:
+使用 [`recurrentgemma.jax.griffin.Griffin`](https://github.com/google-deepmind/recurrentgemma/blob/e4939f9b7edf8baa1d512fb86bfc2e206044d66b/recurrentgemma/jax/griffin.py#L29){ data-model="recurrentgemma" }
+類別定義前向傳遞與損失函數。RecurrentGemma 的 `Griffin` 繼承自 [`flax.linen.Module`](https://flax.readthedocs.io/en/latest/api_reference/flax.linen/module.html)，並提供兩個重要方法：
 
-- `init`: Initializes the model's parameters.
-- `apply`: Executes the model's `__call__` function using a given set of parameters.
+- `init`：初始化模型的參數。
+- `apply`：使用給定的參數集執行模型的 `__call__` 函數。
 
-Since you are working with pre-trained Gemma weights, you don't need to use the `init` function.
+由於您使用的是預訓練的 Gemma 權重，因此不需要使用 `init` 函數。
 
 ```python { .notebook-cell }
 def forward_and_loss_fn(
@@ -575,10 +572,10 @@ def forward_and_loss_fn(
   return -jnp.sum(jax.nn.log_softmax(logits) * one_hot) / norm_factor
 ```
 
-Build the `train_step` function that performs the backward pass and updates the model's parameters accordingly, where:
+建立執行反向傳遞並相應更新模型參數的 `train_step` 函數，其中：
 
-- [`jax.value_and_grad`](https://jax.readthedocs.io/en/latest/_autosummary/jax.value_and_grad.html) is for evaluating the loss function and gradients during the forward and backward passes.
-- [`optax.apply_updates`](https://optax.readthedocs.io/en/latest/api/apply_updates.html#optax.apply_updates) is for updating the parameters.
+- [`jax.value_and_grad`](https://jax.readthedocs.io/en/latest/_autosummary/jax.value_and_grad.html) 用於在前向與反向傳遞期間評估損失函數與梯度。
+- [`optax.apply_updates`](https://optax.readthedocs.io/en/latest/api/apply_updates.html#optax.apply_updates) 用於更新參數。
 
 ```python { .notebook-cell }
 Params = Mapping[str, Any]
@@ -636,7 +633,7 @@ def train_step(
   return train_loss, params, opt_state
 ```
 
-Build the `validation_step` function without the backward pass:
+建立不含反向傳遞的 `validation_step` 函數：
 
 ```python { .notebook-cell }
 @functools.partial(jax.jit, static_argnames=['model'])
@@ -654,8 +651,7 @@ def validation_step(
       positions=get_positions(example.input_tokens, pad_id),
   )
 ```
-
-Define the training loop:
+定義訓練迴圈：
 
 ```python { .notebook-cell }
 def train_loop(
@@ -716,7 +712,7 @@ def train_loop(
   return params
 ```
 
-Here you have to choose an (Optax) optimizer. For devices with smaller memory, you should use SGD, as it has a much lower memory footprint. To achieve best fine-tuning performance, try Adam-W. The optimal hyperparameters for each optimizer for the particular task in this notebook are provided in this example for the `2b-it` checkpoint.
+這裡您必須選擇一個（Optax）最佳化器。對於記憶體較小的裝置，建議使用 SGD，因為它的記憶體佔用低得多。若要達到最佳的微調效能，可以嘗試 Adam-W。本範例針對 `2b-it` 檢查點提供了各個最佳化器在本筆記本特定任務上的最佳超參數。
 
 ```python { .notebook-cell }
 def griffin_weight_decay_mask(params_like: optax.Params) -> Any:
@@ -751,7 +747,7 @@ else:
   raise ValueError(f"Unknown optimizer: {optimizer_choice}")
 ```
 
-Prepare the training and validation datasets:
+準備訓練與驗證資料集：
 
 ```python { .notebook-cell }
 # Choose a small sequence length size, so that everything fits in memory.
@@ -775,7 +771,7 @@ validation_ds = dataset_builder.get_validation_dataset(
 ).take(50)
 ```
 
-Begin fine-tuning the RecurrentGemma (Griffin) model on a limited number of steps (`num_steps`):
+開始在有限的步數（`num_steps`）上微調 RecurrentGemma（Griffin）模型：
 
 ```python { .notebook-cell }
 trained_params = train_loop(
@@ -810,9 +806,9 @@ STEP 280 training loss: 2.73045015335083 - eval loss: 1.9159646034240723
 STEP 300 training loss: 2.0918595790863037 - eval loss: 1.9742532968521118
 ```
 
-Both the training loss and the validation loss should have gone down with each step count.
+訓練損失與驗證損失都應該隨步數增加而下降。
 
-To ensure your input matches the training format, remember to use the prefix `Translate this into French:\n` and a newline character at the end. This signals the model to begin translation.
+為確保您的輸入符合訓練格式，請記得使用前綴 `Translate this into French:\n`，並在結尾加上換行字元。這會指示模型開始翻譯。
 
 ```python { .notebook-cell }
 sampler.params = trained_params
@@ -830,15 +826,15 @@ See an explanation at https://jax.readthedocs.io/en/latest/faq.html#buffer_donat
 Mais je m'appelle Morgane.
 ```
 
-## Learn more
+## 了解更多
 
-- You can learn more about the Google DeepMind [`recurrentgemma` library on GitHub](https://github.com/google-deepmind/recurrentgemma){ data-model="recurrentgemma" }, which contains docstrings of methods and modules you used in this tutorial, such as [`recurrentgemma.jax.load_parameters`](https://github.com/google-deepmind/recurrentgemma/blob/e4939f9b7edf8baa1d512fb86bfc2e206044d66b/recurrentgemma/jax/utils.py#L31){ data-model="recurrentgemma" }, [`recurrentgemma.jax.Griffin`](https://github.com/google-deepmind/recurrentgemma/blob/e4939f9b7edf8baa1d512fb86bfc2e206044d66b/recurrentgemma/jax/griffin.py#L29){ data-model="recurrentgemma" }, and [`recurrentgemma.jax.Sampler`](https://github.com/google-deepmind/recurrentgemma/blob/e4939f9b7edf8baa1d512fb86bfc2e206044d66b/recurrentgemma/jax/sampler.py#L74){ data-model="recurrentgemma" }.
-- The following libraries have their own documentation sites: [core JAX](https://jax.readthedocs.io), [Flax](https://flax.readthedocs.io), [Chex](https://chex.readthedocs.io/en/latest/), [Optax](https://optax.readthedocs.io/en/latest/), and [Orbax](https://orbax.readthedocs.io/).
-- For `sentencepiece` tokenizer/detokenizer documentation, check out [Google's `sentencepiece` GitHub repo](https://github.com/google/sentencepiece).
-- For `kagglehub` documentation, check out `README.md` on [Kaggle's `kagglehub` GitHub repo](https://github.com/Kaggle/kagglehub).
-- Learn how to [use Gemma models with Google Cloud Vertex AI][vertex-use-gemma].
-- If you are using Google Cloud TPUs (v3-8 and newer), make sure to also update to the latest `jax[tpu]` package (`!pip install -U jax[tpu] -f https://storage.googleapis.com/jax-releases/libtpu_releases.html`), restart the runtime, and check that `jax` and `jaxlib` versions match (`!pip list | grep jax`). This can prevent the `RuntimeError` that can arise because of the `jaxlib` and `jax` version mismatch. For more JAX installation instructions, refer to the [JAX docs](https://jax.readthedocs.io/en/latest/tutorials/installation.html#install-google-tpu).
-- Check out the [RecurrentGemma: Moving Past Transformers
-  for Efficient Open Language Models](https://arxiv.org/pdf/2404.07839) paper by Google DeepMind.
-- Read the [Griffin: Mixing Gated Linear Recurrences with
-  Local Attention for Efficient Language Models](https://arxiv.org/pdf/2402.19427) paper by Google DeepMind to learn more about the model architecture used by RecurrentGemma.
+- 您可以前往 GitHub 上的 Google DeepMind [`recurrentgemma` 函式庫](https://github.com/google-deepmind/recurrentgemma){ data-model="recurrentgemma" } 了解更多，其中包含本教學所使用方法與模組的 docstring，例如 [`recurrentgemma.jax.load_parameters`](https://github.com/google-deepmind/recurrentgemma/blob/e4939f9b7edf8baa1d512fb86bfc2e206044d66b/recurrentgemma/jax/utils.py#L31){ data-model="recurrentgemma" }、[`recurrentgemma.jax.Griffin`](https://github.com/google-deepmind/recurrentgemma/blob/e4939f9b7edf8baa1d512fb86bfc2e206044d66b/recurrentgemma/jax/griffin.py#L29){ data-model="recurrentgemma" } 與 [`recurrentgemma.jax.Sampler`](https://github.com/google-deepmind/recurrentgemma/blob/e4939f9b7edf8baa1d512fb86bfc2e206044d66b/recurrentgemma/jax/sampler.py#L74){ data-model="recurrentgemma" }。
+- 以下函式庫各有自己的文件網站：[核心 JAX](https://jax.readthedocs.io)、[Flax](https://flax.readthedocs.io)、[Chex](https://chex.readthedocs.io/en/latest/)、[Optax](https://optax.readthedocs.io/en/latest/) 與 [Orbax](https://orbax.readthedocs.io/)。
+- 關於 `sentencepiece` 分詞/還原詞元文件，請參閱 [Google 的 `sentencepiece` GitHub 儲存庫](https://github.com/google/sentencepiece)。
+- 關於 `kagglehub` 文件，請參閱 [Kaggle 的 `kagglehub` GitHub 儲存庫](https://github.com/Kaggle/kagglehub) 中的 `README.md`。
+- 了解如何[在 Google Cloud Vertex AI 上使用 Gemma 模型][vertex-use-gemma]。
+- 如果您使用 Google Cloud TPU（v3-8 及更新版本），請務必同時更新到最新的 `jax[tpu]` 套件（`!pip install -U jax[tpu] -f https://storage.googleapis.com/jax-releases/libtpu_releases.html`），重新啟動執行環境，並確認 `jax` 與 `jaxlib` 版本相符（`!pip list | grep jax`）。這可以避免因 `jaxlib` 與 `jax` 版本不符而產生的 `RuntimeError`。更多 JAX 安裝說明請參閱 [JAX 文件](https://jax.readthedocs.io/en/latest/tutorials/installation.html#install-google-tpu)。
+- 閱讀 Google DeepMind 的論文 [RecurrentGemma: Moving Past Transformers
+  for Efficient Open Language Models](https://arxiv.org/pdf/2404.07839)。
+- 閱讀 Google DeepMind 的論文 [Griffin: Mixing Gated Linear Recurrences with
+  Local Attention for Efficient Language Models](https://arxiv.org/pdf/2402.19427)，深入了解 RecurrentGemma 所使用的模型架構。

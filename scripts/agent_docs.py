@@ -109,7 +109,7 @@ def markdown_route_for(relative: str) -> str:
 def display_title(metadata: dict, family_names: dict[str, str]) -> str:
     title = str(metadata.get("title", "Untitled"))
     models = metadata.get("models") or []
-    if title.lower() in {"model card", "overview"} and len(models) == 1:
+    if title.lower() in {"model card", "模型卡", "overview", "總覽", "概覽"} and len(models) == 1:
         family = str(models[0]).split("/", 1)[0]
         if family in family_names:
             return f"{family_names[family]} — {title}"

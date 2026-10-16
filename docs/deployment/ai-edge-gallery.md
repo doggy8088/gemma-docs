@@ -1,61 +1,60 @@
 ---
 title: AI Edge Gallery
-description: Run Gemma 4 on an Android or iOS phone with no code — chat, vision, audio transcription and benchmarking, fully offline.
+description: 在 Android 或 iOS 手機上免寫程式碼執行 Gemma 4 —— 聊天、視覺、音訊轉錄與基準測試，完全離線。
 models: [gemma-4]
 frameworks: [litert, android, ios]
 ---
 
-# Try Gemma on your phone with AI Edge Gallery
+# 在手機上用 AI Edge Gallery 試試 Gemma
 
-[AI Edge Gallery](https://github.com/google-ai-edge/gallery) is Google AI Edge's app for running
-open models directly on a phone or laptop. Every inference happens on the device — no network,
-no account, nothing leaves the hardware — which makes it the fastest way to see what Gemma 4
-actually feels like on the device you carry.
+[AI Edge Gallery](https://github.com/google-ai-edge/gallery) 是 Google AI Edge 用於直接在手機或筆電上執行
+開放模型的應用程式。所有推論都在裝置上進行——無需網路、無需帳號，資料不會離開硬體——這是
+體驗 Gemma 4 在您隨身裝置上實際感受的最快方式。
 
-It is the no-code counterpart to [LiteRT-LM](litert.md): the same runtime underneath, wrapped in
-an interface you can hand to someone who does not write Python.
+它是 [LiteRT-LM](litert.md) 的免程式碼對應版本：底層是相同的執行環境，包裝在
+可以交給不會寫 Python 的人使用的介面中。
 
-## Install
+## 安裝
 
-| Platform | Requirement |
+| 平台 | 需求 |
 |---|---|
-| [Google Play](https://play.google.com/store/apps/details?id=com.google.aiedge.gallery) | Android 12 and up |
-| [App Store](https://apps.apple.com/app/google-ai-edge-gallery/id6737687734) | iOS 17 and up |
-| macOS | Download from the [releases page](https://github.com/google-ai-edge/gallery/releases) |
+| [Google Play](https://play.google.com/store/apps/details?id=com.google.aiedge.gallery) | Android 12 及以上 |
+| [App Store](https://apps.apple.com/app/google-ai-edge-gallery/id6737687734) | iOS 17 及以上 |
+| macOS | 從[發佈頁面](https://github.com/google-ai-edge/gallery/releases)下載 |
 
-Without Google Play access, install the APK from the
-[latest release](https://github.com/google-ai-edge/gallery/releases).
+若無法使用 Google Play，請從
+[最新發佈版本](https://github.com/google-ai-edge/gallery/releases)安裝 APK。
 
-## What you can do with it
+## 它能做什麼
 
-- **AI Chat with thinking mode** — multi-turn conversation, with a toggle that shows the model's
-  step-by-step reasoning. Thinking mode works with the Gemma 4 family.
-- **Ask Image** — point the camera or pick a photo and ask about it.
-- **Audio Scribe** — transcribe and translate voice recordings in real time.
-- **Prompt Lab** — a workspace for single-turn prompts with direct control over temperature and
-  top-k, useful for tuning before you commit settings to code.
-- **Agent Skills** — augment the model with tools such as Wikipedia grounding, maps and visual
-  summary cards. Skills can be loaded from a URL.
-- **Mobile Actions** and **Tiny Garden** — offline device control and a natural-language garden
-  game, both powered by a fine-tune of [FunctionGemma](../models/functiongemma/index.md) 270M.
-- **Model management and benchmarking** — download models, side-load your own, and benchmark
-  each one on your actual hardware rather than trusting someone else's numbers.
+- **具思考模式的 AI 聊天** —— 多輪對話，並有開關可顯示模型的
+  逐步推理。思考模式適用於 Gemma 4 家族。
+- **圖片問答** —— 將相機對準或選取照片並提問。
+- **音訊速記** —— 即時轉錄並翻譯語音錄音。
+- **提示實驗室** —— 單輪提示的工作區，可直接控制溫度（temperature）與
+  top-k，適合在將設定寫入程式碼前進行調校。
+- **Agent 技能** —— 以維基百科接地（grounding）、地圖與視覺
+  摘要卡等工具增強模型。技能可從 URL 載入。
+- **Mobile Actions** 與 **Tiny Garden** —— 離線裝置控制與自然語言花園
+  遊戲，兩者皆由 [FunctionGemma](../models/functiongemma/index.md) 270M 的微調版本驅動。
+- **模型管理與基準測試** —— 下載模型、側載自己的模型，並在實際硬體上對每個
+  模型進行基準測試，而不是相信別人的數字。
 
-!!! tip "Bring your own weights"
-    Gallery loads custom models, so a Gemma you fine-tuned and exported with
-    [LiteRT-LM](litert.md) can be tested on-device without building an app around it.
+!!! tip "自備權重"
+    Gallery 可載入自訂模型，因此您以
+    [LiteRT-LM](litert.md) 微調並匯出的 Gemma，可以直接在裝置上測試，無需為它建置應用程式。
 
-## How it fits together
+## 各層如何協作
 
-| Layer | What it does |
+| 層 | 功能 |
 |---|---|
-| [Google AI Edge](https://ai.google.dev/edge) | Core on-device ML APIs and tooling |
-| [LiteRT](litert.md) | The runtime that executes the model |
-| [Hugging Face](https://huggingface.co/litert-community){ data-model="gemma-4" } | Where the `.litertlm` weights come from |
+| [Google AI Edge](https://ai.google.dev/edge) | 核心的裝置端 ML API 與工具 |
+| [LiteRT](litert.md) | 執行模型的執行環境 |
+| [Hugging Face](https://huggingface.co/litert-community){ data-model="gemma-4" } | `.litertlm` 權重的來源 |
 
-## Next steps
+## 後續步驟
 
-- Run the same models from a terminal or your own app with [LiteRT-LM](litert.md).
-- Fine-tune first, then export: [fine-tuning overview](../tuning/index.md).
-- Read the [project wiki](https://github.com/google-ai-edge/gallery/wiki) for detailed setup,
-  including corporate-managed devices.
+- 使用 [LiteRT-LM](litert.md) 從終端機或自己的應用程式執行相同的模型。
+- 先微調再匯出：[微調總覽](../tuning/index.md)。
+- 閱讀[專案 wiki](https://github.com/google-ai-edge/gallery/wiki) 了解詳細設定，
+  包括企業管理的裝置。

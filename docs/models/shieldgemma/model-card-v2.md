@@ -1,53 +1,41 @@
 ---
-title: ShieldGemma 2 model card
-description: ShieldGemma 2 is a model trained on Gemma 3's 4B IT checkpoint for image safety classification across key categories that takes in images and outputs safety labels per policy.
+title: ShieldGemma 2 模型卡
+description: ShieldGemma 2 是在 Gemma 3 的 4B IT 檢查點上訓練的模型，用於跨關鍵類別的影像安全分類：接收影像，依政策輸出安全標籤。
 models: [shieldgemma]
 source_url: "https://ai.google.dev/gemma/docs/shieldgemma/model_card_2.md.txt"
 ---
-# ShieldGemma model card
+# ShieldGemma 模型卡
 
-**Model Page** : [ShieldGemma](index.md)
+**模型頁面** : [ShieldGemma](index.md)
 
-**Resources and Technical Documentation**:
+**資源與技術文件**:
 
 - [Responsible Generative AI Toolkit][responsible-ai]
-- [ShieldGemma on Kaggle](https://www.kaggle.com/models/google/shieldgemma){ data-model="shieldgemma" }
-- [ShieldGemma on Hugging Face Hub](https://huggingface.co/models?search=shieldgemma){ data-model="shieldgemma" }
+- [Kaggle 上的 ShieldGemma](https://www.kaggle.com/models/google/shieldgemma){ data-model="shieldgemma" }
+- [Hugging Face Hub 上的 ShieldGemma](https://huggingface.co/models?search=shieldgemma){ data-model="shieldgemma" }
 
-**Terms of Use** : [Terms][gemma-terms]
+**使用條款** : [條款][gemma-terms]
 
-**Authors**: Google
+**作者**: Google
 
-## Model Information
+## 模型資訊
 
-ShieldGemma 2 is a model trained on Gemma 3's 4B IT checkpoint for image safety
-classification across key categories that takes in images and outputs safety
-labels per policy.
+ShieldGemma 2 是在 Gemma 3 的 4B IT 檢查點上訓練的模型，用於跨關鍵類別的影像安全分類：接收影像，依政策輸出安全標籤。
 
-### Description
+### 描述
 
-ShieldGemma 2, built on Gemma 3, is a 4 billion (4B) parameter model that checks
-the safety of both synthetic and natural images against key categories to help
-you build robust datasets and models. With this addition to the Gemma family of
-models, researchers and developers can now minimize the risk of harmful content
-affecting their Generative-AI powered applications across key
-[harm types](model-card-v2.md#harm-types).
+ShieldGemma 2 建構於 Gemma 3 之上，是一個 40 億（4B）參數模型，用於檢查合成與自然影像在關鍵類別中的安全性，協助您建構穩健的資料集與模型。隨著這個 Gemma 系列模型的加入，研究人員與開發者現在能將有害內容影響其生成式 AI 應用程式的風險降至最低，涵蓋關鍵[傷害類型](model-card-v2.md#傷害類型)。
 
-We recommend using ShieldGemma 2 as an input filter to vision language models,
-or as an output filter of image generation systems. To train a robust image
-safety model, we curated training datasets of natural and synthetic images and
-instruction-tuned Gemma 3 to demonstrate strong performance. We compared safety
-policies to different benchmarks, and are releasing a technical report that
-incorporates third party benchmarks.
+我們建議將 ShieldGemma 2 用作視覺語言模型的輸入過濾器，或影像生成系統的輸出過濾器。為了訓練出穩健的影像安全模型，我們整理了自然與合成影像的訓練資料集，並對 Gemma 3 進行指令微調，展現出強勁效能。我們將安全政策與不同基準測試進行比較，並發布一份納入第三方基準測試的技術報告。
 
-### Inputs and outputs
+### 輸入與輸出
 
-- **Input:** Image and prompt instruction with policy definition.
-- **Output:** Probability of 'Yes' or 'No' tokens. A higher score for the 'Yes' token indicates that the model is confident that the content violates the included policy. The inverse is true for the 'No' token. Both scores are provided to enable classification metrics and calibration.
+- **輸入：** 影像與包含政策定義的提示指令。
+- **輸出：** 'Yes' 或 'No' 詞元的機率。'Yes' 詞元的分數越高，表示模型越有信心認定內容違反所含政策；'No' 詞元則相反。兩個分數皆會提供，以便進行分類指標計算與校準。
 
-#### Guidelines to use in prompts
+#### 在提示中使用的準則
 
-Here is our prompt instruction `[Prompt Instruction]`:
+以下是我們的提示指令 `[Prompt Instruction]`：
 
 ```text
 You are a policy expert trying to help determine whether a generated or real
@@ -62,17 +50,17 @@ include any interpretation outside of the safety policy.
 Does the image violate the above policy? Your Answer must start with 'Yes' or 'No'.
 ```
 
-##### Harm types
+##### 傷害類型
 
-**Use Case: Image Classification**
+**使用場景：影像分類**
 
-| Harm Type | Guideline |
+| 傷害類型 | 準則 |
 |---|---|
-| Sexually Explicit content | "No Sexually Explicit content": The image shall not contain content that depicts explicit or graphic sexual acts (e.g., pornography, erotic. nudity, depictions of rape or sexual assault). |
-| Dangerous content | "No Dangerous content": The image shall not contain content that facilitates or encourages activities that could cause real-world harm (e.g., building firearms and explosive devices, promotion of terrorism, instructions for suicide). |
-| Violent content | "No Violence/Gore content": The image shall not contain content that depicts shocking, sensational, or gratuitous violence (e.g., excessive blood and gore, gratuitous violence against animals, extreme injury or moment of death). |
+| 色情露骨內容 | "No Sexually Explicit content": The image shall not contain content that depicts explicit or graphic sexual acts (e.g., pornography, erotic. nudity, depictions of rape or sexual assault). |
+| 危險內容 | "No Dangerous content": The image shall not contain content that facilitates or encourages activities that could cause real-world harm (e.g., building firearms and explosive devices, promotion of terrorism, instructions for suicide). |
+| 暴力內容 | "No Violence/Gore content": The image shall not contain content that depicts shocking, sensational, or gratuitous violence (e.g., excessive blood and gore, gratuitous violence against animals, extreme injury or moment of death). |
 
-### Citation
+### 引用
 
 ```python
 @misc{zeng2025shieldgemma2robusttractable,
@@ -86,121 +74,86 @@ Does the image violate the above policy? Your Answer must start with 'Yes' or 'N
 }
 ```
 
-## Model Data
+## 模型資料
 
-Data used for model training and how the data was processed.
+用於模型訓練的資料，以及資料處理方式。
 
-### Training Dataset
+### 訓練資料集
 
-Our training dataset consists of both natural images and synthetic images. For
-natural images, we sample a subset of images from WebLI (Web Language and Image)
-dataset that are relevant to the safety tasks. For synthetic images, we use an
-internal data generation pipeline to enable controlled generation of prompts and
-corresponding images that balance the diversity and severity of images. For this
-study, harm types were limited to dangerous, sexually explicit, and violent
-content, with English only. Additional adversarial and sub-topics were
-structured using a taxonomy that corresponds to respective policies, and a range
-of demographics, context, and regional aspects.
+我們的訓練資料集包含自然影像與合成影像。自然影像方面，我們從 WebLI（Web Language and Image）
+資料集中抽取與安全任務相關的影像子集。合成影像方面，我們使用內部資料生成管線，對提示與對應影像進行可控生成，以平衡影像的多樣性與嚴重程度。在本研究中，傷害類型限於危險、色情露骨與暴力內容，且僅限英文。此外，對抗性與子主題採用對應各政策的分類架構（taxonomy）進行組織，並涵蓋不同人口特徵、情境與地區面向。
 
-## Data Preprocessing
+## 資料前處理
 
-Here are the key data cleaning and filtering methods applied to the training
-data: CSAM Filtering: CSAM (Child Sexual Abuse Material) filtering was applied
-in the data preparation process to ensure the exclusion of illegal content.
+以下是套用於訓練資料的關鍵資料清理與過濾方法：CSAM 過濾：在資料準備過程中套用 CSAM（兒童性虐待材料）過濾，以確保排除非法內容。
 
-## Implementation Information
+## 實作資訊
 
-### Hardware
+### 硬體
 
-ShieldGemma 2 was trained using the latest generation of
-[Tensor Processing Unit (TPU)](https://cloud.google.com/tpu/docs/intro-to-tpu) hardware (TPUv5e), for more details refer to
-the [Gemma 3 model card](../gemma-3/index.md).
+ShieldGemma 2 使用最新一代
+[Tensor Processing Unit (TPU)](https://cloud.google.com/tpu/docs/intro-to-tpu) 硬體（TPUv5e）進行訓練，更多詳情請參閱
+[Gemma 3 模型卡](../gemma-3/index.md)。
 
-### Software
+### 軟體
 
-Training was done using [JAX](https://github.com/jax-ml/jax) and [ML Pathways](https://blog.google/technology/ai/introducing-pathways-next-generation-ai-architecture/). For more
-details refer to the [Gemma 3 model card](../gemma-3/index.md).
+訓練使用 [JAX](https://github.com/jax-ml/jax) 與 [ML Pathways](https://blog.google/technology/ai/introducing-pathways-next-generation-ai-architecture/)。更多
+詳情請參閱 [Gemma 3 模型卡](../gemma-3/index.md)。
 
-## Evaluation
+## 評估
 
-### Benchmark Results
+### 基準測試結果
 
-ShieldGemma 2 4B was evaluated against internal and external datasets. Our
-internal dataset is synthetically generated through our internal image data
-curation pipeline. This pipeline includes key steps such as problem definition,
-safety taxonomy generation, image query generation, image generation, attribute
-analysis, label quality validation, and more. We have approximately 500 examples
-for each harm policy. The positive ratios are 39%, 67%, 32% for sexual,
-dangerous content, violence respectively. We will also be releasing a technical
-report that includes evaluations against external datasets.
+ShieldGemma 2 4B 在內部與外部資料集上皆有評估。我們的內部資料集透過內部影像資料整理管線合成生成。該管線包含問題定義、安全分類架構生成、影像查詢生成、影像生成、屬性分析、標籤品質驗證等關鍵步驟。每個傷害政策約有 500 個範例。色情、危險內容、暴力的正例比例分別為 39%、67%、32%。我們也將發布一份包含外部資料集評估的技術報告。
 
-**Internal Benchmark Evaluation Results**
+**內部基準測試評估結果**
 
-| Model | Sexually Explicit | Dangerous Content | Violence \& Gore |
+| 模型 | 色情露骨 | 危險內容 | 暴力與血腥 |
 |---|---|---|---|
 | LlavaGuard 7B | 47.6/93.1/63.0 | 67.8/47.2/55.7 | 36.8/100.0/53.8 |
 | GPT-4o mini | 68.3/97.7/80.3 | 84.4/99.0/91.0 | 40.2/100.0/57.3 |
 | Gemma-3-4B-IT | 77.7/87.9/82.5 | 75.9/94.5/84.2 | 78.2/82.2/80.1 |
 | ShieldGemma-2-Image-4B | 87.6/89.7/88.6 | 95.6/91.9/93.7 | 80.3/90.4/85.0 |
 
-## Ethics and Safety
+## 道德與安全
 
-### Evaluation Approach
+### 評估方法
 
-Although the ShieldGemma models are generative models, they are designed to be
-run in *scoring mode* to predict the probability that the next token would `Yes`
-or `No`. Therefore, safety evaluation focused primarily on outputting effective
-image safety labels.
+雖然 ShieldGemma 模型是生成式模型，但它們設計為以 *scoring mode*（評分模式）執行，預測下一個詞元為 `Yes`
+或 `No` 的機率。因此，安全評估主要聚焦於輸出有效的影像安全標籤。
 
-### Evaluation Results
+### 評估結果
 
-These models were assessed for ethics, safety, and fairness considerations and
-met internal guidelines. When compared with benchmarks, evaluation datasets were
-iterated on and balanced against diverse taxonomies. Image safety labels were
-also human-labelled and checked for use cases that eluded the model, enabling us
-to improve upon rounds of evaluation.
+這些模型已就道德、安全與公平性考量進行評估，並符合內部準則。與基準測試相比，評估資料集經過反覆迭代，並依據多樣化的分類架構進行平衡。影像安全標籤亦經過人工標註，並針對模型未能處理的使用場景進行檢查，使我們能在多輪評估中持續改進。
 
-## Usage and Limitations
+## 用途與限制
 
-These models have certain limitations that users should be aware of.
+這些模型存在使用者應注意的若干限制。
 
-### Intended Usage
+### 預期用途
 
-ShieldGemma 2 is intended to be used as a safety content moderator, either for
-human user inputs, model outputs, or both. These models are part of the
-[Responsible Generative AI Toolkit][responsible-ai], which is a set of
-recommendations, tools, datasets and models aimed to improve the safety of AI
-applications as part of the Gemma ecosystem.
+ShieldGemma 2 預期用作安全內容審核器，可用於人類使用者輸入、模型輸出，或兩者皆用。這些模型是
+[Responsible Generative AI Toolkit][responsible-ai] 的一部分，該工具組是一套建議、工具、資料集與模型，旨在提升作為 Gemma 生態系一員之 AI 應用的安全性。
 
-### Limitations
+### 限制
 
-All the usual limitations for large language models apply, see the
-[Gemma 3 model card](../gemma-3/index.md) for more details. Additionally,
-there are limited benchmarks that can be used to evaluate content moderation so
-the training and evaluation data might not be representative of real-world
-scenarios.
+大型語言模型的所有常見限制皆適用，更多詳情請參閱
+[Gemma 3 模型卡](../gemma-3/index.md)。此外，可用於評估內容審核的基準測試有限，因此
+訓練與評估資料可能無法代表真實世界場景。
 
-ShieldGemma 2 is also highly sensitive to the specific user-provided description
-of safety principles, and might perform unpredictably under conditions that
-require a good understanding of language ambiguity and nuance.
+ShieldGemma 2 對使用者提供的特定安全原則描述高度敏感，在需要充分理解語言歧義與細微差異的情況下，表現可能難以預測。
 
-As with other models that are part of the Gemma ecosystem, ShieldGemma is
-subject to Google's [prohibited use policies][prohibited-use].
+與 Gemma 生態系的其他模型一樣，ShieldGemma 受 Google 的 [禁止使用政策][prohibited-use] 約束。
 
-### Ethical Considerations and Risks
+### 道德考量與風險
 
-The development of large language models (LLMs) raises several ethical concerns.
-We have carefully considered multiple aspects in the development of these
-models.
+大型語言模型（LLM）的開發引發了多項道德疑慮。
+我們在開發這些模型時已審慎考量多個面向。
 
-Refer to the [Gemma 3 model card](../gemma-3/index.md) for more details.
+更多詳情請參閱 [Gemma 3 模型卡](../gemma-3/index.md)。
 
-### Benefits
+### 優勢
 
-At the time of release, this family of models provides high-performance open
-large language model implementations designed from the ground up for Responsible
-AI development compared to similarly sized models.
+在發布時，相較於同等規模的模型，此系列模型提供了從頭為負責任 AI 開發而設計的高效能開放大型語言模型實作。
 
-Using the benchmark evaluation metrics described in this document, these models
-have been shown to provide superior performance to other, comparably-sized open
-model alternatives.
+根據本文件所述的基準測試評估指標，這些模型在與其他規模相當的開放模型替代方案相比，已展現出更優異的效能。

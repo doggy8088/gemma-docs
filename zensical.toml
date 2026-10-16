@@ -4,10 +4,10 @@
 
 [project]
 
-site_name = "Gemma Documentation"
-site_description = "Gemma open model documentation by Google DeepMind"
+site_name = "Gemma 文件"
+site_description = "Google DeepMind Gemma 開放模型繁體中文文件"
 site_author = "Google DeepMind"
-site_url = "https://gemma.ai"
+site_url = "https://gemma.gh.miniasp.com"
 
 copyright = """
 Copyright &copy; 2026 Google DeepMind
@@ -45,21 +45,21 @@ plugins = { macros = { enabled = true, include_yaml = { modeldata = "data/models
 # NAVIGATION
 # ============================================================================
 nav = [
-  { "Home" = "index.md" },
+  { "首頁" = "index.md" },
 
   # ---------------------------------------------------------------------------
   # Capabilities live here, not in their own tab: they are fundamental Gemma 4
   # capabilities and belong where the full picture is visible at once.
   # ---------------------------------------------------------------------------
-  { "Get started" = [
-    { "Quickstart" = "get-started/index.md" },
-    { "Best practices" = "get-started/best-practices.md" },
-    { "Text" = [
+  { "開始使用" = [
+    { "快速開始" = "get-started/index.md" },
+    { "最佳實務" = "get-started/best-practices.md" },
+    { "文字" = [
       "get-started/capabilities/text.md",
       "get-started/capabilities/thinking.md",
       "get-started/capabilities/function-calling.md",
     ]},
-    { "Multimodal" = [
+    { "多模態" = [
       "get-started/capabilities/vision.md",
       "get-started/capabilities/image.md",
       "get-started/capabilities/video.md",
@@ -68,10 +68,10 @@ nav = [
     # Advanced holds the tuning-and-internals material -- MTP, QAT and the
     # prompt-format references -- so the main list stays what a newcomer needs
     # first: how to run it and how to run it well, then the capability groups.
-    { "Advanced" = [
-      { "Prompt formatting" = "get-started/prompt-formatting.md" },
-      { "Multi-Token Prediction" = "get-started/capabilities/mtp.md" },
-      { "Quantization-Aware Training" = "get-started/qat.md" },
+    { "進階" = [
+      { "提示格式" = "get-started/prompt-formatting.md" },
+      { "多詞元預測" = "get-started/capabilities/mtp.md" },
+      { "量化感知訓練" = "get-started/qat.md" },
     ]},
   ]},
 
@@ -80,65 +80,65 @@ nav = [
   # directories stay flat so a model's URL never changes when it is
   # reclassified (see PLAN.md, "Open decision for Step 2.1").
   # ---------------------------------------------------------------------------
-  { "Models" = [
-    { "Overview" = "models/index.md" },
+  { "模型" = [
+    { "總覽" = "models/index.md" },
     { "Gemma 4" = [
-      { "Overview" = "models/gemma-4/index.md" },
-      { "Model card" = "models/gemma-4/model-card.md" },
+      { "總覽" = "models/gemma-4/index.md" },
+      { "模型卡" = "models/gemma-4/model-card.md" },
     ]},
-    { "Previous generations" = [
+    { "先前世代" = [
       { "Gemma 3" = "models/gemma-3/index.md" },
       { "Gemma 2" = "models/gemma-2/index.md" },
       { "Gemma" = "models/gemma-1/index.md" },
     ]},
-    { "Variants" = [
+    { "變體" = [
       { "Gemma 3n" = [
-        { "Overview" = "models/gemma-3n/index.md" },
-        { "Model card" = "models/gemma-3n/model-card.md" },
+        { "總覽" = "models/gemma-3n/index.md" },
+        { "模型卡" = "models/gemma-3n/model-card.md" },
       ]},
       { "DiffusionGemma" = [
-        { "Overview" = "models/diffusiongemma/index.md" },
-        { "Model card" = "models/diffusiongemma/model-card.md" },
-        { "Diffusion explained" = "models/diffusiongemma/explained.md" },
-        { "Generate output" = "models/diffusiongemma/inference.md" },
+        { "總覽" = "models/diffusiongemma/index.md" },
+        { "模型卡" = "models/diffusiongemma/model-card.md" },
+        { "擴散模型解說" = "models/diffusiongemma/explained.md" },
+        { "產生輸出" = "models/diffusiongemma/inference.md" },
       ]},
       { "FunctionGemma" = [
-        { "Overview" = "models/functiongemma/index.md" },
-        { "Model card" = "models/functiongemma/model-card.md" },
-        { "Formatting and best practices" = "models/functiongemma/formatting.md" },
-        { "Function calling with HF" = "models/functiongemma/inference.md" },
-        { "Full sequence" = "models/functiongemma/full-sequence.md" },
-        { "Fine-tuning" = "models/functiongemma/fine-tuning.md" },
+        { "總覽" = "models/functiongemma/index.md" },
+        { "模型卡" = "models/functiongemma/model-card.md" },
+        { "格式與最佳實務" = "models/functiongemma/formatting.md" },
+        { "使用 HF 進行函式呼叫" = "models/functiongemma/inference.md" },
+        { "完整序列" = "models/functiongemma/full-sequence.md" },
+        { "微調" = "models/functiongemma/fine-tuning.md" },
       ]},
       { "EmbeddingGemma" = [
-        { "Overview" = "models/embeddinggemma/index.md" },
-        { "EmbeddingGemma model card" = "models/embeddinggemma/model-card-v1.md" },
-        { "EmbeddingGemma 2 model card" = "models/embeddinggemma/model-card-v2.md" },
-        { "Generate embeddings" = "models/embeddinggemma/inference.md" },
-        { "Multimodal embeddings" = "models/embeddinggemma/multimodal.md" },
-        { "Fine-tuning" = "models/embeddinggemma/fine-tuning.md" },
-        { "Multimodal fine-tuning" = "models/embeddinggemma/fine-tuning-multimodal.md" },
+        { "總覽" = "models/embeddinggemma/index.md" },
+        { "EmbeddingGemma 模型卡" = "models/embeddinggemma/model-card-v1.md" },
+        { "EmbeddingGemma 2 模型卡" = "models/embeddinggemma/model-card-v2.md" },
+        { "產生嵌入" = "models/embeddinggemma/inference.md" },
+        { "多模態嵌入" = "models/embeddinggemma/multimodal.md" },
+        { "微調" = "models/embeddinggemma/fine-tuning.md" },
+        { "多模態微調" = "models/embeddinggemma/fine-tuning-multimodal.md" },
       ]},
       { "PaliGemma" = [
-        { "Overview" = "models/paligemma/index.md" },
-        { "PaliGemma model card" = "models/paligemma/model-card-v1.md" },
-        { "PaliGemma 2 model card" = "models/paligemma/model-card-v2.md" },
-        { "Prompting & system instructions" = "models/paligemma/prompting.md" },
-        { "Generate output with Keras" = "models/paligemma/inference.md" },
-        { "Fine-tuning with JAX" = "models/paligemma/fine-tuning.md" },
+        { "總覽" = "models/paligemma/index.md" },
+        { "PaliGemma 模型卡" = "models/paligemma/model-card-v1.md" },
+        { "PaliGemma 2 模型卡" = "models/paligemma/model-card-v2.md" },
+        { "提示與系統指示" = "models/paligemma/prompting.md" },
+        { "使用 Keras 產生輸出" = "models/paligemma/inference.md" },
+        { "使用 JAX 微調" = "models/paligemma/fine-tuning.md" },
       ]},
       { "ShieldGemma" = [
-        { "Overview" = "models/shieldgemma/index.md" },
-        { "ShieldGemma model card" = "models/shieldgemma/model-card-v1.md" },
-        { "ShieldGemma 2 model card" = "models/shieldgemma/model-card-v2.md" },
+        { "總覽" = "models/shieldgemma/index.md" },
+        { "ShieldGemma 模型卡" = "models/shieldgemma/model-card-v1.md" },
+        { "ShieldGemma 2 模型卡" = "models/shieldgemma/model-card-v2.md" },
       ]},
     ]},
-    { "Research" = [
+    { "研究" = [
       { "RecurrentGemma" = [
-        { "Overview" = "models/recurrentgemma/index.md" },
-        { "Model card" = "models/recurrentgemma/model-card.md" },
-        { "Generate output with JAX" = "models/recurrentgemma/inference.md" },
-        { "Fine-tuning with JAX" = "models/recurrentgemma/fine-tuning.md" },
+        { "總覽" = "models/recurrentgemma/index.md" },
+        { "模型卡" = "models/recurrentgemma/model-card.md" },
+        { "使用 JAX 產生輸出" = "models/recurrentgemma/inference.md" },
+        { "使用 JAX 微調" = "models/recurrentgemma/fine-tuning.md" },
       ]},
       { "DataGemma" = "models/datagemma/index.md" },
       { "Gemma Scope" = "models/gemma-scope/index.md" },
@@ -152,9 +152,9 @@ nav = [
   # ---------------------------------------------------------------------------
   # Nav labels are short on purpose -- page H1s stay as written ("Run Gemma with
   # Hugging Face Transformers"), but the sidebar shows just the engine name.
-  { "Run" = [
-    { "Overview" = "deployment/index.md" },
-    { "Local" = [
+  { "執行" = [
+    { "總覽" = "deployment/index.md" },
+    { "本機" = [
       { "Ollama" = "deployment/ollama.md" },
       { "llama.cpp" = "deployment/llamacpp.md" },
       { "LM Studio" = "deployment/lmstudio.md" },
@@ -164,43 +164,43 @@ nav = [
       { "LiteRT-LM" = "deployment/litert.md" },
       { "AI Edge Gallery" = "deployment/ai-edge-gallery.md" },
     ]},
-    { "Serve" = [
+    { "部署服務" = [
       { "vLLM" = "deployment/vllm.md" },
       { "SGLang" = "deployment/sglang.md" },
       { "Gemini API" = "deployment/gemini-api.md" },
       { "Google Cloud" = "deployment/google-cloud.md" },
     ]},
-    { "Frameworks" = [
+    { "框架" = [
       { "LangChain" = "deployment/langchain.md" },
       { "Unsloth" = "deployment/unsloth.md" },
     ]},
   ]},
 
-  { "Fine-tune" = [
-    { "Overview" = "tuning/index.md" },
-    { "Guides" = [
+  { "微調" = [
+    { "總覽" = "tuning/index.md" },
+    { "指南" = [
       { "QLoRA" = "tuning/qlora.md" },
-      { "Audio QLoRA" = "tuning/audio-qlora.md" },
-      { "Vision QLoRA" = "tuning/vision-qlora.md" },
-      { "Full fine-tune" = "tuning/full-finetune.md" },
-      { "Agent Skill" = "tuning/gemma-trainer.md" },
+      { "音訊 QLoRA" = "tuning/audio-qlora.md" },
+      { "視覺 QLoRA" = "tuning/vision-qlora.md" },
+      { "完整微調" = "tuning/full-finetune.md" },
+      { "代理技能" = "tuning/gemma-trainer.md" },
     ]},
   ]},
 
-  { "Learn" = [
-    { "Overview" = "learn/index.md" },
-    { "Visual guides" = [
+  { "學習" = [
+    { "總覽" = "learn/index.md" },
+    { "視覺化指南" = [
       { "Gemma 4" = "tutorials/visual-guides/gemma-4.md" },
       { "Gemma 4 12B" = "tutorials/visual-guides/gemma-4-12b.md" },
-      { "Multi-Token Prediction" = "tutorials/visual-guides/mtp.md" },
+      { "多詞元預測" = "tutorials/visual-guides/mtp.md" },
       { "DiffusionGemma" = "tutorials/visual-guides/diffusiongemma.md" },
     ]},
-    { "Gemma explained" = [
-      { "Overview" = "tutorials/gemma-explained/overview.md" },
-      { "What's new in Gemma 2" = "tutorials/gemma-explained/gemma-2.md" },
+    { "Gemma 解說" = [
+      { "總覽" = "tutorials/gemma-explained/overview.md" },
+      { "Gemma 2 新功能" = "tutorials/gemma-explained/gemma-2.md" },
       { "RecurrentGemma" = "tutorials/gemma-explained/recurrentgemma.md" },
       { "PaliGemma" = "tutorials/gemma-explained/paligemma.md" },
-      { "What's new in Gemma 3" = "tutorials/gemma-explained/gemma-3.md" },
+      { "Gemma 3 新功能" = "tutorials/gemma-explained/gemma-3.md" },
       { "EmbeddingGemma" = "tutorials/gemma-explained/embeddinggemma.md" },
     ]},
   ]},
@@ -210,28 +210,28 @@ nav = [
   # Ecosystem tabs, plus the notebook and external-link directory. Its index is
   # card-driven so a new demo or link is one entry, not a new nav level.
   # ---------------------------------------------------------------------------
-  { "Resources" = [
-    { "Overview" = "resources/index.md" },
-    { "Demos & tools" = [
+  { "資源" = [
+    { "總覽" = "resources/index.md" },
+    { "展示與工具" = [
       { "Gemma Skills" = "resources/gemma-skills.md" },
       { "AIventure" = "resources/aiventure.md" },
-      { "Vision token budget" = "resources/vision-token-budget.md" },
-      { "Embedding Draw Challenge" = "resources/embedding-draw-challenge.md" },
+      { "視覺詞元預算" = "resources/vision-token-budget.md" },
+      { "嵌入繪畫挑戰賽" = "resources/embedding-draw-challenge.md" },
     ]},
-    { "Contribute" = [
-      { "Components" = "contributing/components.md" },
-      { "Conventions" = "contributing/conventions.md" },
+    { "參與貢獻" = [
+      { "元件" = "contributing/components.md" },
+      { "慣例" = "contributing/conventions.md" },
     ]},
-    { "Legal" = [
-      { "Gemma 4 license" = "resources/apache-2.md" },
-      { "Terms of use" = "resources/terms.md" },
-      { "Terms archive" = [
-        { "Overview" = "resources/terms-archive/index.md" },
-        { "April 1, 2024" = "resources/terms-archive/terms_04_01_24.md" },
-        { "February 21, 2024" = "resources/terms-archive/terms_02_21_24.md" },
+    { "法律資訊" = [
+      { "Gemma 4 授權" = "resources/apache-2.md" },
+      { "使用條款" = "resources/terms.md" },
+      { "條款存檔" = [
+        { "總覽" = "resources/terms-archive/index.md" },
+        { "2024 年 4 月 1 日" = "resources/terms-archive/terms_04_01_24.md" },
+        { "2024 年 2 月 21 日" = "resources/terms-archive/terms_02_21_24.md" },
       ]},
-      { "Prohibited use" = "resources/prohibited-use.md" },
-      { "Intended use statement" = "resources/intended-use.md" },
+      { "禁止使用" = "resources/prohibited-use.md" },
+      { "預期用途聲明" = "resources/intended-use.md" },
     ]},
   ]},
 ]
@@ -245,22 +245,22 @@ nav = [
 [[project.extra.social]]
 icon = "fontawesome/brands/x-twitter"
 link = "https://x.com/googlegemma"
-name = "Gemma on X"
+name = "X 上的 Gemma"
 
 [[project.extra.social]]
 icon = "fontawesome/brands/github"
 link = "https://github.com/google-gemma"
-name = "Gemma on GitHub"
+name = "GitHub 上的 Gemma"
 
 [[project.extra.social]]
 icon = "fontawesome/brands/hugging-face"
 link = "https://huggingface.co/collections/google/gemma-4"
-name = "Gemma 4 on Hugging Face"
+name = "Hugging Face 上的 Gemma 4"
 
 [[project.extra.social]]
 icon = "fontawesome/brands/kaggle"
 link = "https://www.kaggle.com/models/google/gemma-4"
-name = "Gemma 4 on Kaggle"
+name = "Kaggle 上的 Gemma 4"
 
 # ============================================================================
 # ANALYTICS & CONSENT
@@ -273,9 +273,9 @@ provider = "google"
 property = ""
 
 [project.extra.consent]
-title = "Cookie consent"
+title = "Cookie 同意"
 description = """
-We use cookies to recognize your repeated visits and preferences, as well as to measure the effectiveness of our documentation and whether users find what they're searching for. With your consent, you're helping us to make our documentation better.
+我們使用 Cookie 來記住您的重複造訪與偏好設定，並衡量文件成效以及使用者是否找到所需的內容。經您同意，您將協助我們把文件做得更好。
 """
 actions = ["accept", "reject", "manage"]
 
@@ -290,7 +290,7 @@ analytics = "Google Analytics"
 logo = "assets/icon-one-color.png"
 favicon = "assets/icon.png"
 custom_dir = "overrides"
-language = "en"
+language = "zh-TW"
 
 features = [
     "announce.dismiss",
@@ -319,12 +319,12 @@ code = "JetBrains Mono"
 [[project.theme.palette]]
 scheme = "default"
 toggle.icon = "lucide/sun"
-toggle.name = "Switch to dark mode"
+toggle.name = "切換為深色模式"
 
 [[project.theme.palette]]
 scheme = "slate"
 toggle.icon = "lucide/moon"
-toggle.name = "Switch to light mode"
+toggle.name = "切換為淺色模式"
 
 # ============================================================================
 # MARKDOWN EXTENSIONS

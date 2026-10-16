@@ -1,29 +1,29 @@
 ---
 title: AIventure
-description: Learning about vibe-coding, agents and Gen AI with Gemma 4.
+description: 透過 Gemma 4 學習氛圍編程（vibe-coding）、代理與生成式 AI。
 models: [gemma-4]
 hide:
   - toc
 ---
 
-AIventure is an interactive, AI-powered educational game built with Angular, PhaserJS, Gemini, and Gemma 4. It demonstrates how to run a local Gemma 4 model directly in the browser using MediaPipe and WebGPU to power dynamic, agentic non-player characters (NPCs) while introducing concepts in vibe-coding and generative AI.
+AIventure 是一款互動式 AI 驅動的教育遊戲，使用 Angular、PhaserJS、Gemini 與 Gemma 4 打造。它示範如何使用 MediaPipe 與 WebGPU，直接在瀏覽器中執行本機 Gemma 4 模型，驅動動態的代理型非玩家角色（NPC），同時介紹氛圍編程與生成式 AI 的概念。
 
-### How to use this demo
+### 如何使用這個示範
 
-1. Click **Accept and Continue** below to load the demo. The first run downloads and caches a Gemma 4 E4B model in your browser.
-2. Navigate the game world and interact with characters to see responses generated locally on your device's GPU.
-3. Use the **Full screen** button in the top-left corner of the demo window for an expanded view.
+1. 按一下下方的「**接受並繼續**」載入示範。首次執行時會在瀏覽器中下載並快取 Gemma 4 E4B 模型。
+2. 在遊戲世界中移動並與角色互動，查看由裝置 GPU 在本機產生的回應。
+3. 使用示範視窗左上角的「**全螢幕**」按鈕展開檢視。
 
-For a deeper dive into the architecture, source code, and step-by-step instructions on building your own agentic game, visit the [AIventure solution page](https://developers.google.com/solutions/learn/aiventure){ data-model="gemma-4" }.
+如要深入瞭解架構、原始碼，以及打造自己的代理型遊戲的逐步說明，請造訪 [AIventure 解決方案頁面](https://developers.google.com/solutions/learn/aiventure){ data-model="gemma-4" }。
 
 <div class="demo-embed">
   <div class="demo-disclaimer">
     <div class="demo-disclaimer-card" role="dialog" aria-label="Demo disclaimer">
       <p>
-        This demo uses Mediapipe with WebGPU to load and run a Gemma 4 model locally. <strong>This will require a 4 gigabyte download</strong> the first time it runs which will then be cached. Performance varies depending on the device's GPU.
+        此示範使用 Mediapipe 搭配 WebGPU，在本機載入並執行 Gemma 4 模型。<strong>首次執行需要下載 4 GB 的資料</strong>，之後會快取起來。效能會依裝置的 GPU 而有所不同。
       </p>
       <p>
-        <strong>Note:</strong> There is some overhead from the browser's WebGPU API which can reduce performance compared to running the model natively via Ollama or LM Studio. Additionally, this model is quantized. Explore this demo and then download the code yourself to compare the performance with LM Studio.
+        <strong>注意：</strong>瀏覽器的 WebGPU API 有一些額外負擔，與透過 Ollama 或 LM Studio 原生執行模型相比，效能可能會降低。此外，這個模型是量化版本。歡迎探索這個示範，然後自行下載程式碼，與 LM Studio 比較效能。
       </p>
       <div class="demo-disclaimer-actions">
         <button
@@ -31,7 +31,7 @@ For a deeper dive into the architecture, source code, and step-by-step instructi
           class="demo-disclaimer-btn"
           onclick="const embed = this.closest('.demo-embed'); const iframe = embed.querySelector('iframe'); iframe.src = iframe.dataset.src; iframe.hidden = false; const fsBtn = embed.querySelector('.demo-fullscreen-btn'); if (fsBtn) fsBtn.hidden = false; this.closest('.demo-disclaimer').hidden = true;"
         >
-          Accept and Continue
+          接受並繼續
         </button>
       </div>
     </div>
@@ -47,7 +47,7 @@ For a deeper dive into the architecture, source code, and step-by-step instructi
     <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="currentColor">
       <path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>
     </svg>
-    <span>Full screen</span>
+    <span>全螢幕</span>
   </button>
   <iframe
     data-src="https://bebechien.github.io/AIventure/index.html"

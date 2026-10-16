@@ -1,20 +1,20 @@
 ---
-title: Image understanding
-description: You can use Gemma 3 and later models to analyze and understand the content of images.
+title: 圖像理解
+description: 使用 Gemma 3 及更新版本的模型分析與理解圖像內容，支援多種長寬比與解析度的視覺輸入。
 models: [gemma-4]
 frameworks: [transformers]
 colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs/notebooks/image-gemma-4-e2b.ipynb
 ---
-# Image understanding
+# 圖像理解
 
-You can use Gemma 3 and later models to analyze and understand the content of images. This capability includes tasks like describing image content, identifying objects, recognizing scenes, and even inferring the context from visual information.
+您可以使用 Gemma 3 及更新版本模型來分析與理解圖像內容。這項功能包含描述圖像內容、辨識物件、識別場景，甚至從視覺資訊推論上下文等任務。
 
-Here are some examples demonstrating these capabilities.
+以下是展示這些功能的幾個範例。
 
 
-## Install Python packages
+## 安裝 Python 套件
 
-Install the Hugging Face libraries required for running the Gemma model and making requests.
+安裝執行 Gemma 模型與發出請求所需的 Hugging Face 函式庫。
 
 ```bash { .notebook-cell }
 # Install PyTorch & other libraries
@@ -24,9 +24,9 @@ pip install torch accelerate
 pip install "transformers>=5.10.1"
 ```
 
-## Load Model
+## 載入模型
 
-Use [`transformers`](https://huggingface.co/docs/transformers/installation) library to load the pipeline
+使用 [`transformers`](https://huggingface.co/docs/transformers/installation) 函式庫載入管線（pipeline）
 
 ```python { .notebook-cell .model-swap }
 MODEL_ID = "google/gemma-4-E2B-it"
@@ -41,9 +41,9 @@ vqa_pipe = pipeline(
 )
 ```
 
-## Use a prompt template
+## 使用提示範本
 
-The following example shows how to provide an image and ask question about it.
+以下範例示範如何提供一張圖像並針對其提問。
 
 ```python { .notebook-cell }
 from PIL import Image
@@ -88,9 +88,9 @@ Key elements visible in the picture include:
 It's a scenic photograph capturing the bridge and the coastal environment.<turn|>
 ```
 
-## Prompting with multiple images
+## 使用多張圖像進行提示
 
-You can provide multiple images in a single prompt by including multiple image content in prompt template.
+您可以在提示範本中加入多個圖像內容，於單一提示中提供多張圖像。
 
 ```python { .notebook-cell }
 from PIL import Image
@@ -182,9 +182,9 @@ Here are captions for the two images you provided:
 `#KitchenDecor #WatercolorArt #RusticKitchen #Cooking #HomeDecor #KitchenInspo #Foodie #Illustration #CozyVibes`<turn|>
 ```
 
-## OCR (Optical Character Recognition)
+## OCR（光學字元辨識）
 
-Models can recognize multilingual texts in the image.
+模型可辨識圖像中的多語言文字。
 
 ```python { .notebook-cell }
 from PIL import Image
@@ -227,9 +227,9 @@ Below that, it says:
 In the context of the picture (showing a cat playfully jumping), the sign is likely humorous or a lighthearted warning.<turn|>
 ```
 
-## Object Detection
+## 物件偵測
 
-Models are trained to detect objects in an image and get their bounding box coordinates. Bounding box coordinates are expressed as normalized values relative to a 1000x1000 grid. You need to descale these coordinates based on your original image size.
+模型經過訓練，可偵測圖像中的物件並取得其邊界框（bounding box）座標。邊界框座標以相對於 1000x1000 網格的正規化值表示。您需要根據原始圖像大小還原這些座標。
 
 ```python { .notebook-cell }
 import numpy as np
@@ -332,18 +332,17 @@ draw_results(output[0]['generated_text'])
 ```
 
 ![png](../../assets/capabilities/output_b041486b_1.png)
+## 可變解析度（詞元預算）
 
-## Variable Resolution (Token Budget)
+所有 Gemma 4 模型都支援可變解析度，意即可以處理不同解析度的圖像。此外，您可以決定要以較高或較低的解析度處理特定圖像。例如，執行物件偵測時，您可能會希望以較高解析度處理圖像；而影片理解則可使用較低的解析度處理每個影格，以加快推論速度。本質上，這是推論速度與圖像表示準確度之間的權衡。
 
-All Gemma 4 models support variable resolution which means that images of different resolutions can be processed. Moreover, you can decide if you want to process a given image in a higher or lower resolution. If you are performing object detection, for instance, you might want to process the image in a higher resolution. Video understanding, for instance, can be done with a lower resolution for each frame to speed up inference. Essentially, it is a tradeoff between inference speed and accuracy of the image representations.
+此選擇由詞元預算控制，詞元預算代表為特定圖像產生的視覺詞元（亦稱為**視覺詞元嵌入**）的最大數量。
 
-This choice is controlled by the token budget, which represents the maximum number of visual tokens (also called **visual token embeddings**) that are generated for a given image.
+使用者可選擇 70、140、280、560 或 1120 個詞元的預算大小。根據預算，輸入會被調整大小。若預算較高（例如 1120 個詞元），圖像可維持較高解析度，因此需要處理的圖像區塊（patch）會多得多；若預算較低（例如 70 個詞元），圖像需要降採樣，需要處理的區塊則較少。較高的預算（因此有較多詞元）能捕捉到比低預算多得多的資訊。
 
-The user can decide between budget sizes of 70, 140, 280, 560, or 1120 tokens. Depending on the budget, the input is resized. If you have a higher budget (like 1120 tokens), then your image can maintain a higher resolution and as a result will have many more patches to process. If you have a lower budget (like 70 tokens), then your image needs to be downscaled and you will have fewer patches that need to be processed. With a higher budget (and therefore more tokens), you can capture much more information than with a lower budget.
+此預算決定了圖像被調整大小的程度。假設預算為 280 個詞元，則區塊的最大數量為 9 x 280 = 2,520。為什麼要乘以 9？因為在下一步驟中，每 3x3 的相鄰區塊會透過取平均合併為單一嵌入。產生的嵌入即為視覺詞元嵌入。擁有的**視覺詞元嵌入**越多，能從圖像中擷取的細緻資訊就越多。
 
-This budget determines how much the image is resized. Imagine you have a budget of 280 tokens, then the maximum number of patches will be 9 x 280 = 2,520. Why times 9? That's because in the next step, every 3x3 block of neighboring patches are merged into a single embedding by averaging them. The resulting embeddings are the visual token embeddings. The more **visual token embeddings** we have, the more fine-grained information can be extracted from an image.
-
-Let's explore what happens if we perform object detection on an image and setting the budget size very low (70):
+讓我們來看看在圖像上執行物件偵測、並將預算大小設得很低（70）時會發生什麼：
 
 ```python { .notebook-cell }
 import numpy as np
@@ -420,11 +419,11 @@ draw_results(output[0]['generated_text'])
 
 ![png](../../assets/capabilities/output_bc2920e6_1.png)
 
-It does alright but it is clear that the image is being compressed quite a bit as it does not detect all cars and persons. A higher token budget should resolve this!
+效果還算可以，但顯然圖像被壓縮得很厲害，因為並未偵測到所有的汽車與人物。提高詞元預算應能解決這個問題！
 
-### Compare Token Budgets
+### 比較詞元預算
 
-Let's explore what happens when we increase the budget sizes! A larger budget size results in more soft tokens being generated and processed. This should improve the object detection.
+讓我們來看看提高預算大小時會發生什麼！較大的預算會產生並處理更多軟詞元（soft token），這應能改善物件偵測效果。
 
 ```python { .notebook-cell }
 import matplotlib.pyplot as plt
@@ -555,25 +554,25 @@ Budget Size: 560
 
 ![png](../../assets/capabilities/output_76f17518_3.png)
 
-## Summary
+## 摘要
 
-In this guide, you learned how to use Gemma 4 models for image understanding tasks. The examples covered generating text from images, using prompt templates for visual QA, processing multiple images simultaneously, optical character recognition (OCR), object detection with bounding boxes, and managing variable resolutions using token budgets.
-## What's next
+在本指南中，您學會了如何將 Gemma 4 模型用於圖像理解任務。範例涵蓋了從圖像產生文字、使用提示範本進行視覺問答、同時處理多張圖像、光學字元辨識（OCR）、使用邊界框的物件偵測，以及使用詞元預算管理可變解析度。
+## 後續步驟
 
 <div class="card-grid">
 <a class="card" href="video.md">
   <span class="card-icon">{{ icon('lucide/film') }}</span>
-  <div class="card-title">Video understanding</div>
-  <p class="card-desc">Pass video as frames and reason over what happens.</p>
+  <div class="card-title">影片理解</div>
+  <p class="card-desc">將影片以影格形式傳入，並對發生的內容進行推理。</p>
 </a>
 <a class="card" href="audio.md">
   <span class="card-icon">{{ icon('lucide/audio-lines') }}</span>
-  <div class="card-title">Audio understanding</div>
-  <p class="card-desc">Transcribe, translate and reason over speech.</p>
+  <div class="card-title">音訊理解</div>
+  <p class="card-desc">轉錄、翻譯語音並進行推理。</p>
 </a>
 <a class="card" href="../prompt-formatting.md">
   <span class="card-icon">{{ icon('lucide/braces') }}</span>
-  <div class="card-title">Prompt formatting</div>
-  <p class="card-desc">The control tokens that structure a Gemma prompt.</p>
+  <div class="card-title">提示格式設定</div>
+  <p class="card-desc">建構 Gemma 提示的控制詞元。</p>
 </a>
 </div>

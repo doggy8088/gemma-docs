@@ -1,129 +1,85 @@
 ---
-title: Model card
-description: Gemma is a family of open models built by Google DeepMind.
+title: 模型卡
+description: Gemma 4 開放模型家族的模型卡：密集與混合專家架構規格、基準測試成績、核心能力、最佳實務與倫理安全說明。
 models: [gemma-4]
 source_url: "https://ai.google.dev/gemma/docs/core/model_card_4.md.txt"
 ---
 <div class="model-card-header" markdown>
 
-![Gemma 4 Banner](../../assets/gemma-4/gemma4_banner.png)
+![Gemma 4 橫幅](../../assets/gemma-4/gemma4_banner.png)
 
 [Hugging Face][hf-gemma4] \|
 [GitHub][gemma-github] \|
-[Launch Blog](https://blog.google/innovation-and-ai/technology/developers-tools/gemma-4/){ data-model="gemma-4" } \|
-[Documentation](index.md) \|
-[Technical Report](https://arxiv.org/abs/2607.02770)
+[發布部落格](https://blog.google/innovation-and-ai/technology/developers-tools/gemma-4/){ data-model="gemma-4" } \|
+[文件](index.md) \|
+[技術報告](https://arxiv.org/abs/2607.02770)
 
-**License** : [Apache 2.0](https://ai.google.dev/gemma/apache_2) \| **Authors** : [Google DeepMind](https://deepmind.google/models/gemma/)
+**授權** : [Apache 2.0](https://ai.google.dev/gemma/apache_2) \| **作者** : [Google DeepMind](https://deepmind.google/models/gemma/)
 
 </div>
 
-Gemma is a family of open models built by Google DeepMind. Gemma 4 models are
-multimodal, handling text and image input (with audio supported on E2B, E4B, and 12B models)
-and generating text output. This release includes open-weights models in both
-pre-trained and instruction-tuned variants. Gemma 4 features a context window of
-up to 256K tokens and maintains multilingual support in over 140 languages.
+Gemma 是由 Google DeepMind 打造的開放模型家族。Gemma 4 模型為多模態，可處理文字與圖像輸入（E2B、E4B 與 12B 模型另支援音訊），並生成文字輸出。本次發布包含預訓練與指令微調版本的開放權重模型。Gemma 4 具備最高達 256K 詞元的上下文視窗，並維持超過 140 種語言的多語言支援。
 
-Featuring both Dense and Mixture-of-Experts (MoE) architectures, Gemma 4 is
-well-suited for tasks like text generation, coding, and reasoning. The models
-are available in five distinct sizes: **E2B** , **E4B** , **12B** ,
-**26B A4B** , and **31B**. Their diverse sizes make them deployable in
-environments ranging from high-end phones to laptops and servers, democratizing
-access to state-of-the-art AI.
+Gemma 4 同時具備稠密（Dense）與混合專家（Mixture-of-Experts, MoE）架構，非常適合文字生成、程式設計與推理等任務。模型提供五種不同尺寸：**E2B** 、**E4B** 、**12B** 、**26B A4B** 與 **31B**。多樣的尺寸使其可部署於從高階手機到筆記型電腦、伺服器的各種環境，讓最先進的 AI 更加普及。
 
-Gemma 4 introduces key **capability and architectural advancements**:
+Gemma 4 帶來了關鍵的**能力與架構進展**：
 
-- **Reasoning** -- All models in the family are designed as highly capable
-  reasoners, with configurable thinking modes.
+- **推理** -- 此家族所有模型皆設計為高能力的推理者，並支援可設定的思考模式。
 
-- **Extended Multimodalities** -- Processes Text, Image with variable aspect
-  ratio and resolution support (all models), Video, and Audio (featured
-  natively on the E2B, E4B, and 12B models).
+- **擴展多模態** -- 可處理文字、圖像（所有模型均支援可變長寬比與解析度）、影片與音訊（E2B、E4B 與 12B 模型原生支援）。
 
-- **Diverse \& Efficient Architectures** -- Offers Dense and Mixture-of-Experts
-  (MoE) variants of different sizes for scalable deployment.
+- **多元且高效的架構** -- 提供不同尺寸的稠密與混合專家（MoE）變體，支援可擴展部署。
 
-- **Optimized for On-Device** -- Smaller models are specifically designed for
-  efficient local execution on laptops and mobile devices.
+- **為裝置端優化** -- 小型模型專為在筆記型電腦與行動裝置上高效本地執行而設計。
 
-- **Increased Context Window** -- The small models feature a 128K context
-  window, while the medium models support 256K.
+- **更大的上下文視窗** -- 小型模型具備 128K 上下文視窗，中型模型支援 256K。
 
-- **Enhanced Coding \& Agentic Capabilities** -- Achieves notable improvements
-  in coding benchmarks alongside native function-calling support, powering
-  highly capable autonomous agents.
+- **增強的程式設計與智慧代理能力** -- 在程式設計基準測試上取得顯著進步，並具備原生函式呼叫支援，驅動高能力的自主智慧代理。
 
-- **Native System Prompt Support** -- Gemma 4 introduces native support for the
-  `system` role, enabling more structured and controllable conversations.
+- **原生系統提示支援** -- Gemma 4 內建對 `system` 角色的支援，實現更結構化、可控的對話。
 
-## **Models Overview**
+## **模型總覽**
 
-Gemma 4 models are designed to deliver frontier-level performance at each size,
-targeting deployment scenarios from mobile and edge devices (E2B, E4B) to
-consumer GPUs and workstations (12B, 26B A4B, 31B). They are well-suited
-for reasoning, agentic workflows, coding, and multimodal understanding.
+Gemma 4 模型旨在在每個尺寸上提供前沿級效能，部署情境涵蓋行動與邊緣裝置（E2B、E4B）到消費級 GPU 與工作站（12B、26B A4B、31B）。它們非常適合推理、智慧代理工作流程、程式設計與多模態理解。
 
-The models employ a hybrid attention mechanism that interleaves local sliding
-window attention with full global attention, ensuring the final layer is always
-global. This hybrid design delivers the processing speed and low memory
-footprint of a lightweight model without sacrificing the deep awareness required
-for complex, long-context tasks. To optimize memory for long contexts, global
-layers feature unified Keys and Values, and apply Proportional RoPE (p-RoPE).
+這些模型採用混合注意力機制，將局部滑動視窗注意力與完整全域注意力交錯排列，並確保最終層始終為全域注意力。這種混合設計在不犧牲複雜長上下文任務所需的深度感知能力下，提供輕量模型的處理速度與低記憶體佔用。為了優化長上下文的記憶體，全域層具備統一的鍵（Keys）與值（Values），並應用比例式 RoPE（p-RoPE）。
 
-### Dense Models
+### 稠密模型
 
-| Property | E2B | E4B | 12B Unified | 31B Dense |
+| 屬性 | E2B | E4B | 12B Unified | 31B Dense |
 |---|---|---|---|---|
-| **Total Parameters** | 2.3B effective (5.1B with embeddings) | 4.5B effective (8B with embeddings) | 11.95B | 30.7B |
-| **Layers** | 35 | 42 | 48 | 60 |
-| **Sliding Window** | 512 tokens | 512 tokens | 1024 tokens | 1024 tokens |
-| **Context Length** | 128K tokens | 128K tokens | 256K tokens | 256K tokens |
-| **Vocabulary Size** | 262K | 262K | 262K | 262K |
-| **Supported Modalities** | Text, Image, Audio | Text, Image, Audio | Text, Image, Audio | Text, Image |
-| **Vision Encoder Parameters** | *\~150M* | *\~150M* | - | *\~550M* |
-| **Audio Encoder Parameters** | *\~300M* | *\~300M* | - | No Audio |
+| **總參數量** | 2.3B 有效（5.1B 含嵌入） | 4.5B 有效（8B 含嵌入） | 11.95B | 30.7B |
+| **層數** | 35 | 42 | 48 | 60 |
+| **滑動視窗** | 512 詞元 | 512 詞元 | 1024 詞元 | 1024 詞元 |
+| **上下文長度** | 128K 詞元 | 128K 詞元 | 256K 詞元 | 256K 詞元 |
+| **詞彙表大小** | 262K | 262K | 262K | 262K |
+| **支援模態** | 文字、圖像、音訊 | 文字、圖像、音訊 | 文字、圖像、音訊 | 文字、圖像 |
+| **視覺編碼器參數** | *\~150M* | *\~150M* | - | *\~550M* |
+| **音訊編碼器參數** | *\~300M* | *\~300M* | - | 不支援音訊 |
 
-The "E" in E2B and E4B stands for "effective" parameters. The smaller models
-incorporate Per-Layer Embeddings (PLE) to maximize parameter efficiency in
-on-device deployments. Rather than adding more layers or parameters to the
-model, PLE gives each decoder layer its own small embedding for every token.
-These embedding tables are large but are only used for quick lookups, which is
-why the effective parameter count is much smaller than the total.
+E2B 與 E4B 中的「E」代表「有效（effective）」參數。小型模型採用逐層嵌入（PLE）以最大化裝置端部署的參數效率。PLE 不為模型增加更多層或參數，而是讓每個解碼器層為每個詞元擁有自己的小型嵌入。這些嵌入表雖然龐大，但僅用於快速查表，這也是有效參數量遠小於總量的原因。
 
-The "Unified" in Gemma 4 12B Unified refers to its encoder-free architecture.
-Other Gemma 4 models use dedicated encoders to process multimodal data before
-passing it to the LLM. Gemma 4 12B eliminates these encoders entirely,
-projecting raw image patches and audio waveforms directly into the LLM's
-embedding space through lightweight linear layers. This unified approach means
-all modalities flow straight into a single decoder-only transformer, reducing
-multimodal latency and allowing the entire model to be fine-tuned in one pass.
+Gemma 4 12B Unified 中的「Unified」指的是其無編碼器架構。其他 Gemma 4 模型使用專用編碼器先處理多模態資料，再傳給 LLM。Gemma 4 12B 完全移除這些編碼器，透過輕量線性層將原始圖像區塊與音訊波形直接投影到 LLM 的嵌入空間。這種統一方法讓所有模態直接流入單一僅解碼器 Transformer，降低多模態延遲，並允許整個模型一次完成微調。
 
-### Mixture-of-Experts (MoE) Model
+### 混合專家（MoE）模型
 
-| Property | 26B A4B MoE |
+| 屬性 | 26B A4B MoE |
 |---|---|
-| **Total Parameters** | 25.2B |
-| **Active Parameters** | 3.8B |
-| **Layers** | 30 |
-| **Sliding Window** | 1024 tokens |
-| **Context Length** | 256K tokens |
-| **Vocabulary Size** | 262K |
-| **Expert Count** | 8 active / 128 total and 1 shared |
-| **Supported Modalities** | Text, Image |
-| **Vision Encoder Parameters** | *\~550M* |
+| **總參數量** | 25.2B |
+| **啟用參數量** | 3.8B |
+| **層數** | 30 |
+| **滑動視窗** | 1024 詞元 |
+| **上下文長度** | 256K 詞元 |
+| **詞彙表大小** | 262K |
+| **專家數量** | 啟用 8 個 / 共 128 個，另有 1 個共享 |
+| **支援模態** | 文字、圖像 |
+| **視覺編碼器參數** | *\~550M* |
 
-The "A" in 26B A4B stands for "active parameters" in contrast to the total
-number of parameters the model contains. By only activating a 4B subset of
-parameters during inference, the Mixture-of-Experts model runs much faster than
-its 26B total might suggest. This makes it an excellent choice for fast
-inference compared to the dense 31B model since it runs almost as fast as a
-4B-parameter model.
+26B A4B 中的「A」代表「啟用（active）」參數，相對於模型包含的總參數量而言。由於推論期間僅啟用 4B 參數子集，混合專家模型的運行速度遠快於其 26B 總量所暗示的速度。與稠密 31B 模型相比，這使其成為快速推論的絕佳選擇，因為它的運行速度幾乎與 4B 參數模型相當。
 
-## **Benchmark Results**
+## **基準測試結果**
 
-These models were evaluated against a large collection of different datasets and
-metrics to cover different aspects of text generation. Evaluation results marked
-in the table are for instruction-tuned models.
+這些模型使用大量不同的資料集與指標進行評測，涵蓋文字生成的各個面向。表格中標示的評測結果為指令微調模型的結果。
 
 |   | Gemma 4 31B | Gemma 4 26B A4B | Gemma 4 12B Unified | Gemma 4 E4B | Gemma 4 E2B | Gemma 3 27B (no think) |
 |---|---|---|---|---|---|---|
@@ -137,90 +93,81 @@ in the table are for instruction-tuned models.
 | HLE with search | 26.5% | 17.2% | - | - | - | - |
 | BigBench Extra Hard | 74.4% | 64.8% | 53.0% | 33.1% | 21.9% | 19.3% |
 | MMMLU | 88.4% | 86.3% | 83.4% | 76.6% | 67.4% | 70.7% |
-| **Vision** |   |   |   |   |   |   |
+| **視覺** |   |   |   |   |   |   |
 | MMMU Pro | 76.9% | 73.8% | 69.1% | 52.6% | 44.2% | 49.7% |
 | OmniDocBench 1.5 (average edit distance, lower is better) | 0.131 | 0.149 | 0.164 | 0.181 | 0.290 | 0.365 |
 | MATH-Vision | 85.6% | 82.4% | 79.7% | 59.5% | 52.4% | 46.0% |
 | MedXPertQA MM | 61.3% | 58.1% | 48.7% | 28.7% | 23.5% | - |
-| **Audio** |   |   |   |   |   |   |
+| **音訊** |   |   |   |   |   |   |
 | CoVoST | - | - | 38.5^\*^ | 35.54 | 33.47 | - |
 | FLEURS (lower is better) | - | - | 0.069^\*^ | 0.08 | 0.09 | - |
-| **Long Context** |   |   |   |   |   |   |
+| **長上下文** |   |   |   |   |   |   |
 | MRCR v2 8 needle 128k (average) | 66.4% | 44.1% | 43.4% | 25.4% | 19.1% | 13.5% |
 
-^\*^Excluding Chinese language.
+^\*^不含中文。
 
-## **Core Capabilities**
+## **核心能力**
 
-Gemma 4 models handle a broad range of tasks across text, vision, and audio. Key
-capabilities include:
+Gemma 4 模型可處理文字、視覺與音訊領域的廣泛任務。主要能力包括：
 
-- **Thinking** -- Built-in reasoning mode that lets the model think step-by-step before answering.
-- **Long Context** -- Context windows of up to 128K tokens (E2B/E4B) and 256K tokens (12B/26B A4B/31B).
-- **Image Understanding** -- Object detection, Document/PDF parsing, screen and UI understanding, chart comprehension, OCR (including multilingual), handwriting recognition, and pointing. Images can be processed at variable aspect ratios and resolutions.
-- **Video Understanding** -- Analyze video by processing sequences of frames.
-- **Interleaved Multimodal Input** -- Freely mix text and images in any order within a single prompt.
-- **Function Calling** -- Native support for structured tool use, enabling agentic workflows.
-- **Coding** -- Code generation, completion, and correction.
-- **Multilingual** -- Out-of-the-box support for 35+ languages, pre-trained on 140+ languages.
-- **Audio** (E2B, E4B, and 12B Unified only) -- Automatic speech recognition (ASR) and speech-to-translated-text translation across multiple languages.
+- **思考** -- 內建推理模式，讓模型在回答前逐步思考。
+- **長上下文** -- 最高達 128K 詞元（E2B/E4B）與 256K 詞元（12B/26B A4B/31B）的上下文視窗。
+- **圖像理解** -- 物件偵測、文件/PDF 解析、螢幕與 UI 理解、圖表理解、OCR（含多語言）、手寫辨識與指點定位。圖像可以可變長寬比與解析度處理。
+- **影片理解** -- 透過處理影格序列分析影片。
+- **交錯多模態輸入** -- 在單一提示中以任意順序自由混合文字與圖像。
+- **函式呼叫** -- 原生支援結構化工具使用，啟用智慧代理工作流程。
+- **程式設計** -- 程式碼生成、補全與修正。
+- **多語言** -- 開箱即支援 35 種以上語言，在 140 種以上語言上預訓練。
+- **音訊**（僅 E2B、E4B 與 12B Unified）-- 跨多語言的自動語音辨識（ASR）與語音轉譯文字翻譯。
 
-## **Best Practices**
+## **最佳實踐**
 
-For the best performance, use these configurations and best practices:
+為獲得最佳效能，請使用以下配置與最佳實踐：
 
-### 1. Sampling Parameters
+### 1. 取樣參數
 
-Use the following standardized sampling configuration across all use cases:
+在所有使用情境中採用以下標準化取樣配置：
 
 - `temperature=1.0`
 - `top_p=0.95`
 - `top_k=64`
 
-### 2. Thinking Mode Configuration
+### 2. 思考模式配置
 
-Compared to Gemma 3, the models use standard `system`, `assistant`, and `user`
-roles. To properly manage the thinking process, use the following control
-tokens:
+與 Gemma 3 相比，這些模型使用標準的 `system`、`assistant` 與 `user` 角色。若要妥善管理思考流程，請使用以下控制詞元：
 
-- **Trigger Thinking:** Thinking is enabled by including the `<|think|>` token at the start of the system prompt. To disable thinking, remove the token.
-- **Standard Generation:** When thinking is enabled, the model will output its internal reasoning followed by the final answer using this structure: `<|channel>thought\n`**\[Internal reasoning\]** `<channel|>`
-- **Disabled Thinking Behavior:** For all models except for the E2B and E4B variants, if thinking is disabled, the model will still generate the tags but with an empty thought block: `<|channel>thought\n<channel|>`**\[Final
-  answer\]**
+- **觸發思考：**在系統提示開頭加入 `<|think|>` 詞元即可啟用思考；移除該詞元即可停用。
+- **標準生成：**啟用思考時，模型會先輸出內部推理，再輸出最終答案，結構如下：`<|channel>thought\n`**\[內部推理\]** `<channel|>`
+- **停用思考時的行為：**除 E2B 與 E4B 變體外所有模型，若停用思考，模型仍會生成標籤，但思考區塊為空：`<|channel>thought\n<channel|>`**\[最終答案\]**
 
 !!! Note
-    Note that many libraries like Transformers and llama.cpp handle the
-    complexities of the chat template for you.
+    請注意，許多函式庫（如 Transformers 與 llama.cpp）會為您處理聊天範本的複雜性。
 
 
-### 3. Multi-Turn Conversations
+### 3. 多輪對話
 
-- **No Thinking Content in History** : In multi-turn conversations, the historical model output should only include the final response. Thoughts from previous model turns must *not be added* before the next user turn begins, with the exception of tool call turns where thinking content should be preserved.
+- **歷史紀錄中不含思考內容**：在多輪對話中，歷史模型輸出應僅包含最終回應。在下一輪使用者發言開始前，不得*加入*先前模型輪次的思考內容；工具呼叫輪次例外，該情況下應保留思考內容。
 
-### 4. Modality order
+### 4. 模態順序
 
-For optimal performance with multimodal inputs, place:
+為在多模態輸入下獲得最佳效能，請將：
 
-- Image content **before** the text in your prompt.
-- Audio content **after** the text in your prompt.
+- 圖像內容放在提示中的文字**之前**。
+- 音訊內容放在提示中的文字**之後**。
 
-### 5. Variable Image Resolution
+### 5. 可變圖像解析度
 
-Aside from variable aspect ratios, Gemma 4 supports variable image resolution
-through a configurable visual token budget, which controls how many tokens are
-used to represent an image. A higher token budget preserves more visual detail
-at the cost of additional compute, while a lower budget enables faster inference
-for tasks that don't require fine-grained understanding.
+除了可變長寬比，Gemma 4 還透過可設定的視覺詞元預算支援可變圖像解析度，控制用於表示圖像的詞元數量。較高的詞元預算以更多運算為代價保留更多視覺細節；較低的預算則為不需要細粒度理解的任務實現更快的推論。
 
-- The supported token budgets are: **70** , **140** , **280** , **560** , and **1120** .
-    - Use *lower budgets* for classification, captioning, or video understanding, where faster inference and processing many frames outweigh fine-grained detail.
-    - Use *higher budgets* for tasks like OCR, document parsing, or reading small text.
+- 支援的詞元預算為：**70** 、**140** 、**280** 、**560** 與 **1120** 。
+    - 對於分類、圖說生成或影片理解，請使用*較低的預算*，此時更快的推論與處理大量影格的重要性勝過細粒度細節。
+    - 對於 OCR、文件解析或讀取小字等任務，請使用*較高的預算*。
 
-### 6. Audio
+### 6. 音訊
 
-Use the following prompt structures for audio processing:
+處理音訊時請使用以下提示結構：
 
-- **Audio Speech Recognition (ASR)**
+- **自動語音辨識（ASR）**
 
   ```text
   Transcribe the following speech segment in {LANGUAGE} into {LANGUAGE} text.
@@ -230,150 +177,120 @@ Use the following prompt structures for audio processing:
     *   When transcribing numbers, write the digits, i.e. write 1.7 and not one point seven, and write 3 instead of three.
   ```
 
-- **Automatic Speech Translation (AST)**
+- **自動語音翻譯（AST）**
 
   ```text
   Transcribe the following speech segment in {SOURCE_LANGUAGE}, then translate it into {TARGET_LANGUAGE}.
   When formatting the answer, first output the transcription in {SOURCE_LANGUAGE}, then one newline, then output the string '{TARGET_LANGUAGE}: ', then the translation in {TARGET_LANGUAGE}.
   ```
 
-### 7. Audio and Video Length
+### 7. 音訊與影片長度
 
-All models support image inputs and can process videos as frames whereas the
-E2B, E4B, and 12B models also support audio inputs. Audio supports a maximum
-length of 30 seconds. Video supports a maximum of 60 seconds assuming the images
-are processed at one frame per second.
+所有模型均支援圖像輸入，並可將影片作為影格處理；而 E2B、E4B 與 12B 模型還支援音訊輸入。音訊最長支援 30 秒；假設圖像以每秒一影格處理，影片最長支援 60 秒。
 
-## **Model Data**
+## **模型資料**
 
-Data used for model training and how the data was processed.
+用於模型訓練的資料，以及資料的處理方式。
 
-### **Training Dataset**
+### **訓練資料集**
 
-Our pre-training dataset is a large-scale, diverse collection of data
-encompassing a wide range of domains and modalities, which includes web
-documents, code, images, audio, with a cutoff date of January 2025. Here are the
-key components:
+我們的預訓練資料集是大規模、多元的資料蒐集，涵蓋廣泛的領域與模態，包括網路文件、程式碼、圖像與音訊，截止日期為 2025 年 1 月。主要組成如下：
 
-- **Web Documents**: A diverse collection of web text ensures the model is exposed to a broad range of linguistic styles, topics, and vocabulary. The training dataset includes content in over 140 languages.
-- **Code**: Exposing the model to code helps it to learn the syntax and patterns of programming languages, which improves its ability to generate code and understand code-related questions.
-- **Mathematics**: Training on mathematical text helps the model learn logical reasoning, symbolic representation, and to address mathematical queries.
-- **Images**: A wide range of images enables the model to perform image analysis and visual data extraction tasks.
+- **網路文件**：多元的網路文字蒐集，讓模型接觸廣泛的語言風格、主題與詞彙。訓練資料集包含超過 140 種語言的內容。
+- **程式碼**：讓模型接觸程式碼有助於學習程式語言的語法與模式，進而提升生成程式碼與理解程式相關問題的能力。
+- **數學**：以數學文字訓練有助於模型學習邏輯推理、符號表示，並處理數學問題。
+- **圖像**：廣泛的圖像讓模型能執行圖像分析與視覺資料擷取任務。
 
-The combination of these diverse data sources is crucial for training a powerful
-multimodal model that can handle a wide variety of different tasks and data
-formats.
+這些多元資料來源的組合，對於訓練出能處理各種任務與資料格式的強大多模態模型至關重要。
 
-### **Data Preprocessing**
+### **資料預處理**
 
-Here are the key data cleaning and filtering methods applied to the training
-data:
+以下為應用於訓練資料的主要資料清理與過濾方法：
 
-- **CSAM Filtering**: Rigorous CSAM (Child Sexual Abuse Material) filtering was applied at multiple stages in the data preparation process to ensure the exclusion of harmful and illegal content.
-- **Sensitive Data Filtering**: As part of making Gemma pre-trained models safe and reliable, automated techniques were used to filter out certain personal information and other sensitive data from training sets.
-- **Additional methods** : Filtering based on content quality and safety in line with [our
-  policies](https://ai.google/static/documents/ai-responsibility-update-published-february-2025.pdf).
+- **CSAM 過濾**：在資料準備過程的多個階段實施嚴格的 CSAM（兒童性虐待內容）過濾，以確保排除有害與非法內容。
+- **敏感資料過濾**：為使 Gemma 預訓練模型安全可靠，使用自動化技術從訓練集中過濾掉部分個人資訊與其他敏感資料。
+- **其他方法** ：依據內容品質與安全性進行過濾，符合[我們的
+  政策](https://ai.google/static/documents/ai-responsibility-update-published-february-2025.pdf)。
 
-## **Ethics and Safety**
+## **倫理與安全**
 
-As open models become central to enterprise infrastructure, provenance and
-security are paramount. Developed by Google DeepMind, Gemma 4 undergoes the same
-rigorous safety evaluations as our proprietary Gemini models.
+隨著開放模型成為企業基礎設施的核心，來源與安全性至關重要。Gemma 4 由 Google DeepMind 開發，接受與我們專有的 Gemini 模型同樣嚴格的安全評測。
 
-### **Evaluation Approach**
+### **評測方法**
 
-Gemma 4 models were developed in partnership with internal safety and
-responsible AI teams. A range of automated as well as human evaluations were
-conducted to help improve model safety. These evaluations align with [Google's
-AI principles](https://ai.google/principles/), as well as safety policies, which
-aim to prevent our generative AI models from generating harmful content,
-including:
+Gemma 4 模型與內部安全及負責任 AI 團隊合作開發。我們進行了一系列自動化與人工評測，以提升模型安全性。這些評測符合 [Google 的 AI 原則](https://ai.google/principles/)與安全政策，旨在防止我們的生成式 AI 模型生成有害內容，包括：
 
-- Content related to child sexual abuse material and exploitation
-- Dangerous content (e.g., promoting suicide, or instructing in activities that could cause real-world harm)
-- Sexually explicit content
-- Hate speech (e.g., dehumanizing members of protected groups)
-- Harassment (e.g., encouraging violence against people)
+- 與兒童性虐待內容及剝削相關的內容
+- 危險內容（例如鼓吹自殺，或教導可能造成現實世界傷害的活動）
+- 色情內容
+- 仇恨言論（例如貶低受保護群體成員）
+- 騷擾（例如鼓勵對他人施暴）
 
-### **Evaluation Results**
+### **評測結果**
 
-For all areas of safety testing, we saw major improvements in all categories of
-content safety relative to previous Gemma models. Overall, Gemma 4 models
-significantly outperform Gemma 3 and 3n models in improving safety, while
-keeping unjustified refusals low. All testing was conducted without safety
-filters to evaluate the model capabilities and behaviors. For both text-to-text
-and image-to-text, and across all model sizes, the model produced minimal policy
-violations, and showed significant improvements over previous Gemma models'
-performance.
+在所有安全測試領域，相較於先前的 Gemma 模型，我們在各內容安全類別都看到大幅改善。整體而言，Gemma 4 模型在提升安全性方面顯著優於 Gemma 3 與 3n 模型，同時將無正當理由的拒答維持在低水準。所有測試均在未使用安全篩選器的情況下進行，以評測模型的能力與行為。在文字轉文字與圖像轉文字、以及所有模型尺寸上，模型僅產生極少的政策違規，並較先前 Gemma 模型的表現有顯著改善。
 
-## **Usage and Limitations**
+## **使用方式與限制**
 
-These models have certain limitations that users should be aware of.
+這些模型存在使用者應注意的特定限制。
 
-### **Intended Usage**
+### **預期用途**
 
-Multimodal models (capable of processing vision, language, and/or audio) have a
-wide range of applications across various industries and domains. The following
-list of potential uses is not comprehensive. The purpose of this list is to
-provide contextual information about the possible use-cases that the model
-creators considered as part of model training and development.
+多模態模型（能處理視覺、語言與/或音訊）在各產業與領域有廣泛應用。以下潛在用途清單並不詳盡，目的在於提供背景資訊，說明模型建立者在模型訓練與開發過程中所考量的可能使用情境。
 
-- **Content Creation and Communication**
-    - **Text Generation**: These models can be used to generate creative text formats such as poems, scripts, code, marketing copy, and email drafts.
-    - **Chatbots and Conversational AI**: Power conversational interfaces for customer service, virtual assistants, or interactive applications.
-    - **Text Summarization**: Generate concise summaries of a text corpus, research papers, or reports.
-    - **Image Data Extraction**: These models can be used to extract, interpret, and summarize visual data for text communications.
-    - **Audio Processing and Interaction**: The E2B, E4B, and 12B models can analyze and interpret audio inputs, enabling voice-driven interactions and transcriptions.
-- **Research and Education**
-    - **Natural Language Processing (NLP) and VLM Research**: These models can serve as a foundation for researchers to experiment with VLM and NLP techniques, develop algorithms, and contribute to the advancement of the field.
-    - **Language Learning Tools**: Support interactive language learning experiences, aiding in grammar correction or providing writing practice.
-    - **Knowledge Exploration**: Assist researchers in exploring large bodies of text by generating summaries or answering questions about specific topics.
+- **內容創作與溝通**
+    - **文字生成**：這些模型可用於生成詩歌、劇本、程式碼、行銷文案與電子郵件草稿等創意文字格式。
+    - **聊天機器人與對話式 AI**：為客戶服務、虛擬助理或互動式應用程式提供對話介面。
+    - **文字摘要**：為文字語料庫、研究論文或報告生成精簡摘要。
+    - **圖像資料擷取**：這些模型可用於擷取、解讀與摘要視覺資料，供文字溝通使用。
+    - **音訊處理與互動**：E2B、E4B 與 12B 模型可分析與解讀音訊輸入，實現語音驅動的互動與轉錄。
+- **研究與教育**
+    - **自然語言處理（NLP）與 VLM 研究**：這些模型可作為研究人員的基礎，用於實驗 VLM 與 NLP 技術、開發演算法，並推動該領域的發展。
+    - **語言學習工具**：支援互動式語言學習體驗，協助文法修正或提供寫作練習。
+    - **知識探索**：協助研究人員探索大量文字，透過生成摘要或回答特定主題的問題。
 
-### **Limitations**
+### **限制**
 
-- **Training Data**
-    - The quality and diversity of the training data significantly influence the model's capabilities. Biases or gaps in the training data can lead to limitations in the model's responses.
-    - The scope of the training dataset determines the subject areas the model can handle effectively.
-- **Context and Task Complexity**
-    - Models perform well on tasks that can be framed with clear prompts and instructions. Open-ended or highly complex tasks might be challenging.
-    - A model's performance can be influenced by the amount of context provided (longer context generally leads to better outputs, up to a certain point).
-- **Language Ambiguity and Nuance**
-    - Natural language is inherently complex. Models might struggle to grasp subtle nuances, sarcasm, or figurative language.
-- **Factual Accuracy**
-    - Models generate responses based on information they learned from their training datasets, but they are not knowledge bases. They may generate incorrect or outdated factual statements.
-- **Common Sense**
-    - Models rely on statistical patterns in language. They might lack the ability to apply common sense reasoning in certain situations.
+- **訓練資料**
+    - 訓練資料的品質與多樣性會顯著影響模型的能力。訓練資料中的偏見或缺口可能導致模型回應受限。
+    - 訓練資料集的範圍決定了模型能有效處理的主題領域。
+- **上下文與任務複雜度**
+    - 模型在能以明確提示與指示框架化的任務上表現良好。開放式或高度複雜的任務可能較具挑戰性。
+    - 模型的效能可能受提供的上下文量影響（上下文越長通常輸出越好，但有其上限）。
+- **語言歧義與細微差別**
+    - 自然語言本質上很複雜。模型可能難以掌握細微差別、諷刺或比喻性語言。
+- **事實準確性**
+    - 模型根據從訓練資料集學到的資訊生成回應，但它們並非知識庫，可能會生成錯誤或過時的事實陳述。
+- **常識**
+    - 模型依賴語言中的統計模式，在某些情境下可能缺乏應用常識推理的能力。
 
-### **Ethical Considerations and Risks**
+### **倫理考量與風險**
 
-The development of vision-language models (VLMs) raises several ethical
-concerns. In creating an open model, we have carefully considered the following:
+視覺語言模型（VLM）的開發引發了若干倫理議題。在打造開放模型時，我們審慎考量了以下事項：
 
-- **Bias and Fairness**
-    - VLMs trained on large-scale, real-world text and image data can reflect socio-cultural biases embedded in the training material. Gemma 4 models underwent careful scrutiny, input data pre-processing, and post-training evaluations as reported in this card to help mitigate the risk of these biases.
-- **Misinformation and Misuse**
-    - VLMs can be misused to generate text that is false, misleading, or harmful.
-    - Guidelines are provided for responsible use with the model, see the [Responsible Generative AI Toolkit][responsible-ai].
-- **Transparency and Accountability**
-    - This model card summarizes details on the models' architecture, capabilities, limitations, and evaluation processes.
-    - A responsibly developed open model offers the opportunity to share innovation by making VLM technology accessible to developers and researchers across the AI ecosystem.
+- **偏見與公平性**
+    - 以大規模真實世界文字與圖像資料訓練的 VLM 可能反映訓練資料中蘊含的社會文化偏見。Gemma 4 模型經過嚴格審查、輸入資料預處理與訓練後評測（如本卡所述），以協助緩解這些偏見的風險。
+- **錯誤資訊與濫用**
+    - VLM 可能被濫用來生成虛假、誤導或有害的文字。
+    - 我們提供負責任使用模型的指南，詳見 [負責任生成式 AI 工具包][responsible-ai]。
+- **透明度與問責制**
+    - 本模型卡彙整了模型的架構、能力、限制與評測流程的詳細資訊。
+    - 一個負責任地開發的開放模型，讓整個 AI 生態系的開發者與研究人員都能取用 VLM 技術，提供了共享創新的機會。
 
-**Risks identified and mitigations**:
+**已識別的風險與緩解措施**：
 
-- **Generation of harmful content**: Mechanisms and guidelines for content safety are essential. Developers are encouraged to exercise caution and implement appropriate content safety safeguards based on their specific product policies and application use cases.
-- **Misuse for malicious purposes**: Technical limitations and developer and end-user education can help mitigate against malicious applications of VLMs. Educational resources and reporting mechanisms for users to flag misuse are provided.
-- **Privacy violations**: Models were trained on data filtered for removal of certain personal information and other sensitive data. Developers are encouraged to adhere to privacy regulations with privacy-preserving techniques.
-- **Perpetuation of biases**: It's encouraged to perform continuous monitoring (using evaluation metrics, human review) and the exploration of de-biasing techniques during model training, fine-tuning, and other use cases.
+- **有害內容的生成**：內容安全機制與指南至關重要。鼓勵開發者謹慎行事，並依據其特定產品政策與應用情境實施適當的內容安全防護。
+- **惡意用途的濫用**：技術限制，以及開發者與終端使用者的教育，有助於緩解 VLM 的惡意應用。我們提供教育資源與回報機制，供使用者舉報濫用。
+- **隱私侵犯**：模型在經過過濾以移除部分個人資訊與其他敏感資料的資料上訓練。鼓勵開發者遵守隱私法規，並採用隱私保護技術。
+- **偏見的延續**：鼓勵在模型訓練、微調與其他使用情境中持續監控（使用評測指標、人工審查），並探索去偏見技術。
 
-### **Benefits**
+### **優點**
 
-At the time of release, this family of models provides high-performance open
-vision-language model implementations designed from the ground up for
-responsible AI development compared to similarly sized models.
+在發布時，與同等規模的模型相比，此模型家族提供從零開始為負責任 AI 開發而設計的高效能開放視覺語言模型實作。
 
-## **Citation**
+## **引用**
 
-If you find our work helpful, please consider citing it:
+如果我們的工作對您有幫助，歡迎引用：
 
 ```python
 @misc{gemmateam2026gemma4,

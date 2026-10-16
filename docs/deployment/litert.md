@@ -1,30 +1,30 @@
 ---
 title: LiteRT-LM
-description: Run Gemma 4 on-device with LiteRT-LM — CLI install, prebuilt .litertlm weights, and exporting your own fine-tune.
+description: 使用 LiteRT-LM 在裝置端執行 Gemma 4 —— CLI 安裝、預建的 .litertlm 權重，以及匯出您自己的微調模型。
 models: [gemma-4]
 frameworks: [litert]
 source_url: "https://developers.google.com/edge/litert-lm/models/gemma-4"
 ---
 
-# Run Gemma on-device with LiteRT-LM
+# 使用 LiteRT-LM 在裝置端執行 Gemma
 
-[LiteRT-LM](https://developers.google.com/edge/litert-lm) is Google AI Edge's runtime for
-running language models directly on a device — Android, iOS, macOS, Windows, Linux and
-Raspberry Pi — with CPU, GPU and NPU acceleration and no network round trip.
+[LiteRT-LM](https://developers.google.com/edge/litert-lm) 是 Google AI Edge 的執行環境，用於
+直接在裝置上執行語言模型——Android、iOS、macOS、Windows、Linux 與
+Raspberry Pi——支援 CPU、GPU 與 NPU 加速，無需網路往返。
 
-!!! note "Sizes supported today"
-    LiteRT-LM ships **E2B** and **E4B**, with larger models coming. The selector above offers
-    the two sizes with published `.litertlm` weights.
+!!! note "目前支援的尺寸"
+    LiteRT-LM 目前提供 **E2B** 與 **E4B**，更大的模型即將推出。上方的選取器提供
+    已發布 `.litertlm` 權重的兩種尺寸。
 
-## Install
+## 安裝
 
 ```bash
 uv tool install litert-lm
 ```
 
-## Run
+## 執行
 
-Weights are pulled straight from the Hugging Face LiteRT Community:
+權重直接從 Hugging Face LiteRT Community 取得：
 
 ```bash { .model-swap }
 litert-lm run \
@@ -33,18 +33,18 @@ litert-lm run \
   --prompt="What is the capital of France?"
 ```
 
-## Multi-Token Prediction
+## 多詞元預測
 
-LiteRT-LM supports [MTP](../get-started/capabilities/mtp.md), which speeds up decoding with no
-quality loss: up to **2.2x** on mobile GPUs and **1.5x** on mobile CPUs.
+LiteRT-LM 支援 [MTP](../get-started/capabilities/mtp.md)，以無品質損失的方式加速解碼：在行動 GPU 上最高達
+**2.2 倍**，在行動 CPU 上達 **1.5 倍**。
 
-Google recommends MTP for every task on GPU backends, and for E4B on CPU. On E2B on CPU it
-helps most with rewriting, summarizing and coding, but can slow down freeform generation
-slightly — so enable it selectively there.
+Google 建議在 GPU 後端的所有任務都使用 MTP，CPU 上的 E4B 也是。在 CPU 的 E2B 上，它
+對改寫、摘要與程式設計最有幫助，但可能會讓自由形式的生成略微變慢——
+因此請在該處斟酌啟用。
 
-## Deploy your own fine-tune
+## 部署您自己的微調模型
 
-Export Safetensors — including a model you have fine-tuned — to the `.litertlm` format:
+將 Safetensors（包括您已微調的模型）匯出為 `.litertlm` 格式：
 
 ```bash { .model-swap }
 uv tool install litert-torch-nightly
@@ -56,26 +56,26 @@ litert-torch export_hf \
   --jinja_chat_template_override=litert-community/gemma-4-E2B-it-litert-lm
 ```
 
-Then run the exported bundle the same way:
+然後以相同方式執行匯出的套件：
 
 ```bash
 litert-lm run /tmp/gemma4/model.litertlm --prompt="What is the capital of France?"
 ```
 
-## Model sizes
+## 模型尺寸
 
-| Size | `.litertlm` bundle |
+| 尺寸 | `.litertlm` 套件 |
 |---|---|
 | E2B | 2.58 GB |
 | E4B | 3.65 GB |
 
-Google publishes measured prefill, decode and time-to-first-token figures per device and
-backend on the [Gemma 4 LiteRT-LM page](https://developers.google.com/edge/litert-lm/models/gemma-4){ data-model="gemma-4" }.
+Google 在 [Gemma 4 LiteRT-LM 頁面](https://developers.google.com/edge/litert-lm/models/gemma-4){ data-model="gemma-4" } 上發布了按裝置與
+後端測量的預填、解碼與首詞元時間數據。
 
-## Platform guides
+## 平台指南
 
-LiteRT-LM has APIs for the CLI, Python, Android (Kotlin), iOS (Swift) and C++. See the
-[LiteRT-LM documentation](https://developers.google.com/edge/litert-lm) for each.
+LiteRT-LM 為 CLI、Python、Android（Kotlin）、iOS（Swift）與 C++ 提供 API。各平台請參閱
+[LiteRT-LM 文件](https://developers.google.com/edge/litert-lm)。
 
-To try Gemma on a phone without writing code, use the
-[AI Edge Gallery](ai-edge-gallery.md).
+要在手機上免寫程式碼試用 Gemma，請使用
+[AI Edge Gallery](ai-edge-gallery.md)。

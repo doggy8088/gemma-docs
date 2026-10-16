@@ -1,38 +1,38 @@
 ---
 title: Ollama
-description: Run Gemma 4 locally with Ollama — model tags, image input, and the OpenAI-compatible server.
+description: 使用 Ollama 在本機執行 Gemma 4 —— 模型標籤、圖像輸入，以及 OpenAI 相容伺服器。
 models: [gemma-4]
 frameworks: [ollama]
 ---
 
-# Run Gemma with Ollama
+# 使用 Ollama 執行 Gemma
 
-Ollama downloads quantized weights for you and exposes a CLI plus a local HTTP API. No GPU
-required, though one helps.
+Ollama 會為您下載量化權重，並提供 CLI 與本機 HTTP API。無需 GPU，
+但有會更好。
 
-## Install
+## 安裝
 
-Download from [ollama.com/download](https://ollama.com/download), then check it worked:
+從 [ollama.com/download](https://ollama.com/download) 下載，然後確認安裝成功：
 
 ```bash
 ollama --version
 ```
 
-## Run
+## 執行
 
 ```bash { .model-swap }
 ollama run gemma4:12b "Explain quantum computing simply"
 ```
 
-Downloads the model on first use. To fetch without running:
+首次使用時會下載模型。若只想下載而不執行：
 
 ```bash { .model-swap }
 ollama pull gemma4:12b
 ```
 
-## Model tags
+## 模型標籤
 
-| Tag | Download | Context |
+| 標籤 | 下載大小 | 脈絡 |
 |---|---|---|
 | `gemma4:e2b` | 7.2 GB | 128K |
 | `gemma4:e4b` | 9.6 GB | 128K |
@@ -40,25 +40,25 @@ ollama pull gemma4:12b
 | `gemma4:26b` | 18 GB | 256K |
 | `gemma4:31b` | 20 GB | 256K |
 
-`gemma4:latest` is an alias for `e4b`. On Apple Silicon, the `-mlx` tags
-(`gemma4:12b-mlx`) use the MLX runtime. Full list:
-[ollama.com/library/gemma4/tags](https://ollama.com/library/gemma4/tags){ data-model="gemma-4" }.
+`gemma4:latest` 是 `e4b` 的別名。在 Apple Silicon 上，`-mlx` 標籤
+（`gemma4:12b-mlx`）使用 MLX 執行環境。完整清單：
+[ollama.com/library/gemma4/tags](https://ollama.com/library/gemma4/tags){ data-model="gemma-4" }。
 
-## Images
+## 圖像
 
 ```bash { .model-swap }
 ollama run gemma4:12b ./image.png "What is in this image?"
 ```
 
 !!! note
-    Ollama publishes Gemma 4 as **text and image only**. For audio input, use
-    [Transformers](huggingface.md) or [llama.cpp](llamacpp.md).
+    Ollama 發布的 Gemma 4 僅支援**文本與圖像**。若要使用音訊輸入，請使用
+    [Transformers](huggingface.md) 或 [llama.cpp](llamacpp.md)。
 
-## Server
+## 伺服器
 
-Ollama serves on port `11434`.
+Ollama 在連接埠 `11434` 上提供服務。
 
-=== "OpenAI-compatible"
+=== "OpenAI 相容"
 
     ```python { .model-swap }
     from openai import OpenAI
@@ -75,7 +75,7 @@ Ollama serves on port `11434`.
     print(response.choices[0].message.content)
     ```
 
-=== "Native API"
+=== "原生 API"
 
     ```bash { .model-swap }
     curl http://localhost:11434/api/generate -d '{
@@ -84,7 +84,7 @@ Ollama serves on port `11434`.
     }'
     ```
 
-=== "Image via API"
+=== "透過 API 傳送圖像"
 
     ```bash { .model-swap }
     IMG=$(base64 < test.jpg | tr -d '\n')
@@ -102,8 +102,8 @@ Ollama serves on port `11434`.
       }'
     ```
 
-!!! tip "Context defaults to 4K under 24 GiB VRAM"
-    Ollama sizes context from available VRAM, not from the model. Raise it when you need it:
-    `OLLAMA_CONTEXT_LENGTH=64000 ollama serve`, or per request with
-    `"options": {"num_ctx": 64000}`. Agents and coding tools want at least 64K —
-    [Ollama: context length](https://docs.ollama.com/context-length).
+!!! tip "在 24 GiB VRAM 以下，脈絡預設為 4K"
+    Ollama 依可用 VRAM（而非模型）決定脈絡大小。需要時請調高：
+    `OLLAMA_CONTEXT_LENGTH=64000 ollama serve`，或以
+    `"options": {"num_ctx": 64000}` 針對單一請求設定。Agent 與程式設計工具至少需要 64K——
+    請參閱 [Ollama：脈絡長度](https://docs.ollama.com/context-length)。

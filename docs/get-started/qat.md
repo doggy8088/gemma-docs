@@ -1,31 +1,28 @@
 ---
-title: Quantization-Aware Training
-description: Which Gemma 4 quantized weights to download for each engine, and why QAT beats post-training quantization at 4-bit.
+title: 量化感知訓練（Quantization-Aware Training）
+description: 說明各引擎應下載哪一組 Gemma 4 量化權重，以及在 4 位元下 QAT 為何優於訓練後量化。
 models: [gemma-4]
 frameworks: [llamacpp, vllm]
 ---
 
-# Quantization-Aware Training
+# 量化感知訓練（QAT）
 
-Google publishes **quantization-aware training** (QAT) checkpoints alongside the full-precision
-weights. QAT simulates quantization *during* training, so the model learns to compensate for the
-precision loss — unlike post-training quantization, which compresses a finished model and loses
-quality doing it.
+Google 與全精度權重一併發布**量化感知訓練**（QAT）檢查點。QAT 在訓練*期間*就模擬量化，讓模型學會補償精度損失——這與訓練後量化不同，後者壓縮的是已訓練完成的模型，會在壓縮過程中損失品質。
 
-**At 4-bit, prefer a QAT build over a generic Q4 of the same size.**
+**在 4 位元下，請選擇 QAT 版本，而非同尺寸的通用 Q4 版本。**
 
-## Which one do I download?
+## 該下載哪一個？
 
-| Running on | Suffix |
+| 執行環境 | 後綴 |
 |---|---|
 | llama.cpp, LM Studio, Ollama | `-qat-q4_0-gguf` |
 | vLLM, SGLang | `-qat-w4a16-ct` |
-| Mobile (Transformers) | `-qat-mobile-transformers` |
-| Mobile (compressed tensors) | `-qat-mobile-ct` |
-| Speculative decoding | `-qat-q4_0-unquantized` + `-qat-q4_0-unquantized-assistant` |
-| Converting to another format (e.g. MLX) | `-qat-q4_0-unquantized` |
+| 行動裝置（Transformers） | `-qat-mobile-transformers` |
+| 行動裝置（compressed tensors） | `-qat-mobile-ct` |
+| 推測性解碼 | `-qat-q4_0-unquantized` + `-qat-q4_0-unquantized-assistant` |
+| 轉換為其他格式（例如 MLX） | `-qat-q4_0-unquantized` |
 
-Names follow `google/gemma-4-{SIZE}-it{SUFFIX}`, for example:
+命名遵循 `google/gemma-4-{SIZE}-it{SUFFIX}`，例如：
 
 ```bash { .model-swap }
 # Local, via llama.cpp
@@ -37,33 +34,31 @@ llama-cli -hf google/gemma-4-12B-it-qat-q4_0-gguf
 vllm serve google/gemma-4-12B-it-qat-w4a16-ct
 ```
 
-The GGUF example follows the model selector. The compressed-tensors one is fixed at 12B because
-no 26B A4B `-qat-w4a16-ct` checkpoint is published — see Availability below.
+GGUF 範例會跟隨模型選擇器；compressed-tensors 範例固定為 12B，因為目前未發布 26B A4B 的 `-qat-w4a16-ct` 檢查點——詳見下方「版本供應」。
 
-## Availability
+## 版本供應
 
-| Variant | Sizes |
+| 變體 | 尺寸 |
 |---|---|
 | `-gguf`, `-unquantized`, `-assistant` | E2B, E4B, 12B, 26B A4B, 31B |
 | `-w4a16-ct` | E2B, E4B, 12B, 31B |
 | `-mobile-transformers`, `-mobile-ct` | E2B, E4B |
 
-Collections:
+集合：
 [gemma-4-qat-q4-0][hf-gemma4-qat-q40] ·
-[gemma-4-qat-mobile][hf-gemma4-qat-mobile].
-All QAT checkpoints are also on
-[Kaggle](https://www.kaggle.com/models/google/gemma-4/transformers){ data-model="gemma-4" }.
+[gemma-4-qat-mobile][hf-gemma4-qat-mobile]。
+所有 QAT 檢查點也可在
+[Kaggle](https://www.kaggle.com/models/google/gemma-4/transformers){ data-model="gemma-4" } 取得。
 
-!!! note "Mobile builds use a different scheme"
-    `-mobile-*` weights are built on a custom `wNa8o8` schema with 2-bit decoding layers and
-    optimized KV caches, tuned for on-device RAM limits rather than raw quality.
+!!! note "行動裝置版本採用不同架構"
+    `-mobile-*` 權重建構於自訂的 `wNa8o8` 架構，具備 2 位元解碼層與最佳化的 KV 快取，針對裝置端 RAM 限制調校，而非追求原始品質。
 
-## Memory
+## 記憶體
 
-Approximate footprint for the static weights, from the
-[Gemma 4 overview](../models/gemma-4/index.md):
+靜態權重的概略記憶體占用，取自
+[Gemma 4 總覽](../models/gemma-4/index.md)：
 
-| Size | BF16 | SFP8 | Q4_0 |
+| 尺寸 | BF16 | SFP8 | Q4_0 |
 |---|---|---|---|
 | E2B | 11.4 GB | 5.7 GB | 2.9 GB |
 | E4B | 17.9 GB | 8.9 GB | 4.5 GB |
@@ -71,21 +66,20 @@ Approximate footprint for the static weights, from the
 | 26B A4B | 57.7 GB | 28.8 GB | 14.4 GB |
 | 31B | 69.9 GB | 34.9 GB | 17.5 GB |
 
-Context (KV cache) is on top of this, and grows with prompt and generation length.
-## What's next
+上下文（KV 快取）在此之外另行占用，且隨提示與生成長度增長。
+## 接下來
 
 <div class="card-grid">
 <a class="card" href="../models/index.md">
   <span class="card-icon">{{ icon('lucide/boxes') }}</span>
-  <div class="card-title">The model family</div>
-  <p class="card-desc">Every generation and variant, and what each came from.</p>
+  <div class="card-title">模型家族</div>
+  <p class="card-desc">每一代與每個變體，以及各自的來源。</p>
 </a>
 <a class="card" href="../deployment/index.md">
   <span class="card-icon">{{ icon('lucide/play') }}</span>
-  <div class="card-title">Run Gemma</div>
-  <p class="card-desc">Every engine that runs Gemma, from a laptop to a cluster.</p>
+  <div class="card-title">執行 Gemma</div>
+  <p class="card-desc">從筆記型電腦到叢集，涵蓋所有可執行 Gemma 的引擎。</p>
 </a>
 </div>
 
 --8<-- "glossary.md"
-

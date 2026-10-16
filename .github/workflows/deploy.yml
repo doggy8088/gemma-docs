@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - zh-tw
   workflow_dispatch:
 
 # Least privilege at the workflow level; the deploy job widens this for itself.

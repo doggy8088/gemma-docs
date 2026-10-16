@@ -1,21 +1,15 @@
 ---
-title: Gemma Model Family
-description: What Gemma is, how the generations relate, and which variant was built from which base model.
+title: Gemma 模型家族
+description: 認識 Gemma 模型家族：介紹 Gemma 是什麼、各世代之間的演進關係，以及每個變體衍生自哪個基礎模型。
 ---
 
-# The Gemma model family
+# Gemma 模型家族
 
-Gemma is Google DeepMind's family of **open models**: the weights are published, so you download
-them and run them on your own hardware — a laptop, a phone, or a cluster you control. Nothing is
-sent to a server unless you choose to send it.
+Gemma 是 Google DeepMind 的**開放模型**家族：權重已公開，您可以下載並在自己的硬體上運行——筆記型電腦、手機，或您控制的叢集。除非您選擇傳送，否則不會有任何資料傳到伺服器。
 
-The family has two halves. A **mainline generation** — Gemma 1 through Gemma 4 — is the general
-purpose model most people want. Around each generation sits a set of **variants**: the same
-architecture retrained or restructured for one job, like embeddings, safety classification or
-vision-language tasks. A variant always descends from a specific generation, which is what the
-tree below shows.
+此家族有兩部分。**主流世代**——Gemma 1 到 Gemma 4——是大多數人想要的通用模型。每個世代周圍有一組**變體**：為單一任務重新訓練或重構的相同架構，例如嵌入、安全分類或視覺語言任務。變體總是衍生自某個特定世代，下方的樹狀圖即呈現此關係。
 
-## How the family fits together
+## 家族結構
 
 {% set generations = modeldata.families | selectattr('generation', 'defined') | sort(attribute='generation') %}
 {% set independent = modeldata.families | selectattr('based_on', 'defined')
@@ -48,7 +42,7 @@ tree below shows.
     {% endfor %}
     </ul>
     {% else %}
-    <p class="tree-none">No variants built from this generation.</p>
+    <p class="tree-none">此世代沒有衍生變體。</p>
     {% endif %}
   </li>
 {% endfor %}
@@ -67,40 +61,37 @@ tree below shows.
 </div>
 
 <p class="tree-legend">
-Each variant sits under the generation its own model page names as its base.
-{% if independent %}Models below the dashed line are Gemma models whose pages describe a
-different architecture rather than a Gemma generation.{% endif %}
+每個變體都歸在其模型頁面所標示的基礎世代之下。
+{% if independent %}虛線下方的模型是 Gemma 模型，但其頁面描述的是不同架構而非 Gemma 世代。{% endif %}
 </p>
 
 ## Gemma 4
 
-The current generation, and where to start unless you need something a variant does.
+目前的世代；除非您需要某個變體的特定功能，否則請從這裡開始。
 
 <!-- Generated from data/models.yml -- edit that file, not this table. -->
 
-| Variant | Parameters | Input | Context | Intended Platform |
+| 變體 | 參數量 | 輸入 | 上下文 | 目標平台 |
 |---|---|---|---|---|
 {% for size in modeldata.gemma4.sizes -%}
 | **{{ size.name }}** | {{ size.parameters }} | {{ size.modalities.input | map('capitalize') | join(', ') }} | {{ size.context }} | {{ size.platform_short }} |
 {% endfor %}
-!!! note "Audio and video support"
-    Audio input is native to **E2B, E4B and 12B**. The **26B A4B** and **31B** models accept
-    video as individual frames — that is, as images — but do not process audio.
+!!! note "音訊與影片支援"
+    音訊輸入為 **E2B、E4B 與 12B** 的原生功能。**26B A4B** 與 **31B** 模型可將影片視為逐幀影像（即圖像）接受，但不處理音訊。
 
-[Run one now](../get-started/index.md) or read the [Gemma 4 model card](gemma-4/model-card.md)
-for the full technical detail.
+[立即執行](../get-started/index.md)或閱讀 [Gemma 4 模型卡](gemma-4/model-card.md)以了解完整技術細節。
 
-## Earlier generations
+## 先前世代
 
-Still supported, and still the right choice when a smaller or text-only model is enough.
+仍在支援中；當您只需要較小或純文字模型時，它們仍是合適的選擇。
 
 <!-- Generated from data/models.yml -- edit that file, not these tables. -->
 {% set n3 = modeldata.families | selectattr('id', 'equalto', 'gemma-3n') | list | first %}
 ### {{ n3.name }}
 
-The on-device member of the Gemma 3 generation.
+Gemma 3 世代的裝置端成員。
 
-| Size | Input ➔ Output | Intended Platform |
+| 大小 | 輸入 ➔ 輸出 | 目標平台 |
 |---|---|---|
 {% for size in n3.sizes -%}
 | **{{ size.name }}** | {{ size.input | capitalize }} ➔ Text | {{ size.platform }} |
@@ -113,7 +104,7 @@ The on-device member of the Gemma 3 generation.
 {% if sized %}
 ### {{ gen.name }}
 
-| Size | Input ➔ Output | Intended Platform |
+| 大小 | 輸入 ➔ 輸出 | 目標平台 |
 |---|---|---|
 {% for size in sized -%}
 | **{{ size.name }}** | {{ size.input | capitalize }} ➔ Text | {{ size.platform }} |
@@ -122,17 +113,12 @@ The on-device member of the Gemma 3 generation.
 {% endfor %}
 
 
-## Choosing between them
+## 如何選擇
 
-- **Just starting?** Take the current generation, instruction-tuned, at the smallest size that
-  fits your hardware. It answers a wide range of prompts with no further training.
-- **Need a specific job done?** Check whether a variant already does it — embeddings
-  ([EmbeddingGemma](embeddinggemma/index.md)), safety labelling
-  ([ShieldGemma](shieldgemma/index.md)), tool calling
-  ([FunctionGemma](functiongemma/index.md)) — before fine-tuning a core model yourself.
-- **On a phone or edge device?** [Gemma 3n](gemma-3n/index.md) and the Gemma 4 E2B and E4B sizes
-  are built for it.
+- **剛入門？** 選擇目前世代的指令微調版本，挑選符合您硬體的最小尺寸。它無需額外訓練即可回答各種提示。
+- **需要完成特定任務？** 先確認是否已有變體可勝任——嵌入（[EmbeddingGemma](embeddinggemma/index.md)）、安全標註（[ShieldGemma](shieldgemma/index.md)）、工具呼叫（[FunctionGemma](functiongemma/index.md)）——再考慮自行微調核心模型。
+- **在手機或邊緣裝置上？** [Gemma 3n](gemma-3n/index.md) 與 Gemma 4 E2B、E4B 尺寸正是為此打造。
 
-For the full dated history of every release, see [Releases](releases.md).
+如需所有版本的完整發布時程，請見[版本發布紀錄](releases.md)。
 
 --8<-- "glossary.md"

@@ -1,29 +1,29 @@
 ---
-title: PaliGemma Architecture
-description: Vision-language model that takes text and images as input to generate text outputs.
+title: PaliGemma 架構
+description: 解說 PaliGemma 的模型架構：接受文字與影像輸入以產生文字輸出的視覺語言模型，及其訓練方式。
 models: [paligemma]
 source_url: https://developers.googleblog.com/gemma-explained-paligemma-architecture/
 ---
 
-# Gemma Explained: PaliGemma Architecture
+# Gemma 詳解：PaliGemma 架構
 
 !!! note
-    Originally published on the
-    [Google Developers Blog](https://developers.googleblog.com/gemma-explained-paligemma-architecture/).
+    最初發表於
+    [Google Developers 部落格](https://developers.googleblog.com/gemma-explained-paligemma-architecture/)。
 
 ![banner](../../assets/gemma-explained/gemma-var-banner.png)
 
-In the [previous post](/tutorials/gemma-explained/recurrentgemma/) of Gemma explained, you reviewed RecurrentGemma architecture. In this blog post, you will explore PaliGemma architecture. Let’s dive into it!
+在「Gemma 詳解」系列的[上一篇文章](/tutorials/gemma-explained/recurrentgemma/)中，你複習了 RecurrentGemma 架構。在這篇部落格文章中，你將探索 PaliGemma 架構。讓我們深入了解！
 
 ## **PaliGemma 3B**
 
-PaliGemma is a lightweight open vision-language model (VLM) inspired by [PaLI-3](https://arxiv.org/abs/2310.09199), and based on open components like the [SigLIP vision model](https://arxiv.org/abs/2303.15343) and the [Gemma language model](https://storage.googleapis.com/deepmind-media/gemma/gemma-report.pdf). Pali stands for [**Pa**thway **L**anguage and **I**mage Model.](https://arxiv.org/pdf/2209.06794) As the name implies this model is able to take both image and text inputs and produce a text response, as you can see in this fine tuning [guide](../../models/paligemma/fine-tuning.md).
+PaliGemma 是一個輕量的開放視覺語言模型（VLM），靈感來自 [PaLI-3](https://arxiv.org/abs/2310.09199)，並基於開放元件打造，如 [SigLIP 視覺模型](https://arxiv.org/abs/2303.15343)與 [Gemma 語言模型](https://storage.googleapis.com/deepmind-media/gemma/gemma-report.pdf)。Pali 是 [**Pa**thway **L**anguage and **I**mage Model（路徑語言與影像模型）](https://arxiv.org/pdf/2209.06794)的縮寫。如其名所示，這個模型能同時接受影像與文字輸入並產生文字回應，如本微調[指南](../../models/paligemma/fine-tuning.md)所示。
 
-## PaliGemma Architecture
+## PaliGemma 架構
 
-PaliGemma adds an additional vision model to the BaseGemma model, which consists of an image encoder. This encoder along with the text tokens is passed to a specialized Gemma 2B model. Both the Vision Model and Gemma model are trained in various stages both independently, and together, to produce the final joint architecture. For full details see Section 3.2 of the [Pali-3 paper](https://arxiv.org/abs/2310.09199)
+PaliGemma 在 BaseGemma 模型之上增加了一個由影像編碼器組成的視覺模型。這個編碼器連同文字詞元一起傳遞給一個專門化的 Gemma 2B 模型。視覺模型與 Gemma 模型都經過多個階段的獨立訓練與聯合訓練，以產出最終的聯合架構。完整細節請參閱 [Pali-3 論文](https://arxiv.org/abs/2310.09199)的第 3.2 節。
 
-![Joint architecture of the Vision Model and Gemma 2B model](../../assets/gemma-explained/image4_W4FHDmx.original.png)
+![視覺模型與 Gemma 2B 模型的聯合架構](../../assets/gemma-explained/image4_W4FHDmx.original.png)
 
 ```python
 PaliGemmaForConditionalGeneration(
@@ -87,112 +87,112 @@ PaliGemmaForConditionalGeneration(
 )
 ```
 
-### **vision_tower (SiglipVisionModel)**
+### **vision_tower（SiglipVisionModel）**
 
-This component is responsible for processing the input image.
+這個元件負責處理輸入影像。
 
-It uses SiglipVisionTransformer which is a type of transformer architecture designed for vision tasks.
+它使用 SiglipVisionTransformer，這是一種為視覺任務設計的 Transformer 架構。
 
-### **embeddings (SiglipVisionEmbeddings)**
+### **embeddings（SiglipVisionEmbeddings）**
 
-PaliGemma takes as input one or more images, which are turned into “soft tokens” by the SigLIP encoder.
+PaliGemma 接受一張或多張影像作為輸入，SigLIP 編碼器會將它們轉換成「軟詞元」（soft tokens）。
 
-It breaks the image into smaller patches, similar to how a text model processes words in a sentence. The model then learns to capture relationships between these patches, effectively understanding the image’s visual content.
+它將影像切成較小的區塊，就像文字模型處理句子中的單字一樣。模型接著學會捕捉這些區塊之間的關係，從而有效理解影像的視覺內容。
 
 ### **patch_embedding**
 
-It uses a convolutional layer (Conv2d) with the following parameters.
+它使用卷積層（Conv2d），參數如下。
 
-- 3: The input has 3 channels (for RGB images)
+- 3：輸入有 3 個通道（RGB 影像）
 
-- 1152: The output has 1152 channels, which is the embedding dimension of each patch
+- 1152：輸出有 1152 個通道，即每個區塊的嵌入維度
 
-- kernel_size=(14, 14): Each patch is a 14x14 pixel square
+- kernel_size=(14, 14)：每個區塊是 14x14 像素的正方形
 
-- stride=(14, 14): The patches are taken with no overlap (the convolutional filter moves 14 pixels at a time)
+- stride=(14, 14)：各區塊互不重疊（卷積濾波器每次移動 14 像素）
 
-- padding=’valid’: No padding is applied, so the output size will be smaller than the input size.
+- padding=’valid’：不套用填充，因此輸出尺寸會小於輸入尺寸。
 
 ### **position_embedding**
 
-Position embeddings are added to each patch embedding to encode the spatial information (i.e., where each patch was located in the original image).
+每個區塊嵌入都會加上位置嵌入，用來編碼空間資訊（即每個區塊在原始影像中的位置）。
 
-This is done using a learned embedding layer (Embedding) that takes as input the position of each patch (up to 256 positions) and outputs a vector of size 1152 (the same as the patch embedding dimension).
+這是透過一個可學習的嵌入層（Embedding）完成的：它接受每個區塊的位置（最多 256 個位置）作為輸入，並輸出一個 1152 維的向量（與區塊嵌入維度相同）。
 
-### **encoder (SiglipEncoder)**
+### **encoder（SiglipEncoder）**
 
-The embeddings pass through a series of SiglipEncoderLayer, each consisting of self-attention and feed-forward neural networks. This helps the model capture relationships between different parts of the image.
+嵌入會經過一系列 SiglipEncoderLayer，每層都包含自注意力與前饋神經網路。這幫助模型捕捉影像不同部分之間的關係。
 
-### **multi_modal_projector (PaliGemmaMultiModalProjector)**
+### **multi_modal_projector（PaliGemmaMultiModalProjector）**
 
-This component projects the output of the vision tower into a multi-modal space. This is achieved using a simple linear layer and it allows the vision and language representations to be combined effectively.
+這個元件將視覺塔的輸出投影到多模態空間。這透過一個簡單的線性層實現，讓視覺與語言表示能有效結合。
 
-### **language_model (GemmaForCausalLM)**
+### **language_model（GemmaForCausalLM）**
 
-This component is a language model based on the Gemma 2B model.
+這個元件是基於 Gemma 2B 模型的語言模型。
 
-It takes as input the multi-modal representation from the projector and generates text output.
+它接受來自投影器的多模態表示作為輸入，並生成文字輸出。
 
-For the text input, each checkpoint was trained with various sequence lengths. For example, paligemma-3b-mix-224 was trained with sequence length 256 (input text + output text tokenized by Gemma’s tokenizer).
+對於文字輸入，每個檢查點以不同的序列長度訓練。例如，paligemma-3b-mix-224 以序列長度 256 訓練（輸入文字 + 由 Gemma 分詞器分詞的輸出文字）。
 
-PaliGemma uses the Gemma tokenizer with 256000 tokens, but extends its vocabulary with 1024 entries that represent coordinates in normalized image-space (<loc0000>...<loc1023>), and another with 128 entries (<seg000>...<seg127>) that are codewords used by a lightweight referring-expression segmentation [vector-quantized variational auto-encoder (VQ-VAE)](https://arxiv.org/abs/2301.02229). (256000 + 1024 + 128 = 257216)
+PaliGemma 使用有 256000 個詞元的 Gemma 分詞器，但擴展了詞彙表：新增 1024 個代表正規化影像空間中座標的詞條（<loc0000>...<loc1023>），以及另外 128 個作為輕量參照表達式分割用編碼字（codewords）的詞條（<seg000>...<seg127>），供[向量量化變分自編碼器（vector-quantized variational auto-encoder，VQ-VAE）](https://arxiv.org/abs/2301.02229)使用。（256000 + 1024 + 128 = 257216）
 
-## Object Segmentation Example
+## 物件分割範例
 
-Additional soft tokens encode object detection and image segmentation. Below is an example output from the paligemma-3b-mix-224. You can try it by yourself from the [HuggingFace live demo](https://huggingface.co/spaces/big-vision/paligemma).
+額外的軟詞元負責編碼物件偵測與影像分割。以下是 paligemma-3b-mix-224 的範例輸出。你可以到 [HuggingFace 線上示範](https://huggingface.co/spaces/big-vision/paligemma)親自試試。
 
-![Image of a child and cat on a snowy roof top](../../assets/gemma-explained/image6_5Hff2p9.original.png)
+![雪頂屋頂上小孩與貓的照片](../../assets/gemma-explained/image6_5Hff2p9.original.png)
 
-Output from the PaliGemma with the prompt “`segment floor;cat;person;`”
+使用提示詞「`segment floor;cat;person;`」的 PaliGemma 輸出
 
-![image of output from the PaliGemma with the prompt “segment floor;cat;person;”](../../assets/gemma-explained/Screenshot_2024-08-27_at_7.07.55PM.original.png)
+![提示詞為「segment floor;cat;person;」的 PaliGemma 輸出影像](../../assets/gemma-explained/Screenshot_2024-08-27_at_7.07.55PM.original.png)
 
-The outputs from the model are unintuitive to decode if you are not familiar with ML and computer vision tasks.
+如果你不熟悉 ML 與電腦視覺任務，模型的輸出可能不太直覺、難以解讀。
 
-The initial four location tokens represent the coordinate of the bounding box, ranging from 0 to 1023. These coordinates are independent of the aspect ratio, as the image is assumed to be resized to 1024 x 1024.
+最初的四個位置詞元代表邊界框的座標，範圍從 0 到 1023。由於假設影像已縮放到 1024 x 1024，這些座標與長寬比無關。
 
-For instance, the output displays the cat's location within the coordinates (382, 637) and (696, 784). In this coordinate system, the top left corner is denoted as (0,0) and the vertical coordinate is listed before the horizontal coordinate.
+例如，輸出顯示貓的位置位於座標 (382, 637) 與 (696, 784) 之間。在這個座標系統中，左上角記為 (0,0)，且垂直座標列在水平座標之前。
 
-![image showing the output displaying the cat's location within coordinates (382, 637) and (696, 784)](../../assets/gemma-explained/image3_cB2oyye.original.png)
+![顯示貓位於座標 (382, 637) 與 (696, 784) 之間的輸出影像](../../assets/gemma-explained/image3_cB2oyye.original.png)
 
-The mask is encoded with the following 16 segmentation tokens. A neural network model (VQ-VAE) can reconstruct masks from quantized representations (codebook indices) by decoding those values. You can explore the actual code from [here](https://huggingface.co/spaces/big-vision/paligemma/blob/main/paligemma_parse.py).
+遮罩由以下 16 個分割詞元編碼。神經網路模型（VQ-VAE）可以透過解碼這些值，從量化表示（碼本索引）重建遮罩。你可以從[這裡](https://huggingface.co/spaces/big-vision/paligemma/blob/main/paligemma_parse.py)探索實際程式碼。
 
-At last, you can obtain this beautiful outcome from the output of the PaliGemma.
+最後，你可以從 PaliGemma 的輸出得到這個漂亮的成果。
 
-![image showing object segmentation result, where the floor is shaded blue, the child is shaded red, and the cat is shaded yellow](../../assets/gemma-explained/image2_p4JSdrB.original.png)
+![物件分割結果影像：地板以藍色遮罩標示、小孩以紅色標示、貓以黃色標示](../../assets/gemma-explained/image2_p4JSdrB.original.png)
 
-## **Summary**
+## **總結**
 
-In this article, you learned about PaliGemma.
+在這篇文章中，你認識了 PaliGemma。
 
-The Gemma family presents a unique opportunity to understand modern large language model systems by offering a collection of open weights models with similar core architectures but designed for different use cases. These models, released by Google for researchers, developers, and end users, span various functionalities and complexities.
+Gemma 家族提供了理解現代大型語言模型系統的獨特機會：它是一系列擁有相似核心架構、但為不同使用場景設計的開放權重模型。這些由 Google 釋出給研究人員、開發者與終端使用者的模型，涵蓋了各種功能與複雜度。
 
-We hope this overview provides a concise understanding of the Gemma model family, highlighting its versatility and suitability for a wide array of tasks.
+希望這篇總覽能讓你簡潔地理解 Gemma 模型家族，並突顯其多功能性與適用於各種任務的特性。
 
-The [Google Developer Community](https://discord.gg/google-dev-community) Discord server is an excellent platform to showcase your projects, establish connections with fellow developers, and engage in interactive discussions. Consider joining the server to explore these exciting opportunities.
+[Google Developer Community](https://discord.gg/google-dev-community) Discord 伺服器是展示專案、與開發者同好建立連結、參與互動討論的絕佳平台。歡迎加入伺服器，探索這些令人興奮的機會。
 
-Thanks for reading!
+感謝閱讀！
 
-## References
+## 參考資料
 
-### **Papers**
+### **論文**
 
-- [PaLI-3 Vision Language Models: Smaller, Faster, Stronger](https://arxiv.org/abs/2310.09199)
-- [Sigmoid Loss for Language Image Pre-Training](https://arxiv.org/abs/2303.15343)
-- [All in Tokens: Unifying Output Space of Visual Tasks via Soft Token](https://arxiv.org/abs/2301.02229)
-- [PaliGemma: A versatile 3B VLM for transfer](https://arxiv.org/abs/2407.07726)
+- [PaLI-3 視覺語言模型：更小、更快、更強](https://arxiv.org/abs/2310.09199)
+- [語言影像預訓練的 Sigmoid 損失](https://arxiv.org/abs/2303.15343)
+- [一切皆詞元：透過軟詞元統一視覺任務的輸出空間](https://arxiv.org/abs/2301.02229)
+- [PaliGemma：適用於遷移的多功能 3B VLM](https://arxiv.org/abs/2407.07726)
 
-### **Code Examples**
+### **程式碼範例**
 
-- [Inference with Keras](../../models/paligemma/inference.md)
-- [Fine-tuning with JAX](../../models/paligemma/fine-tuning.md)
-- [HuggingFace live demo](https://huggingface.co/spaces/big-vision/paligemma)
+- [使用 Keras 推論](../../models/paligemma/inference.md)
+- [使用 JAX 微調](../../models/paligemma/fine-tuning.md)
+- [HuggingFace 線上示範](https://huggingface.co/spaces/big-vision/paligemma)
 
-## 📋 The complete Gemma architecture series
+## 📋 完整的 Gemma 架構系列
 
-- [Gemma explained: An overview of Gemma model family architectures](/tutorials/gemma-explained/overview/)
-- [Gemma explained: What’s new in Gemma 2](/tutorials/gemma-explained/gemma-2/)
-- [Gemma explained: RecurrentGemma architecture](/tutorials/gemma-explained/recurrentgemma/)
-- Gemma explained: PaliGemma architecture
-- [Gemma explained: What’s new in Gemma 3](/tutorials/gemma-explained/gemma-3/)
-- [Gemma explained: EmbeddingGemma architecture](/tutorials/gemma-explained/embeddinggemma/)
+- [Gemma 詳解：Gemma 模型家族架構總覽](/tutorials/gemma-explained/overview/)
+- [Gemma 詳解：Gemma 2 的新變化](/tutorials/gemma-explained/gemma-2/)
+- [Gemma 詳解：RecurrentGemma 架構](/tutorials/gemma-explained/recurrentgemma/)
+- Gemma 詳解：PaliGemma 架構
+- [Gemma 詳解：Gemma 3 的新變化](/tutorials/gemma-explained/gemma-3/)
+- [Gemma 詳解：EmbeddingGemma 架構](/tutorials/gemma-explained/embeddinggemma/)

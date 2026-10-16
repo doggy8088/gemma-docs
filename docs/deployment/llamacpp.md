@@ -1,17 +1,17 @@
 ---
 title: llama.cpp
-description: Run Gemma 4 with llama.cpp — GGUF repos for every size, image/audio/video input, and the OpenAI-compatible server.
+description: 使用 llama.cpp 執行 Gemma 4 —— 各尺寸的 GGUF 儲存庫、圖像/音訊/視訊輸入，以及 OpenAI 相容伺服器。
 models: [gemma-4]
 frameworks: [llamacpp]
 ---
 
-# Run Gemma with llama.cpp
+# 使用 llama.cpp 執行 Gemma
 
-[llama.cpp](https://github.com/ggml-org/llama.cpp) is the engine underneath most local LLM
-tooling. Using it directly gives full control over quantization and GPU offload, and it is the
-most capable local runtime for Gemma 4 — **image, audio and video input all work**.
+[llama.cpp](https://github.com/ggml-org/llama.cpp) 是大多數本機 LLM
+工具底層的引擎。直接使用它可完全掌控量化與 GPU 卸載，它也是 Gemma 4
+功能最強的本機執行環境——**圖像、音訊與視訊輸入都支援**。
 
-## Install
+## 安裝
 
 === "macOS / Linux"
 
@@ -37,22 +37,22 @@ most capable local runtime for Gemma 4 — **image, audio and video input all wo
     nix profile install nixpkgs#llama-cpp
     ```
 
-## Run
+## 執行
 
 ```bash { .model-swap }
 llama-cli -hf ggml-org/gemma-4-E2B-it-GGUF --prompt "Write a poem about the Kraken."
 ```
 
-`-hf` downloads the weights on first use, including the multimodal projector. With a system
-prompt:
+`-hf` 會在首次使用時下載權重，包括多模態投影器。搭配系統
+提示：
 
 ```bash { .model-swap }
 llama-cli -hf ggml-org/gemma-4-E2B-it-GGUF -sys "You are Hong Gildong." -p "Who are you?"
 ```
 
-## Model repositories
+## 模型儲存庫
 
-| Size | Repository |
+| 尺寸 | 儲存庫 |
 |---|---|
 | E2B | `ggml-org/gemma-4-E2B-it-GGUF` |
 | E4B | `ggml-org/gemma-4-E4B-it-GGUF` |
@@ -60,38 +60,38 @@ llama-cli -hf ggml-org/gemma-4-E2B-it-GGUF -sys "You are Hong Gildong." -p "Who 
 | 26B A4B | `ggml-org/gemma-4-26B-A4B-it-GGUF` |
 | 31B | `ggml-org/gemma-4-31B-it-GGUF` |
 
-For 4-bit, prefer Google's [QAT](../get-started/qat.md) weights — trained with quantization simulated rather
-than compressed afterwards:
+對於 4 位元，請優先使用 Google 的 [QAT](../get-started/qat.md) 權重——以模擬量化的方式訓練，而非
+事後壓縮：
 
 ```bash { .model-swap }
 llama-cli -hf google/gemma-4-12B-it-qat-q4_0-gguf -p "Explain PLE in one paragraph"
 ```
 
-Available as `google/gemma-4-{E2B,E4B,12B,26B-A4B,31B}-it-qat-q4_0-gguf`.
+提供 `google/gemma-4-{E2B,E4B,12B,26B-A4B,31B}-it-qat-q4_0-gguf`。
 
-## Multimodal
+## 多模態
 
 ```bash { .model-swap }
 llama-mtmd-cli -hf ggml-org/gemma-4-E2B-it-GGUF
 ```
 
-With local files, pass the projector explicitly:
+使用本機檔案時，請明確傳入投影器：
 
 ```bash
 llama-server -m gemma-4-12B-it-Q4_K_M.gguf --mmproj mmproj-gemma-4-12B-it.gguf
 ```
 
 !!! note
-    Audio works on E2B, E4B and 12B. The 26B A4B and 31B models take text and images, and read
-    video as frames — they have no audio encoder.
+    音訊適用於 E2B、E4B 與 12B。26B A4B 與 31B 模型接受文本與圖像，並以影格
+    方式讀取視訊——它們沒有音訊編碼器。
 
-## Server
+## 伺服器
 
 ```bash { .model-swap }
 llama-server -hf ggml-org/gemma-4-E2B-it-GGUF
 ```
 
-Browser UI at `http://localhost:8080`, OpenAI-compatible API at `http://localhost:8080/v1`.
+瀏覽器 UI 位於 `http://localhost:8080`，OpenAI 相容 API 位於 `http://localhost:8080/v1`。
 
 ```python
 from openai import OpenAI
@@ -105,4 +105,4 @@ response = client.chat.completions.create(
 print(response.choices[0].message.content)
 ```
 
-Multimodal input consumes context quickly; set it with `-c`, for example `-c 32768`.
+多模態輸入會快速消耗脈絡；請用 `-c` 設定，例如 `-c 32768`。

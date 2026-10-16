@@ -1,33 +1,33 @@
 ---
 title: vLLM
-description: Serve Gemma 4 with vLLM — install, vllm serve, model repositories, and the OpenAI-compatible API.
+description: 使用 vLLM 服務 Gemma 4 —— 安裝、vllm serve、模型儲存庫，以及 OpenAI 相容 API。
 models: [gemma-4]
 frameworks: [vllm]
 ---
 
-# Serve Gemma with vLLM
+# 使用 vLLM 服務 Gemma
 
-[vLLM](https://docs.vllm.ai) is a high-throughput serving engine. Use it when you have more than
-one concurrent user; for single-user local work, [Ollama](ollama.md) or
-[llama.cpp](llamacpp.md) are simpler.
+[vLLM](https://docs.vllm.ai) 是高吞吐量的服務引擎。當您有多個
+並發使用者時請使用它；對於單使用者本機工作，[Ollama](ollama.md) 或
+[llama.cpp](llamacpp.md) 更簡單。
 
-## Install
+## 安裝
 
 ```bash
 uv pip install vllm --torch-backend=auto
 ```
 
-## Serve
+## 服務
 
 ```bash { .model-swap }
 vllm serve google/gemma-4-12B-it
 ```
 
-Serves an OpenAI-compatible API on `http://localhost:8000`.
+在 `http://localhost:8000` 上提供 OpenAI 相容 API。
 
-## Model repositories
+## 模型儲存庫
 
-| Size | Repository |
+| 尺寸 | 儲存庫 |
 |---|---|
 | E2B | `google/gemma-4-E2B-it` |
 | E4B | `google/gemma-4-E4B-it` |
@@ -35,20 +35,19 @@ Serves an OpenAI-compatible API on `http://localhost:8000`.
 | 26B A4B | `google/gemma-4-26B-A4B-it` |
 | 31B | `google/gemma-4-31B-it` |
 
-Drop `-it` for base weights, which you want only for further training.
+去掉 `-it` 即為基礎權重，僅在進一步訓練時需要。
 
-For 4-bit serving, use the [QAT](../get-started/qat.md) compressed-tensors builds — 4-bit weights with 16-bit
-activations:
+對於 4 位元服務，請使用 [QAT](../get-started/qat.md) compressed-tensors 建置版本——4 位元權重搭配 16 位元
+活化：
 
 ```bash { .model-swap }
 vllm serve google/gemma-4-12B-it-qat-w4a16-ct
 ```
 
-Published as `google/gemma-4-{E2B,E4B,12B,31B}-it-qat-w4a16-ct`. No 26B A4B compressed-tensors
-checkpoint exists, so this page's selector offers the other four sizes; serve 26B A4B from the
-full-precision repository above.
+發布為 `google/gemma-4-{E2B,E4B,12B,31B}-it-qat-w4a16-ct`。目前沒有 26B A4B 的 compressed-tensors
+檢查點，因此本頁的選取器提供其他四種尺寸；請從上方的全精度儲存庫服務 26B A4B。
 
-## Call it
+## 呼叫它
 
 ```python { .model-swap }
 from openai import OpenAI

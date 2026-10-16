@@ -1,81 +1,68 @@
 ---
-title: PaliGemma prompt and system instructions
-description: This page describes prompt formatting and system instructions for PaliGemma models.
+title: PaliGemma 提示與系統指示
+description: 本頁說明 PaliGemma 視覺語言模型的提示格式、任務語法與系統指示的撰寫方式，並提供實用範例。
 models: [paligemma]
 source_url: "https://ai.google.dev/gemma/docs/paligemma/prompt-system-instructions.md.txt"
 ---
-# PaliGemma prompt and system instructions
+# PaliGemma 提示與系統指示
 
-This page describes prompt formatting and system instructions for PaliGemma
-models. These Gemma model variants use the same general formatting as Gemma
-foundation models and support a special syntax for specific image-related
-tasks.
+本頁說明 PaliGemma 模型的提示格式與系統指示。這些 Gemma 模型變體使用與
+Gemma 基礎模型相同的大致格式，並支援針對特定影像相關任務的特殊語法。
 
-## Prompt format
+## 提示格式
 
-PaliGemma models use the same prompt formatting as the Gemma foundation models
-they are based on. However, PaliGemma models also support a special
-[task syntax](prompting.md#prompt-task-syntax), which is described in the next section. For
-more information on Gemma prompt formatting, see
-[Gemma prompt and system instructions](../../get-started/prompt-formatting.md).
+PaliGemma 模型使用與其所基於的 Gemma 基礎模型相同的提示格式。不過，
+PaliGemma 模型也支援特殊的[任務語法](prompting.md#提示任務語法)，下一節
+將加以說明。有關 Gemma 提示格式的更多資訊，請參閱
+[Gemma 提示與系統指示](../../get-started/prompt-formatting.md)。
 
 !!! Note
-    although the pre-trained checkpoints support this prompt structure, they require fine-tuning to your specific use cases.
+    雖然預訓練檢查點支援此提示結構，但仍需要針對您的特定使用情境進行微調。
 
 
-### Image and text data order
+### 影像與文字資料的順序
 
-When prompting PaliGemma models with text and image data, the image data must
-always be provided *first*, and then the text prompting data after it. Reversing
-the order of image and text prompt data, or mixing image and text data will
-typically generate unusable responses.
+以文字與影像資料提示 PaliGemma 模型時，必須*先*提供影像資料，再提供文字
+提示資料。顛倒影像與文字提示資料的順序，或混合影像與文字資料，通常會產生
+無法使用的回應。
 
-### Prompt task syntax
+### 提示任務語法
 
-The PaliGemma models are trained with specific prompt patterns and syntax for
-tasks such as object identification and image captioning. You can use this
-prompt task syntax to request specific behavior from the PaliGemma models as
-follows:
+PaliGemma 模型以特定提示模式與語法進行訓練，適用於物件識別與影像圖說等任務。
+您可以如下使用此提示任務語法，要求 PaliGemma 模型執行特定行為：
 
-- **`"cap {lang}\n"`:** Very raw short caption (only supported by PT)
-- **`"caption {lang}\n"`:** Short captions
-- **`"describe {lang}\n"`:** Somewhat longer, more descriptive captions (only supported by PT)
-- **`"ocr"`:** Optical character recognition (only supported by PT)
-- **`"answer {lang} {question}\n"`:** Question answering about the image contents
-- **`"question {lang} {answer}\n"`:** Question generation for a given answer (only supported by PT)
-- **`"detect {object} ; {object}\n"`:** Locate listed objects in an image and return the bounding boxes for those objects
-- **`"segment {object} ; {object}\n"`:** Locate the area occupied by the listed objects in an image to create an image segmentation for that object
+- **`"cap {lang}\n"`:**：非常簡短的原始圖說（僅 PT 支援）
+- **`"caption {lang}\n"`:**：簡短圖說
+- **`"describe {lang}\n"`:**：稍長、更具描述性的圖說（僅 PT 支援）
+- **`"ocr"`:**：光學字元辨識（僅 PT 支援）
+- **`"answer {lang} {question}\n"`:**：針對影像內容的問答
+- **`"question {lang} {answer}\n"`:**：針對給定答案產生問題（僅 PT 支援）
+- **`"detect {object} ; {object}\n"`:**：在影像中定位所列物件，並回傳其邊界框
+- **`"segment {object} ; {object}\n"`:**：在影像中定位所列物件所佔的區域，為該物件建立影像分割
 
 !!! Note
-    the "object" for detection and segmentation can also be an expression, such as "the penguin on the left".
+    用於偵測與分割的「物件」也可以是表達式，例如「左側的企鵝」。
 
-
-The `{lang}` options are for language codes. PaliGemma supports language
-recognition for 34 different languages for task prompts with this option. You
-can find the list of supported languages on
-[GitHub](https://github.com/google/crossmodal-3600/blob/main/web-data/README.md).
+`{lang}` 選項是語言代碼。PaliGemma 支援以此選項辨識 34 種不同語言的任務提示。
+支援的語言清單可參閱
+[GitHub](https://github.com/google/crossmodal-3600/blob/main/web-data/README.md)。
 
 !!! Important
-    The [PaliGemma FT](index.md#model-categories) category of models are trained for specific tasks and *only* support the syntax for the target task.
+    [PaliGemma FT](index.md#模型類別) 類別的模型是為特定任務訓練的，*僅*支援目標任務的語法。
 
+有關展示如何使用此語法的詳細程式碼範例，請參閱教學
+[使用 Keras 產生 PaliGemma 輸出](inference.md)。
 
-For a detailed code examples showing how to use this syntax, see the
-[Generate PaliGemma output with Keras](inference.md)
-tutorial.
+### 以自然語言提示
 
-### Prompting with natural language
+雖然建議使用上一節的語法，但混合模型也支援以自然語言執行許多任務。例如，
+"describe this image briefly" 或 "what is this text" 即使未使用精確的語法提示，
+仍然有效。
 
-Although the syntax in the previous section is recommended, the mix models also
-support natural language for many of the tasks. For example, "describe this
-image briefly" or "what is this text" will still work even if not prompted with
-the exact syntax.
+### 批次提示指令
 
-### Batched prompt commands
-
-You can provide more than one prompt command within a single prompt as a batch
-of instructions. Each prompt command must end with a `\n` character. The
-following example demonstrates how to structure your prompt text to provide
-multiple instructions.
+您可以在單一提示中提供多個提示指令，作為一批指令。每個提示指令都必須以 `\n`
+字元結尾。以下範例示範如何組織提示文字以提供多個指令。
 
 ```python
 prompts = [
@@ -96,8 +83,8 @@ for output in outputs:
     print(output)
 ```
 
-## System instructions
+## 系統指示
 
-The PaliGemma models don't support any additional system instructions beyond
-the [Gemma system instructions](../../get-started/prompt-formatting.md#system-instructions)
-from the foundation models they are based on.
+PaliGemma 模型除了其所基於的基礎模型的
+[Gemma 系統指示](../../get-started/prompt-formatting.md#系統指令)
+之外，不支援任何其他系統指示。
