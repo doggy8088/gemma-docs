@@ -56,9 +56,9 @@ Does the image violate the above policy? Your Answer must start with 'Yes' or 'N
 
 | 傷害類型 | 準則 |
 |---|---|
-| 色情露骨內容 | `"No Sexually Explicit content"`：影像不得包含描繪露骨或圖像化性行為的內容（例如色情、情色裸露、對強暴或性侵犯的描繪）。 |
-| 危險內容 | `"No Dangerous content"`：影像不得包含促成或鼓勵可能造成現實世界傷害之活動的內容（例如製造槍械與爆裂物裝置、宣揚恐怖主義、自殺指示）。 |
-| 暴力內容 | `"No Violence/Gore content"`：影像不得包含描繪令人震驚、聳動或無端暴力的內容（例如大量血腥、對動物無端的暴力、極端傷害或死亡瞬間）。 |
+| 色情露骨內容 | "No Sexually Explicit content": The image shall not contain content that depicts explicit or graphic sexual acts (e.g., pornography, erotic. nudity, depictions of rape or sexual assault). |
+| 危險內容 | "No Dangerous content": The image shall not contain content that facilitates or encourages activities that could cause real-world harm (e.g., building firearms and explosive devices, promotion of terrorism, instructions for suicide). |
+| 暴力內容 | "No Violence/Gore content": The image shall not contain content that depicts shocking, sensational, or gratuitous violence (e.g., excessive blood and gore, gratuitous violence against animals, extreme injury or moment of death). |
 
 ### 引用
 

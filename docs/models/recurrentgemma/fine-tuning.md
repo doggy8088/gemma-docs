@@ -471,8 +471,8 @@ input_tokens: [[     2  49688    736   1280   6987 235292    108    527   5174  
   235265    108      2 235324 235304  19963 235265      1      0      0]]
 target_mask: [[False False False False False False False False False False False False
    True  True  True  True  True  True  True  True]
- [False False False False False False False False False False False False
-  False  True  True  True  True  True False False False]
+ [False False False False False False False False False False False  True
+   True  True  True  True False False False False]
  [False False False False False False False False False False False False
    True  True  True  True  True  True False False]]
 ```

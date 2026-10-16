@@ -1,6 +1,6 @@
 <!-- GENERATED from data/glossary.yml by scripts/generate_snippets.py -- do not edit. -->
 
-*[MTP]: 多詞元預測 — 小型草稿模型一次提出多個詞元，主模型一次驗證通過
+*[MTP]: 多詞元預測 — 小型草稿模型一次提出多個詞元，主模型在一次前向傳播中驗證這些詞元
 *[QAT]: 量化感知訓練 — 訓練時模擬量化，讓模型學會補償量化造成的影響
 *[PTQ]: 訓練後量化 — 壓縮已訓練完成的模型，在相同位元寬度下品質損失比 QAT 大
 *[GGUF]: llama.cpp 及其生態系用於量化權重的檔案格式

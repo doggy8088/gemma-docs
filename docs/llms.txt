@@ -24,7 +24,7 @@ Follow the Markdown links below to read canonical page content without cloning t
 ## 模型
 - [Gemma 模型家族](https://gemma.ai/models.md): 認識 Gemma 模型家族：介紹 Gemma 是什麼、各世代之間的演進關係，以及每個變體衍生自哪個基礎模型。
 - [Gemma 4](https://gemma.ai/models/gemma-4.md): Gemma 是生成式人工智慧模型的家族，可用於各種生成任務，包括問答、摘要與推理。
-- [模型卡](https://gemma.ai/models/gemma-4/model-card.md): Gemma 4 開放模型家族的模型卡：密集與混合專家架構規格、基準測試成績、核心能力、最佳實務與倫理安全說明。
+- [Gemma 4 — 模型卡](https://gemma.ai/models/gemma-4/model-card.md): Gemma 4 開放模型家族的模型卡：密集與混合專家架構規格、基準測試成績、核心能力、最佳實務與倫理安全說明。
 - [Gemma 3 模型卡](https://gemma.ai/models/gemma-3.md): Gemma 3 多模態模型的模型卡：128K 上下文、140 種以上語言、輸入與輸出、訓練資料與評測。
 - [Gemma 2 模型卡](https://gemma.ai/models/gemma-2.md): Gemma 2 文字轉文字模型的模型卡：模型說明、輸入與輸出格式、訓練資料、評測結果與安全評估。
 - [Gemma 模型卡](https://gemma.ai/models/gemma-1.md): 第一代 Gemma 文字轉文字模型的模型卡：模型說明、輸入與輸出格式、訓練資料、評測結果與使用限制。
@@ -66,7 +66,7 @@ Follow the Markdown links below to read canonical page content without cloning t
 - [版本發布紀錄](https://gemma.ai/models/releases.md): Gemma 模型家族的日期化發布歷史，從 Gemma 1 到 Gemma 4 以及專用變體。
 
 ## 執行
-- [總覽](https://gemma.ai/deployment.md): 依您的硬體選擇合適的執行框架與 Gemma 模型變體，逐步完成環境設定並執行您的第一個文字生成與推論請求。
+- [Gemma 4 — 總覽](https://gemma.ai/deployment.md): 依您的硬體選擇合適的執行框架與 Gemma 模型變體，逐步完成環境設定並執行您的第一個文字生成與推論請求。
 - [Ollama](https://gemma.ai/deployment/ollama.md): 使用 Ollama 在本機執行 Gemma 4 —— 模型標籤、圖像輸入，以及 OpenAI 相容伺服器。
 - [llama.cpp](https://gemma.ai/deployment/llamacpp.md): 使用 llama.cpp 執行 Gemma 4 —— 各尺寸的 GGUF 儲存庫、圖像/音訊/視訊輸入，以及 OpenAI 相容伺服器。
 - [LM Studio](https://gemma.ai/deployment/lmstudio.md): 使用 LM Studio 執行 Gemma 4 —— 桌面應用程式、lms CLI 與 OpenAI 相容的本機伺服器。

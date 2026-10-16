@@ -226,7 +226,7 @@ TFDS 用於存取資料集，Flax 用於模型架構。PaliGemma 2 的微調程�
 **[Visual Spatial Reasoning](https://direct.mit.edu/tacl/article/doi/10.1162/tacl_a_00566/116470/Visual-Spatial-Reasoning)**
 
 | 模型 | VSR zeroshot split (test) | VSR random split (test) |
-|---|---|---|---|
+|---|---|---|
 | PaliGemma 2 3B | 0.75 | 0.82 |
 | PaliGemma 2 10B | 0.80 | 0.87 |
 
