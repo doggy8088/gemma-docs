@@ -92,7 +92,7 @@ Gemma 4 模型提供 5 種參數規模：E2B、E4B、12B、31B 與 26B A4B。模
 | 目標部署引擎 | 下載後綴 | 主要使用情境 |
 |---|---|---|
 | llama.cpp / LM Studio（本機） | `{model-name}-qat-q4_0-gguf` | 在 CPU、Apple Silicon 或消費級 GPU 上零設定本機部署。 |
-| vLLM / SGLang | 伺服器版：`{model-name}-qat-w4a16-ct` 行動版：`{model-name}-qat-mobile-ct` | 使用 4 位元權重與 16 位元激活的高吞吐量推論。 |
+| vLLM / SGLang | 伺服器版：`{model-name}-qat-w4a16-ct` 行動版：`{model-name}-qat-mobile-ct` | 使用 4 位元權重與 16 位元活化的高吞吐量推論。 |
 | 推測解碼 | 主模型：`{model-name}-qat-q4_0-unquantized` 草稿模型：`{model-name}-qat-q4_0-unquantized-assistant` | 將主模型與其對應的 MTP 草稿模型並行運行，大幅加速詞元生成。模型必須經過量化。 |
 | 其他格式 | `{model-name}-qat-q4_0-unquantized` | 用於轉換為其他格式（例如 MLX）的未量化權重 |
 | 行動部署（Transformers） | `{model-name}-qat-mobile-transformers` | 針對行動使用情境優化的邊緣權重，可作為其他格式的參考。 |
@@ -104,7 +104,7 @@ Hugging Face 上的官方 QAT 集合
     - **GGUF（`-gguf`）：**可直接相容於本機 LLM 生態系的檢查點。*適用於 Gemma 4 E2B、E4B、12B、26B A4B 與 31B。*
     - **Compressed Tensors（`-w4a16-ct`）：**以 `compressed-tensors` 標準原生序列化，為優化、高併發的雲端服務而設計。*適用於 Gemma 4 E2B、E4B、12B 與 31B。*
 - **[collections/google/gemma-4-qat-mobile][hf-gemma4-qat-mobile]**
-    - **行動優化（`-mobile-transformers` / `-mobile-ct`）：**基於專為行動硬體限制設計的自訂 `wNa8o8` 結構。利用針對性的 2 位元解碼層、優化的 KV 快取與靜態激活，在不拖慢邊緣處理器的前提下，最大化裝置端 RAM 節省。*適用於 Gemma 4 E2B 與 E4B。*
+    - **行動優化（`-mobile-transformers` / `-mobile-ct`）：**基於專為行動硬體限制設計的自訂 `wNa8o8` 結構。利用針對性的 2 位元解碼層、優化的 KV 快取與靜態活化，在不拖慢邊緣處理器的前提下，最大化裝置端 RAM 節省。*適用於 Gemma 4 E2B 與 E4B。*
 
 所有官方 Gemma 4 QAT 檢查點也可直接從
 [Kaggle](https://www.kaggle.com/models/google/gemma-4/transformers){ data-model="gemma-4" } 取得。

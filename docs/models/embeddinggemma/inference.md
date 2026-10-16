@@ -64,7 +64,7 @@ Total number of parameters in the model: 744371488
     預設情況下，`SentenceTransformer` 會載入所有模態編碼器（740M 參數）。如果您的工作流程只使用文字，可以傳入 `config_kwargs={"vision_config": None, "audio_config": None}` 來跳過視覺與音訊編碼器的載入（270M 參數）。
 
 !!! note "精度說明"
-    EmbeddingGemma 2 的激活值與 `float16` 不相容。請使用 `bfloat16`（支援的 GPU 上為預設值）或 `float32`。
+    EmbeddingGemma 2 的活化值與 `float16` 不相容。請使用 `bfloat16`（支援的 GPU 上為預設值）或 `float32`。
 
 ## 文字嵌入與任務提示
 

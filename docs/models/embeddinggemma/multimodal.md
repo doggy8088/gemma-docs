@@ -60,7 +60,7 @@ Total number of parameters in the model: 744371488
 ```
 
 !!! note "精度說明"
-    EmbeddingGemma 2 的激活值與 `float16` 不相容。推論一律使用 `bfloat16`（支援的 GPU 上為預設值）或 `float32`。
+    EmbeddingGemma 2 的活化值與 `float16` 不相容。推論一律使用 `bfloat16`（支援的 GPU 上為預設值）或 `float32`。
 
 ### 選用：選擇性編碼器載入
 

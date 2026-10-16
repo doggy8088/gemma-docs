@@ -38,7 +38,7 @@ vllm serve google/gemma-4-12B-it
 去掉 `-it` 即為基礎權重，僅在進一步訓練時需要。
 
 對於 4 位元服務，請使用 [QAT](../get-started/qat.md) compressed-tensors 建置版本——4 位元權重搭配 16 位元
-激活：
+活化：
 
 ```bash { .model-swap }
 vllm serve google/gemma-4-12B-it-qat-w4a16-ct

@@ -88,7 +88,7 @@ Total number of parameters in the model: 438760448
     由於本教學是在**文字與圖像**資料上微調，我們在初始化時傳入 `config_kwargs={"audio_config": None}` 來省略音訊編碼器，以減少訓練期間的 GPU 記憶體使用量。如果您的微調資料集也包含音訊，請使用預設設定初始化 `SentenceTransformer(model_id)` 以載入所有模態編碼器。
 
 !!! note "精度說明"
-    EmbeddingGemma 2 的激活值與 `float16` 不相容。請使用 `bfloat16`（支援的 GPU 上為預設值）或 `float32`。
+    EmbeddingGemma 2 的活化值與 `float16` 不相容。請使用 `bfloat16`（支援的 GPU 上為預設值）或 `float32`。
 
 ## 基準評估（微調前）
 
