@@ -7,7 +7,7 @@
 site_name = "Gemma 文件"
 site_description = "Google DeepMind Gemma 開放模型繁體中文文件"
 site_author = "Google DeepMind"
-site_url = "https://gemma.ai"
+site_url = "https://gemma.gh.miniasp.com"
 
 copyright = """
 Copyright &copy; 2026 Google DeepMind
