@@ -290,7 +290,7 @@ analytics = "Google Analytics"
 logo = "assets/icon-one-color.png"
 favicon = "assets/icon.png"
 custom_dir = "overrides"
-language = "zh"
+language = "zh-TW"
 
 features = [
     "announce.dismiss",
