@@ -18,7 +18,7 @@ colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs
 - 測試模型推論並產生 SQL 查詢
 
 !!! Note
-    本指南是為在配備 NVIDIA T4 GPU（16GB）與 Gemma 1B 的 Google colaboratory 帳戶上執行而設計，但也可以調整為在更大的 GPU 與更大的模型上執行。
+    本指南是為在配備 NVIDIA T4 GPU（16GB）與 Gemma 1B 的 Google Colaboratory 帳號上執行而設計，但也可以調整為在更大的 GPU 與更大的模型上執行。
 
 
 ## 什麼是量化低秩適配（QLoRA）

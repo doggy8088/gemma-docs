@@ -93,7 +93,7 @@ Gemma 4 模型提供 5 種參數規模：E2B、E4B、12B、31B 與 26B A4B。模
 |---|---|---|
 | llama.cpp / LM Studio（本機） | `{model-name}-qat-q4_0-gguf` | 在 CPU、Apple Silicon 或消費級 GPU 上零設定本機部署。 |
 | vLLM / SGLang | 伺服器版：`{model-name}-qat-w4a16-ct` 行動版：`{model-name}-qat-mobile-ct` | 使用 4 位元權重與 16 位元活化的高吞吐量推論。 |
-| 推測解碼 | 主模型：`{model-name}-qat-q4_0-unquantized` 草稿模型：`{model-name}-qat-q4_0-unquantized-assistant` | 將主模型與其對應的 MTP 草稿模型並行運行，大幅加速詞元生成。模型必須經過量化。 |
+| 推測解碼 | 主模型：`{model-name}-qat-q4_0-unquantized` 草稿模型：`{model-name}-qat-q4_0-unquantized-assistant` | 將主模型與其對應的 MTP 草稿模型並行執行，大幅加速詞元生成。模型必須經過量化。 |
 | 其他格式 | `{model-name}-qat-q4_0-unquantized` | 用於轉換為其他格式（例如 MLX）的未量化權重 |
 | 行動部署（Transformers） | `{model-name}-qat-mobile-transformers` | 針對行動使用情境優化的邊緣權重，可作為其他格式的參考。 |
 

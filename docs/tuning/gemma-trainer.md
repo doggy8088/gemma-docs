@@ -24,10 +24,10 @@ source_url: "https://bebechien.github.io/cozy-corner-future/posts/master-local-f
 
 ## 為什麼您會想用它
 
-- **更快、更輕量的訓練**：我們推薦使用 **[Unsloth](http://unsloth.ai/)** 進行單 GPU 訓練，速度快、記憶體用量少，個人硬體也能輕鬆運行。
+- **更快、更輕量的訓練**：我們推薦使用 **[Unsloth](http://unsloth.ai/)** 進行單 GPU 訓練，速度快、記憶體用量少，個人硬體也能輕鬆執行。
 - **三種關鍵方法**：引導您完成監督式微調（SFT）來教導新知、直接偏好最佳化（DPO）來對齊偏好，以及獎勵模型（RM）來評分回應。
 - **教模型看與聽**：提供清晰的指示，教模型同時用圖片與音訊（多模態學習）搭配文字進行訓練。
-- **隨處運行**：快速將模型轉換為輕量格式（如 GGUF），並使用 **[LiteRT-LM](https://developers.google.com/edge/litert-lm/models/gemma-4)** 在手機或智慧裝置（IoT）上運行。
+- **隨處執行**：快速將模型轉換為輕量格式（如 GGUF），並使用 **[LiteRT-LM](https://developers.google.com/edge/litert-lm/models/gemma-4)** 在手機或智慧裝置（IoT）上執行。
 - **與時俱進的最佳實務**：此技能會持續更新最新的最佳化設定與訓練技巧，確保您用的永遠是最佳方法。
 
 ## 實用案例

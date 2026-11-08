@@ -17,7 +17,7 @@ colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs
 - 測試模型推論並做主觀檢驗
 
 !!! Note
-    本指南是為在配備 NVIDIA T4 GPU（16GB）與 Gemma 270m 的 Google colaboratory 帳戶上執行而設計，但也可以調整為在更大的 GPU 與更大的模型上執行。
+    本指南是為在配備 NVIDIA T4 GPU（16GB）與 Gemma 270m 的 Google Colaboratory 帳號上執行而設計，但也可以調整為在更大的 GPU 與更大的模型上執行。
 
 
 ## 設定開發環境
@@ -39,7 +39,7 @@ colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs
     如果您使用的 GPU 採用 Ampere 架構（如 NVIDIA L4）或更新版本，可以使用 Flash Attention。Flash Attention 是一種顯著加速運算並將記憶體使用量從序列長度的二次方降為線性的作法，最多可加速訓練 3 倍。更多資訊請參閱 [FlashAttention](https://github.com/Dao-AILab/flash-attention/tree/main).*
 
 
-在開始訓練之前，您必須先接受 Gemma 的使用條款。您可以前往 [Hugging Face](http://huggingface.co/google/gemma-3-270m-it){ data-model="gemma-3" }，點擊模型頁面上的「Agree and access repository」按鈕接受授權，網址為：<http://huggingface.co/google/gemma-3-270m-it>
+在開始訓練之前，您必須先接受 Gemma 的使用條款。您可以前往 [Hugging Face](http://huggingface.co/google/gemma-3-270m-it){ data-model="gemma-3" }，點選模型頁面上的「Agree and access repository」按鈕接受授權，網址為：<http://huggingface.co/google/gemma-3-270m-it>
 
 接受授權後，您需要有效的 Hugging Face Token 才能存取模型。如果您在 Google Colab 中執行，可以使用 Colab 密鑰安全地使用 Hugging Face Token；否則可以直接在 `login` 方法中設定 Token。請確保您的 Token 具有寫入權限，因為訓練期間會將模型推送到 Hub。
 

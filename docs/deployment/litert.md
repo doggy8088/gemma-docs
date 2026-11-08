@@ -70,7 +70,7 @@ litert-lm run /tmp/gemma4/model.litertlm --prompt="What is the capital of France
 | E4B | 3.65 GB |
 
 Google 在 [Gemma 4 LiteRT-LM 頁面](https://developers.google.com/edge/litert-lm/models/gemma-4){ data-model="gemma-4" } 上發布了按裝置與
-後端測量的預填、解碼與首詞元時間數據。
+後端測量的預填、解碼與首詞元時間資料。
 
 ## 平台指南
 

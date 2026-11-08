@@ -17,7 +17,7 @@ source_url: https://developers.googleblog.com/gemma-explained-new-in-gemma-2/
 
 ## **Gemma 2**
 
-我們最近發布了 Gemma 2，這套劃時代的全新開放模型為效能與可及性樹立了新標準。Gemma 2 提供 2B、9B 與 27B 三種參數規模，很快就嶄露頭角。我們的 27B 模型迅速登上 LMSYS Chatbot Arena 排行榜，在引人入勝的真實世界對話中超越了體積超過其兩倍的熱門模型，奠定自己作為排名最高、最實用的開放模型之一的地位。同時，Gemma 2 2B 模型以能在邊緣裝置上運行的體積，在 Chatbot Arena 上超越了所有 GPT-3.5 模型，展現了卓越的對話式 AI 實力。
+我們最近發布了 Gemma 2，這套劃時代的全新開放模型為效能與可及性樹立了新標準。Gemma 2 提供 2B、9B 與 27B 三種參數規模，很快就嶄露頭角。我們的 27B 模型迅速登上 LMSYS Chatbot Arena 排行榜，在引人入勝的真實世界對話中超越了體積超過其兩倍的熱門模型，奠定自己作為排名最高、最實用的開放模型之一的地位。同時，Gemma 2 2B 模型以能在邊緣裝置上執行的體積，在 Chatbot Arena 上超越了所有 GPT-3.5 模型，展現了卓越的對話式 AI 實力。
 
 開發者可以在各種平台與工具中使用 Gemma 2 強大的調校能力。透過雲端解決方案如 [Google Cloud](https://console.cloud.google.com/vertex-ai/publishers/google/model-garden/gemma2) 與社群工具如 [Axolotl](https://github.com/OpenAccess-AI-Collective/axolotl)，微調 Gemma 2 變得簡單。與 Hugging Face、NVIDIA TensorRT-LLM 等合作夥伴的無縫整合，以及我們的 JAX 與 Keras，讓效能最佳化與在多種硬體配置上的高效部署成為可能。
 

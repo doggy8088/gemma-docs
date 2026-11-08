@@ -7,7 +7,7 @@ colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs
 ---
 # 推論
 
-Gemma 是一個輕量級的頂尖開放模型家族，採用與創建 [Gemini](https://deepmind.google/technologies/gemini/#introduction) 模型相同的研發與技術打造而成。Gemma 4 旨在成為全球最具效率的開放權重模型家族。
+Gemma 是一個輕量級的頂尖開放模型家族，採用與打造 [Gemini](https://deepmind.google/technologies/gemini/#introduction) 模型相同的研發與技術打造而成。Gemma 4 旨在成為全球最具效率的開放權重模型家族。
 
 本文件提供使用 Hugging Face [`transformers`](https://huggingface.co/docs/transformers/installation) 函式庫，以 Gemma 4 進行基本文字推論的指南。內容涵蓋環境設定、模型載入，以及各種文字生成情境，包括單輪提示、結構化多輪對話，以及套用系統指令。
 

@@ -32,7 +32,7 @@ ollama pull gemma4:12b
 
 ## 模型標籤
 
-| 標籤 | 下載大小 | 脈絡 |
+| 標籤 | 下載大小 | 上下文 |
 |---|---|---|
 | `gemma4:e2b` | 7.2 GB | 128K |
 | `gemma4:e4b` | 9.6 GB | 128K |
@@ -51,7 +51,7 @@ ollama run gemma4:12b ./image.png "What is in this image?"
 ```
 
 !!! note
-    Ollama 發布的 Gemma 4 僅支援**文本與圖像**。若要使用音訊輸入，請使用
+    Ollama 發布的 Gemma 4 僅支援**文字與圖像**。若要使用音訊輸入，請使用
     [Transformers](huggingface.md) 或 [llama.cpp](llamacpp.md)。
 
 ## 伺服器
@@ -102,8 +102,8 @@ Ollama 在連接埠 `11434` 上提供服務。
       }'
     ```
 
-!!! tip "在 24 GiB VRAM 以下，脈絡預設為 4K"
-    Ollama 依可用 VRAM（而非模型）決定脈絡大小。需要時請調高：
+!!! tip "在 24 GiB VRAM 以下，上下文預設為 4K"
+    Ollama 依可用 VRAM（而非模型）決定上下文大小。需要時請調高：
     `OLLAMA_CONTEXT_LENGTH=64000 ollama serve`，或以
     `"options": {"num_ctx": 64000}` 針對單一請求設定。Agent 與程式設計工具至少需要 64K——
-    請參閱 [Ollama：脈絡長度](https://docs.ollama.com/context-length)。
+    請參閱 [Ollama：上下文長度](https://docs.ollama.com/context-length)。

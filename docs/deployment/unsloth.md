@@ -27,7 +27,7 @@ Unsloth 自家的建議總量——RAM + VRAM 合計，或統一記憶體：
 
 !!! note
     這些是 Unsloth 針對其 GGUF 建置版本的數字，包含執行期開銷，因此略高於
-    [Gemma 4 總覽](../models/gemma-4/index.md)中的靜態權重大小。脈絡（KV 快取）還需額外計算。
+    [Gemma 4 總覽](../models/gemma-4/index.md)中的靜態權重大小。上下文（KV 快取）還需額外計算。
 
 Unsloth 建議 12B、26B A4B 與 31B 使用**動態 4 位元**（`UD-Q4_K_XL`），E2B 與 E4B 使用
 **8 位元**（`Q8_0`）。
@@ -97,7 +97,7 @@ GGUF 與 MLX 檔案都支援。
     irm https://llama.app/install.ps1 | iex
     ```
 
-然後直接從 Hugging Face 拉取並執行模型。無需設定脈絡長度——
+然後直接從 Hugging Face 拉取並執行模型。無需設定上下文長度——
 llama.cpp 會使用正好所需的量。
 
 === "E2B"

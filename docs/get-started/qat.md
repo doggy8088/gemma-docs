@@ -55,7 +55,7 @@ GGUF 範例會跟隨模型選擇器；compressed-tensors 範例固定為 12B，�
 
 ## 記憶體
 
-靜態權重的概略記憶體占用，取自
+靜態權重的概略記憶體佔用，取自
 [Gemma 4 總覽](../models/gemma-4/index.md)：
 
 | 尺寸 | BF16 | SFP8 | Q4_0 |
@@ -66,7 +66,7 @@ GGUF 範例會跟隨模型選擇器；compressed-tensors 範例固定為 12B，�
 | 26B A4B | 57.7 GB | 28.8 GB | 14.4 GB |
 | 31B | 69.9 GB | 34.9 GB | 17.5 GB |
 
-上下文（KV 快取）在此之外另行占用，且隨提示與生成長度增長。
+上下文（KV 快取）在此之外另行佔用，且隨提示與生成長度增長。
 ## 接下來
 
 <div class="card-grid">

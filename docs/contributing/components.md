@@ -520,7 +520,7 @@ Body content, including code blocks.
 | `model-tree.css` | 模型家族血緣樹 |
 | `page-context.css` | 每個 H1 上方的適用性列 |
 | `tokens.css` | 對話詞元徽章（`<start_of_turn>` 等） |
-| `home.css` | 登陸頁：外框、背景、主視覺 |
+| `home.css` | 首頁：外框、背景、主視覺 |
 | `motion.css` | 轉場與減少動效的退出機制 |
 
 每個檔案都保持在 250 行以內，編輯前可以從頭讀到尾。為新的關注點新增樣式表是正確的做法；把某個檔案養成大雜燴則不是。

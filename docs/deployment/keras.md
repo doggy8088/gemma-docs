@@ -9,9 +9,9 @@ colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs
 # 使用 Keras 執行 Gemma
 
 
-生成內容、摘要與分析內容，只是您可以用 Gemma 開放模型完成的其中一些任務。本教學說明如何使用 Keras 開始執行 Gemma，包括使用文本與圖像輸入生成文本內容。[Keras](https://keras.io/) 提供使用 JAX、PyTorch 與 TensorFlow 執行 Gemma 與其他模型的實作。如果您是 Keras 新手，建議先閱讀 [Keras 入門](https://keras.io/getting_started/) 再開始。
+生成內容、摘要與分析內容，只是您可以用 Gemma 開放模型完成的其中一些任務。本教學說明如何使用 Keras 開始執行 Gemma，包括使用文字與圖像輸入生成文字內容。[Keras](https://keras.io/) 提供使用 JAX、PyTorch 與 TensorFlow 執行 Gemma 與其他模型的實作。如果您是 Keras 新手，建議先閱讀 [Keras 入門](https://keras.io/getting_started/) 再開始。
 
-Gemma 3 及後續模型支援文本與圖像輸入。較早版本的 Gemma 僅支援文本輸入，但部分變體除外，包括 [PaliGemma](../models/paligemma/index.md)。
+Gemma 3 及後續模型支援文字與圖像輸入。較早版本的 Gemma 僅支援文字輸入，但部分變體除外，包括 [PaliGemma](../models/paligemma/index.md)。
 !!! Note
     這本筆記本在使用 Gemma 4 時無法在 T4 上執行。請使用 L4 或更高階的 GPU。
 
@@ -143,9 +143,9 @@ Non-trainable params: 111,555 (435.69 KB)
     要在 Google Colab 上執行較大的 Gemma 模型，您需要付費方案提供的高階 GPU。或者，您可以使用 [Kaggle](https://www.kaggle.com/code) 筆記本或 Google Cloud 專案執行推論。
 
 
-## 以文本生成文本
+## 以文字生成文字
 
-使用您在前述步驟中設定的 Gemma 模型物件的 `generate()` 方法，以文本提示生成文本。選用的 `max_length` 參數指定生成序列的最大長度。以下程式碼範例示範幾種提示模型的方式。
+使用您在前述步驟中設定的 Gemma 模型物件的 `generate()` 方法，以文字提示生成文字。選用的 `max_length` 參數指定生成序列的最大長度。以下程式碼範例示範幾種提示模型的方式。
 
 ```python { .notebook-cell }
 output = gemma_lm.generate("what is keras in 3 bullet points?", max_length=64)
@@ -238,7 +238,7 @@ Everywhere, there, in
 
 雖然預設的貪婪演算法總是選擇機率最大的詞元，但 top-K 演算法會從機率最高的 K 個詞元中隨機選擇下一個詞元。您不必指定取樣器，如果對您的使用案例沒有幫助，可以忽略上一段程式碼。若想進一步了解可用的取樣器，請參閱[取樣器](https://keras.io/api/keras_nlp/samplers/)。
 
-## 以圖像資料生成文本
+## 以圖像資料生成文字
 
 使用 Gemma 3 及後續模型，您可以在提示中使用圖像來生成輸出。此功能讓您可以使用 Gemma 解讀視覺內容，或將圖像作為內容生成的資料。
 
@@ -378,7 +378,7 @@ Photo B is a close-up portrait of a **cat** with black and white markings and st
 
 ## 下一步
 
-在本教學中，您學會了如何使用 Keras 與 Gemma 生成文本。以下是一些後續學習建議：
+在本教學中，您學會了如何使用 Keras 與 Gemma 生成文字。以下是一些後續學習建議：
 
 - 了解如何[微調 Gemma 模型](../tuning/qlora.md)。
 - 了解 [Gemma 與 Vertex AI 的整合](google-cloud.md)

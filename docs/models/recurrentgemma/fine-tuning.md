@@ -1,6 +1,6 @@
 ---
 title: 使用 JAX 與 Flax 進行微調
-description: 使用 JAX、Flax 與 MTNT 噪聲文本資料集，將 RecurrentGemma 2B Instruct 微調為英法翻譯模型。
+description: 使用 JAX、Flax 與 MTNT 噪聲文字資料集，將 RecurrentGemma 2B Instruct 微調為英法翻譯模型。
 models: [recurrentgemma]
 frameworks: [jax]
 colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs/notebooks/recurrentgemma-fine-tuning.ipynb
@@ -8,7 +8,7 @@ source_url: "https://ai.google.dev/gemma/docs/recurrentgemma/recurrentgemma_jax_
 ---
 # 使用 JAX 與 Flax 進行微調
 
-本教學示範如何使用 [Google DeepMind 的 `recurrentgemma` 函式庫](https://github.com/google-deepmind/recurrentgemma){ data-model="recurrentgemma" }、[JAX](https://jax.readthedocs.io)（高效能數值運算函式庫）、[Flax](https://flax.readthedocs.io)（基於 JAX 的類神經網路函式庫）、[Chex](https://chex.readthedocs.io/en/latest/)（用於撰寫可靠 JAX 程式碼的工具函式庫）、[Optax](https://optax.readthedocs.io/en/latest/)（基於 JAX 的梯度處理與最佳化函式庫），以及 [MTNT（噪聲文本機器翻譯，Machine Translation of Noisy Text）資料集](https://arxiv.org/abs/1809.00388)，將 [RecurrentGemma](index.md) 2B Instruct 模型微調為英法翻譯任務。雖然本筆記本未直接使用 Flax，但 Gemma 正是用 Flax 建立的。
+本教學示範如何使用 [Google DeepMind 的 `recurrentgemma` 函式庫](https://github.com/google-deepmind/recurrentgemma){ data-model="recurrentgemma" }、[JAX](https://jax.readthedocs.io)（高效能數值運算函式庫）、[Flax](https://flax.readthedocs.io)（基於 JAX 的類神經網路函式庫）、[Chex](https://chex.readthedocs.io/en/latest/)（用於撰寫可靠 JAX 程式碼的工具函式庫）、[Optax](https://optax.readthedocs.io/en/latest/)（基於 JAX 的梯度處理與最佳化函式庫），以及 [MTNT（噪聲文字機器翻譯，Machine Translation of Noisy Text）資料集](https://arxiv.org/abs/1809.00388)，將 [RecurrentGemma](index.md) 2B Instruct 模型微調為英法翻譯任務。雖然本筆記本未直接使用 Flax，但 Gemma 正是用 Flax 建立的。
 
 `recurrentgemma` 函式庫以 JAX、Flax、[Orbax](https://orbax.readthedocs.io/)（基於 JAX 的訓練工具函式庫，例如檢查點）與 [SentencePiece](https://github.com/google/sentencepiece)（分詞/還原詞元函式庫）撰寫。
 
@@ -133,7 +133,7 @@ TOKENIZER_PATH: /root/.cache/kagglehub/models/google/recurrentgemma/flax/2b-it/1
 ```
 ## 載入並準備 MTNT 資料集與 Gemma 分詞器
 
-您將使用 [MTNT（噪聲文本機器翻譯）](https://arxiv.org/abs/1809.00388) 資料集，可從 [TensorFlow Datasets](https://www.tensorflow.org/datasets/catalog/mtnt) 取得。
+您將使用 [MTNT（噪聲文字機器翻譯）](https://arxiv.org/abs/1809.00388) 資料集，可從 [TensorFlow Datasets](https://www.tensorflow.org/datasets/catalog/mtnt) 取得。
 
 下載 MTNT 資料集中的英翻法部分，然後取兩個範例。資料集中的每個樣本包含兩個欄位：`src`：原始英文句子；`dst`：對應的法文翻譯。
 

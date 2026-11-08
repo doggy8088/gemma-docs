@@ -43,7 +43,7 @@ source_url: "https://ai.google.dev/gemma/docs/functiongemma/finetuning-with-func
     如果您使用的 GPU 具備 Ampere 架構（例如 NVIDIA L4）或更新的架構，就可以使用 Flash attention。Flash Attention 是一種能大幅加速運算、並將序列長度的記憶體使用量從二次方降為線性的方法，可加速訓練達 3 倍。詳情請參閱 [FlashAttention](https://github.com/Dao-AILab/flash-attention/tree/main)。
 
 
-在開始訓練之前，必須先接受 Gemma 的使用條款。您可以在 [Hugging Face](http://huggingface.co/google/functiongemma-270m-it){ data-model="functiongemma" } 點擊模型頁面上的 **Agree** 並存取儲存庫按鈕來接受授權，模型頁面網址：<http://huggingface.co/google/functiongemma-270m-it>
+在開始訓練之前，必須先接受 Gemma 的使用條款。您可以在 [Hugging Face](http://huggingface.co/google/functiongemma-270m-it){ data-model="functiongemma" } 點選模型頁面上的 **Agree** 並存取儲存庫按鈕來接受授權，模型頁面網址：<http://huggingface.co/google/functiongemma-270m-it>
 
 接受授權後，您需要有效的 Hugging Face 權杖才能存取模型。如果您在 Google Colab 中執行，可以使用 Colab 密鑰安全地使用 Hugging Face 權杖，否則也可以直接在 `login` 方法中設定權杖。請確保您的權杖具有寫入權限，因為微調後會將模型推送到 Hugging Face Hub。
 

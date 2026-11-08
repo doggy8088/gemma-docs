@@ -70,7 +70,7 @@ llama cli -m gemma-4-E2B-it-Q4_0.gguf --mm mmproj-gemma-4-E2B-it-Q8_0.gguf
 ```
 
 !!! note
-    音訊適用於 E2B、E4B 與 12B。26B A4B 與 31B 模型接受文本與圖像，並以影格
+    音訊適用於 E2B、E4B 與 12B。26B A4B 與 31B 模型接受文字與圖像，並以影格
     方式讀取視訊——它們沒有音訊編碼器。
 
 ## 伺服器
@@ -93,4 +93,4 @@ response = client.chat.completions.create(
 print(response.choices[0].message.content)
 ```
 
-多模態輸入會快速消耗脈絡；請用 `-c` 設定，例如 `-c 32768`。
+多模態輸入會快速消耗上下文；請用 `-c` 設定，例如 `-c 32768`。

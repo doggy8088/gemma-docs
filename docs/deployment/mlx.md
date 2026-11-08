@@ -1,6 +1,6 @@
 ---
 title: 使用 MLX 執行 Gemma
-description: 在 Apple 晶片上使用 MLX 執行 Gemma 4 —— 文本與視覺生成、模型儲存庫，以及 OpenAI 相容伺服器。
+description: 在 Apple 晶片上使用 MLX 執行 Gemma 4 —— 文字與視覺生成、模型儲存庫，以及 OpenAI 相容伺服器。
 models: [gemma-4]
 frameworks: [mlx]
 ---
@@ -19,7 +19,7 @@ pip install mlx mlx-lm mlx-vlm
 
 ## 執行
 
-=== "文本"
+=== "文字"
 
     ```bash { .model-swap }
     mlx_lm.generate --model mlx-community/gemma-4-E2B-it-qat-4bit --prompt "Who are you?"
