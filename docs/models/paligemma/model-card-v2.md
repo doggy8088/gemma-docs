@@ -1,7 +1,7 @@
 ---
 title: PaliGemma 2 模型卡
 description: PaliGemma 2 是 PaliGemma 視覺語言模型（VLM）的更新版本，納入了 Gemma 2 模型的能力。
-models: [paligemma]
+models: [paligemma-2]
 source_url: "https://ai.google.dev/gemma/docs/paligemma/model-card-2.md.txt"
 ---
 # 模型卡
@@ -36,7 +36,7 @@ PaliGemma 2 是 [PaliGemma](https://arxiv.org/abs/2407.07726)
 PaliGemma 2 由
 [Transformer 解碼器](https://arxiv.org/abs/1706.03762)與
 [Vision Transformer 影像編碼器](https://arxiv.org/abs/2010.11929)組成。
-文字解碼器以 [Gemma 2](../gemma-4/index.md) 初始化，提供 2B、9B 與 27B
+文字解碼器以 [Gemma 2](../gemma-2/index.md) 初始化，提供 2B、9B 與 27B
 參數量版本。影像編碼器以
 [SigLIP-So400m/14](https://colab.research.google.com/github/google-research/big_vision/blob/main/big_vision/configs/proj/image_text/SigLIP_demo.ipynb)
 初始化。與原始 PaliGemma 模型類似，PaliGemma 2 的訓練遵循
@@ -49,7 +49,7 @@ PaliGemma 2 由
 
 #### 引用
 
-```python
+```bibtex
 @article{
     title={PaliGemma 2: A Family of Versatile VLMs for Transfer},
     author={Andreas Steiner and André Susano Pinto and Michael Tschannen and Daniel Keysers and Xiao Wang and Yonatan Bitton and Alexey Gritsenko and Matthias Minderer and Anthony Sherbondy and Shangbang Long and Siyang Qin and Reeve Ingle and Emanuele Bugliarello and Sahar Kazemzadeh and Thomas Mesnard and Ibrahim Alabdulmohsin and Lucas Beyer and Xiaohua Zhai},

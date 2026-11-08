@@ -1,6 +1,6 @@
 ---
 title: 使用 Hugging Face Transformers 執行 Gemma
-description: 生成文本、摘要與分析內容，只是您可以用 Gemma 開放模型完成的其中一些任務。
+description: "在 Python 中使用 Hugging Face Transformers 執行 Gemma 4，進行文字、圖像、音訊與多輪對話生成。"
 models: [gemma-4, gemma-3, gemma-3n]
 frameworks: [transformers]
 source_url: "https://ai.google.dev/gemma/docs/core/huggingface_inference.md.txt"
@@ -12,7 +12,7 @@ colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs
 生成文本、摘要與分析內容，只是您可以用 Gemma 開放模型完成的其中一些任務。本教學說明如何使用 Hugging Face Transformers 開始執行 Gemma，使用文本與圖像輸入來生成文本內容。Transformers Python 函式庫提供存取預訓練生成式 AI 模型（包括 Gemma）的 API。更多資訊請參閱 [Transformers](https://huggingface.co/docs/transformers/en/index) 文件。
 
 !!! Note
-    Gemma 3 及後續模型支援圖像與文本兩種輸入。較早版本的 Gemma 僅支援文本輸入，但部分變體除外，包括 [PaliGemma](../get-started/index.md)。
+    Gemma 3 及後續模型支援圖像與文本兩種輸入。較早版本的 Gemma 僅支援文本輸入，但部分變體除外，包括 [PaliGemma](../models/paligemma/index.md)。
 
 
 ### 安裝 Python 套件
@@ -142,6 +142,7 @@ pipe(text=messages, return_full_text=False, generate_kwargs=gen_kwargs)
 !!! Note
     請勿在提示範本的文本部分使用 `<|image|>`{.token-multi}、`<start_of_image>`{.token-multi} 或 `<image_soft_token>`{.token-multi} 詞元，因為這種做法會產生冗餘的詞元與處理錯誤。
 
+<!-- notebook:requires-start audio -->
 
 ## 從音訊資料生成文本
 
@@ -151,7 +152,7 @@ pipe(text=messages, return_full_text=False, generate_kwargs=gen_kwargs)
 
 當以音訊生成內容時，請使用提示範本來組織您的請求。提示範本可讓您指定特定角色的輸入，例如 `user`{.token-role} 或 `model`{.token-role}，是管理與 Gemma 模型多輪聊天互動的必要格式。以下範例程式碼示範如何為搭配音訊資料輸入的 Gemma 建構提示範本：
 
-```python { .notebook-cell }
+```python { .notebook-cell data-requires="audio" }
 from transformers import GenerationConfig
 config = GenerationConfig.from_pretrained(MODEL_ID)
 config.max_new_tokens = 512
@@ -162,7 +163,7 @@ messages = [
         "role": "user",
         "content": [
             {"type": "text", "text": "Transcribe the following speech segment in its original language. Follow these specific instructions for formatting the answer:\n* Only output the transcription, with no newlines.\n* When transcribing numbers, write the digits, i.e. write 1.7 and not one point seven, and write 3 instead of three."},
-            {"type": "audio", "audio": "https://ai.google.dev/gemma/docs/audio/roses-are.wav"},
+            {"type": "audio", "audio": "https://gemma.ai/assets/capabilities/roses-are.wav"},
         ]
     }
 ]
@@ -175,13 +176,15 @@ pipe(text=messages, return_full_text=False, generate_kwargs=gen_kwargs)
     'content': [{'type': 'text',
       'text': 'Transcribe the following speech segment in its original language. Follow these specific instructions for formatting the answer:\n* Only output the transcription, with no newlines.\n* When transcribing numbers, write the digits, i.e. write 1.7 and not one point seven, and write 3 instead of three.'},
      {'type': 'audio',
-      'audio': 'https://ai.google.dev/gemma/docs/audio/roses-are.wav'}]}],
+      'audio': 'https://gemma.ai/assets/capabilities/roses-are.wav'}]}],
   'generated_text': 'Roses are red, violets are blue.<turn|>'}]
 ```
 
 您可以在提示中包含多個音訊檔，方法是在 `content` 清單中加入額外的 `"type": "audio",` 項目。
 !!! Note
     請勿在提示範本的文本部分使用 `<|audio|>`{.token-multi} 或 `<audio_soft_token>`{.token-multi} 詞元，因為這種做法會產生冗餘的詞元與處理錯誤。
+
+<!-- notebook:requires-end -->
 
 
 ## 後續步驟

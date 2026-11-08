@@ -1,7 +1,7 @@
 ---
 title: 使用 Sentence Transformers 微調多模態 EmbeddingGemma 2
 description: 使用 Sentence Transformers 透過對比式多模態三元組微調（triplet fine-tuning），讓 EmbeddingGemma 2 適應文字與視覺輸入。
-models: [embeddinggemma]
+models: [embeddinggemma-2]
 frameworks: [sentence-transformers, transformers]
 colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs/notebooks/embeddinggemma-fine-tuning-multimodal.ipynb
 source_url: "https://ai.google.dev/gemma/docs/embeddinggemma/fine-tuning-multimodal-embeddinggemma-with-sentence-transformers.md.txt"

@@ -16,9 +16,12 @@
 - 23 篇 Markdown 優先的教學匯出 66 個 Jupyter notebook（`docs/notebooks/*.ipynb`），
   含 Apache 2.0 授權標頭，包括 `.model-swap` 頁面的模型專屬變體，
   以及瀏覽器中的動態 Colab 連結切換。
-- 兩個互動示範（FunctionGemma 物理遊樂場 HF Space 與 AIventure 網頁遊戲）、
-  以任務為先的 Learn 中心、視覺指南（`tutorials/visual-guides/`），以及 6 篇的
+- 三個互動示範（FunctionGemma 物理遊樂場 HF Space、AIventure 網頁遊戲與
+  Embedding Draw Challenge）、以任務為先的 Learn 中心、視覺指南（`tutorials/visual-guides/`），以及 6 篇的
   Gemma Explained 系列（`tutorials/gemma-explained/`），展示了更豐富的文件體驗。
+- Google Analytics 4（`G-CWMC2KTTGQ`）與 Cookie 同意管理已於
+  `zensical.toml` 設定（`scripts/build_docs.py` 支援 `GA_MEASUREMENT_ID` 覆寫），
+  並由 `tests/test_analytics.py` 驗證。
 - `scripts/importers/sources.toml` 中的全部 65 個匯入頁面皆已凍結（`frozen = true`），
   並在總計 97 個文件頁面中手動維護。
 - lint 基準線（`.lintbaseline.json`）為空（全部 15 項檢查皆為
@@ -33,12 +36,6 @@
 
 保持這份清單精簡。這些任務實質影響正式上線切換或儲存庫維護；
 更廣的產品想法屬於延期路線圖。
-
-### 分析切換
-
-- [ ] 在 GitHub Actions 中設定正式環境的 `GA_MEASUREMENT_ID` 儲存庫變數或 secret。
-- [ ] 最終的量測 ID 就緒後，將 `tests/skip_test_analytics.py` 重新命名為
-      `tests/test_analytics.py`，以在 CI 中啟用 GA4 與 cookie 同意驗證。
 
 ### 產生的 notebook（可選的 CI 發布）
 
@@ -159,8 +156,7 @@ scripts/importers/port_docs.py
 
 回歸測試與轉換器測試夾具屬於 `tests/`，而不是放在可執行的維護指令旁。
 CI 從這個目錄探索 `test_*.py`（`test_agent_docs.py`、
-`test_convert_notebook.py`、`test_notebooks.py`；`skip_test_analytics.py`
-等待正式環境的 `GA_MEASUREMENT_ID`）。
+`test_analytics.py`、`test_convert_notebook.py`、`test_notebooks.py`）。
 
 已從維護範圍中移除：
 

@@ -1,10 +1,10 @@
 ---
 title: ShieldGemma
 description: ShieldGemma 是一組指令微調（instruction-tuned）模型，用於依據一組定義好的安全政策，評估文字與圖片的安全性。
-models: [shieldgemma]
+models: [shieldgemma-2, shieldgemma]
 source_url: "https://ai.google.dev/gemma/docs/shieldgemma.md.txt"
 ---
-# ShieldGemma {: #hidden-title style="display: none;" }
+# ShieldGemma
 
 <div class="video-embed">
   <iframe src="https://www.youtube.com/embed/BgWO2iVPlyw"
@@ -18,7 +18,7 @@ ShieldGemma 是一組指令微調模型，用於依據一組定義好的安全�
 
 
 ShieldGemma 2 是為圖片安全標註而建構的 40 億（4B）參數模型。
-ShieldGemma 1 建構於 [Gemma 2](../gemma-4/index.md) 之上，提供 2B、9B 與 27B 三種參數規模。
+ShieldGemma 1 建構於 [Gemma 2](../gemma-2/index.md) 之上，提供 2B、9B 與 27B 三種參數規模。
 
 
 - **內容安全評估** — 依據一組定義好的安全政策，評估提示輸入與輸出回應的安全性。

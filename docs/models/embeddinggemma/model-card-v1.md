@@ -43,7 +43,7 @@ EmbeddingGemma 產生文字的向量表示，非常適合搜尋與檢索任務�
 
 ### 引用
 
-```python
+```bibtex
 @article{embedding_gemma_2025,
     title={EmbeddingGemma: Powerful and Lightweight Text Representations},
     publisher={Google DeepMind},

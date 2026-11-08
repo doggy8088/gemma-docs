@@ -231,23 +231,26 @@ def load_context() -> Context:
     return Context(pages=load_pages(), nav_entries=list(walk_nav(nav)), config=config)
 
 
+FENCE_OPEN = re.compile(r"^(\s*)(`{3,}|~{3,})(.*)$")
+
+
 def iter_code_blocks(page: Page) -> Iterator[tuple[int, str, str]]:
     """Yield (start line, info string, block content) for each fenced code block."""
-    fence = re.compile(r"^(\s*)```(.*)$")
     open_at: int | None = None
+    active_fence = ""
     info = ""
     buf: list[str] = []
     for lineno, line in page.body_lines():
-        m = fence.match(line)
-        if not m:
-            if open_at is not None:
-                buf.append(line)
-            continue
+        m = FENCE_OPEN.match(line)
         if open_at is None:
-            open_at, info, buf = lineno, m.group(2).strip(), []
-        else:
+            if m:
+                open_at, active_fence, info, buf = lineno, m.group(2), m.group(3).strip(), []
+            continue
+        if m and m.group(2) == active_fence and not m.group(3).strip():
             yield open_at, info, "\n".join(buf)
             open_at = None
+        else:
+            buf.append(line)
 
 
 INLINE_CODE = re.compile(r"`+[^`]*`+")
@@ -264,13 +267,17 @@ def strip_inline_code(line: str) -> str:
 
 def outside_code(page: Page) -> Iterator[tuple[int, str]]:
     """Yield body lines that are not inside a fenced code block, with code spans blanked."""
-    in_fence = False
+    active_fence: str | None = None
     for lineno, line in page.body_lines():
-        if line.lstrip().startswith("```"):
-            in_fence = not in_fence
-            continue
-        if not in_fence:
+        m = FENCE_OPEN.match(line)
+        if active_fence is None:
+            if m:
+                active_fence = m.group(2)
+                continue
             yield lineno, strip_inline_code(line)
+        elif m and m.group(2) == active_fence and not m.group(3).strip():
+            active_fence = None
+            continue
 
 
 # --- Checks -----------------------------------------------------------------------------------
@@ -484,22 +491,53 @@ def check_frontmatter(ctx: Context) -> Iterable[Finding]:
         # `<h1 id="__skip">`). On those pages the title is visible content, not just metadata,
         # so it has to say what the page already said. Where the page *has* an H1, the title
         # only reaches the browser tab and llms.txt and may be more specific than the heading.
-        if first_heading(page) is None and "title" not in page.frontmatter:
+        h1 = first_heading(page)
+        title = str(page.frontmatter.get("title", ""))
+        if h1 is None and "title" not in page.frontmatter:
             yield Finding(
                 "frontmatter",
                 page.repo_rel,
                 0,
                 "page has no H1, so `title` is rendered as the heading -- it must be set",
             )
+        if h1 and "gemma" in h1.lower() and "gemma" not in title.lower():
+            yield Finding(
+                "frontmatter",
+                page.repo_rel,
+                0,
+                "frontmatter `title` drops 'Gemma' from the page's H1 -- keep the full title in "
+                "frontmatter and shorten the sidebar label in zensical.toml instead",
+            )
+        if "model-card" in page.rel and "gemma" not in title.lower():
+            yield Finding(
+                "frontmatter",
+                page.repo_rel,
+                0,
+                "model card `title` must include the model name (e.g. 'Gemma 4 model card')",
+            )
+        for lineno, line in outside_code(page):
+            if line.startswith("# ") and ("hidden-title" in line or re.search(r"display\s*:\s*none", line)):
+                yield Finding(
+                    "frontmatter",
+                    page.repo_rel,
+                    lineno,
+                    "H1 is hidden with display:none -- keep H1 visible for search indexing",
+                )
+
+
+HIDDEN_PREFIXES = ("contributing/",)
 
 
 def check_orphans(ctx: Context) -> Iterable[Finding]:
     """Nav and filesystem must agree."""
     nav = set(ctx.nav_entries)
-    for rel in sorted(ctx.page_paths - nav):
+    visible_pages = {rel for rel in ctx.page_paths if not rel.startswith(HIDDEN_PREFIXES)}
+    for rel in sorted(visible_pages - nav):
         yield Finding("orphans", f"docs/{rel}", 0, "page exists but is not in nav")
     for rel in sorted(nav - ctx.page_paths):
         yield Finding("orphans", "zensical.toml", 0, f"nav entry has no file: {rel}")
+    for rel in sorted(nav & (ctx.page_paths - visible_pages)):
+        yield Finding("orphans", "zensical.toml", 0, f"hidden page must not be in nav: {rel}")
     seen: set[str] = set()
     for rel in ctx.nav_entries:
         if rel in seen:
@@ -552,9 +590,19 @@ def check_model_swap(ctx: Context) -> Iterable[Finding]:
     """A swappable engine must not also appear in unacknowledged static code blocks."""
     data = yaml.safe_load((REPO_ROOT / "data" / "models.yml").read_text(encoding="utf-8"))
     engines: dict[str, set[str]] = {}
+    index: list[tuple[str, str, str]] = []
     for size in data.get("gemma4", {}).get("sizes", []):
+        size_id = str(size["id"])
         for engine, identifier in size.get("ids", {}).items():
             engines.setdefault(str(engine), set()).add(str(identifier))
+            index.append((str(identifier), str(engine), size_id))
+    index.sort(key=lambda item: len(item[0]), reverse=True)
+    pattern = re.compile("|".join(re.escape(text) for text, _, _ in index))
+    by_text = {text: (engine, size_id) for text, engine, size_id in index}
+    unrewritten_re = re.compile(
+        r"\bgemma[-_]?4[-_:(](?:e2b|e4b|12b|26b(?:[-_]a4b)?|31b)[\w.-]*",
+        re.IGNORECASE,
+    )
 
     for page in ctx.pages:
         blocks = list(iter_code_blocks(page))
@@ -562,12 +610,40 @@ def check_model_swap(ctx: Context) -> Iterable[Finding]:
         if not marked:
             continue
 
-        active = {
-            engine
-            for _, _, code in marked
-            for engine, identifiers in engines.items()
-            if any(identifier in code for identifier in identifiers)
-        }
+        active: set[str] = set()
+        page_default_size: str | None = None
+        for line, _, code in marked:
+            matches = [m.group(0) for m in pattern.finditer(code)]
+            if not matches:
+                yield Finding(
+                    "model-swap",
+                    page.repo_rel,
+                    line,
+                    ".model-swap block contains no swappable model identifier from data/models.yml",
+                )
+                continue
+            for match in matches:
+                engine, size_id = by_text[match]
+                active.add(engine)
+                if page_default_size is None:
+                    page_default_size = size_id
+                elif size_id != page_default_size:
+                    yield Finding(
+                        "model-swap",
+                        page.repo_rel,
+                        line,
+                        f".model-swap identifier '{match}' targets '{size_id}' "
+                        f"but page default is '{page_default_size}'",
+                    )
+            remainder = pattern.sub("", code)
+            for leftover in unrewritten_re.finditer(remainder):
+                yield Finding(
+                    "model-swap",
+                    page.repo_rel,
+                    line,
+                    f"unrewritten model identifier '{leftover.group(0)}' inside .model-swap block",
+                )
+
         for line, info, code in blocks:
             if ".model-swap" in info or ".model-fixed" in info or ".output" in info:
                 continue
@@ -696,7 +772,7 @@ def check_css(ctx: Context) -> Iterable[Finding]:
         return
 
     registered = {
-        Path(entry).name
+        Path(entry.split("?", 1)[0]).name
         for entry in ctx.config.get("project", {}).get("extra_css", [])
     }
 

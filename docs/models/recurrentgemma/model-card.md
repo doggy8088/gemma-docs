@@ -38,7 +38,7 @@ Gemma 需要更少的記憶體，並在生成長序列時達到更快的推論�
 
 #### 引用
 
-```python
+```bibtex
 @article{recurrentgemma_2024,
     title={RecurrentGemma},
     url={},

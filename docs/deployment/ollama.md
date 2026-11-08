@@ -1,5 +1,5 @@
 ---
-title: Ollama
+title: 使用 Ollama 執行 Gemma
 description: 使用 Ollama 在本機執行 Gemma 4 —— 模型標籤、圖像輸入，以及 OpenAI 相容伺服器。
 models: [gemma-4]
 frameworks: [ollama]

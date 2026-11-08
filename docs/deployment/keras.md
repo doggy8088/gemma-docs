@@ -1,6 +1,6 @@
 ---
 title: 使用 Keras 執行 Gemma
-description: 生成內容、摘要與分析內容，只是您可以用 Gemma 開放模型完成的其中一些任務。
+description: "在 Python 中使用 Keras 與 KerasHub 執行 Gemma 4 推論，進行文字與多模態圖像生成。"
 models: [gemma-4]
 frameworks: [keras]
 source_url: "https://ai.google.dev/gemma/docs/core/keras_inference.md.txt"
@@ -11,7 +11,7 @@ colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs
 
 生成內容、摘要與分析內容，只是您可以用 Gemma 開放模型完成的其中一些任務。本教學說明如何使用 Keras 開始執行 Gemma，包括使用文本與圖像輸入生成文本內容。[Keras](https://keras.io/) 提供使用 JAX、PyTorch 與 TensorFlow 執行 Gemma 與其他模型的實作。如果您是 Keras 新手，建議先閱讀 [Keras 入門](https://keras.io/getting_started/) 再開始。
 
-Gemma 3 及後續模型支援文本與圖像輸入。較早版本的 Gemma 僅支援文本輸入，但部分變體除外，包括 [PaliGemma](../get-started/index.md)。
+Gemma 3 及後續模型支援文本與圖像輸入。較早版本的 Gemma 僅支援文本輸入，但部分變體除外，包括 [PaliGemma](../models/paligemma/index.md)。
 !!! Note
     這本筆記本在使用 Gemma 4 時無法在 T4 上執行。請使用 L4 或更高階的 GPU。
 
@@ -267,7 +267,7 @@ def read_image(url):
 from matplotlib import pyplot as plt
 
 image = read_image(
-    "https://ai.google.dev/gemma/docs/images/thali-indian-plate.jpg"
+    "https://gemma.ai/assets/deployment/thali-indian-plate.jpg"
 )
 plt.imshow(image)
 ```

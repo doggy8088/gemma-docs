@@ -1,7 +1,7 @@
 ---
 title: ShieldGemma 2 模型卡
 description: ShieldGemma 2 是在 Gemma 3 的 4B IT 檢查點上訓練的模型，用於跨關鍵類別的影像安全分類：接收影像，依政策輸出安全標籤。
-models: [shieldgemma]
+models: [shieldgemma-2]
 source_url: "https://ai.google.dev/gemma/docs/shieldgemma/model_card_2.md.txt"
 ---
 # ShieldGemma 模型卡
@@ -11,8 +11,8 @@ source_url: "https://ai.google.dev/gemma/docs/shieldgemma/model_card_2.md.txt"
 **資源與技術文件**:
 
 - [Responsible Generative AI Toolkit][responsible-ai]
-- [Kaggle 上的 ShieldGemma](https://www.kaggle.com/models/google/shieldgemma){ data-model="shieldgemma" }
-- [Hugging Face Hub 上的 ShieldGemma](https://huggingface.co/models?search=shieldgemma){ data-model="shieldgemma" }
+- [Kaggle 上的 ShieldGemma](https://www.kaggle.com/models/google/shieldgemma-2){ data-model="shieldgemma-2" }
+- [Hugging Face Hub 上的 ShieldGemma](https://huggingface.co/models?search=shieldgemma){ data-model="shieldgemma-2" }
 
 **使用條款** : [條款][gemma-terms]
 
@@ -62,7 +62,7 @@ Does the image violate the above policy? Your Answer must start with 'Yes' or 'N
 
 ### 引用
 
-```python
+```bibtex
 @misc{zeng2025shieldgemma2robusttractable,
       title={ShieldGemma 2: Robust and Tractable Image Content Moderation},
       author={Wenjun Zeng and Dana Kurniawan and Ryan Mullins and Yuchi Liu and Tamoghna Saha and Dirichi Ike-Njoku and Jindong Gu and Yiwen Song and Cai Xu and Jingjing Zhou and Aparna Joshi and Shravan Dheep and Mani Malek and Hamid Palangi and Joon Baek and Rick Pereira and Karthik Narasimhan},

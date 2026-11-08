@@ -1,6 +1,6 @@
 ---
 title: 音訊理解
-description: 從 Gemma 3n 開始，您可以直接在提示與工作流程中使用音訊輸入，打造語音辨識、翻譯等各類音訊應用。
+description: "使用 Gemma 4 與 Gemma 3n 的多模態音訊理解，處理並轉錄語音、音樂與聲音輸入。"
 models: [gemma-4]
 requires: audio
 frameworks: [transformers]
@@ -182,7 +182,7 @@ messages = [
         "role": "user",
         "content": [
             {"type": "text", "text": "Transcribe the following speech segment in English, then translate it into Korean. When formatting the answer, first output the transcription in English, then one newline, then output the string 'Korean: ', then the translation in Korean."},
-            {"type": "audio", "audio": "https://ai.google.dev/gemma/docs/audio/roses-are.wav"},
+            {"type": "audio", "audio": "https://gemma.ai/assets/capabilities/roses-are.wav"},
         ]
     }
 ]

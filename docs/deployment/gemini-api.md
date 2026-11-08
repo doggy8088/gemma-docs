@@ -1,5 +1,5 @@
 ---
-title: Gemini API
+title: 透過 Gemini API 執行 Gemma
 description: 透過 Gemini API 呼叫託管的 Gemma 4 模型，而無需自行執行與服務執行個體。
 models: [gemma-4]
 frameworks: [gemini-api]

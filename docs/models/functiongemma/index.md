@@ -4,7 +4,7 @@ description: FunctionGemma 是我們的 Gemma 3 270M 模型的專門版本，針
 models: [functiongemma]
 source_url: "https://ai.google.dev/gemma/docs/functiongemma.md.txt"
 ---
-# FunctionGemma 模型總覽 {: #hidden-title style="display: none;" }
+# FunctionGemma 模型總覽
 
 <div class="video-embed">
   <iframe src="https://www.youtube.com/embed/-Tgc_9uYJLI"
@@ -40,6 +40,7 @@ FunctionGemma 是自然語言與軟體執行之間的橋樑。在以下情況它
 與其他 Gemma 模型一樣，FunctionGemma 以開放權重提供，並授權用於負責任的[商業用途][gemma-terms]，讓您能在自己的專案與應用中微調與部署。
 
 [格式與最佳實務](formatting.md)
+
 [試用 FunctionGemma](inference.md)
 
 [微調 FunctionGemma](fine-tuning.md)

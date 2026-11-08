@@ -1,6 +1,6 @@
 ---
 title: Gemma 4 12B 視覺化指南
-description: Gemma 4 12B 視覺化指南：用圖解導覽這個統一 12B 模型的獨特之處，以及它與其他尺寸變體的差異。
+description: "Gemma 4 12B 如何以無編碼器架構與線性投影，快速統一理解文字、圖像與音訊等多模態內容。"
 models: [gemma-4/12b]
 source_url: https://newsletter.maartengrootendorst.com/p/a-visual-guide-to-gemma-4-12b
 ---
@@ -150,17 +150,17 @@ Gemma 4 12B 不只是一款正好落在 E4B 與 26B A4B 之間的模型，它的
 ## 接下來
 
 <div class="card-grid">
-<a class="card" href="mtp">
+<a class="card" href="mtp.md">
   <span class="card-icon">{{ icon('lucide/book-open') }}</span>
   <div class="card-title">MTP 視覺化指南</div>
   <p class="card-desc">用圖解說明草稿模型與推測性解碼。</p>
 </a>
-<a class="card" href="diffusiongemma">
+<a class="card" href="diffusiongemma.md">
   <span class="card-icon">{{ icon('lucide/book-open') }}</span>
   <div class="card-title">DiffusionGemma 視覺化指南</div>
   <p class="card-desc">去噪如何生成文字而非像素。</p>
 </a>
-<a class="card" href="../../resources">
+<a class="card" href="../../resources/index.md">
   <span class="card-icon">{{ icon('lucide/library') }}</span>
   <div class="card-title">資源</div>
   <p class="card-desc">值得加入書籤的展示、工具與程式碼倉庫。</p>

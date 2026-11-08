@@ -1,5 +1,5 @@
 ---
-title: llama.cpp
+title: 使用 llama.cpp 執行 Gemma
 description: 使用 llama.cpp 執行 Gemma 4 —— 各尺寸的 GGUF 儲存庫、圖像/音訊/視訊輸入，以及 OpenAI 相容伺服器。
 models: [gemma-4]
 frameworks: [llamacpp]
@@ -13,41 +13,29 @@ frameworks: [llamacpp]
 
 ## 安裝
 
-=== "macOS / Linux"
+=== "curl"
 
     ```bash
-    brew install llama.cpp
+    curl -LsSf https://llama.app/install.sh | sh
     ```
 
-=== "Windows"
+=== "powershell"
 
-    ```bash
-    winget install llama.cpp
-    ```
-
-=== "conda"
-
-    ```bash
-    conda install -c conda-forge llama.cpp
-    ```
-
-=== "Nix"
-
-    ```bash
-    nix profile install nixpkgs#llama-cpp
+    ```powershell
+    irm https://llama.app/install.ps1 | iex
     ```
 
 ## 執行
 
 ```bash { .model-swap }
-llama-cli -hf ggml-org/gemma-4-E2B-it-GGUF --prompt "Write a poem about the Kraken."
+llama cli -hf ggml-org/gemma-4-E2B-it-GGUF --prompt "Write a poem about the Kraken."
 ```
 
 `-hf` 會在首次使用時下載權重，包括多模態投影器。搭配系統
 提示：
 
 ```bash { .model-swap }
-llama-cli -hf ggml-org/gemma-4-E2B-it-GGUF -sys "You are Hong Gildong." -p "Who are you?"
+llama cli -hf ggml-org/gemma-4-E2B-it-GGUF -sys "You are Hong Gildong." -p "Who are you?"
 ```
 
 ## 模型儲存庫
@@ -64,7 +52,7 @@ llama-cli -hf ggml-org/gemma-4-E2B-it-GGUF -sys "You are Hong Gildong." -p "Who 
 事後壓縮：
 
 ```bash { .model-swap }
-llama-cli -hf google/gemma-4-12B-it-qat-q4_0-gguf -p "Explain PLE in one paragraph"
+llama cli -hf google/gemma-4-E2B-it-qat-q4_0-gguf -p "Explain gravity in one paragraph"
 ```
 
 提供 `google/gemma-4-{E2B,E4B,12B,26B-A4B,31B}-it-qat-q4_0-gguf`。
@@ -72,13 +60,13 @@ llama-cli -hf google/gemma-4-12B-it-qat-q4_0-gguf -p "Explain PLE in one paragra
 ## 多模態
 
 ```bash { .model-swap }
-llama-mtmd-cli -hf ggml-org/gemma-4-E2B-it-GGUF
+llama cli -hf ggml-org/gemma-4-E2B-it-GGUF --image "image.png" -p "Describe this image."
 ```
 
 使用本機檔案時，請明確傳入投影器：
 
-```bash
-llama-server -m gemma-4-12B-it-Q4_K_M.gguf --mmproj mmproj-gemma-4-12B-it.gguf
+```bash { .model-swap }
+llama cli -m gemma-4-E2B-it-Q4_0.gguf --mm mmproj-gemma-4-E2B-it-Q8_0.gguf
 ```
 
 !!! note
@@ -88,7 +76,7 @@ llama-server -m gemma-4-12B-it-Q4_K_M.gguf --mmproj mmproj-gemma-4-12B-it.gguf
 ## 伺服器
 
 ```bash { .model-swap }
-llama-server -hf ggml-org/gemma-4-E2B-it-GGUF
+llama server -hf ggml-org/gemma-4-E2B-it-GGUF
 ```
 
 瀏覽器 UI 位於 `http://localhost:8080`，OpenAI 相容 API 位於 `http://localhost:8080/v1`。

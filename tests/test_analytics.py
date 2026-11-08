@@ -1,0 +1,141 @@
+# Copyright 2026 Google LLC
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+from __future__ import annotations
+
+import importlib.util
+import os
+import subprocess
+import sys
+import tempfile
+import unittest
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
+import build_docs
+
+HAS_ZENSICAL = importlib.util.find_spec("zensical") is not None
+
+
+class AnalyticsBuildTests(unittest.TestCase):
+    def test_inject_analytics_property_updates_config(self):
+        source = (build_docs.agent_docs.REPO_ROOT / "zensical.toml").read_text(encoding="utf-8")
+        self.assertIn('property = ""', source)  # zh-tw: GA ID is injected at build time, no upstream default
+        injected = build_docs.inject_analytics_property(source, "G-TEST123456")
+        self.assertIn('property = "G-TEST123456"', injected)
+        cleared = build_docs.inject_analytics_property(source, "")
+        self.assertIn('property = ""', cleared)
+
+    def test_inject_site_url_updates_config(self):
+        source = (build_docs.agent_docs.REPO_ROOT / "zensical.toml").read_text(encoding="utf-8")
+        self.assertIn('site_url = "https://gemma.gh.miniasp.com"', source)  # zh-tw custom domain
+        injected = build_docs.inject_site_url(source, "https://example.invalid//pr-42")
+        self.assertIn('site_url = "https://example.invalid/pr-42"', injected)
+
+    def test_rewrite_colab_links_handles_simple_and_compound_branches(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            site_dir = Path(tmp)
+            page = site_dir / "page" / "index.html"
+            page.parent.mkdir(parents=True)
+            sample_html = (
+                '<a href="https://colab.research.google.com/github/google-gemma/docs/blob/main/'
+                'docs/notebooks/notebook.ipynb">Colab</a>\n'
+                '<a href="https://colab.research.google.com/github/google-gemma/cookbook/blob/main/'
+                'demo.ipynb">External</a>\n'
+            )
+            page.write_text(sample_html, encoding="utf-8")
+            md_txt = site_dir / "page.md.txt"
+            md_txt.write_text(sample_html, encoding="utf-8")
+
+            count = build_docs.rewrite_colab_links(site_dir, "org/repo", "sub/branch")
+            self.assertEqual(count, 1)
+            rewritten = page.read_text(encoding="utf-8")
+            self.assertIn(
+                "https://colab.research.google.com/github/org/repo/blob/"
+                "sub%2Fbranch/docs/notebooks/notebook.ipynb",
+                rewritten,
+            )
+            self.assertIn(
+                "https://colab.research.google.com/github/google-gemma/cookbook/blob/main/demo.ipynb",
+                rewritten,
+            )
+            self.assertEqual(md_txt.read_text(encoding="utf-8"), sample_html)
+
+            with self.assertRaises(ValueError):
+                build_docs.rewrite_colab_links(site_dir, "bad repo", "main")
+            with self.assertRaises(ValueError):
+                build_docs.rewrite_colab_links(site_dir, "org/repo", "../bad")
+
+    @unittest.skipUnless(HAS_ZENSICAL, "zensical is required for full build tests")
+    def test_build_without_measurement_id_omits_tracking_script(self):
+        env = {**os.environ, "GA_MEASUREMENT_ID": ""}
+        result = subprocess.run(
+            [sys.executable, "scripts/build_docs.py"],
+            cwd=build_docs.agent_docs.REPO_ROOT,
+            env=env,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        self.assertEqual(result.returncode, 0, msg=result.stderr)
+        index_html = (build_docs.agent_docs.REPO_ROOT / "site" / "index.html").read_text(encoding="utf-8")
+        self.assertNotIn("googletagmanager.com/gtag/js", index_html)
+        self.assertNotIn("Change cookie settings", index_html)
+
+    @unittest.skipUnless(HAS_ZENSICAL, "zensical is required for full build tests")
+    def test_build_with_measurement_id_includes_ga4_and_consent(self):
+        env = {**os.environ, "GA_MEASUREMENT_ID": "G-TEST123456"}
+        result = subprocess.run(
+            [sys.executable, "scripts/build_docs.py"],
+            cwd=build_docs.agent_docs.REPO_ROOT,
+            env=env,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        self.assertEqual(result.returncode, 0, msg=result.stderr)
+        index_html = (build_docs.agent_docs.REPO_ROOT / "site" / "index.html").read_text(encoding="utf-8")
+        self.assertIn("https://www.googletagmanager.com/gtag/js?id=G-TEST123456", index_html)
+        self.assertIn("G-TEST123456", index_html)
+        self.assertIn('id="__consent"', index_html)
+        self.assertIn('name="analytics"', index_html)
+        self.assertIn("Change cookie settings", index_html)
+        # Ensure temporary config file is cleaned up
+        self.assertFalse((build_docs.agent_docs.REPO_ROOT / ".zensical.build.toml").exists())
+
+    @unittest.skipUnless(HAS_ZENSICAL, "zensical is required for full build tests")
+    def test_non_prod_site_url_disables_analytics_and_sets_noindex(self):
+        env = {
+            **os.environ,
+            "GA_MEASUREMENT_ID": "G-TEST123456",
+            "SITE_URL": "https://example.invalid/pr-1",
+        }
+        result = subprocess.run(
+            [sys.executable, "scripts/build_docs.py"],
+            cwd=build_docs.agent_docs.REPO_ROOT,
+            env=env,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        self.assertEqual(result.returncode, 0, msg=result.stderr)
+        index_html = (build_docs.agent_docs.REPO_ROOT / "site" / "index.html").read_text(encoding="utf-8")
+        self.assertNotIn("googletagmanager.com/gtag/js", index_html)
+        self.assertNotIn("G-TEST123456", index_html)
+        self.assertNotIn("G-CWMC2KTTGQ", index_html)
+        self.assertIn('<meta name="robots" content="noindex, nofollow">', index_html)
+
+
+if __name__ == "__main__":
+    unittest.main()

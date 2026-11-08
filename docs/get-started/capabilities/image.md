@@ -1,6 +1,6 @@
 ---
 title: 圖像理解
-description: 使用 Gemma 3 及更新版本的模型分析與理解圖像內容，支援多種長寬比與解析度的視覺輸入。
+description: "使用 Gemma 4 分析圖像，支援可變長寬比、可設定的視覺詞元預算與多圖像提示。"
 models: [gemma-4]
 frameworks: [transformers]
 colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs/notebooks/image-gemma-4-e2b.ipynb
@@ -103,8 +103,8 @@ config.max_new_tokens = 512
 gen_kwargs = dict(generation_config=config)
 
 img_urls = [
-    "https://ai.google.dev/gemma/docs/capabilities/vision/images/surprise.png",
-    "https://ai.google.dev/gemma/docs/capabilities/vision/images/kitchen.jpg",
+    "https://gemma.ai/assets/capabilities/surprise.png",
+    "https://gemma.ai/assets/capabilities/kitchen.jpg",
 ]
 for img in img_urls:
     display(Image.open(requests.get(img, stream=True).raw))
@@ -196,7 +196,7 @@ config = GenerationConfig.from_pretrained(MODEL_ID)
 config.max_new_tokens = 512
 gen_kwargs = dict(generation_config=config)
 
-img_url = "https://ai.google.dev/gemma/docs/capabilities/vision/images/cat.png"
+img_url = "https://gemma.ai/assets/capabilities/cat.png"
 input_image = Image.open(requests.get(img_url, stream=True).raw)
 display(input_image)
 
@@ -320,16 +320,16 @@ output = vqa_pipe(messages, return_full_text=False, generate_kwargs=gen_kwargs)
 print(output[0]['generated_text'])
 
 draw_results(output[0]['generated_text'])
-``` 
+```
 
-```{ .no-copy .output }
+```` { .no-copy .output }
 ```json
 [
   {"box_2d": [243, 252, 956, 415], "label": "person"},
   {"box_2d": [356, 606, 654, 802], "label": "cat"}
 ]
 ```<turn|>
-```
+````
 
 ![png](../../assets/capabilities/output_b041486b_1.png)
 ## 可變解析度（詞元預算）
@@ -408,14 +408,14 @@ print(output[0]['generated_text'])
 draw_results(output[0]['generated_text'])
 ```
 
-```{ .no-copy .output }
+```` { .no-copy .output }
 ```json
 [
   {"box_2d": [454, 871, 533, 923], "label": "person"},
   {"box_2d": [551, 316, 665, 628], "label": "car"}
 ]
 ```<turn|>
-```
+````
 
 ![png](../../assets/capabilities/output_bc2920e6_1.png)
 
@@ -505,7 +505,7 @@ plt.tight_layout()
 plt.show()
 ```
 
-```{ .no-copy .output }
+```` { .no-copy .output }
 Budget Size: 70
 # of Image Tokens: 64
 [transformers] You seem to be using the pipelines sequentially on GPU. In order to maximize efficiency please use a dataset
@@ -550,7 +550,7 @@ Budget Size: 560
   {"box_2d": [404, 867, 520, 925], "label": "person"}
 ]
 ```<turn|>
-```
+````
 
 ![png](../../assets/capabilities/output_76f17518_3.png)
 

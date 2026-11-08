@@ -1,6 +1,6 @@
 ---
 title: DiffusionGemma 模型卡
-description: DiffusionGemma 是由 Google DeepMind 打造的生成式模型。
+description: "DiffusionGemma（26B A4B MoE）模型卡：離散文字擴散架構、多模態輸入、訓練資料與評測基準。"
 models: [diffusiongemma]
 source_url: "https://ai.google.dev/gemma/docs/diffusiongemma/model_card.md.txt"
 ---
@@ -12,7 +12,7 @@ source_url: "https://ai.google.dev/gemma/docs/diffusiongemma/model_card.md.txt"
 [說明文件](index.md)
 
 
-**授權** : [Apache 2.0](https://ai.google.dev/gemma/apache_2) \| **作者** : [Google DeepMind](https://deepmind.google/models/gemma/)
+**授權** : [Apache 2.0](https://gemma.ai/resources/apache-2) \| **作者** : [Google DeepMind](https://deepmind.google/models/gemma/)
 
 DiffusionGemma 是由 Google DeepMind 打造的生成式模型。基於 26B A4B 混合專家（MoE）Gemma 4 架構，DiffusionGemma 使用離散擴散生成詞元。這個開放權重模型具備多模態能力，可處理文字、影像與影片輸入，產生文字輸出。
 
@@ -36,16 +36,18 @@ DiffusionGemma 的設計目標是降低標準因果語言模型的序列化瓶�
 
 ### DiffusionGemma
 
-\| **總參數量** \| 25.2B \|
-\| **啟動參數量** \| 3.8B \|
-\| **層數** \| 30 \|
-\| **滑動視窗** \| 1024 詞元 \|
-\| **上下文長度** \| 最多 256K 詞元 \|
-\| **畫布長度** \| 256 \|
-\| **詞彙表大小** \| 262K \|
-\| **專家數量** \| 8 啟動 / 128 總數，另有 1 個共享專家 \|
-\| **支援的模態** \| 文字、影像 \|
-\| **視覺編碼器參數量** \| \~550M \|
+| 屬性 | DiffusionGemma 26B A4B |
+| :---- | :---- |
+| **總參數量** | 25.2B |
+| **啟用參數量** | 3.8B |
+| **層數** | 30 |
+| **滑動視窗** | 1024 詞元 |
+| **上下文長度** | 最多 256K 詞元 |
+| **畫布長度** | 256 |
+| **詞彙表大小** | 262K |
+| **專家數量** | 8 啟用 / 128 總數，另有 1 個共享專家 |
+| **支援的模態** | 文字、影像 |
+| **視覺編碼器參數量** | ~550M |
 
 ## **基準測試結果**
 

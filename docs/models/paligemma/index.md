@@ -1,7 +1,7 @@
 ---
 title: PaliGemma
 description: PaliGemma 2 與 PaliGemma 是輕量級開放視覺語言模型（VLM），受 PaLI-3 啟發，並基於 SigLIP 視覺模型與 Gemma 語言模型等開放元件構建。
-models: [paligemma]
+models: [paligemma-2, paligemma]
 source_url: "https://ai.google.dev/gemma/docs/paligemma.md.txt"
 ---
 # PaliGemma

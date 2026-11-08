@@ -130,6 +130,20 @@ print(MODEL_ID)
         self.assertNotIn("gemma-4/26b-a4b", candidates)
         self.assertNotIn("gemma-4/31b", candidates)
 
+    def test_requires_region_and_cell_filtered_by_model_modality(self):
+        hf_source = notebooks.REPO_ROOT / "docs" / "deployment" / "huggingface.md"
+        for audio_model in ("gemma-4/e2b", "gemma-4/e4b", "gemma-4/12b"):
+            payload = json.loads(notebooks.render(hf_source, model=audio_model))
+            code_sources = "\n".join(
+                "".join(cell["source"]) for cell in payload["cells"][2:] if cell["cell_type"] == "code"
+            )
+            self.assertIn("roses-are.wav", code_sources)
+        for non_audio_model in ("gemma-4/26b-a4b", "gemma-4/31b"):
+            payload = json.loads(notebooks.render(hf_source, model=non_audio_model))
+            all_sources = "\n".join("".join(cell["source"]) for cell in payload["cells"][2:])
+            self.assertNotIn("roses-are.wav", all_sources)
+            self.assertNotIn("Generate text from audio data", all_sources)
+
     def test_infer_model_from_output_filename(self):
         self.assertEqual(notebooks.infer_model("thinking-gemma-4-e2b-it.ipynb"), "gemma-4/e2b")
         self.assertEqual(notebooks.infer_model("thinking-gemma-4-26b-a4b-it.ipynb"), "gemma-4/26b-a4b")
@@ -179,6 +193,19 @@ After"""
         self.assertIn("`<|think|>`", rendered)
         self.assertNotIn(".token-think", rendered)
         self.assertNotIn("data-model", rendered)
+
+    def test_relative_asset_paths_are_resolved(self):
+        body = "![Shin Yunbok](../../assets/embeddinggemma/ink-wash-1.png)\n![](../assets/deployment/thali-indian-plate.jpg)"
+        cells = notebooks.export_cells(body)
+        rendered = "".join(cells[0]["source"])
+        self.assertIn(
+            "![Shin Yunbok](https://gemma.ai/assets/embeddinggemma/ink-wash-1.png)",
+            rendered,
+        )
+        self.assertIn(
+            "![](https://gemma.ai/assets/deployment/thali-indian-plate.jpg)",
+            rendered,
+        )
 
 
 if __name__ == "__main__":

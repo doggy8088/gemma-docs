@@ -1,6 +1,6 @@
 ---
 title: Gemma 4 圖解指南
-description: Gemma 4 圖解指南：用豐富的視覺化圖解，完整走讀 Gemma 4 模型家族的架構、機制與各尺寸變體。
+description: "Gemma 4 架構圖解指南：稠密與 26B A4B MoE 模型、逐層嵌入（E2B/E4B）、視覺與音訊編碼器，以及 KV 快取。"
 models: [gemma-4]
 source_url: https://newsletter.maartengrootendorst.com/p/a-visual-guide-to-gemma-4
 ---

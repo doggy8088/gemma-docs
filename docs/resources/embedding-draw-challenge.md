@@ -1,7 +1,7 @@
 ---
 title: Embedding Draw Challenge
 description: 在互動式畫布上描繪目標物件，即時查看 EmbeddingGemma 2 對跨模態圖像轉文字相似度的評分。
-models: [embeddinggemma]
+models: [embeddinggemma-2]
 hide:
   - toc
 ---

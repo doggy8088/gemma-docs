@@ -33,7 +33,7 @@ Gemma 是 Google 推出的輕量級、最先進的開放模型家族，採用與
 
 ### 引用
 
-```python
+```bibtex
 @article{gemma_2024,
     title={Gemma},
     url={https://www.kaggle.com/m/3301},
@@ -90,7 +90,7 @@ JAX 讓研究人員得以利用最新一代硬體（包括 TPU），更快、更
 
 ML Pathways 是 Google 為打造能跨多個任務泛化的人工智慧系統所做的最新努力。這特別適合基礎模型，包括這類大型語言模型。
 
-JAX 與 ML Pathways 的共同使用方式如[關於 Gemini 模型家族的論文](https://goo.gle/gemma2report){ data-model="gemma-2" }所述：「Jax 與 Pathways 的『單一控制器』程式設計模型，讓單一 Python 行程即可編排整個訓練流程，大幅簡化了開發工作流程。」
+JAX 與 ML Pathways 的共同使用方式如[關於 Gemini 模型家族的論文](https://arxiv.org/abs/2312.11805)所述：「Jax 與 Pathways 的『單一控制器』程式設計模型，讓單一 Python 行程即可編排整個訓練流程，大幅簡化了開發工作流程。」
 
 ## 評測
 

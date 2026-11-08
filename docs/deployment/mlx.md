@@ -1,5 +1,5 @@
 ---
-title: Apple MLX
+title: 使用 MLX 執行 Gemma
 description: 在 Apple 晶片上使用 MLX 執行 Gemma 4 —— 文本與視覺生成、模型儲存庫，以及 OpenAI 相容伺服器。
 models: [gemma-4]
 frameworks: [mlx]

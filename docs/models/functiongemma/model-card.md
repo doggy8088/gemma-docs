@@ -84,7 +84,7 @@ Gemma 使用 [Tensor Processing Unit (TPU)](https://cloud.google.com/tpu/docs/in
 訓練使用 [JAX](https://github.com/jax-ml/jax) 與 [ML Pathways](https://blog.google/technology/ai/introducing-pathways-next-generation-ai-architecture/) 進行。
 JAX 讓研究人員能利用最新一代硬體（包括 TPU），更快、更有效率地訓練大型模型。ML Pathways 是 Google 最新打造能跨多任務泛化的人工智慧系統的努力。這特別適合基礎模型，包括這些大型語言模型。
 
-JAX 與 ML Pathways 如 [Gemini 模型家族論文](https://goo.gle/gemma2report) 所述一起使用；*「Jax 與 Pathways 的『單一控制器』程式設計模型，讓單一 Python 程序能編排整個訓練流程，大幅簡化開發工作流程。」*
+JAX 與 ML Pathways 如 [Gemini 模型家族論文](https://arxiv.org/abs/2312.11805) 所述一起使用；*「Jax 與 Pathways 的『單一控制器』程式設計模型，讓單一 Python 程序能編排整個訓練流程，大幅簡化開發工作流程。」*
 
 ## 評估
 

@@ -1,5 +1,5 @@
 ---
-title: SGLang
+title: 使用 SGLang 服務 Gemma
 description: 使用 SGLang 服務 Gemma 4 —— 安裝、launch_server、模型儲存庫，以及 OpenAI 相容 API。
 models: [gemma-4]
 frameworks: [sglang]

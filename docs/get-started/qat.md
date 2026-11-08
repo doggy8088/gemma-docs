@@ -26,7 +26,7 @@ Google 與全精度權重一併發布**量化感知訓練**（QAT）檢查點。
 
 ```bash { .model-swap }
 # Local, via llama.cpp
-llama-cli -hf google/gemma-4-12B-it-qat-q4_0-gguf
+llama cli -hf google/gemma-4-12B-it-qat-q4_0-gguf
 ```
 
 ```bash { .model-fixed }

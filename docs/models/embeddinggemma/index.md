@@ -1,10 +1,10 @@
 ---
 title: EmbeddingGemma 模型概覽
 description: EmbeddingGemma 2 是一個輕量、開源的 740M 參數模型，專為統一多模態嵌入而設計。
-models: [embeddinggemma]
+models: [embeddinggemma-2, embeddinggemma]
 source_url: "https://ai.google.dev/gemma/docs/embeddinggemma.md.txt"
 ---
-# EmbeddingGemma 模型概覽 {: #hidden-title style="display: none;" }
+# EmbeddingGemma 模型概覽
 
 <div class="video-embed">
   <iframe src="https://www.youtube.com/embed/anPsS6huQk0"

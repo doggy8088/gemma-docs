@@ -1,7 +1,7 @@
 ---
 title: 使用 Sentence Transformers 的多模態嵌入
 description: 使用 EmbeddingGemma 2 與 Sentence Transformers 產生統一的圖像、音訊、影片與交錯式多模態嵌入。
-models: [embeddinggemma]
+models: [embeddinggemma-2]
 frameworks: [sentence-transformers, transformers]
 colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs/notebooks/embeddinggemma-multimodal.ipynb
 source_url: "https://ai.google.dev/gemma/docs/embeddinggemma/multimodal-embeddinggemma-with-sentence-transformers.md.txt"
@@ -214,7 +214,7 @@ a friendly dog sitting in the grass
 ```python { .notebook-cell }
 from IPython.display import display, Audio
 
-aud_url = "https://ai.google.dev/gemma/docs/audio/roses-are.wav"
+aud_url = "https://gemma.ai/assets/capabilities/roses-are.wav"
 
 print("Input Audio:")
 display(Audio(aud_url))
@@ -243,7 +243,7 @@ Input Audio:
 
 <audio controls>
   <source src="../../assets/embeddinggemma/output_roses-are.wav" type="audio/mpeg">
-  Your browser does not support the audio element.
+  您的瀏覽器不支援音訊元素。
 </audio>
 
 ``` { .no-copy .output }
@@ -295,7 +295,7 @@ Input Video:
 
 <video controls>
   <source src="../../assets/embeddinggemma/output_cat_dozing.mp4" type="video/mp4">
-  Your browser does not support the video element.
+  您的瀏覽器不支援影片元素。
 </video>
 
 ``` { .no-copy .output }
@@ -363,7 +363,7 @@ EmbeddingGemma 2 在單次查詢中支援豐富的混合模態輸入：
 ```python { .notebook-cell }
 img_url = "https://raw.githubusercontent.com/google-gemma/cookbook/refs/heads/main/apps/sample-data/GoldenGate.png"
 example_img_url = "https://raw.githubusercontent.com/google-gemma/cookbook/refs/heads/main/apps/sample-data/kitchen_painting.jpg"
-aud_url = "https://ai.google.dev/gemma/docs/audio/roses-are.wav"
+aud_url = "https://gemma.ai/assets/capabilities/roses-are.wav"
 vid_url = "https://github.com/bebechien/gemma/raw/refs/heads/main/videos/cat_dozing.mp4"
 
 # 1. Multimodal query combining text, multiple images, and audio

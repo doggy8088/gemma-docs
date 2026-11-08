@@ -1,7 +1,7 @@
 ---
 title: PaliGemma 提示與系統指示
-description: 本頁說明 PaliGemma 視覺語言模型的提示格式、任務語法與系統指示的撰寫方式，並提供實用範例。
-models: [paligemma]
+description: 本頁說明 PaliGemma 模型的提示格式與系統指示，協助您正確建構輸入並取得預期輸出。
+models: [paligemma-2, paligemma]
 source_url: "https://ai.google.dev/gemma/docs/paligemma/prompt-system-instructions.md.txt"
 ---
 # PaliGemma 提示與系統指示

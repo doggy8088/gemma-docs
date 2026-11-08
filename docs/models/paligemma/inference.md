@@ -1,7 +1,7 @@
 ---
 title: 使用 Keras 產生 PaliGemma 輸出
 description: PaliGemma 模型具備多模態能力，讓您能同時使用文字與圖片輸入資料來產生輸出。
-models: [paligemma]
+models: [paligemma-2]
 frameworks: [keras]
 colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs/notebooks/paligemma-inference.ipynb
 source_url: "https://ai.google.dev/gemma/docs/paligemma/inference-with-keras.md.txt"

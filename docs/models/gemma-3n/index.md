@@ -4,7 +4,7 @@ description: Gemma 3n 是針對日常裝置（如手機、筆記型電腦與平�
 models: [gemma-3n]
 source_url: "https://ai.google.dev/gemma/docs/gemma-3n.md.txt"
 ---
-# Gemma 3n 模型總覽 {: #hidden-title style="display: none;" }
+# Gemma 3n 模型總覽
 
 <div class="video-embed">
   <iframe src="https://www.youtube.com/embed/eJFJRyXEHZ0"

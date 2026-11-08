@@ -13,7 +13,7 @@ description: 探索 Gemma 生態系資源：互動展示、實用工具、社群
   <div class="card-title">Gemmaverse <span class="card-ext">↗</span></div>
   <p class="card-desc">探索 Gemma 模型的互動式生態系、視覺化解說與研究成果。</p>
 </a>
-<a class="card" href="https://github.com/google-gemma/gemma-cookbook" target="_blank" rel="noopener">
+<a class="card" href="https://github.com/google-gemma/cookbook" target="_blank" rel="noopener">
   <span class="card-icon">{{ icon('lucide/notebook-pen') }}</span>
   <div class="card-title">Gemma Cookbook <span class="card-ext">↗</span></div>
   <p class="card-desc">官方 Jupyter 筆記本，涵蓋推論、微調、RAG 與函式呼叫。</p>

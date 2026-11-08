@@ -41,7 +41,69 @@ class AgentDocsTests(unittest.TestCase):
         rendered = agent_docs.render_llms()
         self.assertTrue(rendered.startswith("# Gemma Documentation\n"))
         self.assertIn("https://gemma.ai/get-started.md", rendered)
+        self.assertIn("- [總覽](https://gemma.ai/deployment.md):", rendered)  # zh-tw title
+        self.assertNotIn("[Gemma 4 — 總覽](https://gemma.ai/deployment.md)", rendered)  # zh-tw title
+        self.assertIn(
+            "- [DiffusionGemma — 生成輸出](https://gemma.ai/models/diffusiongemma/inference.md):",
+            rendered,
+        )
+        self.assertIn(
+            "- [RecurrentGemma — 使用 JAX 與 Flax 進行微調](https://gemma.ai/models/recurrentgemma/fine-tuning.md):",
+            rendered,
+        )
         self.assertNotIn("llms-full", rendered)
+        self.assertNotIn("/contributing/", rendered)
+
+    def test_display_title_scopes_family_prefix_to_model_pages(self):
+        family_names = {
+            "gemma-4": "Gemma 4",
+            "diffusiongemma": "DiffusionGemma",
+            "recurrentgemma": "RecurrentGemma",
+            "gemma-aps": "Gemma APS",
+        }
+        self.assertEqual(
+            agent_docs.display_title(
+                {"title": "Overview", "models": ["gemma-4"]},
+                family_names,
+                "deployment/index.md",
+            ),
+            "Overview",
+        )
+        self.assertEqual(
+            agent_docs.display_title(
+                {"title": "Model card", "models": ["gemma-4"]},
+                family_names,
+                "models/gemma-4/model-card.md",
+            ),
+            "Gemma 4 — Model card",
+        )
+        self.assertEqual(
+            agent_docs.display_title(
+                {"title": "Generate output", "models": ["diffusiongemma"]},
+                family_names,
+                "models/diffusiongemma/inference.md",
+            ),
+            "DiffusionGemma — Generate output",
+        )
+        self.assertEqual(
+            agent_docs.display_title(
+                {"title": "Fine-tuning using JAX and Flax", "models": ["recurrentgemma"]},
+                family_names,
+                "models/recurrentgemma/fine-tuning.md",
+            ),
+            "RecurrentGemma — Fine-tuning using JAX and Flax",
+        )
+        self.assertEqual(
+            agent_docs.display_title(
+                {
+                    "title": "Gemma for abstractive proposition segmentation (APS)",
+                    "models": ["gemma-aps"],
+                },
+                family_names,
+                "models/gemma-aps/index.md",
+            ),
+            "Gemma for abstractive proposition segmentation (APS)",
+        )
 
     def test_raw_markdown_renders_model_macros(self):
         pages = agent_docs.source_pages()
@@ -49,6 +111,79 @@ class AgentDocsTests(unittest.TestCase):
         rendered = agent_docs.render_raw("get-started/index.md", metadata, body)
         self.assertIn("| **E2B** |", rendered)
         self.assertNotIn("{% for", rendered)
+        self.assertNotIn("glossary.md", rendered)
+        self.assertNotIn("## What's next", rendered)
+        self.assertIn("https://gemma.ai/assets/gemma-mark.png", rendered)
+
+    def test_raw_markdown_resolves_relative_asset_paths(self):
+        rendered = agent_docs.render_raw(
+            "models/embeddinggemma/fine-tuning-multimodal.md",
+            {"title": "Fine-Tune Multimodal"},
+            "![Shin Yunbok](../../assets/embeddinggemma/ink-wash-1.png)\n",
+        )
+        self.assertIn(
+            "![Shin Yunbok](https://gemma.ai/assets/embeddinggemma/ink-wash-1.png)",
+            rendered,
+        )
+
+    def test_raw_markdown_resolves_shared_reference_links(self):
+        pages = agent_docs.source_pages()
+        _path, metadata, body = pages["models/gemma-4/index.md"]
+        rendered = agent_docs.render_raw("models/gemma-4/index.md", metadata, body)
+        self.assertIn(
+            "[Hugging Face](https://huggingface.co/collections/google/gemma-4)",
+            rendered,
+        )
+        self.assertIn("[商業用途](../../resources/apache-2.md)", rendered)  # zh-tw link text
+        self.assertNotIn("[hf-gemma4]", rendered)
+        self.assertNotIn("[gemma-terms]", rendered)
+
+        _path, metadata, body = pages["models/gemma-3/index.md"]
+        rendered = agent_docs.render_raw("models/gemma-3/index.md", metadata, body)
+        self.assertIn(
+            "[Gemma 禁止使用政策](/resources/prohibited-use)",  # zh-tw link text
+            rendered,
+        )
+        self.assertNotIn("[prohibited-use]", rendered)
+
+    def test_raw_targets_include_inline_text_routes(self):
+        site_dir = Path("/tmp/site")
+        targets = {path.relative_to(site_dir).as_posix() for path, _ in agent_docs.raw_targets(site_dir)}
+        self.assertIn("get-started.md", targets)
+        self.assertIn("get-started.md.txt", targets)
+        self.assertIn("get-started/best-practices.md.txt", targets)
+        self.assertFalse(any(target.startswith("contributing/") for target in targets))
+
+    def test_variant_generation_ids_accepted_in_frontmatter(self):
+        import frontmatter_schema
+
+        for family_id in ("embeddinggemma-2", "paligemma-2", "shieldgemma-2"):
+            self.assertIn(family_id, frontmatter_schema.model_families())
+            problems = frontmatter_schema.validate(
+                {
+                    "title": "Test Page",
+                    "description": "A valid description string that is between forty and two hundred characters.",
+                    "models": [family_id],
+                }
+            )
+            self.assertEqual(problems, [])
+
+    def test_placeholder_visual_walkthrough_description_rejected(self):
+        import frontmatter_schema
+
+        problems = frontmatter_schema.validate(
+            {
+                "title": "A Visual Guide to Gemma 4",
+                "description": "A Visual Guide to Gemma 4 — a visual walkthrough.",
+                "models": ["gemma-4"],
+            }
+        )
+        self.assertTrue(any("visual walkthrough" in p.message for p in problems))
+
+    def test_robots_txt_references_sitemap(self):
+        robots = (agent_docs.DOCS_DIR / "robots.txt").read_text(encoding="utf-8")
+        self.assertIn("User-agent: *", robots)
+        self.assertIn("Sitemap: https://gemma.ai/sitemap.xml", robots)
 
 
 if __name__ == "__main__":

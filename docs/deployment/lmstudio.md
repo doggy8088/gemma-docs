@@ -1,5 +1,5 @@
 ---
-title: LM Studio
+title: 使用 LM Studio 執行 Gemma
 description: 使用 LM Studio 執行 Gemma 4 —— 桌面應用程式、lms CLI 與 OpenAI 相容的本機伺服器。
 models: [gemma-4]
 frameworks: [lmstudio]

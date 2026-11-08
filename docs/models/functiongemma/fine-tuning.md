@@ -197,23 +197,13 @@ Map:   0%|          | 0/40 [00:00<?, ? examples/s]
 
 現在您已準備好微調模型。Hugging Face TRL 的 [SFTTrainer](https://huggingface.co/docs/trl/sft_trainer) 讓監督式微調開放式 LLM 變得簡單。`SFTTrainer` 是 `transformers` 函式庫中 `Trainer` 的子類別，支援所有相同的功能。
 
-以下程式碼從 Hugging Face 載入 FunctionGemma 模型與分詞器。
+以下程式碼從 Hugging Face 載入 FunctionGemma 分詞器，並示範聊天範本如何格式化訓練範例。`SFTTrainer` 會為您載入模型。
 
 ```python { .notebook-cell }
-import torch
-from transformers import AutoTokenizer, AutoModelForCausalLM
+from transformers import AutoTokenizer
 
-# Load model and tokenizer
-model = AutoModelForCausalLM.from_pretrained(
-    base_model,
-    dtype="auto",
-    device_map="auto",
-    attn_implementation="eager"
-)
+# Load the tokenizer
 tokenizer = AutoTokenizer.from_pretrained(base_model)
-
-print(f"Device: {model.device}")
-print(f"DType: {model.dtype}")
 
 # Print formatted user prompt
 print("--- dataset input ---")
@@ -224,8 +214,6 @@ print(debug_msg)
 ```
 
 ``` { .no-copy .output }
-Device: cuda:0
-DType: torch.bfloat16
 --- dataset input ---
 {
   "messages": [
@@ -311,12 +299,10 @@ What is the reimbursement limit for travel meals?<end_of_turn>
 <start_function_call>call:search_knowledge_base{query:<escape>travel meal reimbursement limit policy<escape>}<end_function_call><start_function_response>
 ```
 
-## 微調前
-
-以下輸出顯示，開箱即用的能力對這個使用場景可能不夠好。
+以下函式會測量模型在測試集上呼叫預期工具的頻率。您將在訓練前後使用它。
 
 ```python { .notebook-cell }
-def check_success_rate():
+def check_success_rate(model):
   success_count = 0
   for idx, item in enumerate(dataset['test']):
     messages = [
@@ -347,8 +333,61 @@ def check_success_rate():
         print(f"  -> ❌ wrong (hallucinated '{other_tool}')")
 
   print(f"Success : {success_count} / {len(dataset['test'])}")
+```
 
-check_success_rate()
+## 訓練
+
+在開始訓練之前，您需要在 `SFTConfig` 實例中定義要使用的超參數。
+
+```python { .notebook-cell }
+from trl import SFTConfig
+
+args = SFTConfig(
+    output_dir=checkpoint_dir,              # directory to save and repository id
+    max_length=512,                         # max sequence length for model and packing of the dataset
+    packing=False,                          # Groups multiple samples in the dataset into a single sequence
+    num_train_epochs=8,                     # number of training epochs
+    per_device_train_batch_size=4,          # batch size per device during training
+    gradient_checkpointing=False,           # the model is small, so skip gradient checkpointing for speed
+    optim="adamw_torch_fused",              # use fused adamw optimizer
+    logging_steps=1,                        # log every step
+    #save_strategy="epoch",                  # save checkpoint every epoch
+    eval_strategy="epoch",                  # evaluate checkpoint every epoch
+    learning_rate=learning_rate,            # learning rate
+    lr_scheduler_type="constant",            # use constant learning rate scheduler
+    push_to_hub=True,                        # push model to hub
+    report_to="tensorboard",                 # report metrics to tensorboard
+)
+```
+
+現在您已經擁有建立 `SFTTrainer` 並開始訓練模型所需的所有元件。
+
+```python { .notebook-cell }
+from trl import SFTTrainer
+
+# Create Trainer object
+trainer = SFTTrainer(
+    model=base_model,
+    args=args,
+    train_dataset=dataset['train'],
+    eval_dataset=dataset['test'],
+)
+```
+
+``` { .no-copy .output }
+Tokenizing train dataset:   0%|          | 0/20 [00:00<?, ? examples/s]
+Truncating train dataset:   0%|          | 0/20 [00:00<?, ? examples/s]
+Tokenizing eval dataset:   0%|          | 0/20 [00:00<?, ? examples/s]
+Truncating eval dataset:   0%|          | 0/20 [00:00<?, ? examples/s]
+The model is already on multiple devices. Skipping the move to device specified in `args`.
+```
+
+## 微調前
+
+Trainer 已載入基礎模型。以下輸出顯示，開箱即用的能力對這個使用場景可能不夠好。
+
+```python { .notebook-cell }
+check_success_rate(trainer.model)
 ```
 
 ``` { .no-copy .output }
@@ -415,58 +454,6 @@ check_success_rate()
 Success : 2 / 20
 ```
 
-## 訓練
-
-在開始訓練之前，您需要在 `SFTConfig` 實例中定義要使用的超參數。
-
-```python { .notebook-cell }
-from trl import SFTConfig
-
-torch_dtype = model.dtype
-
-args = SFTConfig(
-    output_dir=checkpoint_dir,              # directory to save and repository id
-    max_length=512,                         # max sequence length for model and packing of the dataset
-    packing=False,                          # Groups multiple samples in the dataset into a single sequence
-    num_train_epochs=8,                     # number of training epochs
-    per_device_train_batch_size=4,          # batch size per device during training
-    gradient_checkpointing=False,           # Caching is incompatible with gradient checkpointing
-    optim="adamw_torch_fused",              # use fused adamw optimizer
-    logging_steps=1,                        # log every step
-    #save_strategy="epoch",                  # save checkpoint every epoch
-    eval_strategy="epoch",                  # evaluate checkpoint every epoch
-    learning_rate=learning_rate,            # learning rate
-    fp16=True if torch_dtype == torch.float16 else False,   # use float16 precision
-    bf16=True if torch_dtype == torch.bfloat16 else False,  # use bfloat16 precision
-    lr_scheduler_type="constant",            # use constant learning rate scheduler
-    push_to_hub=True,                        # push model to hub
-    report_to="tensorboard",                 # report metrics to tensorboard
-)
-```
-
-現在您已經擁有建立 `SFTTrainer` 並開始訓練模型所需的所有元件。
-
-```python { .notebook-cell }
-from trl import SFTTrainer
-
-# Create Trainer object
-trainer = SFTTrainer(
-    model=model,
-    args=args,
-    train_dataset=dataset['train'],
-    eval_dataset=dataset['test'],
-    processing_class=tokenizer,
-)
-```
-
-``` { .no-copy .output }
-Tokenizing train dataset:   0%|          | 0/20 [00:00<?, ? examples/s]
-Truncating train dataset:   0%|          | 0/20 [00:00<?, ? examples/s]
-Tokenizing eval dataset:   0%|          | 0/20 [00:00<?, ? examples/s]
-Truncating eval dataset:   0%|          | 0/20 [00:00<?, ? examples/s]
-The model is already on multiple devices. Skipping the move to device specified in `args`.
-```
-
 呼叫 `train()` 方法開始訓練。
 
 ```python { .notebook-cell }
@@ -528,7 +515,7 @@ plt.show()
 訓練完成後，您會想評估並測試模型。您可以從測試資料集載入不同的樣本來評估模型。
 
 ```python { .notebook-cell }
-check_success_rate()
+check_success_rate(trainer.model)
 ```
 
 ``` { .no-copy .output }
@@ -621,7 +608,7 @@ Success : 16 / 20
   <div class="card-title">微調 Gemma</div>
   <p class="card-desc">QLoRA、完整微調與分散式訓練。</p>
 </a>
-<a class="card" href="https://github.com/google-gemma/cookbook/blob/main/FunctionGemma/%5BFunctionGemma%5DFinetune_FunctionGemma_270M_for_Mobile_Actions_with_Hugging_Face.ipynb" target="_blank" rel="noopener" data-model="functiongemma">
+<a class="card" href="https://github.com/google-gemma/cookbook/tree/main/.archive/FunctionGemma" target="_blank" rel="noopener" data-model="functiongemma">
   <div class="card-title">行動操作筆記本 <span class="card-ext">↗</span></div>
   <p class="card-desc">針對裝置端操作微調 FunctionGemma 270M。</p>
 </a>

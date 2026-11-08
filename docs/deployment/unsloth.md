@@ -1,5 +1,5 @@
 ---
-title: Unsloth
+title: 使用 Unsloth 執行 Gemma
 description: 使用 Unsloth 執行 Gemma 4 —— 桌面 Studio 應用程式、適用於 llama.cpp 的動態量化 GGUF，以及快 2 倍的微調。
 models: [gemma-4]
 frameworks: [unsloth, llamacpp]
@@ -83,16 +83,19 @@ GGUF 與 MLX 檔案都支援。
 
 ## llama.cpp
 
-先建置 `llama.cpp`——CPU 機器與 Apple 晶片（Metal 預設開啟）請設定 `-DGGML_CUDA=OFF`：
+以下是在您的機器上安裝 `llama.cpp` 的幾個選項：
 
-```bash
-git clone https://github.com/ggml-org/llama.cpp
-cmake llama.cpp -B llama.cpp/build \
-    -DBUILD_SHARED_LIBS=OFF -DGGML_CUDA=ON
-cmake --build llama.cpp/build --config Release -j --clean-first \
-    --target llama-cli llama-mtmd-cli llama-server llama-gguf-split
-cp llama.cpp/build/bin/llama-* llama.cpp
-```
+=== "curl"
+
+    ```bash
+    curl -LsSf https://llama.app/install.sh | sh
+    ```
+
+=== "powershell"
+
+    ```powershell
+    irm https://llama.app/install.ps1 | iex
+    ```
 
 然後直接從 Hugging Face 拉取並執行模型。無需設定脈絡長度——
 llama.cpp 會使用正好所需的量。
@@ -100,8 +103,7 @@ llama.cpp 會使用正好所需的量。
 === "E2B"
 
     ```bash
-    export LLAMA_CACHE="unsloth/gemma-4-E2B-it-GGUF"
-    ./llama.cpp/llama-cli \
+    llama cli \
         -hf unsloth/gemma-4-E2B-it-GGUF:Q8_0 \
         --temp 1.0 --top-p 0.95 --top-k 64
     ```
@@ -109,8 +111,7 @@ llama.cpp 會使用正好所需的量。
 === "E4B"
 
     ```bash
-    export LLAMA_CACHE="unsloth/gemma-4-E4B-it-GGUF"
-    ./llama.cpp/llama-cli \
+    llama cli \
         -hf unsloth/gemma-4-E4B-it-GGUF:Q8_0 \
         --temp 1.0 --top-p 0.95 --top-k 64
     ```
@@ -118,8 +119,7 @@ llama.cpp 會使用正好所需的量。
 === "12B"
 
     ```bash
-    export LLAMA_CACHE="unsloth/gemma-4-12B-it-GGUF"
-    ./llama.cpp/llama-cli \
+    llama cli \
         -hf unsloth/gemma-4-12b-it-GGUF:UD-Q4_K_XL \
         --temp 1.0 --top-p 0.95 --top-k 64
     ```
@@ -127,8 +127,7 @@ llama.cpp 會使用正好所需的量。
 === "26B A4B"
 
     ```bash
-    export LLAMA_CACHE="unsloth/gemma-4-26B-A4B-it-GGUF"
-    ./llama.cpp/llama-cli \
+    llama cli \
         -hf unsloth/gemma-4-26B-A4B-it-GGUF:UD-Q4_K_XL \
         --temp 1.0 --top-p 0.95 --top-k 64
     ```
@@ -136,8 +135,7 @@ llama.cpp 會使用正好所需的量。
 === "31B"
 
     ```bash
-    export LLAMA_CACHE="unsloth/gemma-4-31B-it-GGUF"
-    ./llama.cpp/llama-cli \
+    llama cli \
         -hf unsloth/gemma-4-31B-it-GGUF:UD-Q4_K_XL \
         --temp 1.0 --top-p 0.95 --top-k 64
     ```
@@ -154,7 +152,7 @@ hf download unsloth/gemma-4-26B-A4B-it-GGUF \
 ```
 
 ```bash
-./llama.cpp/llama-cli \
+llama cli \
     --model unsloth/gemma-4-26B-A4B-it-GGUF/gemma-4-26B-A4B-it-UD-Q4_K_XL.gguf \
     --mmproj unsloth/gemma-4-26B-A4B-it-GGUF/mmproj-BF16.gguf \
     --temp 1.0 --top-p 0.95 --top-k 64
@@ -163,7 +161,7 @@ hf download unsloth/gemma-4-26B-A4B-it-GGUF \
 ### 伺服器
 
 ```bash
-./llama.cpp/llama-server \
+llama server \
     --model unsloth/gemma-4-26B-A4B-it-GGUF/gemma-4-26B-A4B-it-UD-Q4_K_XL.gguf \
     --mmproj unsloth/gemma-4-26B-A4B-it-GGUF/mmproj-BF16.gguf \
     --temp 1.0 --top-p 0.95 --top-k 64 \

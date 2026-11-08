@@ -58,7 +58,7 @@ DESCRIPTION_MAX = 200
 MODEL_SEPARATOR = "/"
 
 # Theme and authoring keys Zensical itself consumes. Allowed, not validated by us.
-THEME_KEYS = frozenset({"template", "hide", "cards", "search", "icon", "subtitle"})
+THEME_KEYS = frozenset({"template", "hide", "cards", "search", "icon", "subtitle", "image"})
 
 # Reserved for the Step 3.2 build hook. Authoring one is an error: a hand-written token
 # count is wrong the moment the page is edited.
@@ -94,8 +94,9 @@ KNOWN = frozenset(f.name for f in SCHEMA) | THEME_KEYS
 
 @cache
 def model_families() -> frozenset[str]:
-    """Every family id. Derived from `docs/models/`, so adding a model directory is enough."""
-    return frozenset(p.name for p in (DOCS_DIR / "models").iterdir() if p.is_dir())
+    """Every family id in data/models.yml."""
+    data = yaml.safe_load(MODELS_DATA.read_text(encoding="utf-8"))
+    return frozenset(str(family["id"]) for family in data.get("families", []))
 
 
 @cache
@@ -187,6 +188,13 @@ def validate(frontmatter: dict, *, page_paths: set[str] | None = None) -> list[P
             )
         if "](" in description or description.startswith("#"):
             problems.append(Problem("description", "description contains markdown syntax"))
+        if "visual walkthrough" in description.lower():
+            problems.append(
+                Problem(
+                    "description",
+                    "description uses placeholder 'visual walkthrough' -- summarize what the page covers",
+                )
+            )
     elif description is not None:
         problems.append(Problem("description", "description must be a string"))
 

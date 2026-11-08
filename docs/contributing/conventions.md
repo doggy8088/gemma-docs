@@ -1,6 +1,8 @@
 ---
 title: 慣例
 description: 維持這份文件一致性的約定：事實的單一來源放在哪裡、哪些檔案是自動產生的，以及 lint 會強制執行哪些規則。
+search:
+  exclude: true
 ---
 
 # 慣例

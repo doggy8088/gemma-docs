@@ -1,6 +1,6 @@
 ---
-title: 模型卡
-description: Gemma 4 開放模型家族的模型卡：密集與混合專家架構規格、基準測試成績、核心能力、最佳實務與倫理安全說明。
+title: Gemma 4 模型卡
+description: "Gemma 4（E2B、E4B、12B、26B A4B 與 31B）模型卡：架構、多模態輸入與輸出、訓練資料與評測基準。"
 models: [gemma-4]
 source_url: "https://ai.google.dev/gemma/docs/core/model_card_4.md.txt"
 ---
@@ -14,7 +14,7 @@ source_url: "https://ai.google.dev/gemma/docs/core/model_card_4.md.txt"
 [文件](index.md) \|
 [技術報告](https://arxiv.org/abs/2607.02770)
 
-**授權** : [Apache 2.0](https://ai.google.dev/gemma/apache_2) \| **作者** : [Google DeepMind](https://deepmind.google/models/gemma/)
+**授權** : [Apache 2.0](https://gemma.ai/resources/apache-2) \| **作者** : [Google DeepMind](https://deepmind.google/models/gemma/)
 
 </div>
 
@@ -292,7 +292,7 @@ Gemma 4 模型與內部安全及負責任 AI 團隊合作開發。我們進行�
 
 如果我們的工作對您有幫助，歡迎引用：
 
-```python
+```bibtex
 @misc{gemmateam2026gemma4,
       title={Gemma 4 Technical Report},
       author={Gemma Team},

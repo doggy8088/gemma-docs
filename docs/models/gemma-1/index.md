@@ -33,7 +33,7 @@ Gemma 是 Google 推出的輕量級、最先進的開放模型家族，採用與
 
 ### 引用
 
-```python
+```bibtex
 @article{gemma_2024,
     title={Gemma},
     url={https://www.kaggle.com/m/3301},

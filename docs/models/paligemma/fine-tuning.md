@@ -1,7 +1,7 @@
 ---
 title: 使用 JAX 與 Flax 微調 PaliGemma
 description: 本筆記本教學說明如何使用 JAX 與 Flax，在視覺語言任務上微調 PaliGemma 模型，包含完整的訓練流程。
-models: [paligemma]
+models: [paligemma-2, paligemma]
 frameworks: [jax]
 colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs/notebooks/paligemma-fine-tuning.ipynb
 source_url: "https://ai.google.dev/gemma/docs/paligemma/fine-tuning-paligemma.md.txt"

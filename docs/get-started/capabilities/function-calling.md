@@ -1,6 +1,6 @@
 ---
 title: 工具呼叫
-description: 當您使用像 Gemma 這樣的生成式人工智慧（AI）模型時，您可能會希望使用模型來操作程式設計介面，以完成任務或回答問題。
+description: "使用 Gemma 4 原生工具呼叫與結構化函式結構描述，在 Hugging Face Transformers 中打造代理式工作流程。"
 models: [gemma-4]
 frameworks: [transformers]
 colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs/notebooks/function-calling-gemma-4-e2b.ipynb
@@ -259,7 +259,7 @@ if calls:
 !!! Note
     為了獲得最佳效果，請使用以下特定格式，將工具執行結果附加到您的訊息歷史記錄中。這可確保聊天範本正確產生所需的詞元結構（例如 `response:get_current_weather{temperature:15,weather:<|"|>sunny<|"|>}`）。
 
-```python { .notebook-cell }
+```python
 "tool_responses": [
   {
     "name": function_name,
@@ -270,7 +270,7 @@ if calls:
 
 如有多個獨立請求：
 
-```python { .notebook-cell }
+```python
 "tool_responses": [
   {
     "name": function_name_1,
@@ -376,7 +376,7 @@ input_len = inputs["input_ids"].shape[-1]
 
 out = model.generate(**inputs, max_new_tokens=1024)
 output = processor.decode(out[0][input_len:], skip_special_tokens=False)
-result = processor.parse_response(output)
+result = processor.parse_response(output, prefix="")
 
 for key, value in result.items():
   if key == "role":

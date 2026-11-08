@@ -1,6 +1,6 @@
 ---
 title: 影片理解
-description: 影片資料是豐富的資訊來源：了解 Gemma 模型如何理解影片內容，協助您完成分析任務並理解周遭世界。
+description: "使用 Gemma 4 多模態視覺語言模型，分析影片片段與交錯的影格序列，深入理解影片內容。"
 models: [gemma-4]
 frameworks: [transformers]
 colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs/notebooks/video-gemma-4-e2b.ipynb

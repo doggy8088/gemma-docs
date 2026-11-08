@@ -1,6 +1,6 @@
 ---
 title: DiffusionGemma 視覺導覽
-description: DiffusionGemma 視覺化導覽：用豐富的圖解完整走讀擴散式文字生成模型的原理、架構與運作方式。
+description: "DiffusionGemma 如何以離散文字擴散、區塊自迴歸多畫布取樣與 26B A4B MoE 架構，平行產生詞元。"
 models: [diffusiongemma]
 source_url: https://newsletter.maartengrootendorst.com/p/a-visual-guide-to-diffusiongemma
 ---
@@ -11,7 +11,7 @@ source_url: https://newsletter.maartengrootendorst.com/p/a-visual-guide-to-diffu
     原刊載於
     [探索語言模型](https://newsletter.maartengrootendorst.com/p/a-visual-guide-to-diffusiongemma){ data-model="diffusiongemma" }。
 
-在 [Gemma 4 12B](https://newsletter.maartengrootendorst.com/p/a-visual-guide-to-gemma-4-12b){ data-model="gemma-4" } 發布之後，又有一款創新的模型可以介紹給大家，那就是 [DiffusionGemma](https://huggingface.co/google/diffusiongemma-26B-A4B-it){ data-model="diffusiongemma" }！
+在 [Gemma 4 12B](gemma-4-12b.md){ data-model="gemma-4" } 發布之後，又有一款創新的模型可以介紹給大家，那就是 [DiffusionGemma](https://huggingface.co/google/diffusiongemma-26B-A4B-it){ data-model="diffusiongemma" }！
 
 這個模型特別令我興奮，因為它採用了一種截然不同的文字生成方式，卻同時沿用了現有「一般」LLM 的許多優點。我們將探索舊的、新的一切，以及它們如何並存。
 
@@ -198,7 +198,7 @@ source_url: https://newsletter.maartengrootendorst.com/p/a-visual-guide-to-diffu
 ## DiffusionGemma 的架構
 **DiffusionGemma** 採用了我們到目前為止探索的均勻狀態擴散。但從零開始訓練的缺點依然存在。解法很簡單：不要從零訓練，改用現成的檢查點當起點，也就是 Gemma 4 26B A4B 模型。
 
-Gemma 4 26B A4B，如同 [Gemma 4 視覺導覽](https://newsletter.maartengrootendorst.com/p/a-visual-guide-to-gemma-4){ data-model="gemma-4" } 所介紹的，是一個混合專家（Mixture of Experts，MoE）模型，經過了大量訓練，效能優異。不過有一個問題……
+Gemma 4 26B A4B，如同 [Gemma 4 視覺導覽](gemma-4.md){ data-model="gemma-4" } 所介紹的，是一個混合專家（Mixture of Experts，MoE）模型，經過了大量訓練，效能優異。不過有一個問題……
 
 Gemma 4 26B A4B 是*純解碼器*模型，設計用來一個接一個生成文字，而擴散一般需要一個*編碼器*和一個*去噪器*。這時一個優雅的解法登場了：**編碼器-去噪器**補丁！
 

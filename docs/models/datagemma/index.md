@@ -6,7 +6,7 @@ source_url: "https://ai.google.dev/gemma/docs/datagemma.md.txt"
 ---
 # DataGemma
 
-DataGemma 是一款研究工具，讓使用者能以淺白語言提問，並根據 [Data Commons](https://datacommons.org/) 儲存庫中公開的統計資料獲得答案。此工具使用特別打造的 [Gemma](../gemma-4/index.md) 版本、搭載 Gemini 1.5 Pro 的 [Gemini API](https://ai.google.dev/gemini-api)，以及一組專為搭配 Data Commons 設計的函式庫。
+DataGemma 是一款研究工具，讓使用者能以淺白語言提問，並根據 [Data Commons](https://datacommons.org/) 儲存庫中公開的統計資料獲得答案。此工具使用特別打造的 [Gemma 2](../gemma-2/index.md) 版本、搭載 Gemini 1.5 Pro 的 [Gemini API](https://ai.google.dev/gemini-api)，以及一組專為搭配 Data Commons 設計的函式庫。
 
 
 此研究工具提供兩種根據 Data Commons 統計資料回答問題的技術：

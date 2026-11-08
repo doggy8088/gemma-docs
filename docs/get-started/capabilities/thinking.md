@@ -141,7 +141,7 @@ This equation shows that water can dissociate (break apart) into hydrogen ions (
 
 ```python { .notebook-cell }
 response = processor.decode(outputs[0][input_len:], skip_special_tokens=False)
-result = processor.parse_response(response)
+result = processor.parse_response(response, prefix="")
 
 for key, value in result.items():
   if key == "role":
@@ -330,7 +330,7 @@ $$\mathbf{100^\circ\text{C} }$$
 
 ```python { .notebook-cell }
 response = processor.decode(outputs[0][input_len:], skip_special_tokens=False)
-result = processor.parse_response(response)
+result = processor.parse_response(response, prefix="")
 
 for key, value in result.items():
   if key == "role":
@@ -409,7 +409,7 @@ input_len = inputs["input_ids"].shape[-1]
 outputs = model.generate(**inputs, max_new_tokens=1024)
 response = processor.decode(outputs[0][input_len:], skip_special_tokens=False)
 
-result = processor.parse_response(response)
+result = processor.parse_response(response, prefix="")
 
 for key, value in result.items():
   if key == "role":

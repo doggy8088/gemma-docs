@@ -39,7 +39,7 @@ Gemma 4 提供五種尺寸。它們共用相同的分詞器與提示格式，因
 
     pipe = pipeline(
         "text-generation",
-        model="google/gemma-4-12B-it",
+        model="google/gemma-4-E2B-it",
         device_map="auto"
     )
     output = pipe("Explain quantum computing simply:", max_new_tokens=150)
@@ -50,14 +50,14 @@ Gemma 4 提供五種尺寸。它們共用相同的分詞器與提示格式，因
     安裝 [`llama.cpp`](https://llama.app/)，然後執行：
 
     ```bash { .model-swap }
-    llama-cli -hf google/gemma-4-12B-it-qat-q4_0-gguf --prompt "Write a poem about the Kraken."
+    llama cli -hf google/gemma-4-E2B-it-qat-q4_0-gguf --prompt "Write a poem about the Kraken."
     ```
 
 === "Ollama"
     安裝 [`ollama`](https://ollama.com/download)，然後執行：
 
     ```bash { .model-swap }
-    ollama run gemma4:12b "Explain quantum computing simply:"
+    ollama run gemma4:e2b "Explain quantum computing simply:"
     ```
 
 === "Apple MLX"
@@ -65,7 +65,7 @@ Gemma 4 提供五種尺寸。它們共用相同的分詞器與提示格式，因
     安裝 [`MLX LM`](https://github.com/ml-explore/mlx-lm)，然後執行：
 
     ```bash { .model-swap }
-    mlx_lm.generate --model mlx-community/gemma-4-12B-it-qat-4bit \
+    mlx_lm.generate --model mlx-community/gemma-4-E2B-it-qat-4bit \
         --prompt "Explain quantum computing simply:"
     ```
 
@@ -74,14 +74,14 @@ Gemma 4 提供五種尺寸。它們共用相同的分詞器與提示格式，因
     安裝 [`vLLM`](https://docs.vllm.ai/en/latest/getting_started/installation/)，然後執行：
 
     ```bash { .model-swap }
-    vllm serve google/gemma-4-26B-A4B-it
+    vllm serve google/gemma-4-E2B-it
     ```
 
 === "LMStudio"
     安裝 [`LMStudio`](https://lmstudio.ai/)，然後執行：
 
     ```bash { .model-swap }
-    lms chat google/gemma-4-12b
+    lms chat google/gemma-4-e2b
     ```
 
 !!! example "使用程式碼代理？"

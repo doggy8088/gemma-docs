@@ -34,7 +34,7 @@ Gemma Scope 2 是為 **Gemma 3** 模型系列設計的全面、開放的可解�
 
 取得 Gemma 3 可解釋性套件的權重、程式碼與文件。
 
-### [在 Colab 中執行](https://colab.sandbox.google.com/drive/1NhWjg7n0nhfW--CjtsOdw5A5J_-Bzn4r?usp=sharing)
+### [在 Colab 中執行](https://colab.research.google.com/drive/1NhWjg7n0nhfW--CjtsOdw5A5J_-Bzn4r?usp=sharing)
 
 試用互動式教學，視覺化特徵並修改模型行為。
 

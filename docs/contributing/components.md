@@ -2,7 +2,9 @@
 title: 元件
 models: [gemma-4]
 frameworks: [ollama]
-description: 文件網站所用的可重複使用建構元件：卡片、徽章、步驟清單、嵌入元件，附即時範例與可直接複製的標記語法。
+description: 組成這份文件的可重複使用建構元件，附有即時範例與可直接複製的標記語法，方便查閱與引用。
+search:
+  exclude: true
 ---
 
 # 元件
@@ -286,6 +288,7 @@ colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs
 | `Uses` | `frameworks` frontmatter | 頁面教授的主要工具。連到各專案外部。 |
 | `Examples` | 頁面自己的程式碼 | **你**希望指令針對的目標。一種偏好設定。 |
 | `Colab` | `colab` frontmatter | Colab 筆記本的直接連結；會動態更新以對應所選模型。 |
+| `View as markdown` | `page.url` | 連到自動產生的原始 `.md.txt` 路由，讓瀏覽器直接內嵌顯示 Markdown。 |
 
 配對之間以 1px 線分隔，所有值共用同一字重，標籤則為靜音色——光靠 16px 的間距，不足以阻止 `Frameworks Sentence Transformers` 被讀成一串連續的灰色文字。
 

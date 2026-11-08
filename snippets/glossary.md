@@ -16,9 +16,9 @@
 *[VLM]: 視覺語言模型 — 可同時接收圖像與文字的模型
 *[RAG]: 檢索增強生成 — 檢索相關文件並放入提示中
 *[TPU]: 張量處理單元 — Google 用於機器學習工作負載的加速器
-*[PEFT]: Parameter-Efficient Fine-Tuning — tuning a small subset of parameters rather than updating all model weights
-*[FT]: Fine-Tuned — specialized for a specific benchmark, dataset, or domain task
-*[ASR]: Automatic Speech Recognition — transcribing spoken audio into text
-*[VQA]: Visual Question Answering — answering questions about visual content in an image
-*[OCR]: Optical Character Recognition — extracting written or printed text directly from images
-*[RLHF]: Reinforcement Learning from Human Feedback — aligning model behavior with human preferences
+*[PEFT]: 參數高效微調 — 只調整一小部分參數，而非更新模型的全部權重
+*[FT]: 已微調 — 針對特定基準、資料集或領域任務特化
+*[ASR]: 自動語音辨識 — 將口語音訊轉錄為文字
+*[VQA]: 視覺問答 — 回答關於圖像視覺內容的問題
+*[OCR]: 光學字元辨識 — 直接從圖像擷取書寫或印刷文字
+*[RLHF]: 人類回饋強化學習 — 讓模型行為與人類偏好對齊

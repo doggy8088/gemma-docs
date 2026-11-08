@@ -258,7 +258,7 @@ trainable params: 48,316,416 || all params: 5,152,613,920 || trainable%: 0.9377
 
 為確保模型只學習轉錄音訊，而非背誦提示詞元：
 
-- 以下程式碼會在每個序列中解析 <code><span class="token-turn"><|turn></span><span class="token-role">model</span>\n</code>。
+- 以下程式碼會在每個序列中解析 <code><span class="token-turn">&lt;|turn&gt;</span><span class="token-role">model</span>\n</code>。
 - 在 <code><span class="token-turn"><|turn></span><span class="token-role">model</span>\n</code> 之前的所有詞元（包括音訊前綴標記與使用者指令）都會被遮罩為 `-100`。
 - 只有助手回應的詞元會計入交叉熵損失。
 

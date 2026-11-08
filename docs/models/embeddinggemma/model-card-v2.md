@@ -1,19 +1,22 @@
 ---
 title: EmbeddingGemma 2 模型卡
 description: "EmbeddingGemma 2 模型卡：架構、多模態能力、基準測試、最佳實務、訓練資料與預期用途。"
-models: [embeddinggemma]
+models: [embeddinggemma-2]
 source_url: "https://ai.google.dev/gemma/docs/embeddinggemma/model_card_2.md.txt"
 ---
-# EmbeddingGemma 2 模型卡
+<div class="model-card-header" markdown>
 
 ![EmbeddingGemma 2 橫幅](../../assets/embeddinggemma/embeddinggemma2_banner.png)
 
-[Hugging Face](https://huggingface.co/google/embeddinggemma-2) |
-[GitHub](https://github.com/google-gemma) |
-[發佈部落格](https://blog.google/innovation-and-ai/technology/developers-tools/embeddinggemma-2) |
-[文件](index.md)
+[Hugging Face](https://huggingface.co/google/embeddinggemma-2) \|
+[GitHub](https://github.com/google-gemma) \|
+[發佈部落格](https://blog.google/innovation-and-ai/technology/developers-tools/embeddinggemma-2) \|
+[文件](index.md) \|
+[技術報告](https://arxiv.org/abs/2610.37364)
 
-**授權**：[Apache 2.0](../../resources/apache-2.md) | **作者**：[Google DeepMind](https://deepmind.google/models/gemma/)
+**授權**：[Apache 2.0](https://gemma.ai/resources/apache-2) \| **作者**：[Google DeepMind](https://deepmind.google/models/gemma/)
+
+</div>
 
 **EmbeddingGemma 2** 是由 Google DeepMind 打造的開放多模態嵌入模型，能將文字（含程式碼）、圖像、影片與音訊輸入（及其組合）映射到單一統一的 768 維向量空間。模型共有 740M 參數，由 270M 參數的文字模型結合模組化的視覺（170M）與音訊（300M）編碼器組成。
 
@@ -62,12 +65,12 @@ EmbeddingGemma 2 在文字、程式碼、視覺、視覺文件、影片與音訊
 |---|---|---|---|---|
 | *文字* | 大規模文字嵌入基準測試（MTEB，多語言，v2） | Mean(Task), Multiple | 61.36 | 61.15 |
 | | 大規模文字嵌入基準測試（MTEB，程式碼，v1） | Mean(Task), NDCG@10 | 78.68 | 68.76 |
-| *圖像* | 大規模圖像嵌入基準測試（MIEB，lite） | Mean(TaskType), Multiple | 64.64 | - |
+| *圖像* | 大規模圖像嵌入基準測試（MIEB，lite） | Mean(TaskType), Multiple | 65.67 | - |
 | | 大規模多模態嵌入基準測試（MMEB v2 - 圖像） | Mean(Task), Hit@1 | 57.28 | - |
 | | 大規模多模態嵌入基準測試（MMEB v2 - 視覺文件） | Mean(Task), NDCG@5 | 67.84 | - |
 | *影片* | 大規模多模態嵌入基準測試（MMEB v2 - 影片） | Mean(Task), Hit@1 | 50.67 | - |
 | *音訊* | 大規模聲音嵌入基準測試（MSEB，檢索） | Mean(Task), MRR@10 | 69.54 | - |
-| | 大規模音訊嵌入基準測試（MAEB） *Hugging Face* | Mean(Task), Multiple | 49.39 | - |
+| | 大規模音訊嵌入基準測試（MAEB） *Hugging Face* | Mean(Task), Multiple | 49.87 | - |
 
 ### 向量截斷評估結果
 
@@ -75,10 +78,10 @@ EmbeddingGemma 2 在文字、程式碼、視覺、視覺文件、影片與音訊
 
 | 輸出維度 | 壓縮比 | MTEB *(多語言，v2) Mean(Task)* | MTEB *(英文，v2) Mean(Task)* | MTEB *(程式碼，v1) Mean(Task)* | MIEB *(lite) Mean(TaskType)* | MMEB (v2) *整體* | MSEB *(檢索）Mean(Task)* | MAEB *Mean(Task)* |
 |---|---|---|---|---|---|---|---|---|
-| 768d（完整） | 1:1 | 61.36 | 68.46 | 78.68 | 64.64 | 59.01 | 69.54 | 49.39 |
-| 512d | 1:1.5 | 61.17 | 68.41 | 77.24 | 64.32 | 58.38 | 69.18 | 49.21 |
-| 256d | 1:3 | 60.41 | 67.78 | 76.18 | 63.13 | 56.24 | 66.76 | 48.91 |
-| 128d | 1:6 | 57.89 | 65.68 | 71.41 | 59.06 | 45.65 | 56.71 | 46.92 |
+| 768d（完整） | 1:1 | 61.36 | 68.46 | 78.68 | 65.67 | 59.01 | 69.54 | 49.87 |
+| 512d | 1:1.5 | 61.17 | 68.41 | 77.24 | 65.34 | 58.38 | 69.18 | 49.76 |
+| 256d | 1:3 | 60.41 | 67.78 | 76.18 | 64.16 | 56.24 | 66.76 | 49.13 |
+| 128d | 1:6 | 57.89 | 65.68 | 71.41 | 59.97 | 45.65 | 56.71 | 47.28 |
 
 ## 快速入門
 
@@ -314,3 +317,20 @@ EmbeddingGemma 2 從輸入內容產生嵌入，可用於多種下游應用。
 EmbeddingGemma 2 是 10 億參數以下最強的多模態嵌入模型之一。我們很期待看到開發者如何為裝置端或邊緣 AI 應用使用與調適這個模型。
 
 此模型從設計之初就面向負責任的 AI 開發，如同其他 Gemma 系列模型。
+
+## **引用**
+
+如果您覺得我們的工作有幫助，請考慮引用：
+
+```bibtex
+@misc{embeddinggemma2_2026,
+    title={EmbeddingGemma 2: Unified and Efficient Multimodal Representations},
+    author={Schechter Vera, Henrique and Dua, Sahil and Team, EmbeddingGemma},
+    year={2026},
+    eprint={2610.37364},
+    archivePrefix={arXiv},
+    primaryClass={cs.LG},
+    url={https://arxiv.org/abs/2610.37364}
+}
+```
+--8<-- "glossary.md"

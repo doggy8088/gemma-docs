@@ -26,6 +26,7 @@ import argparse
 import re
 import sys
 import tomllib
+from functools import lru_cache
 from pathlib import Path
 from typing import Iterable
 
@@ -37,6 +38,7 @@ DOCS_DIR = REPO_ROOT / "docs"
 CONFIG_FILE = REPO_ROOT / "zensical.toml"
 MODELS_FILE = REPO_ROOT / "data" / "models.yml"
 FRAMEWORKS_FILE = REPO_ROOT / "data" / "frameworks.yml"
+LINKS_FILE = REPO_ROOT / "data" / "links.yml"
 
 # Pages call `icon()`; the macros extension provides it during a Zensical build, but these raw
 # routes are rendered here, in a Jinja environment of our own. Same source, same output.
@@ -45,8 +47,18 @@ from main import icon as _icon  # noqa: E402
 
 LLMS_TARGET = DOCS_DIR / "llms.txt"
 SITE_URL = "https://gemma.ai"
+HIDDEN_PREFIXES = ("contributing/",)
 
 H1 = re.compile(r"^#\s+", re.MULTILINE)
+SNIPPET_INCLUDE = re.compile(r'^-{2,}8<-{2,}[ \t]+"[^"]+"[ \t]*$\n?', re.MULTILINE)
+WHATS_NEXT_SECTION = re.compile(
+    r"^##\s+(?:What['’]s\s+next|接下來|後續步驟|下一步)[ \t]*$(?:\n(?!#{1,2}\s).*)*\n?",
+    re.IGNORECASE | re.MULTILINE,
+)
+RELATIVE_ASSET = re.compile(
+    r"(?P<prefix>\]\(|(?:\b(?:src|href)=[\"']))(?:\.\.?/|/)*(?P<path>assets/[^)\s\"']+)"
+)
+REFERENCE_LINK = re.compile(r"\[([^\]]+)\]\[([a-z0-9][a-z0-9-]*)\]")
 
 
 def split_frontmatter(text: str) -> tuple[dict, str]:
@@ -62,10 +74,16 @@ def split_frontmatter(text: str) -> tuple[dict, str]:
     raise ValueError("unterminated frontmatter")
 
 
+def is_hidden_page(relative: str) -> bool:
+    return relative.startswith(HIDDEN_PREFIXES)
+
+
 def source_pages() -> dict[str, tuple[Path, dict, str]]:
     pages = {}
     for path in sorted(DOCS_DIR.rglob("*.md")):
         relative = path.relative_to(DOCS_DIR).as_posix()
+        if is_hidden_page(relative):
+            continue
         metadata, body = split_frontmatter(path.read_text(encoding="utf-8"))
         pages[relative] = (path, metadata, body)
     return pages
@@ -106,13 +124,24 @@ def markdown_route_for(relative: str) -> str:
     return "/index.md" if route == "/" else f"{route.rstrip('/')}.md"
 
 
-def display_title(metadata: dict, family_names: dict[str, str]) -> str:
+def display_title(
+    metadata: dict,
+    family_names: dict[str, str],
+    relative: str = "",
+) -> str:
     title = str(metadata.get("title", "Untitled"))
+    if not relative.startswith("models/"):
+        return title
     models = metadata.get("models") or []
-    if title.lower() in {"model card", "模型卡", "overview", "總覽", "概覽"} and len(models) == 1:
-        family = str(models[0]).split("/", 1)[0]
-        if family in family_names:
-            return f"{family_names[family]} — {title}"
+    parts = Path(relative).parts
+    family = (
+        parts[1]
+        if len(parts) > 2 and parts[1] in family_names
+        else (str(models[0]).split("/", 1)[0] if len(models) == 1 else "")
+    )
+    family_name = family_names.get(family)
+    if family_name and not all(part in title.lower() for part in family_name.lower().split()):
+        return f"{family_name} — {title}"
     return title
 
 
@@ -122,6 +151,12 @@ def model_data() -> dict:
 
 def framework_data() -> dict:
     return yaml.safe_load(FRAMEWORKS_FILE.read_text(encoding="utf-8"))
+
+
+@lru_cache(maxsize=1)
+def shared_links() -> dict[str, str]:
+    data = yaml.safe_load(LINKS_FILE.read_text(encoding="utf-8"))
+    return {name: str(entry["url"]) for name, entry in (data.get("links") or {}).items()}
 
 
 def render_llms() -> str:
@@ -144,7 +179,7 @@ def render_llms() -> str:
         for relative in entries:
             seen.add(relative)
             _path, metadata, _body = pages[relative]
-            title = display_title(metadata, family_names)
+            title = display_title(metadata, family_names, relative)
             description = " ".join(str(metadata.get("description", "")).split())
             url = f"{SITE_URL}{markdown_route_for(relative)}"
             suffix = f": {description}" if description else ""
@@ -169,7 +204,16 @@ def render_raw(relative: str, metadata: dict, body: str) -> str:
     context["modeldata"] = model_data()
     context["frameworkdata"] = framework_data()
     context["icon"] = _icon
-    rendered = environment.from_string(body).render(**context).strip() + "\n"
+    rendered = environment.from_string(body).render(**context)
+
+    def resolve_reference(match: re.Match) -> str:
+        url = shared_links().get(match.group(2))
+        return f"[{match.group(1)}]({url})" if url else match.group(0)
+
+    rendered = REFERENCE_LINK.sub(resolve_reference, rendered)
+    rendered = WHATS_NEXT_SECTION.sub("", rendered)
+    rendered = SNIPPET_INCLUDE.sub("", rendered).strip() + "\n"
+    rendered = RELATIVE_ASSET.sub(rf"\g<prefix>{SITE_URL}/\g<path>", rendered)
     if not H1.search(rendered):
         rendered = f"# {metadata['title']}\n\n{rendered}"
     return rendered
@@ -184,6 +228,7 @@ def raw_targets(site_dir: Path) -> Iterable[tuple[Path, str]]:
         clean_target = site_dir / clean_route
         if clean_target != source_shape:
             yield clean_target, content
+        yield Path(f"{clean_target}.txt"), content
 
 
 def generated_outputs() -> tuple[tuple[Path, str], ...]:
@@ -192,7 +237,8 @@ def generated_outputs() -> tuple[tuple[Path, str], ...]:
 
 def write_generated() -> None:
     for path, content in generated_outputs():
-        path.write_text(content, encoding="utf-8")
+        if not path.exists() or path.read_text(encoding="utf-8") != content:
+            path.write_text(content, encoding="utf-8")
         print(f"wrote {path.relative_to(REPO_ROOT)}")
 
 

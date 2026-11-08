@@ -1,5 +1,5 @@
 ---
-title: AI Edge Gallery
+title: 用 AI Edge Gallery 在手機上試用 Gemma
 description: 在 Android 或 iOS 手機上免寫程式碼執行 Gemma 4 —— 聊天、視覺、音訊轉錄與基準測試，完全離線。
 models: [gemma-4]
 frameworks: [litert, android, ios]

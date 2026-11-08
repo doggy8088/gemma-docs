@@ -60,7 +60,7 @@ Gemma 執行於廣泛的生態系工具。哪一個適合您，取決於您的�
 託管端點。無需下載、無需 GPU——適合在投入
 硬體前先評估模型。
 
-{{ engines(["ai-studio", "openrouter", "cerebras"]) }}
+{{ engines(["ai-studio", "openrouter"]) }}
 
 ### 在自己的機器上執行
 

@@ -1,5 +1,5 @@
 ---
-title: LiteRT-LM
+title: 使用 LiteRT-LM 在裝置端執行 Gemma
 description: 使用 LiteRT-LM 在裝置端執行 Gemma 4 —— CLI 安裝、預建的 .litertlm 權重，以及匯出您自己的微調模型。
 models: [gemma-4]
 frameworks: [litert]

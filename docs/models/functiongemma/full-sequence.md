@@ -33,7 +33,7 @@ pip install torch
 pip install transformers
 ```
 
-After you have accepted the license, you need a valid Hugging Face Token to access the model.
+接受授權後，您需要有效的 Hugging Face Token 才能存取模型。
 
 ```python { .notebook-cell }
 # Login into Hugging Face Hub

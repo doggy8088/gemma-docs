@@ -114,30 +114,6 @@ Map:   0%|          | 0/25 [00:00<?, ? examples/s]
 
 您現在已可開始微調模型。Hugging Face TRL 的 [SFTTrainer](https://huggingface.co/docs/trl/sft_trainer) 讓監督式微調開放 LLM 變得簡單。`SFTTrainer` 是 `transformers` 函式庫中 `Trainer` 的子類別，支援所有相同功能，
 
-以下程式碼從 Hugging Face 載入 Gemma 模型與分詞器。
-
-```python { .notebook-cell }
-import torch
-from transformers import AutoTokenizer, AutoModelForCausalLM
-
-# Load model and tokenizer
-model = AutoModelForCausalLM.from_pretrained(
-    base_model,
-    torch_dtype="auto",
-    device_map="auto",
-    attn_implementation="eager"
-)
-tokenizer = AutoTokenizer.from_pretrained(base_model)
-
-print(f"Device: {model.device}")
-print(f"DType: {model.dtype}")
-```
-
-```{ .no-copy .output }
-Device: cuda:0
-DType: torch.bfloat16
-```
-
 ## 微調之前
 
 下方輸出顯示，模型開箱即用的能力對這個用例來說可能不夠好。
@@ -148,8 +124,8 @@ from transformers import pipeline
 from random import randint
 import re
 
-# Load the model and tokenizer into the pipeline
-pipe = pipeline("text-generation", model=model, tokenizer=tokenizer)
+# Load the base model into the pipeline
+pipe = pipeline("text-generation", model=base_model, dtype="auto")
 
 # Load a random sample from the test dataset
 rand_idx = randint(0, len(dataset["test"])-1)
@@ -231,29 +207,21 @@ This is a cave. It's made of rock and dust.
 ```python { .notebook-cell }
 from trl import SFTConfig
 
-torch_dtype = model.dtype
-
 args = SFTConfig(
     output_dir=checkpoint_dir,              # directory to save and repository id
     max_length=512,                         # max sequence length for model and packing of the dataset
     packing=False,                          # Groups multiple samples in the dataset into a single sequence
     num_train_epochs=5,                     # number of training epochs
     per_device_train_batch_size=4,          # batch size per device during training
-    gradient_checkpointing=False,           # Caching is incompatible with gradient checkpointing
+    gradient_checkpointing=False,           # the model is small, so skip gradient checkpointing for speed
     optim="adamw_torch_fused",              # use fused adamw optimizer
     logging_steps=1,                        # log every step
     save_strategy="epoch",                  # save checkpoint every epoch
     eval_strategy="epoch",                  # evaluate checkpoint every epoch
     learning_rate=learning_rate,            # learning rate
-    fp16=True if torch_dtype == torch.float16 else False,   # use float16 precision
-    bf16=True if torch_dtype == torch.bfloat16 else False,  # use bfloat16 precision
     lr_scheduler_type="constant",           # use constant learning rate scheduler
     push_to_hub=True,                       # push model to hub
     report_to="tensorboard",                # report metrics to tensorboard
-    dataset_kwargs={
-        "add_special_tokens": False, # Template with special tokens
-        "append_concat_token": True, # Add EOS token as separator token between examples
-    }
 )
 ```
 
@@ -264,11 +232,10 @@ from trl import SFTTrainer
 
 # Create Trainer object
 trainer = SFTTrainer(
-    model=model,
+    model=base_model,
     args=args,
     train_dataset=dataset['train'],
     eval_dataset=dataset['test'],
-    processing_class=tokenizer,
 )
 ```
 
@@ -345,28 +312,13 @@ plt.show()
 
 對這個特定用例來說，最佳模型見仁見智。有趣的是，我們通常稱之為「過擬合」的現象對遊戲 NPC 其實很有用。它迫使模型忘記一般性知識，轉而鎖定訓練時學到的人格與特徵，確保它始終維持角色設定。
 
-```python { .notebook-cell }
-from transformers import AutoTokenizer, AutoModelForCausalLM
-
-model_id = checkpoint_dir
-
-# Load Model
-model = AutoModelForCausalLM.from_pretrained(
-    model_id,
-    torch_dtype="auto",
-    device_map="auto",
-    attn_implementation="eager"
-)
-tokenizer = AutoTokenizer.from_pretrained(model_id)
-```
-
-讓我們載入測試資料集中的所有問題並產生輸出。
+讓我們載入微調後的模型，然後為測試資料集中的所有問題產生輸出。
 
 ```python { .notebook-cell }
 from transformers import pipeline
 
-# Load the model and tokenizer into the pipeline
-pipe = pipeline("text-generation", model=model, tokenizer=tokenizer)
+# Load the fine-tuned model into the pipeline
+pipe = pipeline("text-generation", model=checkpoint_dir, dtype="auto")
 
 def test(test_sample):
   # Convert as test example into a prompt with the Gemma template

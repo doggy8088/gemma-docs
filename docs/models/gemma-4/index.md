@@ -1,10 +1,10 @@
 ---
-title: Gemma 4
-description: Gemma 是生成式人工智慧模型的家族，可用於各種生成任務，包括問答、摘要與推理。
+title: Gemma 4 模型總覽
+description: "Gemma 4 開放權重多模態模型（E2B、E4B、12B、26B A4B 與 31B）總覽：能力、上下文視窗、VRAM 與 QAT 檢查點。"
 models: [gemma-4]
 source_url: "https://ai.google.dev/gemma/docs/core.md.txt"
 ---
-# Gemma 4 {: #hidden-title style="display: none;" }
+# Gemma 4 model overview
 
 <div class="video-embed">
   <iframe src="https://www.youtube.com/embed/jZVBoFOJK-Q"
@@ -13,7 +13,7 @@ source_url: "https://ai.google.dev/gemma/docs/core.md.txt"
           referrerpolicy="strict-origin-when-cross-origin"></iframe>
 </div>
 
-Gemma 是生成式人工智慧模型的家族，可用於各種生成任務，包括問答、摘要與推理。Gemma 模型提供開放權重，並允許負責任的[商業用途][gemma-terms]，讓您能在自己的專案與應用中微調與部署它們。
+Gemma 是生成式人工智慧模型的家族，可用於各種生成任務，包括問答、摘要與推理。Gemma 模型提供開放權重，並允許負責任的[商業用途](../../resources/apache-2.md)，讓您能在自己的專案與應用中微調與部署它們。
 
 Gemma 4 模型家族包含四種為特定硬體需求量身打造的架構：
 
