@@ -1,33 +1,33 @@
 ---
-title: Fine-Tune Gemma for Vision Tasks using Hugging Face Transformers and QLoRA
-description: This guide walks you through how to fine-tune Gemma on a custom image and text dataset for a vision task (generating product descriptions) using Hugging Face Transformers and TRL.
+title: 使用 Hugging Face Transformers 與 QLoRA 針對視覺任務微調 Gemma
+description: 本指南將引導您使用 Hugging Face Transformers 與 TRL 在自訂圖片與文字資料集上微調 Gemma，以執行視覺任務（產生商品描述）。
 models: [gemma-4]
 frameworks: [transformers, peft, trl]
 source_url: "https://ai.google.dev/gemma/docs/core/huggingface_vision_finetune_qlora.md.txt"
 colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs/notebooks/vision-qlora-gemma-4-e2b.ipynb
 ---
-# Fine-Tune Gemma for Vision Tasks using Hugging Face Transformers and QLoRA
+# 使用 Hugging Face Transformers 與 QLoRA 針對視覺任務微調 Gemma
 
 
-This guide walks you through how to fine-tune Gemma on a custom image and text dataset for a vision task (generating product descriptions) using Hugging Face [Transformers](https://huggingface.co/docs/transformers/index) and [TRL](https://huggingface.co/docs/trl/index). You will learn:
+本指南將引導您使用 Hugging Face [Transformers](https://huggingface.co/docs/transformers/index) 與 [TRL](https://huggingface.co/docs/trl/index) 在自訂圖片與文字資料集上微調 Gemma，以執行視覺任務（產生商品描述）。您將學到：
 
-- What is Quantized Low-Rank Adaptation (QLoRA)
-- Setup development environment
-- Create and prepare the fine-tuning dataset
-- Fine-tune Gemma using TRL and the SFTTrainer
-- Test Model Inference and generate product descriptions from images and text.
+- 什麼是量化低秩適配（QLoRA）
+- 設定開發環境
+- 建立並準備微調資料集
+- 使用 TRL 與 SFTTrainer 微調 Gemma
+- 測試模型推論，從圖片與文字產生商品描述
 
 !!! Note
-    This guide requires a GPU which support bfloat16 data type such as NVIDIA L4 or NVIDIA A100 and more than 16GB of memory.
+    本指南需要支援 bfloat16 資料型別的 GPU（如 NVIDIA L4 或 NVIDIA A100），且記憶體需超過 16GB。
 
 
-## What is Quantized Low-Rank Adaptation (QLoRA)
+## 什麼是量化低秩適配（QLoRA）
 
-This guide demonstrates the use of [Quantized Low-Rank Adaptation (QLoRA)](https://arxiv.org/abs/2305.14314), which emerged as a popular method to efficiently fine-tune LLMs as it reduces computational resource requirements while maintaining high performance. In QloRA, the pretrained model is quantized to 4-bit and the weights are frozen. Then trainable adapter layers (LoRA) are attached and only the adapter layers are trained. Afterwards, the adapter weights can be merged with the base model or kept as a separate adapter.
+本指南展示了[量化低秩適配（Quantized Low-Rank Adaptation, QLoRA）](https://arxiv.org/abs/2305.14314)的用法。它成為高效微調 LLM 的熱門方法，因為它降低了運算資源需求，同時維持高效能。在 QLoRA 中，預訓練模型會被量化為 4-bit 並凍結權重，接著附加可訓練的轉接器層（LoRA），只訓練這些轉接器層。之後可以將轉接器權重合併到基底模型，或保留為獨立的轉接器。
 
-## Setup development environment
+## 設定開發環境
 
-The first step is to install Hugging Face Libraries, including TRL, and datasets to fine-tune open model.
+第一步是安裝 Hugging Face 函式庫（包括 TRL）與 datasets，以微調開放模型。
 
 ```python { .notebook-cell }
 # Install Pytorch & other libraries
@@ -44,9 +44,9 @@ The first step is to install Hugging Face Libraries, including TRL, and datasets
 #%pip install flash-attn
 ```
 
-*Note: If you are using a GPU with Ampere architecture (such as NVIDIA L4) or newer, you can use Flash attention. Flash Attention is a method that significantly speeds computations up and reduces memory usage from quadratic to linear in sequence length, leading to acelerating training up to 3x. Learn more at [FlashAttention](https://github.com/Dao-AILab/flash-attention/tree/main).*
+*注意：如果您使用的 GPU 採用 Ampere 架構（如 NVIDIA L4）或更新版本，可以使用 Flash Attention。Flash Attention 是一種顯著加速運算並將記憶體使用量從序列長度的二次方降為線性的作法，最多可加速訓練 3 倍。更多資訊請參閱 [FlashAttention](https://github.com/Dao-AILab/flash-attention/tree/main)。*
 
-You need a valid Hugging Face Token to publish your model. If you are running inside a Google Colab, you can securely use your Hugging Face Token using the Colab secrets otherwise you can set the token as directly in the `login` method. Make sure your token has write access too, as you push your model to the Hub during training.
+您需要有效的 Hugging Face Token 才能發布模型。如果您在 Google Colab 中執行，可以使用 Colab 密鑰安全地使用 Hugging Face Token；否則可以直接在 `login` 方法中設定 Token。請確保您的 Token 具有寫入權限，因為訓練期間會將模型推送到 Hub。
 
 ```python { .notebook-cell }
 # Login into Hugging Face Hub
@@ -54,17 +54,17 @@ from huggingface_hub import login
 login()
 ```
 
-## Create and prepare the fine-tuning dataset
+## 建立並準備微調資料集
 
-When fine-tuning LLMs, it is important to know your use case and the task you want to solve. This helps you create a dataset to fine-tune your model. If you haven't defined your use case yet, you might want to go back to the drawing board.
+微調 LLM 時，瞭解您的用例與要解決的任務很重要。這有助於建立用來微調模型的資料集。如果您還沒定義用例，可能要先回頭重新規劃。
 
-As an example, this guide focuses on the following use case:
+例如，本指南聚焦於以下用例：
 
-- Fine-tuning a Gemma model to generate concise, SEO-optimized product descriptions for an ecommerce platform, specifically tailored for mobile search.
+- 將 Gemma 模型微調為能為電商平台產生簡潔、SEO 最佳化的商品描述，特別針對手機搜尋進行調校。
 
-This guide uses the [philschmid/amazon-product-descriptions-vlm](https://huggingface.co/datasets/philschmid/amazon-product-descriptions-vlm) dataset, a dataset of Amazon product descriptions, including product images and categories.
+本指南使用 [philschmid/amazon-product-descriptions-vlm](https://huggingface.co/datasets/philschmid/amazon-product-descriptions-vlm) 資料集，這是 Amazon 商品描述資料集，包含商品圖片與分類。
 
-Hugging Face TRL supports multimodal conversations. The important piece is the "image" role, which tells the processing class that it should load the image. The structure should follow:
+Hugging Face TRL 支援多模態對話。關鍵是「image」角色，它告訴處理類別應該載入圖片。結構應如下所示：
 
 ```text
 {"messages": [{"role": "system", "content": [{"type": "text", "text":"You are..."}]}, {"role": "user", "content": [{"type": "text", "text": "..."}, {"type": "image"}]}, {"role": "assistant", "content": [{"type": "text", "text": "..."}]}]}
@@ -72,7 +72,7 @@ Hugging Face TRL supports multimodal conversations. The important piece is the "
 {"messages": [{"role": "system", "content": [{"type": "text", "text":"You are..."}]}, {"role": "user", "content": [{"type": "text", "text": "..."}, {"type": "image"}]}, {"role": "assistant", "content": [{"type": "text", "text": "..."}]}]}
 ```
 
-You can now use the Hugging Face Datasets library to load the dataset and create a prompt template to combine the image, product name, and category, and add a system message. The dataset includes images as`Pil.Image` objects.
+您現在可以使用 Hugging Face Datasets 函式庫載入資料集，並建立提示範本，將圖片、商品名稱與分類結合起來，同時加上系統訊息。資料集中的圖片是 `Pil.Image` 物件。
 
 ```python { .notebook-cell }
 from datasets import load_dataset
@@ -164,17 +164,17 @@ print(dataset_train[345]["messages"])
 [{'role': 'system', 'content': 'You are an expert product description writer for Amazon.'}, {'role': 'user', 'content': [{'type': 'text', 'text': 'Create a Short Product description based on the provided <PRODUCT> and <CATEGORY> and image.\nOnly return description. The description should be SEO optimized and for a better mobile search experience.\n\n<PRODUCT>\nBachmann Trains inches 6 inches Pine Trees with Snow 6 Per Box\n</PRODUCT>\n\n<CATEGORY>\nToys & Games | Hobbies | Trains & Accessories | Accessories | Scenery\n</CATEGORY>\n'}, {'type': 'image', 'image': <PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=173x500 at 0x7ED5E4422C00>}]}, {'role': 'assistant', 'content': [{'type': 'text', 'text': 'Enhance your model train landscape with these realistic Bachmann Trains 6-inch pine trees, flocked with snow.  Six highly detailed trees per box, perfect for adding winter charm to your HO scale layout.  Create a captivating snowy scene!'}]}]
 ```
 
-## Fine-tune Gemma using TRL and the SFTTrainer
+## 使用 TRL 與 SFTTrainer 微調 Gemma
 
-You are now ready to fine-tune your model. Hugging Face TRL [SFTTrainer](https://huggingface.co/docs/trl/sft_trainer) makes it straightforward to supervise fine-tune open LLMs. The `SFTTrainer` is a subclass of the `Trainer` from the `transformers` library and supports all the same features, including logging, evaluation, and checkpointing, but adds additional quality of life features, including:
+您現在已可開始微調模型。Hugging Face TRL 的 [SFTTrainer](https://huggingface.co/docs/trl/sft_trainer) 讓監督式微調開放 LLM 變得簡單。`SFTTrainer` 是 `transformers` 函式庫中 `Trainer` 的子類別，支援所有相同功能，包括日誌記錄、評估與檢查點，但還額外提供多項便利功能，包括：
 
-- Dataset formatting, including conversational and instruction formats
-- Training on completions only, ignoring prompts
-- Packing datasets for more efficient training
-- Parameter-efficient fine-tuning (PEFT) support including QloRA
-- Preparing the model and tokenizer for conversational fine-tuning (such as adding special tokens)
+- 資料集格式設定，包括對話與指令格式
+- 只在補全上訓練，忽略提示
+- 打包資料集以提升訓練效率
+- 參數效率型微調（PEFT）支援，包括 QLoRA
+- 為對話微調準備模型與分詞器（例如新增特殊詞元）
 
-The following code loads the Gemma model and tokenizer from Hugging Face and initializes the quantization configuration.
+以下程式碼從 Hugging Face 載入 Gemma 模型與分詞器，並初始化量化設定。
 
 ```python { .notebook-cell .model-swap }
 import torch
@@ -213,7 +213,7 @@ processor = AutoProcessor.from_pretrained("google/gemma-4-E2B-it") # Load the In
 model = prepare_model_for_kbit_training(model)
 ```
 
-The `SFTTrainer` supports a built-in integration with `peft`, which makes it straightforward to efficiently tune LLMs using QLoRA. You only need to create a `LoraConfig` and provide it to the trainer.
+`SFTTrainer` 內建與 `peft` 的整合，讓使用 QLoRA 高效微調 LLM 變得簡單。您只需要建立一個 `LoraConfig` 並傳給訓練器。
 
 ```python { .notebook-cell }
 from peft import LoraConfig
@@ -230,7 +230,7 @@ peft_config = LoraConfig(
 )
 ```
 
-Before you can start your training, you need to define the hyperparameter you want to use in a `SFTConfig` and a custom `collate_fn` to handle the vision processing. The `collate_fn` converts the messages with text and images into a format that the model can understand.
+在開始訓練之前，您需要在 `SFTConfig` 實例中定義要使用的超參數，以及一個自訂的 `collate_fn` 來處理視覺資料。`collate_fn` 會將包含文字與圖片的訊息轉換為模型能理解的格式。
 
 ```python { .notebook-cell }
 from trl import SFTConfig
@@ -283,7 +283,7 @@ def collate_fn(examples):
     return batch
 ```
 
-You now have every building block you need to create your `SFTTrainer` to start the training of your model.
+您現在已具備建立 `SFTTrainer` 所需的所有組件，可以開始訓練模型了。
 
 ```python { .notebook-cell }
 from trl import SFTTrainer
@@ -300,7 +300,7 @@ trainer = SFTTrainer(
 )
 ```
 
-Start training by calling the `train()` method.
+呼叫 `train()` 方法開始訓練。
 
 ```python { .notebook-cell }
 # Start training, the model will be automatically saved to the Hub and the output directory
@@ -320,7 +320,7 @@ trainer.save_model()
 | 3 | 0.488929 | 1.007192 | 0.417825 | 0.822075 | 1565223.000000 |
 ```
 
-Before you can test your model, make sure to free the memory.
+在測試模型之前，請確保先釋放記憶體。
 
 ```python { .notebook-cell }
 # free the memory again
@@ -329,10 +329,10 @@ del trainer
 torch.cuda.empty_cache()
 ```
 
-When using QLoRA, you only train adapters and not the full model. This means when saving the model during training you only save the adapter weights and not the full model. If you want to save the full model, which makes it easier to use with serving stacks like vLLM or TGI, you can merge the adapter weights into the model weights using the `merge_and_unload` method and then save the model with the `save_pretrained` method. This saves a default model, which can be used for inference.
+使用 QLoRA 時，您只訓練轉接器，而非完整模型。這表示訓練期間儲存模型時，只會儲存轉接器權重，而非完整模型。如果您想儲存完整模型（這會讓搭配 vLLM 或 TGI 等服務堆疊使用更方便），可以使用 `merge_and_unload` 方法將轉接器權重合併到模型權重中，再用 `save_pretrained` 方法儲存模型。這樣會儲存一個可直接用於推論的預設模型。
 
 !!! Note
-    It requires more than 30GB of CPU Memory when you want to merge the adapter into the model. You can skip this and continue with Test Model Inference.
+    注意：將轉接器合併到模型中需要超過 30GB 的 CPU 記憶體。您可以跳過此步驟，直接繼續「測試模型推論」。
 
 
 ```python { .notebook-cell }
@@ -357,12 +357,12 @@ Writing model shards:   0%|          | 0/4 [00:00<?, ?it/s]
 ['merged_model/processor_config.json']
 ```
 
-## Test Model Inference and generate product descriptions
+## 測試模型推論並產生商品描述
 
-After the training is done, you'll want to evaluate and test your model. You can load different samples from the test dataset and evaluate the model on those samples.
+訓練完成後，您會想評估並測試模型。可以從測試資料集載入不同的樣本，並在這些樣本上評估模型。
 
 !!! Note
-    Evaluating Generative AI models is not a trivial task since one input can have multiple correct outputs. This guide only focuses on manual evaluation and vibe checks.
+    注意：評估生成式 AI 模型並非簡單任務，因為一個輸入可能有多個正確輸出。本指南僅聚焦於人工評估與主觀檢驗。
 
 
 ```python { .notebook-cell }
@@ -383,7 +383,7 @@ processor = AutoProcessor.from_pretrained(model_id)
 Loading weights:   0%|          | 0/1951 [00:00<?, ?it/s]
 ```
 
-You can test inference by providing a product name, category and image. The `sample` includes a marvel action figure.
+您可以提供商品名稱、分類與圖片來測試推論。`sample` 包含一個漫威動作人偶。
 
 ```python { .notebook-cell }
 import requests
@@ -458,12 +458,12 @@ MODEL OUTPUT>>
 Bring home the action with the Hasbro Marvel Avengers Assemble Titan-held Iron Man Action Figure! This highly detailed 30.5-centimeter figure is perfect for recreating epic battles.  Collect the entire Marvel Avengers Assemble Titan-held series for an authentic experience.  Shop now!
 ```
 
-## Summary and next steps
+## 摘要與後續步驟
 
-This tutorial covered how to fine-tune a Gemma model for vision tasks using TRL and QLoRA, specifically for generating product descriptions. Check out the following docs next:
+本教學介紹了如何使用 TRL 與 QLoRA 針對視覺任務微調 Gemma 模型，特別是用於產生商品描述。接下來請參閱以下文件：
 
-- Learn how to [generate text with a Gemma model](../get-started/index.md).
-- Learn how to [fine-tune Gemma for text tasks using Hugging Face Transformers](qlora.md).
-- Learn how to [full model fine-tune using Hugging Face Transformers](full-finetune.md).
-- Learn how to [use Gemma open models with Vertex AI][vertex-use-gemma].
-- Learn how to [fine-tune Gemma using KerasNLP and deploy to Vertex AI](https://github.com/GoogleCloudPlatform/vertex-ai-samples/blob/main/notebooks/community/model_garden/model_garden_gemma_kerasnlp_to_vertexai.ipynb).
+- 瞭解如何[用 Gemma 模型產生文字](../get-started/index.md)。
+- 瞭解如何[使用 Hugging Face Transformers 針對文字任務微調 Gemma](qlora.md)。
+- 瞭解如何[使用 Hugging Face Transformers 進行完整模型微調](full-finetune.md)。
+- 瞭解如何[在 Vertex AI 上使用 Gemma 開放模型][vertex-use-gemma]。
+- 瞭解如何[使用 KerasNLP 微調 Gemma 並部署到 Vertex AI](https://github.com/GoogleCloudPlatform/vertex-ai-samples/blob/main/notebooks/community/model_garden/model_garden_gemma_kerasnlp_to_vertexai.ipynb)。

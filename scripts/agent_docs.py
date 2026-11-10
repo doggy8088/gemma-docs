@@ -52,7 +52,7 @@ HIDDEN_PREFIXES = ("contributing/",)
 H1 = re.compile(r"^#\s+", re.MULTILINE)
 SNIPPET_INCLUDE = re.compile(r'^-{2,}8<-{2,}[ \t]+"[^"]+"[ \t]*$\n?', re.MULTILINE)
 WHATS_NEXT_SECTION = re.compile(
-    r"^##\s+What['’]s\s+next[ \t]*$(?:\n(?!#{1,2}\s).*)*\n?",
+    r"^##\s+(?:What['’]s\s+next|接下來|後續步驟|下一步)[ \t]*$(?:\n(?!#{1,2}\s).*)*\n?",
     re.IGNORECASE | re.MULTILINE,
 )
 RELATIVE_ASSET = re.compile(

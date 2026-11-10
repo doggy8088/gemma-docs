@@ -65,7 +65,7 @@
     {% endif %}
     <meta name="description" content="{{ meta_description | e }}">
   {% endif %}
-  {% if (page and page.meta and page.meta.search and page.meta.search.exclude) or (config.site_url and (config.site_url | trim("/")) != "https://gemma.ai") %}
+  {% if (page and page.meta and page.meta.search and page.meta.search.exclude) or (config.site_url and (config.site_url | trim("/")) != "https://gemma.ai" and (config.site_url | trim("/")) != "https://gemma.gh.miniasp.com") %}
     <meta name="robots" content="noindex, nofollow">
   {% else %}
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
@@ -104,6 +104,7 @@
     {% set social_image_url = social_image_path | url %}
   {% endif %}
   <meta property="og:type" content="{{ 'website' if (not page or page.is_homepage) else 'article' }}">
+  <meta property="og:locale" content="zh_TW">
   <meta property="og:site_name" content="{{ config.site_name | e }}">
   <meta property="og:title" content="{{ social_title | e }}">
   {% if social_description %}

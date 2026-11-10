@@ -1,12 +1,12 @@
-# Gemma documentation
+# Gemma 文件
 
-The Google DeepMind Gemma documentation, ported to
-[Zensical](https://github.com/zensical/zensical).
+Google DeepMind Gemma 文件，已移植到
+[Zensical](https://github.com/zensical/zensical)。
 
-## Local development
+## 本機開發
 
-The project uses [uv](https://docs.astral.sh/uv/) and pins the documentation
-toolchain in `uv.lock`.
+專案使用 [uv](https://docs.astral.sh/uv/)，並將文件工具鏈鎖定在
+`uv.lock` 中。
 
 ```bash
 uv sync --frozen
@@ -14,13 +14,13 @@ uv run --frozen python scripts/agent_docs.py
 uv run --frozen zensical serve
 ```
 
-The preview is available at <http://localhost:8000/>.
-Zensical's preview server may download raw `.md` routes because of its local MIME mapping;
-GitHub Pages serves those static files with their Markdown content type.
+預覽可在 <http://localhost:8000/> 開啟。
+由於本機 MIME 映射的關係，Zensical 的預覽伺服器可能會下載原始的
+`.md` 路由；GitHub Pages 則會以其 Markdown 內容類型提供這些靜態檔案。
 
-## Verification
+## 驗證
 
-Run these checks before committing documentation or styling changes:
+在提交文件或樣式變更前，請執行以下檢查：
 
 ```bash
 uv run --frozen python -m unittest discover -s tests -p "test_*.py"
@@ -28,9 +28,9 @@ uv run --frozen python scripts/lint_docs.py --baseline
 uv run --frozen python scripts/build_docs.py
 ```
 
-`build_docs.py` runs the normal Zensical build and then publishes raw Markdown routes such as
-`/get-started/index.md`. The committed `docs/llms.txt` is regenerated from page
-frontmatter and verified by the `generated` lint check.
+`build_docs.py` 會執行一般的 Zensical 建置，然後發布原始 Markdown 路由，
+例如 `/get-started/index.md`。提交到版本庫的 `docs/llms.txt`
+是從頁面 front matter 重新產生，並由 `generated` lint 檢查驗證。
 
-See `PLAN.md` for the migration roadmap and `docs/contributing/components.md`
-for the CSS tokens and reusable components.
+遷移路線圖請參閱 `PLAN.md`；CSS tokens 與可重用元件請參閱
+`docs/contributing/components.md`。

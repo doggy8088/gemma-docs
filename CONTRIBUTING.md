@@ -1,33 +1,30 @@
-# How to contribute
+# 如何貢獻
 
-We'd love to accept your patches and contributions to this project.
+我們非常樂意接受你對本專案的修補程式與貢獻。
 
-## Before you begin
+## 開始之前
 
-### Sign our Contributor License Agreement
+### 簽署貢獻者授權協議
 
-Contributions to this project must be accompanied by a
-[Contributor License Agreement](https://cla.developers.google.com/about) (CLA).
-You (or your employer) retain the copyright to your contribution; this simply
-gives us permission to use and redistribute your contributions as part of the
-project.
+對本專案的貢獻必須附帶
+[貢獻者授權協議](https://cla.developers.google.com/about)（CLA）。
+你（或你的雇主）保留貢獻的著作權；這只是授權我們使用並將你的貢獻
+作為專案的一部分重新散佈。
 
-If you or your current employer have already signed the Google CLA (even if it
-was for a different project), you probably don't need to do it again.
+如果你或你目前的雇主已簽署過 Google CLA（即使是為了其他專案），
+你可能不需要再簽一次。
 
-Visit <https://cla.developers.google.com/> to see your current agreements or to
-sign a new one.
+請前往 <https://cla.developers.google.com/> 查看你目前的協議或簽署新協議。
 
-### Review our community guidelines
+### 閱讀我們的社群規範
 
-This project follows
-[Google's Open Source Community Guidelines](https://opensource.google/conduct/).
+本專案遵循
+[Google 開源社群規範](https://opensource.google/conduct/)。
 
-## Contribution process
+## 貢獻流程
 
-### Code reviews
+### 程式碼審查
 
-All submissions, including submissions by project members, require review. We
-use GitHub pull requests for this purpose. Consult
-[GitHub Help](https://help.github.com/articles/about-pull-requests/) for more
-information on using pull requests.
+所有提交（包括專案成員的提交）都需要審查。我們為此使用 GitHub
+pull request。關於使用 pull request 的更多資訊，請參閱
+[GitHub 說明](https://help.github.com/articles/about-pull-requests/)。

@@ -41,14 +41,14 @@ class AgentDocsTests(unittest.TestCase):
         rendered = agent_docs.render_llms()
         self.assertTrue(rendered.startswith("# Gemma Documentation\n"))
         self.assertIn("https://gemma.ai/get-started.md", rendered)
-        self.assertIn("- [Overview](https://gemma.ai/deployment.md):", rendered)
-        self.assertNotIn("[Gemma 4 — Overview](https://gemma.ai/deployment.md)", rendered)
+        self.assertIn("- [總覽](https://gemma.ai/deployment.md):", rendered)  # zh-tw title
+        self.assertNotIn("[Gemma 4 — 總覽](https://gemma.ai/deployment.md)", rendered)  # zh-tw title
         self.assertIn(
-            "- [DiffusionGemma — Generate output](https://gemma.ai/models/diffusiongemma/inference.md):",
+            "- [DiffusionGemma — 生成輸出](https://gemma.ai/models/diffusiongemma/inference.md):",
             rendered,
         )
         self.assertIn(
-            "- [RecurrentGemma — Fine-tuning using JAX and Flax](https://gemma.ai/models/recurrentgemma/fine-tuning.md):",
+            "- [RecurrentGemma — 使用 JAX 與 Flax 進行微調](https://gemma.ai/models/recurrentgemma/fine-tuning.md):",
             rendered,
         )
         self.assertNotIn("llms-full", rendered)
@@ -134,14 +134,14 @@ class AgentDocsTests(unittest.TestCase):
             "[Hugging Face](https://huggingface.co/collections/google/gemma-4)",
             rendered,
         )
-        self.assertIn("[commercial use](../../resources/apache-2.md)", rendered)
+        self.assertIn("[商業用途](../../resources/apache-2.md)", rendered)  # zh-tw link text
         self.assertNotIn("[hf-gemma4]", rendered)
         self.assertNotIn("[gemma-terms]", rendered)
 
         _path, metadata, body = pages["models/gemma-3/index.md"]
         rendered = agent_docs.render_raw("models/gemma-3/index.md", metadata, body)
         self.assertIn(
-            "[Gemma Prohibited Use Policy](/resources/prohibited-use)",
+            "[Gemma 禁止使用政策](/resources/prohibited-use)",  # zh-tw link text
             rendered,
         )
         self.assertNotIn("[prohibited-use]", rendered)
