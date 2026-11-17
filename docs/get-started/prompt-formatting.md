@@ -115,7 +115,8 @@ Gemma 4 接受過六個特殊詞元的訓練，用於管理「工具使用」生
 以下是一個對話範例：
 
 <pre><code><span class="token-turn">&lt;|turn&gt;</span><span class="token-role">system</span>
-<span class="token-think">&lt;|think|&gt;</span><span class="token-turn">&lt;turn|&gt;</span>
+<span class="token-think">&lt;|think|&gt;</span>
+<span class="token-turn">&lt;turn|&gt;</span>
 <span class="token-turn">&lt;|turn&gt;</span><span class="token-role">user</span>
 What is the water formula?<span class="token-turn">&lt;turn|&gt;</span>
 <span class="token-turn">&lt;|turn&gt;</span><span class="token-role">model</span>
@@ -138,7 +139,8 @@ What is the water formula?<span class="token-turn">&lt;turn|&gt;</span>
 以下範例展示模型使用天氣工具：
 
 <pre><code><span class="token-turn">&lt;|turn&gt;</span><span class="token-role">system</span>
-<span class="token-think">&lt;|think|&gt;</span>You are a helpful assistant.<span class="token-tool">&lt;|tool&gt;</span>declaration:get_current_temperature{...}<span class="token-tool">&lt;tool|&gt;</span><span class="token-turn">&lt;turn|&gt;</span>
+<span class="token-think">&lt;|think|&gt;</span>
+You are a helpful assistant.<span class="token-tool">&lt;|tool&gt;</span>declaration:get_current_temperature{...}<span class="token-tool">&lt;tool|&gt;</span><span class="token-turn">&lt;turn|&gt;</span>
 <span class="token-turn">&lt;|turn&gt;</span><span class="token-role">user</span>
 What's the temperature in London?<span class="token-turn">&lt;turn|&gt;</span>
 <span class="token-turn">&lt;|turn&gt;</span><span class="token-role">model</span>

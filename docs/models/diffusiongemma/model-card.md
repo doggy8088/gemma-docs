@@ -4,15 +4,18 @@ description: "DiffusionGemma（26B A4B MoE）模型卡：離散文字擴散架�
 models: [diffusiongemma]
 source_url: "https://ai.google.dev/gemma/docs/diffusiongemma/model_card.md.txt"
 ---
-# DiffusionGemma 模型卡
+<div class="model-card-header" markdown>
+
+![DiffusionGemma banner](../../assets/diffusiongemma/diffusiongemma_banner.png)
 
 [Hugging Face](https://huggingface.co/google/diffusiongemma-26B-A4B-it){ data-model="diffusiongemma" } \|
 [GitHub][gemma-github] \|
 [發布部落格](https://blog.google/innovation-and-ai/technology/developers-tools/diffusion-gemma-faster-text-generation/) \|
 [說明文件](index.md)
 
-
 **授權** : [Apache 2.0](https://gemma.ai/resources/apache-2) \| **作者** : [Google DeepMind](https://deepmind.google/models/gemma/)
+
+</div>
 
 DiffusionGemma 是由 Google DeepMind 打造的生成式模型。基於 26B A4B 混合專家（MoE）Gemma 4 架構，DiffusionGemma 使用離散擴散生成詞元。這個開放權重模型具備多模態能力，可處理文字、影像與影片輸入，產生文字輸出。
 

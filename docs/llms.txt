@@ -92,6 +92,7 @@ Follow the Markdown links below to read canonical page content without cloning t
 
 ## 學習
 - [學習](https://gemma.ai/learn.md): 用圖解方式說明 Gemma 模型如何運作：從整體架構深入到注意力機制、嵌入等個別關鍵機制。
+- [LLM 如何運作（搭配 Gemma 4）](https://gemma.ai/learn/how-llms-work.md): 一份大型語言模型運作方式的互動指南，在同一畫面中帶你走過 Gemma 4 管線的全部五個階段，從分詞到聊天範本。
 - [Gemma 4 圖解指南](https://gemma.ai/tutorials/visual-guides/gemma-4.md): Gemma 4 架構圖解指南：稠密與 26B A4B MoE 模型、逐層嵌入（E2B/E4B）、視覺與音訊編碼器，以及 KV 快取。
 - [Gemma 4 12B 視覺化指南](https://gemma.ai/tutorials/visual-guides/gemma-4-12b.md): Gemma 4 12B 如何以無編碼器架構與線性投影，快速統一理解文字、圖像與音訊等多模態內容。
 - [MTP 視覺化指南](https://gemma.ai/tutorials/visual-guides/mtp.md): 多詞元預測（Multi-Token Prediction）與推測性解碼（speculative decoding）如何讓 Gemma 4 更快 — 草稿模型、共享 KV 快取與分群式 LM 輸出頭。

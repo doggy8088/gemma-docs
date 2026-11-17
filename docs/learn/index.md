@@ -9,6 +9,16 @@ description: 用圖解方式說明 Gemma 模型如何運作：從整體架構深
 
 閱讀順序不限。這裡的內容都不是使用 Gemma 的先決條件。
 
+## 互動指南
+
+<div class="card-grid">
+<a class="card" href="how-llms-work.md">
+  <span class="card-icon">{{ icon('lucide/play') }}</span>
+  <div class="card-title">LLM 如何運作</div>
+  <p class="card-desc">將文字切分成詞元、探索嵌入空間、檢視注意力、調整 Temperature、Top-K 與 Top-P，並以思考與工具呼叫進行串流對話。</p>
+</a>
+</div>
+
 ## 接下來
 
 <div class="card-grid">
