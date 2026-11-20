@@ -83,12 +83,23 @@ Follow the Markdown links below to read canonical page content without cloning t
 - [使用 Unsloth 執行 Gemma](https://gemma.ai/deployment/unsloth.md): 使用 Unsloth 執行 Gemma 4 —— 桌面 Studio 應用程式、適用於 llama.cpp 的動態量化 GGUF，以及快 2 倍的微調。
 
 ## 微調
-- [Gemma 模型微調](https://gemma.ai/tuning.md): 微調 Gemma 這類生成式 AI 模型會改變模型的行為：了解各種微調方法，選擇最適合您需求的微調路徑。
-- [使用 Hugging Face Transformers 與 QLoRA 微調 Gemma](https://gemma.ai/tuning/qlora.md): 本指南將引導您使用 Hugging Face Transformers 與 TRL 在自訂 text-to-sql 資料集上微調 Gemma。
-- [使用 Unsloth 與 QLoRA 針對音訊任務微調 Gemma](https://gemma.ai/tuning/audio-qlora.md): 本指南將引導您使用 Unsloth 在自訂音訊資料集上微調 Gemma，以執行音訊任務（產生熊本方言日語的轉錄）。
-- [使用 Hugging Face Transformers 與 QLoRA 針對視覺任務微調 Gemma](https://gemma.ai/tuning/vision-qlora.md): 本指南將引導您使用 Hugging Face Transformers 與 TRL 在自訂圖片與文字資料集上微調 Gemma，以執行視覺任務（產生商品描述）。
-- [使用 Hugging Face Transformers 進行完整模型微調](https://gemma.ai/tuning/full-finetune.md): 本指南將引導您使用 Hugging Face Transformers 與 TRL 在手機遊戲 NPC 資料集上微調 Gemma。
-- [用 gemma-trainer 掌握本地微調](https://gemma.ai/tuning/gemma-trainer.md): 掌控您的 AI 模型：介紹我們最新的代理技能 gemma-trainer，旨在讓本地端微調流程更簡單、更有效率。
+- [微調總覽](https://gemma.ai/tuning.md): 微調 Gemma 4 之前，先選好訓練階段、方法、GPU 預算與基底檢查點，再開始訓練。
+- [最佳實務](https://gemma.ai/tuning/best-practices.md): 適用於全部五款 Gemma 4 模型的實用指南、模型架構、超參數表與損失曲線判讀技巧。
+- [資料集格式](https://gemma.ai/tuning/datasets-formatting.md): 為 Gemma 4 格式化單回合、多回合、思考與工具呼叫資料集，並使用僅計算完成部分的損失遮罩與思考內容剔除。
+- [持續預訓練](https://gemma.ai/tuning/continued-pretraining.md): 使用序列打包、詞彙表擴充與分開的嵌入學習率，將 Gemma 4 適應未標註的領域文字與新語言。
+- [自訂聊天範本](https://gemma.ai/tuning/custom-chat-template.md): 使用 ChatML 範本與 QLoRA，把預訓練 Gemma 4 基礎模型變成多輪聊天助手。
+- [(Q)LoRA](https://gemma.ai/tuning/qlora.md): 使用 LoRA 與 4 位元 QLoRA 在單一 GPU 上微調 Gemma 4，從資料集到合併模型。
+- [完整微調](https://gemma.ai/tuning/full-finetune.md): 使用 Hugging Face Transformers、TRL、餘弦暖身排程與 8 位元 AdamW，在 Gemma 4 上執行全參數 bfloat16 微調。
+- [MoE 微調](https://gemma.ai/tuning/moe-finetune.md): 使用 LoRA、PEFT target_parameters 與分組 GEMM，微調 Gemma 4 26B A4B 的 128 專家混合專家（MoE）架構，且不發生路由崩潰。
+- [未使用詞元](https://gemma.ai/tuning/unused-tokens.md): 把 Gemma 4 的 6,227 個保留詞元槽位變成單一詞元路由標籤、來源標籤與領域詞彙，無需調整詞彙表大小。
+- [視覺微調](https://gemma.ai/tuning/vision-qlora.md): 使用 QLoRA、可選的視覺詞元預算與僅針對補全的多模態損失遮罩，在自訂影像-文字資料集上微調 Gemma 4。
+- [音訊微調](https://gemma.ai/tuning/audio-qlora.md): 在自訂語音轉錄、低資源語言與口說問答資料集上，以 LoRA、Transformers 與 TRL 微調 Gemma 4 E2B、E4B 與 12B。
+- [偏好最佳化](https://gemma.ai/tuning/preference-alignment.md): 使用 Hugging Face TRL 的 DPO、ORPO 與 KTO，以偏好與拒絕的回應配對訓練 Gemma 4。
+- [可驗證獎勵](https://gemma.ai/tuning/reinforcement-learning.md): 使用群組相對策略最佳化、可驗證獎勵、TRL、PEFT 與 vLLM，訓練 Gemma 4 進行逐步推理與原生思考詞元。
+- [擴展規模](https://gemma.ai/tuning/scaling.md): 使用 PyTorch FSDP2 將 Gemma 4 訓練擴展到多 GPU 叢集，並使用 TorchAO 量化感知訓練，在自訂微調後恢復 4 位元精度。
+- [匯出](https://gemma.ai/tuning/export.md): 將微調後的 Gemma 4 檢查點匯出，並透過 vLLM、GGUF（llama.cpp 與 Ollama）與 LiteRT-LM 提供服務。
+- [Unsloth](https://gemma.ai/tuning/unsloth.md): 在任何單 GPU Gemma 4 教學中，把 Unsloth 的 FastVisionModel 或 FastModel 換入，以加速 LoRA、QLoRA 並匯出 GGUF。
+- [Gemma trainer 技能](https://gemma.ai/tuning/gemma-trainer.md): 安裝 gemma-trainer 代理技能，自動完成 Gemma 4 的資料集驗證、超參數調整、微調、評估與匯出。
 
 ## 學習
 - [學習](https://gemma.ai/learn.md): 用圖解方式說明 Gemma 模型如何運作：從整體架構深入到注意力機制、嵌入等個別關鍵機制。

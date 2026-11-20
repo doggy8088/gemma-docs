@@ -25,6 +25,7 @@ extra_css = [
   "stylesheets/embeds.css?v=2",      # external interactive demos
   "stylesheets/page-context.css?v=2",# the applicability bar above every H1
   "stylesheets/tokens.css?v=2",      # chat-token badges
+  "stylesheets/tuning-map.css?v=3",  # interactive fine-tuning pipeline map
   "stylesheets/home.css?v=3",        # landing page: chrome, backdrop, hero
   "stylesheets/llm-tutorial.css",    # interactive "How LLMs work" tutorial widgets
   "stylesheets/llm-animations.css",  # keyframes & motion choreography for LLM tutorial widgets
@@ -36,7 +37,8 @@ extra_css = [
 # Order matters: the generated data must load before the switcher that reads it.
 extra_javascript = [
   "javascripts/model-data.js?v=2",     # GENERATED from data/models.yml -- do not edit
-  "javascripts/model-switcher.js?v=2", # page context strip selector + code rewriting
+  "javascripts/model-switcher.js?v=3", # page context strip selector + code rewriting
+  "javascripts/tuning-map.js?v=3",     # interactive fine-tuning map & path picker
   "javascripts/llm-tutorial.js",        # interactive "How LLMs work" tutorial widgets
   "javascripts/llm-ascii-shell.js?v=1", # interactive tour shell: ASCII canvas, stage rail, terminal
   "javascripts/mathjax.js",
@@ -185,12 +187,33 @@ nav = [
 
   { "微調" = [
     { "總覽" = "tuning/index.md" },
-    { "指南" = [
-      { "QLoRA" = "tuning/qlora.md" },
-      { "音訊 QLoRA" = "tuning/audio-qlora.md" },
-      { "視覺 QLoRA" = "tuning/vision-qlora.md" },
+    { "基礎" = [
+      { "最佳實務" = "tuning/best-practices.md" },
+      { "資料集格式" = "tuning/datasets-formatting.md" },
+    ]},
+    { "持續預訓練" = [
+      { "持續預訓練" = "tuning/continued-pretraining.md" },
+      { "自訂聊天範本" = "tuning/custom-chat-template.md" },
+    ]},
+    { "監督式微調" = [
+      { "(Q)LoRA" = "tuning/qlora.md" },
       { "完整微調" = "tuning/full-finetune.md" },
-      { "代理技能" = "tuning/gemma-trainer.md" },
+      { "MoE 微調" = "tuning/moe-finetune.md" },
+      { "未使用詞元" = "tuning/unused-tokens.md" },
+    ]},
+    { "多模態微調" = [
+      { "視覺微調" = "tuning/vision-qlora.md" },
+      { "音訊微調" = "tuning/audio-qlora.md" },
+    ]},
+    { "強化學習" = [
+      { "偏好最佳化" = "tuning/preference-alignment.md" },
+      { "可驗證獎勵" = "tuning/reinforcement-learning.md" },
+    ]},
+    { "部署" = [
+      { "擴展規模" = "tuning/scaling.md" },
+      { "匯出" = "tuning/export.md" },
+      { "Unsloth" = "tuning/unsloth.md" },
+      { "Gemma trainer 技能" = "tuning/gemma-trainer.md" },
     ]},
   ]},
 

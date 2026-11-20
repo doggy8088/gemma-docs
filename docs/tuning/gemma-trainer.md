@@ -1,76 +1,108 @@
 ---
-title: 用 gemma-trainer 掌握本地微調
-description: 掌控您的 AI 模型：介紹我們最新的代理技能 gemma-trainer，旨在讓本地端微調流程更簡單、更有效率。
+title: Gemma trainer 技能
+description: 安裝 gemma-trainer 代理技能，自動完成 Gemma 4 的資料集驗證、超參數調整、微調、評估與匯出。
 models: [gemma-4]
-frameworks: [unsloth, transformers]
-source_url: "https://bebechien.github.io/cozy-corner-future/posts/master-local-fine-tuning-with-gemma-trainer/"
+frameworks: [transformers, unsloth]
 ---
 
-# 用 `gemma-trainer` 掌握本地微調
+# Gemma trainer 技能
 
-!!! note
-    最初發表於
-    [Cozy Corner Future](https://bebechien.github.io/cozy-corner-future/posts/master-local-fine-tuning-with-gemma-trainer/).
+來自 [`google-gemma/gemma-skills`][gemma-skills-repo] 的 **`gemma-trainer`** 技能，讓 Gemini CLI、Claude Code、Cursor 與 Antigravity 等 AI 程式撰寫代理掌握 Gemma 4 微調的最新實務知識。您不用再從零拼湊樣板程式碼，只要用淺白的英文描述資料集與目標，代理就會驗證資料格式、依您的 GPU 調整超參數、執行訓練並評估結果。
 
-還記得五月時我介紹了 [`gemma-skills`](https://github.com/google-gemma/gemma-skills) 倉庫嗎？看到這麼多人用[我先前的文章](https://bebechien.github.io/cozy-corner-future/posts/a-warm-welcome-to-gemma-skills/)簡化了工作流程，真是令人欣慰。（嘿，就算我們還沒被 GitHub 星星淹沒，我覺得已經是個很好的開始！😉）
+---
 
-但當我打造更多自訂應用時，總是遇到同一個瓶頸：**如何拿一個很棒的基底模型，把它調整成符合我的特定需求。**
+## 1. 安裝技能
 
-微調模型通常得涉足複雜的設定與令人困惑的指南。為了讓這個過程直觀又快速，我們打造了最新的技能：**`gemma-trainer`**。
+把 `gemma-trainer` 安裝到程式撰寫代理的 skills 目錄：
 
-## 什麼是 `gemma-trainer`？
+=== "skills CLI"
 
-`gemma-trainer` 是您在本地硬體上訓練與調整 Gemma 模型的藍圖。它負責處理「怎麼做」，讓您可以專注於專案目標——無論是教模型學會新領域，還是把它調校得符合您的偏好。
+    ```bash
+    # Install the gemma-trainer skill from google-gemma/gemma-skills
+    npx skills add google-gemma/gemma-skills --skill gemma-trainer
+    ```
 
-## 為什麼您會想用它
+=== "Antigravity CLI"
 
-- **更快、更輕量的訓練**：我們推薦使用 **[Unsloth](http://unsloth.ai/)** 進行單 GPU 訓練，速度快、記憶體用量少，個人硬體也能輕鬆執行。
-- **三種關鍵方法**：引導您完成監督式微調（SFT）來教導新知、直接偏好最佳化（DPO）來對齊偏好，以及獎勵模型（RM）來評分回應。
-- **教模型看與聽**：提供清晰的指示，教模型同時用圖片與音訊（多模態學習）搭配文字進行訓練。
-- **隨處執行**：快速將模型轉換為輕量格式（如 GGUF），並使用 **[LiteRT-LM](https://developers.google.com/edge/litert-lm/models/gemma-4)** 在手機或智慧裝置（IoT）上執行。
-- **與時俱進的最佳實務**：此技能會持續更新最新的最佳化設定與訓練技巧，確保您用的永遠是最佳方法。
+    ```bash
+    # Install the full Gemma Skills bundle
+    agy plugin install https://github.com/google-gemma/gemma-skills
+    ```
 
-## 實用案例
+如需瞭解如何列出與管理倉庫中的其他技能（例如 `gemma-dev`），請參閱 [Gemma Skills](../resources/gemma-skills.md)。
 
-來看實際操作：回想一下我們如何在[先前那篇文章](https://bebechien.github.io/cozy-corner-future/posts/turning-gemma-4-into-an-old-korean-translator/)中把 Gemma 4 變成古典韓國文學的專家譯者。有了 `gemma-trainer`，您不需要手動拼湊管線，只要跟您的 agent 說：
+---
 
-> **「在資料集 bebechien/HongGildongJeon 上微調 Gemma 4 E2B。」**
+## 2. 技能如何運作
 
-有了 `gemma-trainer` 技能，您的 agent 會和您並肩合作：
+當您請程式撰寫代理微調 Gemma 4 模型時，`gemma-trainer` 會在訓練前後引導整個工作階段經過四個階段：
 
-1. **驗證您的資料**：使用驗證腳本，確保訓練資料符合範本要求。
-2. **設定參數**：選擇最合適的 LoRA 設定，教模型學會語言細微差別，同時不耗盡顯示記憶體（VRAM）。
-3. **執行訓練**：使用資源效率最佳的預設值啟動訓練。
-4. **評估與迭代**：檢視模型表現、調整設定，直到得到您需要的確切結果。
+![gemma-trainer 技能如何把淺白英文描述的目標變成訓練好的轉接器](../assets/tuning/gemma_trainer_01_workflow.svg)
 
-以下範例顯示 agent 針對音訊任務，在 Gemma 4 12B 模型上啟動微調：
+1. **驗證資料集與範本**：檢查本機的 `JSONL`、`CSV`、`Parquet` 或 Hugging Face 資料集，用 `<|turn>` 與 `<turn|>` 格式化對話輪次，並啟用僅完成損失遮罩，讓提示詞 token 不會稀釋權重更新。
+2. **配對模型與 GPU 記憶體**：檢查可用的顯示記憶體，選擇相容的 Gemma 4 檢查點（自動捕捉模態不符的情況，例如把語音任務導向具備音訊能力的 `E2B`、`E4B` 或 `12B`，而非文字加視覺的 `26B A4B` 或 `31B`），並在啟動前提出 LoRA 秩、批次大小與學習率供您確認。
+3. **執行訓練配方**：產生乾淨的獨立 Python 訓練指令碼——單 GPU 快速執行用 [Unsloth](unsloth.md)，自訂設定與多 GPU [擴展](scaling.md)則用 Hugging Face TRL 與 PEFT——並追蹤訓練與驗證損失。
+4. **評估與匯出**：在保留的範例上執行訓練前後的評估，並把轉接器或合併後的檢查點匯出至 Hugging Face、`GGUF` 或 `LiteRT-LM`。
 
-![音訊微調啟動](../assets/tuning/gemma-trainer-audio-tuning-start.png)
+---
 
-設定完成後，agent 會用您指定的資料集啟動訓練流程：
+## 3. 支援的工作流程
 
-![音訊微調訓練](../assets/tuning/gemma-trainer-audio-tuning-training.png)
+`gemma-trainer` 涵蓋本文件套組中完整的後訓練生命週期：
 
-就算您出錯，agent 也會幫您收尾。例如，我不小心要求訓練 Gemma 4 31B 模型（那是文字加視覺模型，沒有音訊能力），它建議改用 Gemma 4 E2B 或 12B 來做音訊微調：
+| 目標 | 功能 | 指南 |
+| :--- | :--- | :--- |
+| **新語言** | 用重播混合打包原始領域文字，避免遺忘 | [持續預訓練](continued-pretraining.md) |
+| **自訂格式** | 設定自訂聊天範本或單一 token 路由標籤 | [自訂聊天範本](custom-chat-template.md) · [未使用詞元](unused-tokens.md) |
+| **任務微調** | 在單一 GPU 上訓練輕量 LoRA 或 4 位元 QLoRA 轉接器 | [(Q)LoRA](qlora.md) |
+| **全權重調整** | 使用記憶體效率佳的 8 位元 AdamW 更新所有模型權重 | [完整微調](full-finetune.md) |
+| **MoE 微調** | 調整全部 128 個路由專家，同時保持路由器凍結 | [MoE 微調](moe-finetune.md) |
+| **視覺任務** | 從圖片、收據與文件擷取結構化資料 | [視覺微調](vision-qlora.md) |
+| **音訊任務** | 微調語音轉錄與音訊理解 | [音訊微調](audio-qlora.md) |
+| **風格與語氣** | 依選擇與拒絕的偏好配對對齊回應 | [偏好最佳化](preference-alignment.md) |
+| **可驗證任務** | 以數學或程式碼的簡潔推理與精確答案獲得獎勵 | [可驗證獎勵](reinforcement-learning.md) |
+| **擴展與匯出** | 分割多 GPU 執行，並匯出至 vLLM、GGUF 或 LiteRT-LM | [擴展](scaling.md) · [匯出](export.md) |
 
-![音訊微調修正](../assets/tuning/gemma-trainer-audio-tuning-fix.png)
+---
 
-訓練完成後，agent 會呈現結果並列出後續步驟：
+## 4. 範例提示詞
 
-![音訊微調完成](../assets/tuning/gemma-trainer-audio-tuning-finish.png)
+安裝完成後，直接在專案資料夾中向程式撰寫代理下提示詞：
 
-您也可以請 agent 依您的特定需求撰寫自訂評估腳本。在這個例子裡，我請它寫一個檢查轉錄相似度的腳本：
+- **本機資料監督式微調**：
+  > *"Fine-tune Gemma 4 E4B on `./data/support_tickets.jsonl` to classify ticket priority and draft concise replies. Validate the dataset first and size QLoRA for a 24 GB GPU."*
+- **多模態視覺擷取**：
+  > *"Train Gemma 4 E2B to extract structured JSON line items from the receipt images in `./invoices/` and evaluate exact-match accuracy before and after training."*
+- **可驗證獎勵推理**：
+  > *"Run GRPO on Gemma 4 E2B using my SQL benchmark so it reasons inside `<|thought>` blocks and gets rewarded when queries execute and match the expected rows."*
+- **裝置端匯出**：
+  > *"Merge my trained Gemma 4 E2B LoRA adapter and convert it to GGUF Q4_K_M and LiteRT-LM for mobile deployment."*
 
-![音訊微調評估](../assets/tuning/gemma-trainer-audio-tuning-eval.png)
+---
 
-最後，您會收到一份總結訓練表現的完整報告，清楚指出下一次可以改進的地方：
+## 接下來
 
-![音訊微調報告](../assets/tuning/gemma-trainer-audio-tuning-report.png)
+<div class="card-grid">
+<a class="card" href="index.md">
+  <span class="card-icon">{{ icon('lucide/graduation-cap') }}</span>
+  <div class="card-title">微調總覽</div>
+  <p class="card-desc">探索互動式管線地圖，選擇訓練階段、方法與檢查點。</p>
+</a>
+<a class="card" href="qlora.md">
+  <span class="card-icon">{{ icon('lucide/sliders-horizontal') }}</span>
+  <div class="card-title">(Q)LoRA</div>
+  <p class="card-desc">逐步瞭解 LoRA 微調背後的 Hugging Face TRL 與 PEFT 程式碼。</p>
+</a>
+<a class="card" href="unsloth.md">
+  <span class="card-icon">{{ icon('lucide/zap') }}</span>
+  <div class="card-title">Unsloth</div>
+  <p class="card-desc">換用 Unsloth 的融合核心，在 16–40 GB GPU 上加快單 GPU 訓練。</p>
+</a>
+<a class="card" href="export.md">
+  <span class="card-icon">{{ icon('lucide/rocket') }}</span>
+  <div class="card-title">匯出</div>
+  <p class="card-desc">把微調後的模型匯出為 vLLM、GGUF 或 LiteRT-LM 以便部署。</p>
+</a>
+</div>
 
-## 來試試吧！
-
-`gemma-trainer` 是一份持續更新的結構化文件。把它放進 agent 的 skills 目錄，您的 AI 助手立刻就知道如何引導您完成流程。
-
-快看看[這個倉庫](https://github.com/google-gemma/gemma-skills)，把這個技能加進您的工具箱，讓我們一起打造了不起的東西！
-
-感謝閱讀，祝您訓練愉快！
+--8<-- "glossary.md"

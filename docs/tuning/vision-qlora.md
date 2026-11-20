@@ -1,279 +1,338 @@
 ---
-title: 使用 Hugging Face Transformers 與 QLoRA 針對視覺任務微調 Gemma
-description: 本指南將引導您使用 Hugging Face Transformers 與 TRL 在自訂圖片與文字資料集上微調 Gemma，以執行視覺任務（產生商品描述）。
-models: [gemma-4]
+title: 視覺微調
+description: 使用 QLoRA、可選的視覺詞元預算與僅針對補全的多模態損失遮罩，在自訂影像-文字資料集上微調 Gemma 4。
+models: [gemma-4/e2b, gemma-4/e4b, gemma-4/12b, gemma-4/31b]
 frameworks: [transformers, peft, trl]
 source_url: "https://ai.google.dev/gemma/docs/core/huggingface_vision_finetune_qlora.md.txt"
 colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs/notebooks/vision-qlora-gemma-4-e2b.ipynb
 ---
-# 使用 Hugging Face Transformers 與 QLoRA 針對視覺任務微調 Gemma
 
+# 視覺微調
 
-本指南將引導您使用 Hugging Face [Transformers](https://huggingface.co/docs/transformers/index) 與 [TRL](https://huggingface.co/docs/trl/index) 在自訂圖片與文字資料集上微調 Gemma，以執行視覺任務（產生商品描述）。您將學到：
+Gemma 4 家族的每個模型都能原生接受圖片與文字。在影像-文字配對上微調 Gemma 4，可以打造收據與文件 OCR、醫學影像、圖表擷取、UI 定位與商品編目等視覺助理。
 
-- 什麼是量化低秩適配（QLoRA）
-- 設定開發環境
-- 建立並準備微調資料集
-- 使用 TRL 與 SFTTrainer 微調 Gemma
-- 測試模型推論，從圖片與文字產生商品描述
+!!! note "硬體需求"
+    視覺微調需要支援 bfloat16 的 GPU（例如 NVIDIA L4、A100、H100 或 RTX 30/40/50 系列），E2B 與 E4B 至少需要 16 GB VRAM，12B 需要 24 GB，26B A4B 與 31B 則需要 48 至 80 GB。
 
-!!! Note
-    本指南需要支援 bfloat16 資料型別的 GPU（如 NVIDIA L4 或 NVIDIA A100），且記憶體需超過 16GB。
+---
 
+## 1. 選擇視覺詞元預算
 
-## 什麼是量化低秩適配（QLoRA）
+許多較舊的視覺語言模型會把每張圖片裁切成固定正方形，導致寬圖表與高收據變形。Gemma 4 會保留每張圖片原本的長寬比，將其切成圖塊，再彙整為可選的詞元預算：
 
-本指南展示了[量化低秩適配（Quantized Low-Rank Adaptation, QLoRA）](https://arxiv.org/abs/2305.14314)的用法。它成為高效微調 LLM 的熱門方法，因為它降低了運算資源需求，同時維持高效能。在 QLoRA 中，預訓練模型會被量化為 4-bit 並凍結權重，接著附加可訓練的轉接器層（LoRA），只訓練這些轉接器層。之後可以將轉接器權重合併到基底模型，或保留為獨立的轉接器。
+![Gemma 4 視覺詞元預算，從 70 到 1,120 個詞元](../assets/tuning/vision_01_variable_token_budget.svg)
 
-## 設定開發環境
+每張圖片會包在 `<|image|>`{.token-multi} 與 `<image|>`{.token-multi} 詞元之間，並轉換為軟詞元。視覺詞元預算決定會產生多少個詞元。將預算從 1,120 個詞元降到 280 個詞元，可將視覺詞元數量減少 4 倍，進而降低活化記憶體，讓您能使用更大的批次大小。以下是選擇預算的一些指導原則：
 
-第一步是安裝 Hugging Face 函式庫（包括 TRL）與 datasets，以微調開放模型。
+- **70 或 140 個詞元**：最適合縮圖、多圖提示，或想使用較大批次大小的快速分類。
+- **280 個詞元（預設）**：一般視覺問答、商品照片與 UI 截圖的良好平衡。
+- **560 或 1,120 個詞元**：適用於密集 PDF 頁面、財務圖表、示意圖與小字 OCR 的高細節預算。
 
-```python { .notebook-cell }
-# Install Pytorch & other libraries
-%pip install torch tensorboard torchvision
-%pip install -U torchao
+---
 
-# Install Transformers
-%pip install "transformers>=5.10.1"
+## 2. 兩種架構
 
-# Install Hugging Face libraries
-%pip install datasets accelerate evaluate bitsandbytes trl "peft>=0.19.0" protobuf pillow sentencepiece
+圖片圖塊會透過專用的視覺編碼器（除 12B 以外的所有模型）或無編碼器的嵌入器（12B）處理。微調模型時，請注意除了轉接器之外，其他部分一律凍結：
 
-# COMMENT IN: if you are running on a GPU that supports BF16 data type and flash attn, such as NVIDIA L4 or NVIDIA A100
-#%pip install flash-attn
-```
+![獨立視覺塔與無編碼器的 Gemma 4 12B 之比較](../assets/tuning/vision_02_12b_vs_siglip_vision.svg)
 
-*注意：如果您使用的 GPU 採用 Ampere 架構（如 NVIDIA L4）或更新版本，可以使用 Flash Attention。Flash Attention 是一種顯著加速運算並將記憶體使用量從序列長度的二次方降為線性的作法，最多可加速訓練 3 倍。更多資訊請參閱 [FlashAttention](https://github.com/Dao-AILab/flash-attention/tree/main)。*
+如圖所示，編碼輸入圖片與訓練轉接器有兩種不同的架構：
 
-您需要有效的 Hugging Face Token 才能發布模型。如果您在 Google Colab 中執行，可以使用 Colab 密鑰安全地使用 Hugging Face Token；否則可以直接在 `login` 方法中設定 Token。請確保您的 Token 具有寫入權限，因為訓練期間會將模型推送到 Hub。
+1. **獨立視覺編碼器** *(E2B、E4B、26B A4B 與 31B)*：圖片會切成 16x16 像素的「圖塊」，再通過視覺編碼器。對於 OCR、圖說生成與商品描述等大多數任務，請保持視覺編碼器凍結，並將 LoRA 轉接器附加到語言層。只有當您希望模型學習它未曾見過的事物（例如 X 光片或衛星雷達影像）時，才解凍視覺編碼器。
+2. **無編碼器（12B）**：Gemma 4 12B 沒有獨立的視覺編碼器。取而代之的是，48x48 像素的圖塊會通過凍結的 1x 嵌入器區塊進入 12B，因此將 LoRA 轉接器附加到 12B 的各層，就能同時調整視覺與文字。
 
-```python { .notebook-cell }
-# Login into Hugging Face Hub
-from huggingface_hub import login
-login()
-```
+---
 
-## 建立並準備微調資料集
+## 3. 遮罩詞元
 
-微調 LLM 時，瞭解您的用例與要解決的任務很重要。這有助於建立用來微調模型的資料集。如果您還沒定義用例，可能要先回頭重新規劃。
+如前所述，遮罩輸入詞元很重要，這樣損失才只會嘗試預測輸出詞元，而不是嘗試預測輸入的圖片詞元。
 
-例如，本指南聚焦於以下用例：
+![僅針對補全的視覺微調遮罩](../assets/tuning/vision_03_vision_loss_masking.svg)
 
-- 將 Gemma 模型微調為能為電商平台產生簡潔、SEO 最佳化的商品描述，特別針對手機搜尋進行調校。
+如果不遮罩輸入圖片詞元，交叉熵損失會嘗試預測輸入圖片的佔位符 ID，進而破壞梯度。將所有提示與圖片詞元遮罩後，100% 的權重更新都會指向模型的文字回答與結尾的 `<turn|>`{.token-turn} 詞元。
 
-本指南使用 [philschmid/amazon-product-descriptions-vlm](https://huggingface.co/datasets/philschmid/amazon-product-descriptions-vlm) 資料集，這是 Amazon 商品描述資料集，包含商品圖片與分類。
+---
 
-Hugging Face TRL 支援多模態對話。關鍵是「image」角色，它告訴處理類別應該載入圖片。結構應如下所示：
+## 4. 設定環境
 
-```text
-{"messages": [{"role": "system", "content": [{"type": "text", "text":"You are..."}]}, {"role": "user", "content": [{"type": "text", "text": "..."}, {"type": "image"}]}, {"role": "assistant", "content": [{"type": "text", "text": "..."}]}]}
-{"messages": [{"role": "system", "content": [{"type": "text", "text":"You are..."}]}, {"role": "user", "content": [{"type": "text", "text": "..."}, {"type": "image"}]}, {"role": "assistant", "content": [{"type": "text", "text": "..."}]}]}
-{"messages": [{"role": "system", "content": [{"type": "text", "text":"You are..."}]}, {"role": "user", "content": [{"type": "text", "text": "..."}, {"type": "image"}]}, {"role": "assistant", "content": [{"type": "text", "text": "..."}]}]}
-```
+我們將在 [`naver-clova-ix/cord-v2`](https://huggingface.co/datasets/naver-clova-ix/cord-v2) 上微調 Gemma 4，這是一個用於收據解析的多模態資料集。我們會使用資料集中的 1000 個範例進行訓練與驗證。目標是擷取收據上的結構化品項，例如小計與折扣。
 
-您現在可以使用 Hugging Face Datasets 函式庫載入資料集，並建立提示範本，將圖片、商品名稱與分類結合起來，同時加上系統訊息。資料集中的圖片是 `Pil.Image` 物件。
+首先，安裝 Hugging Face 的後訓練、量化、多模態與評估函式庫：
 
 ```python { .notebook-cell }
+# Install Hugging Face post-training, quantization, multimodal, and evaluation libraries
+%pip install -q -U "transformers>=5.10.1" "trl>=0.16.0" "peft>=0.19.0" accelerate datasets bitsandbytes torchao
+%pip install -q -U evaluate sacrebleu jiwer pillow soundfile librosa matplotlib tensorboard
+```
+
+如果您打算將訓練好的轉接器推送到 Hugging Face Hub，請使用具寫入權限的權杖登入：
+
+```python { .notebook-cell }
+# Optional: Uncomment if using gated checkpoints or pushing to the Hub
+# from huggingface_hub import login
+# login()
+```
+
+---
+
+## 5. 準備資料集
+
+
+接下來是將資料集準備成對話格式：
+
+```python { .notebook-cell }
+import json
 from datasets import load_dataset
-from PIL import Image
 
-# System message for the assistant
-system_message = "You are an expert product description writer for Amazon."
+system_message = (
+    "You are a document extraction assistant that parses receipt images into "
+    "structured JSON using the CORD schema (menu, sub_total, total). "
+    "Return only valid JSON without markdown code fences."
+)
+user_prompt = "Extract all line items, subtotals, and totals from this receipt image as JSON."
 
-# User prompt that combines the user query and the schema
-user_prompt = """Create a Short Product description based on the provided <PRODUCT> and <CATEGORY> and image.
-Only return description. The description should be SEO optimized and for a better mobile search experience.
 
-<PRODUCT>
-{product}
-</PRODUCT>
+# Format each receipt photo and ground-truth JSON into a multimodal conversation
+def format_batch(batch):
+    messages_list = []
+    images_list = []
+    for img, gt in zip(batch["image"], batch["ground_truth"]):
+        rgb_img = img.convert("RGB")
+        gt_parse = json.loads(gt)["gt_parse"]
+        images_list.append(rgb_img)
+        messages_list.append(
+            [
+                {"role": "system", "content": system_message},
+                {
+                    "role": "user",
+                    "content": [
+                        {"type": "image", "image": rgb_img},
+                        {"type": "text", "text": user_prompt},
+                    ],
+                },
+                {
+                    "role": "assistant",
+                    "content": [
+                        {"type": "text", "text": json.dumps(gt_parse, ensure_ascii=False)}
+                    ],
+                },
+            ]
+        )
+    return {"image": images_list, "messages": messages_list}
 
-<CATEGORY>
-{category}
-</CATEGORY>
-"""
 
-# Convert dataset to OAI messages
-def format_data(sample):
-    return {
-        "messages": [
-            {
-                "role": "system",
-                #"content": [{"type": "text", "text": system_message}],
-                "content": system_message,
-            },
-            {
-                "role": "user",
-                "content": [
-                    {
-                        "type": "text",
-                        "text": user_prompt.format(
-                            product=sample["Product Name"],
-                            category=sample["Category"],
-                        ),
-                    },
-                    {
-                        "type": "image",
-                        "image": sample["image"],
-                    },
-                ],
-            },
-            {
-                "role": "assistant",
-                "content": [{"type": "text", "text": sample["description"]}],
-            },
-        ],
-    }
+# Attach the lazy batch transform to the train, validation, and test splits
+raw_dataset = load_dataset("naver-clova-ix/cord-v2")
+dataset_train = raw_dataset["train"].with_transform(format_batch)
+dataset_val = raw_dataset["validation"].with_transform(format_batch)
+dataset_test = raw_dataset["test"].with_transform(format_batch)
 
-def process_vision_info(messages: list[dict]) -> list[Image.Image]:
-    image_inputs = []
-    # Iterate through each conversation
-    for msg in messages:
-        # Get content (ensure it's a list)
-        content = msg.get("content", [])
-        if not isinstance(content, list):
-            content = [content]
-
-        # Check each content element for images
-        for element in content:
-            if isinstance(element, dict) and (
-                "image" in element or element.get("type") == "image"
-            ):
-                # Get the image and convert to RGB
-                if "image" in element:
-                    image = element["image"]
-                else:
-                    image = element
-                image_inputs.append(image.convert("RGB"))
-    return image_inputs
-
-# Load dataset from the hub
-dataset = load_dataset("philschmid/amazon-product-descriptions-vlm", split="train")
-dataset = dataset.train_test_split(test_size=0.1)
-
-# Convert dataset to OAI messages
-# need to use list comprehension to keep Pil.Image type, .mape convert image to bytes
-dataset_train = [format_data(sample) for sample in dataset["train"]]
-dataset_test = [format_data(sample) for sample in dataset["test"]]
-
-print(dataset_train[345]["messages"])
+print(f"Splits: train={len(dataset_train)}, val={len(dataset_val)}, test={len(dataset_test)}")
+print(dataset_train[0]["messages"])
 ```
 
 ```{ .no-copy .output }
-[{'role': 'system', 'content': 'You are an expert product description writer for Amazon.'}, {'role': 'user', 'content': [{'type': 'text', 'text': 'Create a Short Product description based on the provided <PRODUCT> and <CATEGORY> and image.\nOnly return description. The description should be SEO optimized and for a better mobile search experience.\n\n<PRODUCT>\nBachmann Trains inches 6 inches Pine Trees with Snow 6 Per Box\n</PRODUCT>\n\n<CATEGORY>\nToys & Games | Hobbies | Trains & Accessories | Accessories | Scenery\n</CATEGORY>\n'}, {'type': 'image', 'image': <PIL.JpegImagePlugin.JpegImageFile image mode=RGB size=173x500 at 0x7ED5E4422C00>}]}, {'role': 'assistant', 'content': [{'type': 'text', 'text': 'Enhance your model train landscape with these realistic Bachmann Trains 6-inch pine trees, flocked with snow.  Six highly detailed trees per box, perfect for adding winter charm to your HO scale layout.  Create a captivating snowy scene!'}]}]
+Splits: train=800, val=100, test=100
+[{'role': 'system', 'content': 'You are a document extraction assistant that parses receipt images into structured JSON using the CORD schema (menu, sub_total, total). Return only valid JSON without markdown code fences.'}, {'role': 'user', 'content': [{'type': 'image', 'image': <PIL.Image.Image image mode=RGB size=864x1296>}, {'type': 'text', 'text': 'Extract all line items, subtotals, and totals from this receipt image as JSON.'}]}, {'role': 'assistant', 'content': [{'type': 'text', 'text': '{"menu": [{"nm": "Nasi Campur Bali", "cnt": "1 x", "price": "75,000"}, {"nm": "Bbk Bengil Nasi", "cnt": "1 x", "price": "125,000"}, ...], "sub_total": {"subtotal_price": "1,346,000", "service_price": "100,950", "tax_price": "144,695", "etc": "-45"}, "total": {"total_price": "1,591,600"}}'}]}]
 ```
 
-## 使用 TRL 與 SFTTrainer 微調 Gemma
+請注意，在同一個回合中，圖片一定在文字之前。這是 Gemma 4 模型訓練的一部分，比起把圖片放在文字之後，這樣的順序通常能帶來更好的效能。
 
-您現在已可開始微調模型。Hugging Face TRL 的 [SFTTrainer](https://huggingface.co/docs/trl/sft_trainer) 讓監督式微調開放 LLM 變得簡單。`SFTTrainer` 是 `transformers` 函式庫中 `Trainer` 的子類別，支援所有相同功能，包括日誌記錄、評估與檢查點，但還額外提供多項便利功能，包括：
+---
 
-- 資料集格式設定，包括對話與指令格式
-- 只在補全上訓練，忽略提示
-- 打包資料集以提升訓練效率
-- 參數效率型微調（PEFT）支援，包括 QLoRA
-- 為對話微調準備模型與分詞器（例如新增特殊詞元）
+## 6. 載入模型
 
-以下程式碼從 Hugging Face 載入 Gemma 模型與分詞器，並初始化量化設定。
+我們將以 4-bit 載入 Gemma 4 檢查點，並將詞元預算設為 560。560 是準確度與速度之間不錯的折衷。收據尤其能受益於更多的視覺詞元，因此值得進一步提高預算以改善效能（代價是速度變慢）。
 
 ```python { .notebook-cell .model-swap }
 import torch
-from transformers import AutoProcessor, AutoModelForMultimodalLM, BitsAndBytesConfig
-from peft import prepare_model_for_kbit_training
+from transformers import AutoModelForMultimodalLM, AutoProcessor, BitsAndBytesConfig
 
-# Hugging Face model id
-model_id = "google/gemma-4-E2B"
+model_id = "google/gemma-4-E2B-it"
 
-# Check if GPU supports bfloat16
-if not torch.cuda.is_bf16_supported():
-    raise ValueError("GPU does not support bfloat16, please use a GPU that supports bfloat16.")
-
-torch_dtype = torch.bfloat16
-
-# Define model init arguments
-model_kwargs = dict(
-    dtype=torch_dtype, # What torch dtype to use
-    device_map="auto", # Let torch decide how to load the model
-)
-
-# BitsAndBytesConfig int-4 config
-model_kwargs["quantization_config"] = BitsAndBytesConfig(
+# Configure 4-bit NF4 quantization with bfloat16 compute
+bnb_config = BitsAndBytesConfig(
     load_in_4bit=True,
     bnb_4bit_use_double_quant=True,
     bnb_4bit_quant_type="nf4",
-    bnb_4bit_compute_dtype=torch_dtype,
-    bnb_4bit_quant_storage=torch_dtype,
+    bnb_4bit_compute_dtype=torch.bfloat16,
+    bnb_4bit_quant_storage=torch.bfloat16,
 )
 
-# Load model and processor
-model = AutoModelForMultimodalLM.from_pretrained(model_id, **model_kwargs)
-processor = AutoProcessor.from_pretrained("google/gemma-4-E2B-it") # Load the Instruction Tokenizer to use the official Gemma template
+# Load the multimodal base model and processor
+model = AutoModelForMultimodalLM.from_pretrained(
+    model_id,
+    dtype=torch.bfloat16,
+    device_map="auto",
+    quantization_config=bnb_config,
+)
+processor = AutoProcessor.from_pretrained(model_id)
 
-# Prepare model for QLoRA training
-model = prepare_model_for_kbit_training(model)
+# Set the 560-token high-detail budget for dense receipt OCR (70, 140, 280, 560, or 1120)
+processor.image_processor.max_soft_tokens = 560
 ```
 
-`SFTTrainer` 內建與 `peft` 的整合，讓使用 QLoRA 高效微調 LLM 變得簡單。您只需要建立一個 `LoraConfig` 並傳給訓練器。
+---
+
+## 7. 評估基底模型
+
+我們先在保留的收據上評估基底模型，建立一個可供比較的基準：
 
 ```python { .notebook-cell }
-from peft import LoraConfig
+# Evaluate CORD schema adherence and exact total_price accuracy on held-out receipts
+def evaluate_receipts(eval_model, eval_processor, samples):
+    eval_model.eval()
+    stop_ids = [
+        eval_processor.tokenizer.eos_token_id,
+        eval_processor.tokenizer.convert_tokens_to_ids("<turn|>"),
+    ]
+    schema_ok, total_matches, total_count = 0, 0, 0
+    preds = []
 
-peft_config = LoraConfig(
-    lora_alpha=16,
-    lora_dropout=0.05,
-    r=16,
-    bias="none",
-    # no target_modules --- PEFT's Gemma 4 defaults scope to the LM layers
-    task_type="CAUSAL_LM",
-    modules_to_save=["lm_head", "embed_tokens"], # make sure to save the lm_head and embed_tokens as you train the special tokens
-    ensure_weight_tying=True,
-)
-```
-
-在開始訓練之前，您需要在 `SFTConfig` 實例中定義要使用的超參數，以及一個自訂的 `collate_fn` 來處理視覺資料。`collate_fn` 會將包含文字與圖片的訊息轉換為模型能理解的格式。
-
-```python { .notebook-cell }
-from trl import SFTConfig
-
-args = SFTConfig(
-    output_dir="gemma-product-description",     # directory to save and repository id
-    num_train_epochs=3,                         # number of training epochs
-    per_device_train_batch_size=1,              # batch size per device during training
-    per_device_eval_batch_size=1,               # batch size per device during evaluation
-    optim="adamw_torch_fused",                  # use fused adamw optimizer
-    logging_steps=5,                            # log every 5 steps
-    save_strategy="epoch",                      # save checkpoint every epoch
-    eval_strategy="epoch",                      # evaluate checkpoint every epoch
-    learning_rate=2e-4,                         # learning rate, based on QLoRA paper
-    bf16=True,                                  # use bfloat16 precision
-    max_grad_norm=0.3,                          # max gradient norm based on QLoRA paper
-    lr_scheduler_type="constant",               # use constant learning rate scheduler
-    push_to_hub=True,                           # push model to hub
-    report_to="tensorboard",                    # report metrics to tensorboard
-    dataset_text_field="",                      # need a dummy field for collator
-    dataset_kwargs={"skip_prepare_dataset": True}, # important for collator
-    remove_unused_columns = False               # important for collator
-)
-
-# Create a data collator to encode text and image pairs
-def collate_fn(examples):
-    texts = []
-    images = []
-    for example in examples:
-        image_inputs = process_vision_info(example["messages"])
-        text = processor.apply_chat_template(
-            example["messages"], add_generation_prompt=False, tokenize=False
+    for idx in range(len(samples)):
+        sample = samples[idx]
+        gold = json.loads(sample["messages"][2]["content"][0]["text"])
+        prompt = eval_processor.apply_chat_template(
+            sample["messages"][:2], tokenize=False, add_generation_prompt=True
         )
-        texts.append(text.strip())
-        images.append(image_inputs)
+        inputs = eval_processor(
+            text=[prompt], images=[[sample["image"]]], padding=True, return_tensors="pt"
+        ).to(eval_model.device)
 
-    # Tokenize the texts and process the images
+        with torch.no_grad():
+            out = eval_model.generate(
+                **inputs, max_new_tokens=512, do_sample=False, eos_token_id=stop_ids
+            )
+        pred_text = eval_processor.decode(
+            out[0][inputs.input_ids.shape[1] :], skip_special_tokens=True
+        ).strip()
+        preds.append(pred_text)
+
+        try:
+            pred = json.loads(pred_text)
+        except json.JSONDecodeError:
+            pred = {}
+
+        pred_total = pred.get("total") if isinstance(pred, dict) else None
+        if isinstance(pred_total, dict) and "total_price" in pred_total:
+            schema_ok += 1
+
+        gold_price = (gold.get("total") or {}).get("total_price")
+        if gold_price is not None:
+            total_count += 1
+            pred_price = pred_total.get("total_price") if isinstance(pred_total, dict) else pred_total
+            if str(pred_price).strip() == str(gold_price).strip():
+                total_matches += 1
+
+    metrics = {
+        "schema_valid_pct": round(100.0 * schema_ok / len(samples), 1),
+        "total_price_acc_pct": round(100.0 * total_matches / max(total_count, 1), 1),
+    }
+    return metrics, preds
+
+
+# Measure zero-shot performance on 40 unseen test receipts before training
+eval_subset = raw_dataset["test"].select(range(40)).with_transform(format_batch)
+before_metrics, before_preds = evaluate_receipts(model, processor, eval_subset)
+print("Before QLoRA (40 unseen receipts):", before_metrics)
+print("Sample #4 zero-shot output:", before_preds[4])
+```
+
+```{ .no-copy .output }
+Before QLoRA (40 unseen receipts): {'schema_valid_pct': 0.0, 'total_price_acc_pct': 43.2}
+Sample #4 zero-shot output: {"menu": ["ICE BLACKCOFFEE", "AVOCADO COFFEE", "CHICKEN KATSUFF"], "sub_total": 144000, "total": 200000}
+```
+
+未經任何微調，模型會出現一些失敗模式，例如誤讀數值（例如把實收現金 `200000` 誤認為實際的 `174,600` 總計），且未遵循精確的巢狀 CORD 格式（`{"total": {"total_price": "174,600"}}`），因為我們簡短的提示並未詳細說明每個巢狀鍵或逗號格式規則。這是很好的訊號，讓我們能在未經任何微調的情況下找出模型失敗的原因。在實際使用情境中，您可能想先找出失敗模式，再決定要使用或收集哪些資料。
+
+---
+
+## 8. 訓練模型
+
+我們先定義 `LoraConfig`，選擇與之前相同的目標投影，並排除視覺編碼器（稱為 `vision_tower`）。請記住，我們不會微調編碼器本身（如果您選擇非 12B 模型），因為只微調模型本身就已經有很大的收穫。
+
+```python { .notebook-cell }
+from peft import LoraConfig, prepare_model_for_kbit_training
+
+# Prepare the 4-bit model for gradient checkpointing and k-bit adapter training
+model = prepare_model_for_kbit_training(model)
+
+# Configure LoRA adapters on the language layers while keeping vision/audio towers frozen
+peft_config = LoraConfig(
+    r=16,
+    lora_alpha=32,
+    lora_dropout=0.0,
+    bias="none",
+    target_modules=[
+        "q_proj",
+        "k_proj",
+        "v_proj",
+        "o_proj",
+        "gate_proj",
+        "up_proj",
+        "down_proj",
+    ],
+    exclude_modules=r"model\.(vision_tower|audio_tower)\..*",
+    task_type="CAUSAL_LM",
+)
+```
+
+接下來是訓練。這個過程與這些指南中的其他訓練過程類似，只有一處不同：我們需要正確建立多模態批次。這表示要確保批次正確填補，並在損失更新時忽略正確的輸入資訊：
+
+```python { .notebook-cell }
+from trl import SFTConfig, SFTTrainer
+
+# Set the training hyperparameters for SFTTrainer
+args = SFTConfig(
+    output_dir="gemma-4-receipt-json",
+    num_train_epochs=3,
+    per_device_train_batch_size=2,
+    per_device_eval_batch_size=2,
+    gradient_accumulation_steps=4,
+    optim="adamw_torch_fused",
+    logging_steps=25,
+    save_strategy="no",
+    eval_strategy="epoch",
+    eval_on_start=True,
+    learning_rate=2e-4,
+    warmup_steps=0.05,
+    lr_scheduler_type="cosine",
+    bf16=True,
+    max_grad_norm=1.0,
+    report_to="none",
+    dataset_text_field="",
+    dataset_kwargs={"skip_prepare_dataset": True},
+    remove_unused_columns=False,
+)
+
+target_tokens = [
+    processor.tokenizer.convert_tokens_to_ids("<|turn>"),
+    processor.tokenizer.convert_tokens_to_ids("model"),
+    processor.tokenizer.convert_tokens_to_ids("\n"),
+]
+target_len = len(target_tokens)
+
+
+# Build multimodal batches and mask prompt, padding, and image soft tokens from the loss
+def collate_fn(examples):
+    texts = [
+        processor.apply_chat_template(
+            example["messages"], add_generation_prompt=False, tokenize=False
+        ).strip()
+        for example in examples
+    ]
+    images = [[example["image"]] for example in examples]
+
     batch = processor(text=texts, images=images, return_tensors="pt", padding=True)
-
-    # The labels are the input_ids, and we mask the padding tokens and image tokens in the loss computation
     labels = batch["input_ids"].clone()
 
-    # Mask tokens for not being used in the loss computation
+    for i in range(labels.size(0)):
+        row_tokens = batch["input_ids"][i].tolist()
+        for idx in range(len(row_tokens) - target_len, -1, -1):
+            if row_tokens[idx : idx + target_len] == target_tokens:
+                labels[i, : idx + target_len] = -100
+                break
+
     labels[labels == processor.tokenizer.pad_token_id] = -100
     labels[labels == processor.tokenizer.boi_token_id] = -100
     labels[labels == processor.tokenizer.image_token_id] = -100
@@ -281,189 +340,134 @@ def collate_fn(examples):
 
     batch["labels"] = labels
     return batch
-```
 
-您現在已具備建立 `SFTTrainer` 所需的所有組件，可以開始訓練模型了。
 
-```python { .notebook-cell }
-from trl import SFTTrainer
-
-# Create Trainer object
+# Initialize and run the multimodal trainer
 trainer = SFTTrainer(
     model=model,
     args=args,
     train_dataset=dataset_train,
-    eval_dataset=dataset_test,
+    eval_dataset=dataset_val,
     peft_config=peft_config,
     processing_class=processor,
     data_collator=collate_fn,
 )
-```
 
-呼叫 `train()` 方法開始訓練。
-
-```python { .notebook-cell }
-# Start training, the model will be automatically saved to the Hub and the output directory
 trainer.train()
-
-# Save the final model again to the Hugging Face Hub
 trainer.save_model()
 ```
 
 ```{ .no-copy .output }
-[3630/3630 57:38, Epoch 3/3]
+[300/300 24:23, Epoch 3/3]
 
-| Epoch | Training Loss | Validation Loss | Entropy | Mean Token Accuracy | Num Tokens |
-|---|---|---|---|---|---|
-| 1 | 0.835934 | 0.844098 | 0.735220 | 0.818571 | 521741.000000 |
-| 2 | 0.411868 | 0.886929 | 0.548703 | 0.822062 | 1043482.000000 |
-| 3 | 0.488929 | 1.007192 | 0.417825 | 0.822075 | 1565223.000000 |
+| Epoch | Training Loss | Validation Loss | Mean Token Accuracy |
+|---|---|---|---|
+| 0 | — | 1.4696 | 0.8571 |
+| 1 | 0.0691 | 0.0500 | 0.9869 |
+| 2 | 0.0319 | 0.0389 | 0.9907 |
+| 3 | 0.0252 | 0.0389 | 0.9908 |
 ```
 
-在測試模型之前，請確保先釋放記憶體。
+<!-- notebook:skip-start -->
+??? info "檢視訓練曲線"
+    ![訓練與驗證損失隨 epoch 的變化](../assets/tuning/vision-qlora_loss.svg)
+<!-- notebook:skip-end -->
+
+我們看到健康的損失，這絕對是個好兆頭！
+
+---
+
+## 9. 評估微調後的模型
+
+要評估我們的模型，先釋放 GPU 記憶體並儲存轉接器：
 
 ```python { .notebook-cell }
-# free the memory again
+import gc
+
+# Free the 4-bit training model and optimizer states before merging
 del model
 del trainer
+gc.collect()
 torch.cuda.empty_cache()
 ```
 
-使用 QLoRA 時，您只訓練轉接器，而非完整模型。這表示訓練期間儲存模型時，只會儲存轉接器權重，而非完整模型。如果您想儲存完整模型（這會讓搭配 vLLM 或 TGI 等服務堆疊使用更方便），可以使用 `merge_and_unload` 方法將轉接器權重合併到模型權重中，再用 `save_pretrained` 方法儲存模型。這樣會儲存一個可直接用於推論的預設模型。
-
-!!! Note
-    注意：將轉接器合併到模型中需要超過 30GB 的 CPU 記憶體。您可以跳過此步驟，直接繼續「測試模型推論」。
-
-
 ```python { .notebook-cell }
-from transformers import AutoModelForMultimodalLM, AutoProcessor
 from peft import PeftModel
-
-# Load Model base model
-model = AutoModelForMultimodalLM.from_pretrained(model_id, low_cpu_mem_usage=True)
-
-# Merge LoRA and base model and save
-peft_model = PeftModel.from_pretrained(model, args.output_dir)
-merged_model = peft_model.merge_and_unload()
-merged_model.save_pretrained("merged_model", safe_serialization=True, max_shard_size="2GB")
-
-processor = AutoProcessor.from_pretrained(args.output_dir)
-processor.save_pretrained("merged_model")
-```
-
-```{ .no-copy .output }
-Loading weights:   0%|          | 0/1951 [00:00<?, ?it/s]
-Writing model shards:   0%|          | 0/4 [00:00<?, ?it/s]
-['merged_model/processor_config.json']
-```
-
-## 測試模型推論並產生商品描述
-
-訓練完成後，您會想評估並測試模型。可以從測試資料集載入不同的樣本，並在這些樣本上評估模型。
-
-!!! Note
-    注意：評估生成式 AI 模型並非簡單任務，因為一個輸入可能有多個正確輸出。本指南僅聚焦於人工評估與主觀檢驗。
-
-
-```python { .notebook-cell }
 from transformers import AutoModelForMultimodalLM, AutoProcessor
 
-model_id = "merged_model"
-
-# Load Model with PEFT adapter
-model = AutoModelForMultimodalLM.from_pretrained(
-  model_id,
-  device_map="auto",
-  dtype="auto",
+# Merge the trained LoRA adapter into the bfloat16 base checkpoint
+base_model = AutoModelForMultimodalLM.from_pretrained(
+    model_id,
+    low_cpu_mem_usage=True,
+    dtype=torch.bfloat16,
+    device_map="auto",
 )
-processor = AutoProcessor.from_pretrained(model_id)
+
+peft_model = PeftModel.from_pretrained(base_model, args.output_dir)
+merged_model = peft_model.merge_and_unload()
+merged_model.save_pretrained("merged_vision_model", safe_serialization=True, max_shard_size="2GB")
+processor.save_pretrained("merged_vision_model")
+
+del base_model, peft_model, merged_model
+torch.cuda.empty_cache()
 ```
 
-```{ .no-copy .output }
-Loading weights:   0%|          | 0/1951 [00:00<?, ?it/s]
-```
-
-您可以提供商品名稱、分類與圖片來測試推論。`sample` 包含一個漫威動作人偶。
+現在，我們可以載入已合併到檢查點中的轉接器，看看它在未見過的收據上的表現：
 
 ```python { .notebook-cell }
-import requests
-from PIL import Image
+# Reload the merged checkpoint and evaluate on the 40 unseen test receipts
+merged_dir = "merged_vision_model"
+reloaded_model = AutoModelForMultimodalLM.from_pretrained(
+    merged_dir, device_map="auto", dtype="auto"
+)
+reloaded_processor = AutoProcessor.from_pretrained(merged_dir)
 
-# Test sample with Product Name, Category and Image
-sample = {
-  "product_name": "Hasbro Marvel Avengers-Serie Marvel Assemble Titan-Held, Iron Man, 30,5 cm Actionfigur",
-  "category": "Toys & Games | Toy Figures & Playsets | Action Figures",
-  "image": Image.open(requests.get("https://m.media-amazon.com/images/I/81+7Up7IWyL._AC_SY300_SX300_.jpg", stream=True).raw).convert("RGB")
-}
+after_metrics, after_preds = evaluate_receipts(reloaded_model, reloaded_processor, eval_subset)
+print("Before QLoRA (40 unseen receipts):", before_metrics)
+print("After QLoRA  (40 unseen receipts):", after_metrics)
 
-def generate_description(sample, model, processor):
-    # Convert sample into messages and then apply the chat template
-    messages = [
-        {"role": "system", "content": system_message},
-        {"role": "user", "content": [
-            {"type": "image","image": sample["image"]},
-            {"type": "text", "text": user_prompt.format(product=sample["product_name"], category=sample["category"])},
-        ]},
-    ]
-    text = processor.apply_chat_template(
-        messages, tokenize=False, add_generation_prompt=True
-    )
-    print(text)
-    # Process the image and text
-    image_inputs = process_vision_info(messages)
-    # Tokenize the text and process the images
-    inputs = processor(
-        text=[text],
-        images=image_inputs,
-        padding=True,
-        return_tensors="pt",
-    )
-    # Move the inputs to the device
-    inputs = inputs.to(model.device)
-
-    # Generate the output
-    stop_token_ids = [processor.tokenizer.eos_token_id, processor.tokenizer.convert_tokens_to_ids("<turn|>")]
-    generated_ids = model.generate(**inputs, max_new_tokens=256, top_p=1.0, do_sample=True, temperature=0.8, eos_token_id=stop_token_ids, disable_compile=True)
-    # Trim the generation and decode the output to text
-    generated_ids_trimmed = [out_ids[len(in_ids) :] for in_ids, out_ids in zip(inputs.input_ids, generated_ids)]
-    output_text = processor.batch_decode(
-        generated_ids_trimmed, skip_special_tokens=True, clean_up_tokenization_spaces=False
-    )
-    return output_text[0]
-
-# generate the description
-description = generate_description(sample, model, processor)
-print("MODEL OUTPUT>> \n")
-print(description)
+gold_sample_4 = eval_subset[4]["messages"][2]["content"][0]["text"]
+print("\n--- Unseen Test Receipt #4 ---")
+print("Ground Truth:", gold_sample_4)
+print("Before QLoRA:", before_preds[4])
+print("After QLoRA :", after_preds[4])
 ```
 
 ```{ .no-copy .output }
-<bos><|turn>system
-You are an expert product description writer for Amazon.<turn|>
-<|turn>user
-<|image|>Create a Short Product description based on the provided <PRODUCT> and <CATEGORY> and image.
-Only return description. The description should be SEO optimized and for a better mobile search experience.
+Before QLoRA (40 unseen receipts): {'schema_valid_pct': 0.0, 'total_price_acc_pct': 43.2}
+After QLoRA  (40 unseen receipts): {'schema_valid_pct': 95.0, 'total_price_acc_pct': 91.9}
 
-<PRODUCT>
-Hasbro Marvel Avengers-Serie Marvel Assemble Titan-Held, Iron Man, 30,5 cm Actionfigur
-</PRODUCT>
-
-<CATEGORY>
-Toys & Games | Toy Figures & Playsets | Action Figures
-</CATEGORY><turn|>
-<|turn>model
-
-MODEL OUTPUT>> 
-
-Bring home the action with the Hasbro Marvel Avengers Assemble Titan-held Iron Man Action Figure! This highly detailed 30.5-centimeter figure is perfect for recreating epic battles.  Collect the entire Marvel Avengers Assemble Titan-held series for an authentic experience.  Shop now!
+--- Unseen Test Receipt #4 ---
+Ground Truth: {"menu": [{"nm": "ICE BLACKCOFFE", "cnt": "2", "price": "82,000"}, {"nm": "AVOCADO COFFEE", "cnt": "1", "price": "61,000"}, {"nm": "CHIKEN KATSU FF", "cnt": "1", "price": "51,000"}], "sub_total": {"subtotal_price": "194,000", "discount_price": "19,400"}, "total": {"total_price": "174,600", "cashprice": "200,000", "changeprice": "25,400"}}
+Before QLoRA: {"menu": ["ICE BLACKCOFFEE", "AVOCADO COFFEE", "CHICKEN KATSUFF"], "sub_total": 144000, "total": 200000}
+After QLoRA : {"menu": [{"nm": "ICE BLACKCOFFE", "cnt": "2", "price": "82,000"}, {"nm": "NEW AVOCADO COFFEE", "cnt": "1", "price": "61,000"}, {"nm": "OLBE CHIKEN KATSUFF", "cnt": "1", "price": "51,000"}], "sub_total": {"subtotal_price": "194,000", "discount_price": "19,400"}, "total": {"total_price": "174,600", "cashprice": "200,000", "changeprice": "28,400"}}
 ```
 
-## 摘要與後續步驟
+效能提升了不少！只微調語言轉接器，就讓模型學會了精確的巢狀 CORD JSON 結構描述（`95.0%`），並將未見過收據的精確 `total_price` 擷取率提高到 `91.9%`——不過請注意，在範例 #4 中，較困難的字元級品項 OCR（例如 `"NEW AVOCADO COFFEE"` 以及 `"changeprice": "28,400"` 對 `"25,400"`）在精簡的 E2B 模型上仍可能偶爾出錯。這顯示了只微調模型的一小部分（而非整個編碼器）能達到的效果。
 
-本教學介紹了如何使用 TRL 與 QLoRA 針對視覺任務微調 Gemma 模型，特別是用於產生商品描述。接下來請參閱以下文件：
+---
 
-- 瞭解如何[用 Gemma 模型產生文字](../get-started/index.md)。
-- 瞭解如何[使用 Hugging Face Transformers 針對文字任務微調 Gemma](qlora.md)。
-- 瞭解如何[使用 Hugging Face Transformers 進行完整模型微調](full-finetune.md)。
-- 瞭解如何[在 Vertex AI 上使用 Gemma 開放模型][vertex-use-gemma]。
-- 瞭解如何[使用 KerasNLP 微調 Gemma 並部署到 Vertex AI](https://github.com/GoogleCloudPlatform/vertex-ai-samples/blob/main/notebooks/community/model_garden/model_garden_gemma_kerasnlp_to_vertexai.ipynb)。
+## 接下來
+
+<div class="card-grid">
+<a class="card" href="audio-qlora.md">
+  <span class="card-icon">{{ icon('lucide/audio-lines') }}</span>
+  <div class="card-title">音訊微調</div>
+  <p class="card-desc">針對語音轉錄、方言適應與口說問答，微調 Gemma 4 E2B、E4B 與 12B。</p>
+</a>
+<a class="card" href="preference-alignment.md">
+  <span class="card-icon">{{ icon('lucide/sliders-horizontal') }}</span>
+  <div class="card-title">偏好最佳化</div>
+  <p class="card-desc">使用選定與拒絕的回應配對，塑造模型的語氣與格式。</p>
+</a>
+<a class="card" href="reinforcement-learning.md">
+  <span class="card-icon">{{ icon('lucide/brain') }}</span>
+  <div class="card-title">可驗證獎勵</div>
+  <p class="card-desc">使用可驗證的獎勵函式，訓練 Gemma 4 的思考通道。</p>
+</a>
+<a class="card" href="export.md">
+  <span class="card-icon">{{ icon('lucide/rocket') }}</span>
+  <div class="card-title">匯出</div>
+  <p class="card-desc">將多模態 Gemma 4 模型匯出為 LiteRT-LM、GGUF 或 vLLM。</p>
+</a>
+</div>

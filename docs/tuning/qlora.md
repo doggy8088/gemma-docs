@@ -1,225 +1,346 @@
 ---
-title: 使用 Hugging Face Transformers 與 QLoRA 微調 Gemma
-description: 本指南將引導您使用 Hugging Face Transformers 與 TRL 在自訂 text-to-sql 資料集上微調 Gemma。
-models: [gemma-4]
+title: "(Q)LoRA"
+description: 使用 LoRA 與 4 位元 QLoRA 在單一 GPU 上微調 Gemma 4，從資料集到合併模型。
+models: [gemma-4/e2b, gemma-4/e4b, gemma-4/12b, gemma-4/31b]
 frameworks: [transformers, peft, trl]
 source_url: "https://ai.google.dev/gemma/docs/core/huggingface_text_finetune_qlora.md.txt"
 colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs/notebooks/qlora-gemma-4-e2b.ipynb
 ---
-# 使用 Hugging Face Transformers 與 QLoRA 微調 Gemma
 
+# (Q)LoRA
 
-本指南將引導您使用 Hugging Face [Transformers](https://huggingface.co/docs/transformers/index) 與 [TRL](https://huggingface.co/docs/trl/index) 在自訂 text-to-sql 資料集上微調 Gemma。您將學到：
+LoRA 是自訂 Gemma 4 最簡單的方式。您不需要更新數十億個權重，只要凍結模型，並在每一層旁邊訓練一個小型轉接器。
 
-- 什麼是量化低秩適配（QLoRA）
-- 設定開發環境
-- 建立並準備微調資料集
-- 使用 TRL 與 SFTTrainer 微調 Gemma
-- 測試模型推論並產生 SQL 查詢
+QLoRA 更進一步，將凍結的模型以 4 個位元儲存。這讓您能在單一 GPU 上微調大得多的模型。
 
-!!! Note
-    本指南是為在配備 NVIDIA T4 GPU（16GB）與 Gemma 1B 的 Google Colaboratory 帳號上執行而設計，但也可以調整為在更大的 GPU 與更大的模型上執行。
+在本指南中，我們先瞭解 LoRA 與 QLoRA 的運作方式，以及要調整哪些層。接著微調 Gemma 4，讓它先以指定的語言推理，再以英文回答。
 
+---
 
-## 什麼是量化低秩適配（QLoRA）
+## 1. LoRA 的運作方式 <a id="1-lora-的運作方式"></a>
 
-本指南展示了[量化低秩適配（Quantized Low-Rank Adaptation, QLoRA）](https://arxiv.org/abs/2305.14314)的用法。它成為高效微調 LLM 的熱門方法，因為它降低了運算資源需求，同時維持高效能。在 QLoRA 中，預訓練模型會被量化為 4-bit 並凍結權重，接著附加可訓練的轉接器層（LoRA），只訓練這些轉接器層。之後可以將轉接器權重合併到基底模型，或保留為獨立的轉接器。
+使用 LoRA 微調時，您會凍結原始權重矩陣 <span style="color: #2B529E; font-weight: 700;">W</span>，並在其旁邊附加兩個小型轉接器矩陣（<span style="color: #7F43AA; font-weight: 700;">A</span> 與 <span style="color: #7F43AA; font-weight: 700;">B</span>）。只有這些轉接器會接收更新，因此您可以略過數十億個凍結權重的梯度與最佳化器狀態。
 
-## 設定開發環境
+可以把凍結的矩陣 <span style="color: #2B529E; font-weight: 700;">W</span> 想像成承載通用語言知識的主要幹道，而 LoRA 轉接器則是一條狹窄的側邊車道，只學習您的任務所需的調整。矩陣 <span style="color: #7F43AA; font-weight: 700;">A</span> 會將輸入壓縮到較小的秩 <span style="color: #857230; font-weight: 700;">r</span>（例如 16 或 32），矩陣 <span style="color: #7F43AA; font-weight: 700;">B</span> 再將其投影回輸出尺寸：
 
-第一步是安裝 Hugging Face 函式庫（包括 TRL）與 datasets，以微調開放模型，包括不同的 RLHF 與對齊技術。
+![訊號流經凍結的權重矩陣與可訓練的 LoRA 矩陣 A 和 B](../assets/tuning/arch_03_lora_rank_alpha_scaling.svg)
+
+如圖底部的方程式所示，轉接器的輸出在加到凍結層之前，會先乘以 <span style="color: #857230; font-weight: 700;">alpha / r</span>。以下兩個設定控制了這一點：
+
+- **<span style="color: #857230; font-weight: 700;">r</span>**（秩）：轉接器的大小。秩越高，可訓練參數越多，訓練所需的運算量也越大。
+- **<span style="color: #857230; font-weight: 700;">alpha</span>**：控制轉接器輸出的加權強度。將 <span style="color: #857230; font-weight: 700;">alpha</span> 設為與 <span style="color: #857230; font-weight: 700;">r</span> 相等（1 倍乘數）或 <span style="color: #857230; font-weight: 700;">r</span> 的兩倍（2 倍乘數），在所有 Gemma 4 模型上都有良好的效果。
+
+| 任務類型 | 秩 | Alpha | 說明 |
+| :--- | :--- | :--- | :--- |
+| 格式、語氣、分類、JSON 或 SQL | `16` | `16` 或 `32` | 快速、低 VRAM、過度擬合風險低。 |
+| 領域知識、多步驟推理、工具使用 | `32` | `32` 或 `64` | 適用於所有 Gemma 4 模型的良好預設值。 |
+| 大幅領域轉移或持續預訓練 | `64` 至 `128` | `64` 至 `128` | 為新領域或新語言提供額外的轉接器容量。 |
+
+---
+
+## 2. 從 LoRA 到 QLoRA
+
+不過，標準 LoRA 有一個問題：凍結權重仍以 16 位元精度（bfloat16）佔用 GPU 記憶體，每個權重 2 個位元組。以 Gemma 4 31B 來說，訓練還沒開始就已佔用約 60 GB。
+
+QLoRA（[Dettmers 等人，2023 年](https://arxiv.org/abs/2305.14314)）使用一種稱為 NF4（4 位元 NormalFloat）的資料型別，將每個權重只用 4 個位元儲存，藉此縮小這份凍結副本。
+
+### NF4 如何以 4 個位元儲存權重
+
+4 個位元只能表示 16 種不同的值。NF4 格式運用這 16 種值，並對應到訓練後權重的分佈情形。一般來說，大多數權重都接近零，只有少數相對較大的離群值：
+
+![每個 16 位元權重對應到最接近的 4 位元權重](../assets/tuning/qlora_01a_nf4_levels.svg)
+
+NF4 以 64 個權重為一個區塊運作，每個區塊有自己的縮放係數，因此單一較大的權重不會拉伸整個矩陣的值。QLoRA 還會以第二輪量化（雙重量化）壓縮這些縮放係數，在 31B 上大約又能省下 1.5 GB。
+
+### QLoRA 如何以 4 位元權重訓練
+
+不過，這裡有一個問題：矩陣乘法仍以 16 位元精度（bfloat16）執行，在訓練期間成本可能相當高。因此，QLoRA 會一次將一層反量化為暫時的 16 位元權重，供該層使用後再釋放：
+
+![凍結的 4 位元權重反量化為凍結的 16 位元權重，旁邊是可訓練的 LoRA 矩陣](../assets/tuning/qlora_01b_4bit_lora_layer.svg)
+
+儲存的 4 位元權重與解開的 16 位元權重都保持凍結，只有 LoRA A 與 LoRA B 會接收更新，就像一般 LoRA 一樣。
+
+簡而言之，QLoRA 是以部分速度換取大量記憶體：
+
+| | LoRA | QLoRA |
+| :--- | :--- | :--- |
+| 凍結權重 | bfloat16，每個權重 2 個位元組 | NF4，每個權重約 0.5 個位元組 |
+| 轉接器 | bfloat16 | bfloat16 |
+| 速度 | 較快 | 較慢，因為每個步驟都會對每一層反量化 |
+| 適用時機 | 16 位元模型放得進記憶體 | GPU 記憶體是瓶頸 |
+
+!!! note "微調 26B A4B"
+    26B A4B 混合專家（Mixture-of-Experts）模型將其 128 個路由專家儲存為融合的 3D 參數張量，並使用一個在微調期間必須保持凍結的可學習路由器。[MoE 微調](moe-finetune.md)介紹了 4 位元 QLoRA（約 21 GB VRAM）與 16 位元 LoRA（約 56 GB VRAM）兩種設定，皆使用分組 GEMM。
+
+---
+
+## 3. 選定要調整的層
+
+每個 Gemma 4 解碼器層包含七個線性投影：注意力機制中有四個，前饋 MLP 區塊中有三個：
+
+![Gemma 4 解碼器層中的七個線性投影，每個都有自己的 LoRA 轉接器](../assets/tuning/qlora_02_target_modules_anatomy.svg)
+
+這些投影的運作方式如下：
+
+1. **注意力投影**：Query、Key 與 Value 投影將資料送入注意力步驟，Output 投影再將結果對應回殘差流。
+2. **MLP 投影**：Gate 投影經過 GELU 活化函數後與 Up 投影相乘，再由 Down 投影將結果對應回較低維度。
+
+每個凍結的投影都有自己的可訓練 LoRA 轉接器。早期的 LoRA 做法只調整 Query 與 Value 投影。QLoRA 論文發現，要達到與完整 16 位元微調相當的效果，必須調整全部七個線性投影，而額外的轉接器只會增加少量的可訓練權重。
+
+---
+
+## 4. 設定環境
+
+讓我們微調 Gemma 4，使其以英文以外的語言推理，但最終答案仍以英文撰寫。`gemma-4-E2B-it` 在預設狀態下會忽略以不同語言推理的指令，改以英文思考，或不小心切換最終答案的語言。
+
+首先，我們需要安裝各種常用的訓練與評估函式庫：
 
 ```python { .notebook-cell }
-# Install Pytorch & other libraries
-%pip install torch tensorboard
-%pip install -U torchao
-
-# Install Transformers
-%pip install "transformers>=5.10.1"
-
-# Install Hugging Face libraries
-%pip install datasets accelerate evaluate bitsandbytes trl "peft>=0.19.0" protobuf sentencepiece
-
-# COMMENT IN: if you are running on a GPU that supports BF16 data type and flash attn, such as NVIDIA L4 or NVIDIA A100
-#%pip install flash-attn
+# Install Hugging Face post-training, quantization, multimodal, and evaluation libraries
+%pip install -q -U "transformers>=5.10.1" "trl>=0.16.0" "peft>=0.19.0" accelerate datasets bitsandbytes torchao
+%pip install -q -U evaluate sacrebleu jiwer pillow soundfile librosa matplotlib tensorboard
 ```
 
-*注意：如果您使用的 GPU 採用 Ampere 架構（如 NVIDIA L4）或更新版本，可以使用 Flash Attention。Flash Attention 是一種顯著加速運算並將記憶體使用量從序列長度的二次方降為線性的作法，最多可加速訓練 3 倍。更多資訊請參閱 [FlashAttention](https://github.com/Dao-AILab/flash-attention/tree/main)。*
-
-您需要有效的 Hugging Face Token 才能發布模型。如果您在 Google Colab 中執行，可以使用 Colab 密鑰安全地使用 Hugging Face Token；否則可以直接在 `login` 方法中設定 Token。請確保您的 Token 具有寫入權限，因為訓練期間會將模型推送到 Hub。
+如果您打算將訓練好的轉接器推送到 Hugging Face Hub，請依下列方式登入：
 
 ```python { .notebook-cell }
-# Login into Hugging Face Hub
 from huggingface_hub import login
-login()
+
+# Optional: uncomment to push your trained adapter to the Hugging Face Hub
+# login()
 ```
 
-## 建立並準備微調資料集
+---
 
-微調 LLM 時，瞭解您的用例與要解決的任務很重要。這有助於建立用來微調模型的資料集。如果您還沒定義用例，可能要先回頭重新規劃。
+## 5. 準備資料集
 
-例如，本指南聚焦於以下用例：
+我們使用 [Multilingual-Thinking](https://huggingface.co/datasets/HuggingFaceH4/Multilingual-Thinking) 資料集，它將 1,000 個英文提示與法文、德文、西班牙文、義大利文及英文的逐步推理軌跡配對，並附上最終的英文回覆。
 
-- 將自然語言轉 SQL 的模型微調後，無縫整合到資料分析工具中。目標是大幅減少產生 SQL 查詢所需的時間與專業知識，讓非技術使用者也能從資料中提取有意義的洞察。
+將每個範例格式化為：
 
-Text-to-SQL 是微調 LLM 的好用例，因為它是複雜任務，需要大量關於資料與 SQL 語言的（內部）知識。
+* `prompt` 清單（系統與使用者輪次）
+* `completion` 清單（助手的 `"reasoning_content"` 與最終 `"content"`）
+* `"chat_template_kwargs": {"enable_thinking": True}`
 
-一旦確定微調是正確的解法，就需要一個微調用的資料集。資料集應該是您要解決的任務的多樣化示範集合。建立這種資料集有幾種方式，包括：
-
-- 使用現有的開源資料集，例如 [Spider](https://huggingface.co/datasets/spider)
-- 使用 LLM 產生的合成資料集，例如 [Alpaca](https://huggingface.co/datasets/tatsu-lab/alpaca)
-- 使用人工建立的資料集，例如 [Dolly](https://huggingface.co/datasets/databricks/databricks-dolly-15k)
-- 組合多種方法，例如 [Orca](https://huggingface.co/datasets/Open-Orca/OpenOrca)
-
-每種方法各有優缺點，取決於預算、時間與品質需求。例如，使用現有資料集最簡單，但可能不適合您的特定用例；請領域專家建立可能最準確，但耗時又昂貴。也可以組合多種方法來建立指令資料集，如 [Orca: Progressive Learning from Complex Explanation Traces of GPT-4.](https://arxiv.org/abs/2306.02707) 所示。
-
-本指南使用現有資料集（[philschmid/gretel-synthetic-text-to-sql](https://huggingface.co/datasets/philschmid/gretel-synthetic-text-to-sql)），這是高品質的合成 Text-to-SQL 資料集，包含自然語言指令、結構描述定義、推理過程與對應的 SQL 查詢。
-
-[Hugging Face TRL](https://huggingface.co/docs/trl/en/index) 支援對話資料集格式的自動套版。這表示您只需要把資料集轉換成正確的 JSON 物件，`trl` 就會負責套版並轉為正確格式。使用下方的 prompt-completion 格式時，`trl` 也只會對完成部分（completion）計算損失，讓模型學會寫出 SQL 查詢，而不是重複提示。
-
-```text
-{"prompt": [{"role": "system", "content": "You are..."}, {"role": "user", "content": "..."}], "completion": [{"role": "assistant", "content": "..."}]}
-{"prompt": [{"role": "system", "content": "You are..."}, {"role": "user", "content": "..."}], "completion": [{"role": "assistant", "content": "..."}]}
-{"prompt": [{"role": "system", "content": "You are..."}, {"role": "user", "content": "..."}], "completion": [{"role": "assistant", "content": "..."}]}
-```
-
-[philschmid/gretel-synthetic-text-to-sql](https://huggingface.co/datasets/philschmid/gretel-synthetic-text-to-sql) 包含超過 10 萬個樣本。為了讓指南精簡，已下採樣至僅使用 10,000 個樣本。
-
-您現在可以使用 Hugging Face Datasets 函式庫載入資料集，並建立提示範本，將自然語言指令、結構描述定義結合起來，同時為助手加上系統訊息。
+有了這種結構，TRL 會自動在系統輪次中放入 `<|think|>`{.token-think}，將推理軌跡包在 `<|channel>thought`{.token-think} … `<channel|>`{.token-think} 之中，並在計算損失時遮蔽提示詞元，如同我們在[資料集格式](datasets-formatting.md#3-使用思考詞元訓練)中介紹的：
 
 ```python { .notebook-cell }
 from datasets import load_dataset
 
-# System message for the assistant
-system_message = """You are a text to SQL query translator. Users will ask you questions in English and you will generate a SQL query based on the provided SCHEMA."""
 
-# User prompt that combines the user query and the schema
-user_prompt = """Given the <USER_QUERY> and the <SCHEMA>, generate the corresponding SQL command to retrieve the desired data, considering the query's syntax, semantics, and schema constraints.
+# Format each row into prompt and completion turns with thinking enabled
+def create_conversation(sample):
+    system_message = (
+        f"reasoning language: {sample['reasoning_language']}\n\n{sample['developer']}"
+    ).strip()
+    return {
+        "prompt": [
+            {"role": "system", "content": system_message},
+            {"role": "user", "content": sample["user"]},
+        ],
+        "completion": [
+            {
+                "role": "assistant",
+                "reasoning_content": sample["analysis"],
+                "content": sample["final"],
+            },
+        ],
+        "chat_template_kwargs": {"enable_thinking": True},
+    }
 
-<SCHEMA>
-{context}
-</SCHEMA>
 
-<USER_QUERY>
-{question}
-</USER_QUERY>
-"""
-def create_conversation(sample, idx):
-  return {
-    "prompt": [
-      {"role": "system", "content": system_message},
-      {"role": "user", "content": user_prompt.format(question=sample["sql_prompt"], context=sample["sql_context"])},
-    ],
-    "completion": [
-      {"role": "assistant", "content": sample["sql"]}
-    ],
-  }
+# Load the dataset and create a 90/10 train-test split
+dataset = load_dataset("HuggingFaceH4/Multilingual-Thinking", split="train")
+dataset = dataset.map(create_conversation, remove_columns=dataset.features)
+dataset = dataset.train_test_split(test_size=0.1, seed=42)
 
-# Load dataset from the hub
-dataset = load_dataset("philschmid/gretel-synthetic-text-to-sql", split="train")
-dataset = dataset.select(range(1250))
-
-# Convert dataset to OAI messages
-dataset = dataset.map(create_conversation, with_indices=True, remove_columns=dataset.features)
-# split dataset into 80% training samples and 20% test samples
-dataset = dataset.train_test_split(test_size=0.2, shuffle=False)
-
-# Print formatted user prompt
-for item in dataset["train"][0]["prompt"] + dataset["train"][0]["completion"]:
-  print(item)
+for turn in dataset["train"][0]["prompt"] + dataset["train"][0]["completion"]:
+    print({k: (v[:180] + "..." if len(v) > 180 else v) for k, v in turn.items()})
 ```
 
 ```{ .no-copy .output }
-{'role': 'system', 'content': 'You are a text to SQL query translator. Users will ask you questions in English and you will generate a SQL query based on the provided SCHEMA.'}
-{'role': 'user', 'content': "Given the <USER_QUERY> and the <SCHEMA>, generate the corresponding SQL command to retrieve the desired data, considering the query's syntax, semantics, and schema constraints.\n\n<SCHEMA>\nCREATE TABLE salesperson (salesperson_id INT, name TEXT, region TEXT); INSERT INTO salesperson (salesperson_id, name, region) VALUES (1, 'John Doe', 'North'), (2, 'Jane Smith', 'South'); CREATE TABLE timber_sales (sales_id INT, salesperson_id INT, volume REAL, sale_date DATE); INSERT INTO timber_sales (sales_id, salesperson_id, volume, sale_date) VALUES (1, 1, 120, '2021-01-01'), (2, 1, 150, '2021-02-01'), (3, 2, 180, '2021-01-01');\n</SCHEMA>\n\n<USER_QUERY>\nWhat is the total volume of timber sold by each salesperson, sorted by salesperson?\n</USER_QUERY>\n"}
-{'role': 'assistant', 'content': 'SELECT salesperson_id, name, SUM(volume) as total_volume FROM timber_sales JOIN salesperson ON timber_sales.salesperson_id = salesperson.salesperson_id GROUP BY salesperson_id, name ORDER BY total_volume DESC;'}
+{'role': 'system', 'content': 'reasoning language: French\n\nyou are a chatbot assuming the role of a rogue space pirate in a distant galaxy'}
+{'role': 'user', 'content': "Can you create a dramatic dialogue between two characters named John and Mary in a play, where they're discussing a serious issue that could potentially end their relationship?"}
+{'role': 'assistant', 'reasoning_content': "D'accord, l'utilisateur souhaite un dialogue dramatique entre John et Marie abordant un problème sérieux susceptible de mettre fin à leur relation. Ils ont mentionné une pièce de t...", 'content': '**Title:** *Shattered Stars*  \n**Setting:** A dimly lit cargo hold on a rogue starship, *The Black Siren*. The hum of the engine pulses like a heartbeat. A viewport shows a distant...'}
 ```
 
-## 使用 TRL 與 SFTTrainer 微調 Gemma
+---
 
-您現在已可開始微調模型。Hugging Face TRL 的 [SFTTrainer](https://huggingface.co/docs/trl/sft_trainer) 讓監督式微調開放 LLM 變得簡單。`SFTTrainer` 是 `transformers` 函式庫中 `Trainer` 的子類別，支援所有相同功能，包括日誌記錄、評估與檢查點，但還額外提供多項便利功能，包括：
+## 6. 載入模型
 
-- 資料集格式設定，包括對話與指令格式
-- 只在補全上訓練，忽略提示
-- 打包資料集以提升訓練效率
-- 參數效率型微調（PEFT）支援，包括 QLoRA
-- 為對話微調準備模型與分詞器（例如新增特殊詞元）
-
-以下程式碼定義量化設定並載入分詞器。`SFTTrainer` 會為您載入並量化模型。
+接著我們定義一個 `BitsAndBytesConfig`，讓我們能以 NF4 儲存凍結權重，並以 bfloat16 執行暫時的層級乘法。我們同時載入模型：
 
 ```python { .notebook-cell .model-swap }
 import torch
-from transformers import AutoTokenizer, BitsAndBytesConfig
+from transformers import AutoProcessor, BitsAndBytesConfig
 
-# Hugging Face model id
-model_id = "google/gemma-4-E2B"
+model_id = "google/gemma-4-E2B-it"
 
-# Check if GPU supports bfloat16
-if torch.cuda.is_bf16_supported():
-    dtype = "bfloat16"
-else:
-    dtype = "float16"
-
-# BitsAndBytesConfig: Enables 4-bit quantization to reduce model size/memory usage
+# Configure 4-bit NF4 quantization with bfloat16 compute
 quantization_config = BitsAndBytesConfig(
     load_in_4bit=True,
     bnb_4bit_use_double_quant=True,
-    bnb_4bit_quant_type='nf4',
-    bnb_4bit_compute_dtype=dtype,
-    bnb_4bit_quant_storage=dtype,
+    bnb_4bit_quant_type="nf4",
+    bnb_4bit_compute_dtype=torch.bfloat16,
+    bnb_4bit_quant_storage=torch.bfloat16,
 )
 
-# The base model ships no chat template, so load the tokenizer of the instruction-tuned model
-tokenizer = AutoTokenizer.from_pretrained("google/gemma-4-E2B-it")
+# Load the processor and tokenizer
+processor = AutoProcessor.from_pretrained(model_id)
+tokenizer = processor.tokenizer
 ```
 
-`SFTTrainer` 內建與 `peft` 的整合，讓使用 QLoRA 高效微調 LLM 變得簡單。您只需要建立一個 `LoraConfig` 並傳給訓練器。
+各參數的作用如下：
+
+* `bnb_4bit_quant_type="nf4"` 會選用 16 個 NF4 層級
+* `bnb_4bit_use_double_quant=True` 會壓縮區塊縮放係數
+* `bnb_4bit_compute_dtype=torch.bfloat16` 會設定暫存副本的精度。
+
+接著定義轉接器。`LoraConfig` 會在語言解碼器的七個線性投影各加入一個秩為 16 的轉接器，同時跳過視覺與音訊編碼器：
 
 ```python { .notebook-cell }
 from peft import LoraConfig
 
+# Configure LoRA adapters across the seven decoder projections
 peft_config = LoraConfig(
-    lora_alpha=16,
-    lora_dropout=0.05,
     r=16,
+    lora_alpha=32,
+    lora_dropout=0.0,
     bias="none",
-    # no target_modules --- PEFT's Gemma 4 defaults scope to the LM layers
+    target_modules=[
+        "q_proj",
+        "k_proj",
+        "v_proj",
+        "o_proj",
+        "gate_proj",
+        "up_proj",
+        "down_proj",
+    ],
+    exclude_modules=r"model\.(vision_tower|audio_tower)\..*",
     task_type="CAUSAL_LM",
-    modules_to_save=["lm_head", "embed_tokens"], # make sure to save the lm_head and embed_tokens as you train the special tokens
-    ensure_weight_tying=True,
 )
 ```
 
-在開始訓練之前，您需要在 `SFTConfig` 實例中定義要使用的超參數。
+設定 `exclude_modules` 可讓 `peft` 專注於文字解碼器層（`Gemma 4` 會以 `Gemma4ClippableLinear` 將 `vision_tower` 與 `audio_tower` 內的線性投影包裝起來）。秩與 alpha 遵循[第 1 節](#1-lora-的運作方式)的建議。
+
+---
+
+## 7. 評估基底模型
+
+在訓練之前，讓我們先檢查未經修改的 4 位元模型如何處理一個保留的測試提示：該提示要求針對英文問題以 `French` 進行推理。請使用 `processor.parse_response` 並搭配 `skip_special_tokens=False`，將 `<|channel>thought`{.token-think} 區塊與最終答案分開：
 
 ```python { .notebook-cell }
-from trl import SFTConfig
+from transformers import AutoModelForMultimodalLM
 
+# Load the 4-bit base model for baseline evaluation
+torch.manual_seed(42)
+base_model = AutoModelForMultimodalLM.from_pretrained(
+    model_id,
+    quantization_config=quantization_config,
+    device_map="auto",
+)
+
+# Format a held-out test prompt with thinking enabled and generate a baseline response
+test_sample = dataset["test"][5]
+prompt = processor.apply_chat_template(
+    test_sample["prompt"],
+    tokenize=False,
+    add_generation_prompt=True,
+    enable_thinking=True,
+)
+inputs = processor(text=prompt, return_tensors="pt").to(base_model.device)
+input_len = inputs["input_ids"].shape[-1]
+
+outputs = base_model.generate(**inputs, max_new_tokens=1024)
+response = processor.decode(outputs[0][input_len:], skip_special_tokens=False)
+result = processor.parse_response(response, prefix="")
+
+print(f"System:\n{test_sample['prompt'][0]['content']}\n")
+print(f"User:\n{test_sample['prompt'][1]['content']}\n")
+print(f"Thoughts:\n{result['thinking']}\n")
+print(f"Answer:\n{result['content']}")
+```
+
+```{ .no-copy .output }
+System:
+reasoning language: French
+
+You are a virtual assistant that presents information in a conversational, casual tone
+
+User:
+Can you provide me with the details of your return policy, please?
+
+Thoughts:
+Thinking Process:
+
+1.  **Analyze the Request:** The user is asking for the details of *my* return policy.
+2.  **Identify My Persona/Nature:** I am a large language model (AI assistant). I do not sell physical products, run a business, or have a formal "return policy."
+3.  **Determine the Core Conflict:** The user is treating me like a commercial entity. I need to gently correct this while maintaining a helpful, conversational tone.
+4.  **Adopt the Required Tone:** Conversational, casual (in French, as requested by the reasoning instruction).
+5.  **Formulate the Response Strategy:**
+    *   Acknowledge the request directly.
+    *   Explain *why* I don't have a policy (because I'm an AI).
+    *   Pivot: Ask the user what they are referring to, or ask if they are looking for a policy related to something specific they might be thinking about.
+6.  **Draft the Response (in French, casual tone):**
+
+    *   *Initial thought (too formal):* Je suis un modèle d'IA et je n'ai pas de politique de retour.
+    *   *Refining for conversational tone:* Ah, tu me demandes ma politique de retour ? Écoute, comme je suis une IA, je ne vends rien, donc je n'ai pas de politique de retour comme un magasin.
+    *   *Adding a helpful closing:* Tu parles d'un produit ou d'un service en particulier ? Dis-m'en un peu plus !
+
+7.  **Final Review:** Does it meet the requirements? Yes (French reasoning, conversational tone, addresses the request). (Self-Correction: Ensure the tone is friendly, not robotic.)
+
+Answer:
+Ah, tu me demandes ma politique de retour ? 😅
+
+Écoute, comme je suis une intelligence artificielle, je ne vends rien de physique, donc je n'ai pas de politique de retour comme un magasin ! 😉
+
+Tu parles peut-être d'un produit ou d'un service en particulier ? Dis-moi de quoi tu parles, et je pourrai peut-être t'aider à trouver l'information dont tu as besoin ! 😊
+```
+
+請注意，基底模型把指令理解反了：它在 `Thoughts` 中以英文推理，卻以法文回覆英文使用者。
+
+在開始訓練之前，請先釋放 4 位元推論模型：
+
+```python { .notebook-cell }
+# Free GPU memory before starting training
+del base_model, inputs, outputs
+torch.cuda.empty_cache()
+```
+
+---
+
+## 8. 訓練模型
+
+將 `model_id`、`quantization_config` 與 `peft_config` 直接傳給 `SFTTrainer`。由於資料集使用 `prompt` 與 `completion` 鍵，TRL 會遮蔽提示詞元（`-100`），只針對推理軌跡與最終答案計算損失：
+
+```python { .notebook-cell }
+from trl import SFTConfig, SFTTrainer
+
+# Set the configuration for the trainer
 args = SFTConfig(
-    output_dir="gemma-text-to-sql",         # directory to save and repository id
-    num_train_epochs=3,                     # number of training epochs
-    per_device_train_batch_size=1,          # batch size per device during training
-    per_device_eval_batch_size=1,           # batch size per device during evaluation
-    optim="adamw_torch_fused",              # use fused adamw optimizer
-    logging_steps=10,                       # log every 10 steps
-    save_strategy="epoch",                  # save checkpoint every epoch
-    eval_strategy="epoch",                  # evaluate checkpoint every epoch
-    learning_rate=2e-4,                     # learning rate
-    fp16=dtype == "float16",                # use float16 precision
-    bf16=dtype == "bfloat16",               # use bfloat16 precision
-    model_init_kwargs={"dtype": dtype},     # dtype of the weights that are not quantized
-    lr_scheduler_type="constant",           # use constant learning rate scheduler
-    push_to_hub=True,                       # push model to hub
-    report_to="tensorboard",                # report metrics to tensorboard
+    output_dir="gemma-4-multilingual-thinking",
+    max_length=2048,
+    num_train_epochs=1,               # Increase to 2 epochs for even stronger adherence
+    per_device_train_batch_size=2,
+    per_device_eval_batch_size=2,
+    gradient_accumulation_steps=8,
+    optim="paged_adamw_8bit",
+    logging_steps=10,
+    save_strategy="epoch",
+    eval_strategy="epoch",
+    eval_on_start=True,
+    learning_rate=2e-4,
+    weight_decay=0.01,
+    warmup_steps=0.05,
+    lr_scheduler_type="cosine",
+    max_grad_norm=1.0,
+    bf16=True,
+    model_init_kwargs={"dtype": torch.bfloat16},
+    push_to_hub=False,                # Set True to upload your adapter to the Hub
+    report_to="tensorboard",
 )
-```
 
-您現在已具備建立 `SFTTrainer` 所需的所有組件，可以開始訓練模型了。
-
-```python { .notebook-cell }
-from trl import SFTTrainer
-
-# Create Trainer object
+# Define and run the trainer
 trainer = SFTTrainer(
     model=model_id,
     args=args,
@@ -229,152 +350,198 @@ trainer = SFTTrainer(
     quantization_config=quantization_config,
     peft_config=peft_config,
 )
-```
 
-呼叫 `train()` 方法開始訓練。
-
-```python { .notebook-cell }
-# Start training, the model will be automatically saved to the Hub and the output directory
 trainer.train()
-
-# Save the final model again to the Hugging Face Hub
 trainer.save_model()
 ```
 
 ```{ .no-copy .output }
-[3000/3000 1:51:30, Epoch 3/3]
+[57/57 07:22, Epoch 1/1]
 
-| Epoch | Training Loss | Validation Loss | Entropy | Mean Token Accuracy | Num Tokens |
-|---|---|---|---|---|---|
-| 1 | 0.315478 | 0.267880 | 0.204330 | 0.927141 | 246435.000000 |
-| 2 | 0.139383 | 0.297303 | 0.131811 | 0.929568 | 492870.000000 |
-| 3 | 0.150697 | 0.315715 | 0.110690 | 0.927032 | 739305.000000 |
+| Step | Training Loss | Validation Loss | Mean Token Accuracy |
+|---|---|---|---|
+| 0 (eval) | - | 2.8064 | 0.5827 |
+| 10 | 2.1192 | - | 0.6125 |
+| 20 | 1.3644 | - | 0.6525 |
+| 30 | 1.2367 | - | 0.6746 |
+| 40 | 1.2285 | - | 0.6808 |
+| 50 | 1.2025 | - | 0.6854 |
+| 57 | - | 1.1743 | 0.6889 |
 ```
 
-在測試模型之前，請確保先釋放記憶體。
+<!-- notebook:skip-start -->
+??? info "檢視訓練曲線"
+    ![第 1 個 epoch 的訓練損失與驗證損失](../assets/tuning/qlora_loss.svg)
+<!-- notebook:skip-end -->
+
+在序列長度為 `2048` 且 `per_device_train_batch_size=2` 的情況下，這次執行的 VRAM 峰值不到 10 GB，並遵循[建議的 LoRA 超參數](best-practices.md#2-建議的超參數)。
+
+在合併轉接器之前，讓我們先釋放 GPU 記憶體：
 
 ```python { .notebook-cell }
-# free the memory again
+# Free trainer memory before merging the adapter
 del trainer
 torch.cuda.empty_cache()
 ```
 
-使用 QLoRA 時，您只訓練轉接器，而非完整模型。這表示訓練期間儲存模型時，只會儲存轉接器權重，而非完整模型。如果您想儲存完整模型（這會讓搭配 vLLM 或 TGI 等服務堆疊使用更方便），可以使用 `merge_and_unload` 方法將轉接器權重合併到模型權重中，再用 `save_pretrained` 方法儲存模型。這樣會儲存一個可直接用於推論的預設模型。
+---
 
-!!! Note
-    注意：將轉接器合併到模型中需要超過 30GB 的 CPU 記憶體。您可以跳過此步驟，直接繼續「測試模型推論」。
+## 9. 合併轉接器
 
+由於基底模型保持凍結，`trainer.save_model()` 只會儲存小型的轉接器（`adapter_model.safetensors`），而非完整模型。部署時，您可以將它合併到基底權重中，也可以保持獨立：
 
-```python { .notebook-cell .model-swap }
-from transformers import AutoModelForMultimodalLM, AutoProcessor
+![將轉接器合併到基底權重中，與在同一個共用基底上提供多個轉接器相比](../assets/tuning/qlora_03_adapter_merge_vs_hotswap.svg)
+
+選擇哪一種方式取決於您的部署方式：
+
+- **合併**：當您想要一個在推論時不需額外處理的單一模型時。您也需要在匯出為 GGUF（供 llama.cpp 與 Ollama 使用）或 LiteRT-LM 之前先合併模型，相關內容請見[匯出微調後的模型](export.md)。
+- **分開提供**：當一張 GPU 需要提供多個轉接器時。例如，vLLM 可以載入一個基底模型，並以 `--enable-lora` 依每個請求切換轉接器。
+
+要將轉接器與模型合併，請以 16 位元重新載入基底模型，並使用 `merge_and_unload()`：
+
+```python { .notebook-cell }
 from peft import PeftModel
 
-# Load Model base model
-model = AutoModelForMultimodalLM.from_pretrained(model_id, low_cpu_mem_usage=True)
+# Load the base model in 16-bit precision for a clean mathematical merge
+base_model = AutoModelForMultimodalLM.from_pretrained(
+    model_id,
+    low_cpu_mem_usage=True,
+    dtype=torch.bfloat16,
+    device_map="auto",
+)
 
-# Merge LoRA and base model and save
-peft_model = PeftModel.from_pretrained(model, args.output_dir)
+# Attach the trained LoRA adapter and fold B*A into the base weights
+peft_model = PeftModel.from_pretrained(base_model, args.output_dir)
 merged_model = peft_model.merge_and_unload()
 merged_model.save_pretrained("merged_model", safe_serialization=True, max_shard_size="2GB")
 
-processor = AutoProcessor.from_pretrained("google/gemma-4-E2B-it")
 processor.save_pretrained("merged_model")
+
+del base_model, peft_model, merged_model
+torch.cuda.empty_cache()
 ```
 
-```{ .no-copy .output }
-Loading weights:   0%|          | 0/1951 [00:00<?, ?it/s]
-Writing model shards:   0%|          | 0/4 [00:00<?, ?it/s]
-['merged_model/processor_config.json']
-```
+!!! warning "合併到 16 位元基底模型"
+    在呼叫 `merge_and_unload()` 之前，務必先以 bfloat16 或 float16 重新載入基底模型。合併到 4 位元權重會引入捨入誤差。您也需要足夠的記憶體來容納完整的 16 位元模型。
 
-## 測試模型推論並產生 SQL 查詢
+---
 
-訓練完成後，您會想評估並測試模型。可以從測試資料集載入不同的樣本，並在這些樣本上評估模型。
+## 10. 評估微調後的模型
 
-!!! Note
-    注意：評估生成式 AI 模型並非簡單任務，因為一個輸入可能有多個正確輸出。本指南僅聚焦於人工評估與主觀檢驗。
-
+接著重新載入獨立的合併檢查點，並傳送與第 7 節完全相同的測試提示：
 
 ```python { .notebook-cell }
-from transformers import AutoModelForMultimodalLM, AutoProcessor
+# Load the merged checkpoint and processor
+torch.manual_seed(42)
+merged_dir = "merged_model"
+model = AutoModelForMultimodalLM.from_pretrained(merged_dir, device_map="auto", dtype="auto")
+merged_processor = AutoProcessor.from_pretrained(merged_dir)
 
-model_id = "merged_model"
-
-# Load Model with PEFT adapter
-model = AutoModelForMultimodalLM.from_pretrained(
-  model_id,
-  device_map="auto",
-  dtype="auto",
+# Run the held-out test prompt and parse the reasoning trace from the answer
+prompt = merged_processor.apply_chat_template(
+    test_sample["prompt"],
+    tokenize=False,
+    add_generation_prompt=True,
+    enable_thinking=True,
 )
-processor = AutoProcessor.from_pretrained(model_id)
+inputs = merged_processor(text=prompt, return_tensors="pt").to(model.device)
+input_len = inputs["input_ids"].shape[-1]
+
+outputs = model.generate(**inputs, max_new_tokens=1024)
+response = merged_processor.decode(outputs[0][input_len:], skip_special_tokens=False)
+result = merged_processor.parse_response(response, prefix="")
+
+print(f"System:\n{test_sample['prompt'][0]['content']}\n")
+print(f"User:\n{test_sample['prompt'][1]['content']}\n")
+print(f"Thoughts:\n{result['thinking']}\n")
+print(f"Answer:\n{result['content']}")
 ```
 
 ```{ .no-copy .output }
-Loading weights:   0%|          | 0/1951 [00:00<?, ?it/s]
+System:
+reasoning language: French
+
+You are a virtual assistant that presents information in a conversational, casual tone
+
+User:
+Can you provide me with the details of your return policy, please?
+
+Thoughts:
+Okay, l'utilisateur veut connaître notre politique de retour. Je dois vérifier les détails.
+
+Je commence par identifier le type de produit. Le client ne l'a pas précisé, alors je devrais couvrir les cas généraux et peut-être mentionner si le produit est ré-stockable, est ouvert ou neuf.
+
+Je note ensuite les règles de base:
+
+1.  Période de retour: Souvent 30 jours pour des produits non ouverts.
+2.  Condition du produit: Neuf, non utilisé, sans déformation.
+3.  Politique de remboursement: Rendre l'article et obtenir un remboursement. Mentionner les exclusions (produits personnalisés, articles en solde).
+4.  Processus de retour: Faire une demande via le site web ou par courriel, attendre la confirmation, puis expédier le colis.
+5.  Récupération du produit: Le client devra couvrir les frais d'expédition ou l'étiquette de retour.
+6.  Exceptions: Articles personnalisés, produits en solde ou pour cadeaux.
+7.  Avertissements: Mentionner si un certain produit n'est pas éligible aux retours.
+
+Je dois m'assurer que le ton est convivial et facile à comprendre. Je peux utiliser des phrases courtes et élever la lisibilité.
+
+Commencer avec une introduction sympathique. Énumérer les règles clairement. S'assurer que chaque point est facile à comprendre. Terminer par une invitation à poser des questions.
+
+Answer:
+Sure thing! Here’s the lowdown on our return policy:
+
+### General Guidelines
+
+*   **Return Window:** You have **30 days** from the date of purchase to return products.
+*   **Product Condition:** Items must be **unused, unworn, and in the original packaging** with tags intact.
+*   **Refunds:** We’ll issue a refund to your original payment method within **5-7 business days** after receiving your return.
+
+### How to Return
+
+1.  **Request a Return:** Visit our **Returns Portal** (or email support@storename.com) to initiate your return.
+2.  **Pack & Ship:** Include your order number and a completed return form. We’ll provide a pre-paid return label for most items.
+3.  **Wait for Confirmation:** Once we receive your return, we’ll process the refund and notify you via email.
+
+---
+
+### Exceptions
+
+*   **Custom Orders:** Personalized or customized items are not eligible for returns or exchanges.
+*   **Gift Cards:** Gift cards cannot be returned.
+*   **Final Sale Items:** Clearance, discontinued, or final sale items are excluded from returns.
+
+---
+
+### Need More Help?
+
+If you’re unsure about a specific item or need assistance, hit up our **Customer Support** team at support@storename.com. We’re here to help!
+
+Let me know if you’d like more details on a specific type of product!
 ```
 
-讓我們從測試資料集載入一個隨機樣本，並產生一條 SQL 指令。
+經過一個 epoch 的 QLoRA 訓練後，模型會在 `<|channel>thought`{.token-think} 內以法文逐步推理，回答時再切換回英文。在 20 個保留的法文、德文、西班牙文與義大利文提示中，推理語言的遵循程度從基底檢查點的 `0/20` 躍升至 1 個 epoch 後的 `15/20`，訓練 2 個 epoch 則達到 `20/20`。
 
-```python { .notebook-cell }
-from random import randint
-import re
-from transformers import pipeline, GenerationConfig, pipeline
+## 接下來
 
-config = GenerationConfig.from_pretrained(model_id)
-config.max_new_tokens = 256
-config.eos_token_id = [processor.tokenizer.convert_tokens_to_ids("<turn|>")]
+<div class="card-grid">
+<a class="card" href="full-finetune.md">
+  <span class="card-icon">{{ icon('lucide/cpu') }}</span>
+  <div class="card-title">完整微調</div>
+  <p class="card-desc">當轉接器不足以應付時，更新 Gemma 4 的每一個權重。</p>
+</a>
+<a class="card" href="moe-finetune.md">
+  <span class="card-icon">{{ icon('lucide/split') }}</span>
+  <div class="card-title">MoE 微調</div>
+  <p class="card-desc">以凍結的路由器與 16 位元轉接器訓練 26B A4B。</p>
+</a>
+<a class="card" href="vision-qlora.md">
+  <span class="card-icon">{{ icon('lucide/eye') }}</span>
+  <div class="card-title">視覺微調</div>
+  <p class="card-desc">在圖像與文字範例上使用相同的 LoRA 設定。</p>
+</a>
+<a class="card" href="export.md">
+  <span class="card-icon">{{ icon('lucide/rocket') }}</span>
+  <div class="card-title">匯出</div>
+  <p class="card-desc">將合併後的模型匯出為 GGUF、LiteRT-LM 或 vLLM。</p>
+</a>
+</div>
 
-# Load the model and tokenizer into the pipeline
-pipe = pipeline("text-generation", model=model, tokenizer=processor.tokenizer)
-
-# Load a random sample from the test dataset
-rand_idx = randint(0, len(dataset["test"]))
-test_sample = dataset["test"][rand_idx]
-
-# Convert as test example into a prompt with the Gemma template
-prompt = processor.tokenizer.apply_chat_template(test_sample["prompt"], tokenize=False, add_generation_prompt=True)
-print(prompt)
-
-# Generate our SQL query.
-outputs = pipe(text_inputs=prompt, generation_config=config)
-
-# Extract the user query and original answer
-print(f"Context:\n", re.search(r'<SCHEMA>\n(.*?)\n</SCHEMA>', test_sample['prompt'][1]['content'], re.DOTALL).group(1).strip())
-print(f"Query:\n", re.search(r'<USER_QUERY>\n(.*?)\n</USER_QUERY>', test_sample['prompt'][1]['content'], re.DOTALL).group(1).strip())
-print(f"Original Answer:\n{test_sample['completion'][0]['content']}")
-print(f"Generated Answer:\n{outputs[0]['generated_text'][len(prompt):].strip().removesuffix("<turn|>")}")
-```
-
-```{ .no-copy .output }
-<bos><|turn>system
-You are a text to SQL query translator. Users will ask you questions in English and you will generate a SQL query based on the provided SCHEMA.<turn|>
-<|turn>user
-Given the <USER_QUERY> and the <SCHEMA>, generate the corresponding SQL command to retrieve the desired data, considering the query's syntax, semantics, and schema constraints.
-
-<SCHEMA>
-CREATE TABLE Auto_Shows (id INT, show_name VARCHAR(255), show_year INT, location VARCHAR(255)); INSERT INTO Auto_Shows (id, show_name, show_year, location) VALUES (1, 'New York International Auto Show', 2019, 'United States'); INSERT INTO Auto_Shows (id, show_name, show_year, location) VALUES (2, 'Chicago Auto Show', 2019, 'United States'); INSERT INTO Auto_Shows (id, show_name, show_year, location) VALUES (3, 'North American International Auto Show', 2018, 'United States');
-</SCHEMA>
-
-<USER_QUERY>
-How many auto shows were held in the United States in the year 2019?
-</USER_QUERY><turn|>
-<|turn>model
-
-Context:
- CREATE TABLE Auto_Shows (id INT, show_name VARCHAR(255), show_year INT, location VARCHAR(255)); INSERT INTO Auto_Shows (id, show_name, show_year, location) VALUES (1, 'New York International Auto Show', 2019, 'United States'); INSERT INTO Auto_Shows (id, show_name, show_year, location) VALUES (2, 'Chicago Auto Show', 2019, 'United States'); INSERT INTO Auto_Shows (id, show_name, show_year, location) VALUES (3, 'North American International Auto Show', 2018, 'United States');
-Query:
- How many auto shows were held in the United States in the year 2019?
-Original Answer:
-SELECT COUNT(*) FROM Auto_Shows WHERE show_year = 2019 AND location = 'United States';
-Generated Answer:
-SELECT COUNT(*) FROM Auto_Shows WHERE location = 'United States' AND show_year = 2019;
-```
-
-## 摘要與後續步驟
-
-本教學介紹了如何使用 TRL 與 QLoRA 微調 Gemma 模型。接下來請參閱以下文件：
-
-- 瞭解如何[用 Gemma 模型產生文字](../get-started/index.md)。
-- 瞭解如何[使用 Hugging Face Transformers 針對視覺任務微調 Gemma](vision-qlora.md)。
-- 瞭解如何[在 Vertex AI 上使用 Gemma 開放模型][vertex-use-gemma]。
-- 瞭解如何[使用 KerasNLP 微調 Gemma 並部署到 Vertex AI](https://github.com/GoogleCloudPlatform/vertex-ai-samples/blob/main/notebooks/community/model_garden/model_garden_gemma_kerasnlp_to_vertexai.ipynb)。
+--8<-- "glossary.md"
