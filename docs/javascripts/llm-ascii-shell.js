@@ -718,7 +718,7 @@
     const tHandle = shell.querySelector("[data-llm-terminal-handle]");
     const tFiles = shell.querySelectorAll("[data-llm-terminal-file]");
 
-    const formatWords = (n) => (n >= 950 ? `${(n / 1000).toFixed(1)}k words` : `${n} words`);
+    const formatWords = (n) => (n >= 950 ? `${(n / 1000).toFixed(1)}k 字` : `${n} 字`);
 
     const steps = [...shell.querySelectorAll(".llm-shell__tab[data-llm-step]")].map((tab) => {
       const id = tab.dataset.llmStep;
