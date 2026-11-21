@@ -64,31 +64,31 @@
   };
 
   const CONTROL_TOKENS = {
-    "<pad>": { id: 0, cat: "control", note: "Padding token" },
-    "<eos>": { id: 1, cat: "control", note: "End-of-sequence token" },
-    "<bos>": { id: 2, cat: "control", note: "Beginning-of-sequence token" },
-    "<unk>": { id: 3, cat: "control", note: "Unknown token" },
-    "<mask>": { id: 4, cat: "control", note: "Mask control token" },
-    "[multimodal]": { id: 5, cat: "control", note: "Multimodal marker token" },
-    "<|tool>": { id: 46, cat: "control", note: "Tool declaration open" },
-    "<tool|>": { id: 47, cat: "control", note: "Tool declaration close" },
-    "<|tool_call>": { id: 48, cat: "control", note: "Tool call open" },
-    "<tool_call|>": { id: 49, cat: "control", note: "Tool call close" },
-    "<|tool_response>": { id: 50, cat: "control", note: "Tool response open / stop token" },
-    "<tool_response|>": { id: 51, cat: "control", note: "Tool response close" },
-    '<|"|>': { id: 52, cat: "control", note: "Gemma 4 tool string delimiter" },
-    "<|think|>": { id: 98, cat: "control", note: "Activates Gemma 4 Thinking Mode" },
-    "<|channel>": { id: 100, cat: "control", note: "Opens reasoning channel block" },
-    "<channel|>": { id: 101, cat: "control", note: "Closes reasoning channel block" },
-    "<|turn>": { id: 105, cat: "control", note: "Opens a conversation turn" },
-    "<turn|>": { id: 106, cat: "control", note: "Closes turn / EOS stop token" },
-    "<|image>": { id: 255999, cat: "control", note: "Beginning-of-image token" },
-    "<|audio>": { id: 256000, cat: "control", note: "Beginning-of-audio token" },
-    "<|image|>": { id: 258880, cat: "control", note: "Multimodal image soft-token placeholder" },
-    "<|audio|>": { id: 258881, cat: "control", note: "Multimodal audio soft-token placeholder" },
-    "<image|>": { id: 258882, cat: "control", note: "End-of-image token" },
-    "<audio|>": { id: 258883, cat: "control", note: "End-of-audio token" },
-    "<|video|>": { id: 258884, cat: "control", note: "Multimodal video placeholder" },
+    "<pad>": { id: 0, cat: "control", note: "填充詞元" },
+    "<eos>": { id: 1, cat: "control", note: "序列結束詞元" },
+    "<bos>": { id: 2, cat: "control", note: "序列起始詞元" },
+    "<unk>": { id: 3, cat: "control", note: "未知詞元" },
+    "<mask>": { id: 4, cat: "control", note: "遮罩控制詞元" },
+    "[multimodal]": { id: 5, cat: "control", note: "多模態標記詞元" },
+    "<|tool>": { id: 46, cat: "control", note: "工具宣告開始" },
+    "<tool|>": { id: 47, cat: "control", note: "工具宣告結束" },
+    "<|tool_call>": { id: 48, cat: "control", note: "工具呼叫開始" },
+    "<tool_call|>": { id: 49, cat: "control", note: "工具呼叫結束" },
+    "<|tool_response>": { id: 50, cat: "control", note: "工具回應開始 / 停止詞元" },
+    "<tool_response|>": { id: 51, cat: "control", note: "工具回應結束" },
+    '<|"|>': { id: 52, cat: "control", note: "Gemma 4 工具字串分隔符" },
+    "<|think|>": { id: 98, cat: "control", note: "啟用 Gemma 4 思考模式" },
+    "<|channel>": { id: 100, cat: "control", note: "開啟推理通道區塊" },
+    "<channel|>": { id: 101, cat: "control", note: "關閉推理通道區塊" },
+    "<|turn>": { id: 105, cat: "control", note: "開啟對話輪次" },
+    "<turn|>": { id: 106, cat: "control", note: "關閉輪次 / EOS 停止詞元" },
+    "<|image>": { id: 255999, cat: "control", note: "圖片起始詞元" },
+    "<|audio>": { id: 256000, cat: "control", note: "音訊起始詞元" },
+    "<|image|>": { id: 258880, cat: "control", note: "多模態圖片軟詞元佔位符" },
+    "<|audio|>": { id: 258881, cat: "control", note: "多模態音訊軟詞元佔位符" },
+    "<image|>": { id: 258882, cat: "control", note: "圖片結束詞元" },
+    "<audio|>": { id: 258883, cat: "control", note: "音訊結束詞元" },
+    "<|video|>": { id: 258884, cat: "control", note: "多模態影片佔位符" },
   };
 
   const getUnusedTokenId = (idx) => {
@@ -103,14 +103,14 @@
 
   const BYTE_FALLBACK_CHARS = {
     "똠": [
-      { t: "<0xEB>", raw: "똠[0xEB]", id: 473, cat: "subword", verified: true, note: "UTF-8 byte 1/3 of rare syllable '똠' (U+B620 → 0xEB 0x98 0xA0)" },
-      { t: "<0x98>", raw: "똠[0x98]", id: 390, cat: "subword", verified: true, note: "UTF-8 byte 2/3 of rare syllable '똠' (0x98)" },
-      { t: "<0xA0>", raw: "똠[0xA0]", id: 398, cat: "subword", verified: true, note: "UTF-8 byte 3/3 of rare syllable '똠' (0xA0) — zero <unk> loss!" },
+      { t: "<0xEB>", raw: "똠[0xEB]", id: 473, cat: "subword", verified: true, note: "稀有音節 '똠' 的 UTF-8 位元組 1/3 (U+B620 → 0xEB 0x98 0xA0)" },
+      { t: "<0x98>", raw: "똠[0x98]", id: 390, cat: "subword", verified: true, note: "稀有音節 '똠' 的 UTF-8 位元組 2/3 (0x98)" },
+      { t: "<0xA0>", raw: "똠[0xA0]", id: 398, cat: "subword", verified: true, note: "稀有音節 '똠' 的 UTF-8 位元組 3/3 (0xA0) — <unk> 零遺失！" },
     ],
     "鬮": [
-      { t: "<0xE9>", raw: "鬮[0xE9]", id: 471, cat: "subword", verified: true, note: "UTF-8 byte 1/3 of rare kanji '鬮' (U+9B2E → 0xE9 0xAC 0xAE)" },
-      { t: "<0xAC>", raw: "鬮[0xAC]", id: 410, cat: "subword", verified: true, note: "UTF-8 byte 2/3 of rare kanji '鬮' (0xAC)" },
-      { t: "<0xAE>", raw: "鬮[0xAE]", id: 412, cat: "subword", verified: true, note: "UTF-8 byte 3/3 of rare kanji '鬮' (0xAE) — zero <unk> loss!" },
+      { t: "<0xE9>", raw: "鬮[0xE9]", id: 471, cat: "subword", verified: true, note: "稀有漢字 '鬮' 的 UTF-8 位元組 1/3 (U+9B2E → 0xE9 0xAC 0xAE)" },
+      { t: "<0xAC>", raw: "鬮[0xAC]", id: 410, cat: "subword", verified: true, note: "稀有漢字 '鬮' 的 UTF-8 位元組 2/3 (0xAC)" },
+      { t: "<0xAE>", raw: "鬮[0xAE]", id: 412, cat: "subword", verified: true, note: "稀有漢字 '鬮' 的 UTF-8 位元組 3/3 (0xAE) — <unk> 零遺失！" },
     ],
   };
 
@@ -224,153 +224,153 @@
 
   const PRESET_TOKENIZATIONS = [
     {
-      label: "Gemma & Numbers",
+      label: "Gemma 與數字",
       text: "Gemma 4 runs on phones in 2026!",
       tokens: [
-        { t: "G", id: 236823, cat: "subword", verified: true, note: "Initial capital subword piece" },
-        { t: "emma", id: 12367, cat: "subword", verified: true, note: "Subword continuation completing 'Gemma'" },
-        { t: "▁", id: 236743, cat: "subword", verified: true, note: "Space before standalone number" },
-        { t: "4", id: 236812, cat: "digit", verified: true, note: "Individual digit token (Gemma splits all digits 0-9)" },
-        { t: "▁runs", id: 8784, cat: "word", verified: true, note: "Whole word with leading space marker ▁ (U+2581)" },
-        { t: "▁on", id: 580, cat: "word", verified: true, note: "Common preposition with leading space ▁" },
-        { t: "▁phones", id: 23319, cat: "word", verified: true, note: "Whole plural noun with leading space ▁" },
-        { t: "▁in", id: 528, cat: "word", verified: true, note: "High-frequency preposition with leading space ▁" },
-        { t: "▁", id: 236743, cat: "subword", verified: true, note: "Leading space before multi-digit year" },
-        { t: "2", id: 236778, cat: "digit", verified: true, note: "Single digit '2' (splitting digits helps arithmetic)" },
-        { t: "0", id: 236771, cat: "digit", verified: true, note: "Single digit '0'" },
-        { t: "2", id: 236778, cat: "digit", verified: true, note: "Single digit '2'" },
-        { t: "6", id: 236825, cat: "digit", verified: true, note: "Single digit '6'" },
-        { t: "!", id: 236888, cat: "code", verified: true, note: "Punctuation token" },
+        { t: "G", id: 236823, cat: "subword", verified: true, note: "首字大寫的子詞片段" },
+        { t: "emma", id: 12367, cat: "subword", verified: true, note: "接續完成 'Gemma' 的子詞" },
+        { t: "▁", id: 236743, cat: "subword", verified: true, note: "獨立數字前的空白" },
+        { t: "4", id: 236812, cat: "digit", verified: true, note: "個別數字詞元（Gemma 將所有數字 0-9 逐一拆分）" },
+        { t: "▁runs", id: 8784, cat: "word", verified: true, note: "帶有前導空白標記 ▁ (U+2581) 的完整單詞" },
+        { t: "▁on", id: 580, cat: "word", verified: true, note: "帶有前導空白 ▁ 的常見介詞" },
+        { t: "▁phones", id: 23319, cat: "word", verified: true, note: "帶有前導空白 ▁ 的完整複數名詞" },
+        { t: "▁in", id: 528, cat: "word", verified: true, note: "帶有前導空白 ▁ 的高頻介詞" },
+        { t: "▁", id: 236743, cat: "subword", verified: true, note: "多位數年份前的前導空白" },
+        { t: "2", id: 236778, cat: "digit", verified: true, note: "單一數字 '2'（拆分數字有助於運算）" },
+        { t: "0", id: 236771, cat: "digit", verified: true, note: "單一數字 '0'" },
+        { t: "2", id: 236778, cat: "digit", verified: true, note: "單一數字 '2'" },
+        { t: "6", id: 236825, cat: "digit", verified: true, note: "單一數字 '6'" },
+        { t: "!", id: 236888, cat: "code", verified: true, note: "標點符號詞元" },
       ],
     },
     {
-      label: "Everyday English",
+      label: "日常英語",
       text: "The cat sat on the mat because it was tired.",
       tokens: [
-        { t: "The", id: 818, cat: "word", verified: true, note: "Sentence-initial word (no leading space)" },
-        { t: "▁cat", id: 5866, cat: "word", verified: true, note: "Whole word with leading space ▁" },
-        { t: "▁sat", id: 2838, cat: "word", verified: true, note: "Whole word with leading space ▁" },
-        { t: "▁on", id: 580, cat: "word", verified: true, note: "High-frequency preposition" },
-        { t: "▁the", id: 506, cat: "word", verified: true, note: "One of the most frequent English tokens" },
-        { t: "▁mat", id: 1756, cat: "word", verified: true, note: "Whole word with leading space ▁" },
-        { t: "▁because", id: 1547, cat: "word", verified: true, note: "Single token for common 7-letter conjunction" },
-        { t: "▁it", id: 625, cat: "word", verified: true, note: "Pronoun token (resolved later by Self-Attention!)" },
-        { t: "▁was", id: 691, cat: "word", verified: true, note: "Common past-tense verb token" },
-        { t: "▁tired", id: 20718, cat: "word", verified: true, note: "Whole adjective token" },
-        { t: ".", id: 236761, cat: "code", verified: true, note: "Period punctuation token" },
+        { t: "The", id: 818, cat: "word", verified: true, note: "句首單詞（無前導空白）" },
+        { t: "▁cat", id: 5866, cat: "word", verified: true, note: "帶有前導空白 ▁ 的完整單詞" },
+        { t: "▁sat", id: 2838, cat: "word", verified: true, note: "帶有前導空白 ▁ 的完整單詞" },
+        { t: "▁on", id: 580, cat: "word", verified: true, note: "高頻介詞" },
+        { t: "▁the", id: 506, cat: "word", verified: true, note: "最常見的英文詞元之一" },
+        { t: "▁mat", id: 1756, cat: "word", verified: true, note: "帶有前導空白 ▁ 的完整單詞" },
+        { t: "▁because", id: 1547, cat: "word", verified: true, note: "常見 7 字母連接詞的單一詞元" },
+        { t: "▁it", id: 625, cat: "word", verified: true, note: "代名詞詞元（其指涉稍後由 Self-Attention 解析！）" },
+        { t: "▁was", id: 691, cat: "word", verified: true, note: "常見過去式動詞詞元" },
+        { t: "▁tired", id: 20718, cat: "word", verified: true, note: "完整的形容詞詞元" },
+        { t: ".", id: 236761, cat: "code", verified: true, note: "句點標點符號詞元" },
       ],
     },
     {
-      label: "Multilingual & Emoji",
+      label: "多語言與表情符號",
       text: "안녕하세요! Gemma 4는 140개 이상의 언어를 지원합니다. 🚀",
       tokens: [
-        { t: "안녕하세요", id: 61659, cat: "word", verified: true, note: "Entire 5-syllable Korean greeting is 1 token in Gemma 4's 262K vocab!" },
-        { t: "!", id: 236888, cat: "code", verified: true, note: "Exclamation mark" },
-        { t: "▁Gemma", id: 147224, cat: "word", verified: true, note: "Space + Gemma" },
-        { t: "▁", id: 236743, cat: "subword", verified: true, note: "Space before digit" },
-        { t: "4", id: 236812, cat: "digit", verified: true, note: "Digit '4'" },
-        { t: "는", id: 237170, cat: "subword", verified: true, note: "Korean topic particle attached to 4" },
-        { t: "▁", id: 236743, cat: "subword", verified: true, note: "Space before number 140" },
-        { t: "1", id: 236770, cat: "digit", verified: true, note: "Digit '1'" },
-        { t: "4", id: 236812, cat: "digit", verified: true, note: "Digit '4'" },
-        { t: "0", id: 236771, cat: "digit", verified: true, note: "Digit '0'" },
-        { t: "개", id: 238242, cat: "subword", verified: true, note: "Korean counter morpheme" },
-        { t: "▁이상의", id: 183126, cat: "word", verified: true, note: "Korean phrase 'more than'" },
-        { t: "▁언", id: 64822, cat: "subword", verified: true, note: "First subword of 'language' (언어)" },
-        { t: "어를", id: 120857, cat: "subword", verified: true, note: "Second subword + object marker" },
-        { t: "▁지원", id: 65363, cat: "word", verified: true, note: "Root noun 'support'" },
-        { t: "합니다", id: 19773, cat: "subword", verified: true, note: "Polite verb ending" },
-        { t: ".", id: 236761, cat: "code", verified: true, note: "Period" },
-        { t: "▁", id: 236743, cat: "subword", verified: true, note: "Space before emoji" },
-        { t: "🚀", id: 242015, cat: "subword", verified: true, note: "Single dedicated emoji token (no UTF-8 byte fallback needed)" },
+        { t: "안녕하세요", id: 61659, cat: "word", verified: true, note: "整句 5 音節韓語問候語在 Gemma 4 的 262K 詞彙表中只佔 1 個詞元！" },
+        { t: "!", id: 236888, cat: "code", verified: true, note: "驚嘆號" },
+        { t: "▁Gemma", id: 147224, cat: "word", verified: true, note: "空白 + Gemma" },
+        { t: "▁", id: 236743, cat: "subword", verified: true, note: "數字前的空白" },
+        { t: "4", id: 236812, cat: "digit", verified: true, note: "數字 '4'" },
+        { t: "는", id: 237170, cat: "subword", verified: true, note: "附著於 4 的韓語主題助詞" },
+        { t: "▁", id: 236743, cat: "subword", verified: true, note: "數字 140 前的空白" },
+        { t: "1", id: 236770, cat: "digit", verified: true, note: "數字 '1'" },
+        { t: "4", id: 236812, cat: "digit", verified: true, note: "數字 '4'" },
+        { t: "0", id: 236771, cat: "digit", verified: true, note: "數字 '0'" },
+        { t: "개", id: 238242, cat: "subword", verified: true, note: "韓語計量詞素" },
+        { t: "▁이상의", id: 183126, cat: "word", verified: true, note: "韓語片語 'more than'" },
+        { t: "▁언", id: 64822, cat: "subword", verified: true, note: "'language'（언어）的第一個子詞" },
+        { t: "어를", id: 120857, cat: "subword", verified: true, note: "第二個子詞 + 受詞標記" },
+        { t: "▁지원", id: 65363, cat: "word", verified: true, note: "詞根名詞 'support'" },
+        { t: "합니다", id: 19773, cat: "subword", verified: true, note: "禮貌形動詞結尾" },
+        { t: ".", id: 236761, cat: "code", verified: true, note: "句點" },
+        { t: "▁", id: 236743, cat: "subword", verified: true, note: "表情符號前的空白" },
+        { t: "🚀", id: 242015, cat: "subword", verified: true, note: "單一專用表情符號詞元（無需 UTF-8 位元組備援）" },
       ],
     },
     {
-      label: "Rare Words & Byte Fallback",
+      label: "稀有詞與位元組備援",
       text: "똠얌꿍 / 加鬮さん",
       tokens: [
-        { t: "<0xEB>", raw: "똠[0xEB]", id: 473, cat: "subword", verified: true, note: "UTF-8 byte 1/3 of rare syllable '똠' (U+B620 → 0xEB 0x98 0xA0)" },
-        { t: "<0x98>", raw: "똠[0x98]", id: 390, cat: "subword", verified: true, note: "UTF-8 byte 2/3 of rare syllable '똠' (0x98)" },
-        { t: "<0xA0>", raw: "똠[0xA0]", id: 398, cat: "subword", verified: true, note: "UTF-8 byte 3/3 of rare syllable '똠' (0xA0) — never collapses to <unk>!" },
-        { t: "얌", id: 249170, cat: "subword", verified: true, note: "Known Korean syllable '얌' in Gemma 4's 262K vocabulary" },
-        { t: "꿍", id: 249927, cat: "subword", verified: true, note: "Known Korean syllable '꿍' in Gemma 4's vocabulary" },
-        { t: "▁/", id: 965, cat: "code", verified: true, note: "Space + slash separator token" },
-        { t: "▁加", id: 50624, cat: "word", verified: true, note: "Leading space + known kanji '加'" },
-        { t: "<0xE9>", raw: "鬮[0xE9]", id: 471, cat: "subword", verified: true, note: "UTF-8 byte 1/3 of ultra-rare kanji '鬮' (U+9B2E → 0xE9 0xAC 0xAE)" },
-        { t: "<0xAC>", raw: "鬮[0xAC]", id: 410, cat: "subword", verified: true, note: "UTF-8 byte 2/3 of rare kanji '鬮' (0xAC)" },
-        { t: "<0xAE>", raw: "鬮[0xAE]", id: 412, cat: "subword", verified: true, note: "UTF-8 byte 3/3 of rare kanji '鬮' (0xAE)" },
-        { t: "さん", id: 9821, cat: "subword", verified: true, note: "Common 2-hiragana honorific suffix 'さん' merged as 1 token" },
+        { t: "<0xEB>", raw: "똠[0xEB]", id: 473, cat: "subword", verified: true, note: "稀有音節 '똠' 的 UTF-8 位元組 1/3 (U+B620 → 0xEB 0x98 0xA0)" },
+        { t: "<0x98>", raw: "똠[0x98]", id: 390, cat: "subword", verified: true, note: "稀有音節 '똠' 的 UTF-8 位元組 2/3 (0x98)" },
+        { t: "<0xA0>", raw: "똠[0xA0]", id: 398, cat: "subword", verified: true, note: "稀有音節 '똠' 的 UTF-8 位元組 3/3 (0xA0) — 永遠不會塌縮為 <unk>！" },
+        { t: "얌", id: 249170, cat: "subword", verified: true, note: "Gemma 4 的 262K 詞彙表中的已知韓語音節 '얌'" },
+        { t: "꿍", id: 249927, cat: "subword", verified: true, note: "Gemma 4 詞彙表中的已知韓語音節 '꿍'" },
+        { t: "▁/", id: 965, cat: "code", verified: true, note: "空白 + 斜線分隔詞元" },
+        { t: "▁加", id: 50624, cat: "word", verified: true, note: "前導空白 + 已知漢字 '加'" },
+        { t: "<0xE9>", raw: "鬮[0xE9]", id: 471, cat: "subword", verified: true, note: "極稀有漢字 '鬮' 的 UTF-8 位元組 1/3 (U+9B2E → 0xE9 0xAC 0xAE)" },
+        { t: "<0xAC>", raw: "鬮[0xAC]", id: 410, cat: "subword", verified: true, note: "稀有漢字 '鬮' 的 UTF-8 位元組 2/3 (0xAC)" },
+        { t: "<0xAE>", raw: "鬮[0xAE]", id: 412, cat: "subword", verified: true, note: "稀有漢字 '鬮' 的 UTF-8 位元組 3/3 (0xAE)" },
+        { t: "さん", id: 9821, cat: "subword", verified: true, note: "常見的 2 個平假名敬稱後綴 'さん' 合併為 1 個詞元" },
       ],
     },
     {
-      label: "Reserved <unusedXX> Tokens",
+      label: "保留的 <unusedXX> 詞元",
       text: "<unused0>citation<unused1> Gemma 4",
       tokens: [
-        { t: "<unused0>", id: 6, cat: "control", verified: true, note: "Reserved <unused0> slot (1 of 6,227) — repurpose for custom fine-tuning tags without resizing the 262,144 × d_model matrix!" },
-        { t: "citation", id: 99697, cat: "word", verified: true, note: "Custom domain tag or structured payload inside reserved control markers" },
-        { t: "<unused1>", id: 7, cat: "control", verified: true, note: "Reserved <unused1> slot — pre-allocated in the vocabulary & embedding table" },
-        { t: "▁Gemma", id: 147224, cat: "word", verified: true, note: "Space + model name" },
-        { t: "▁", id: 236743, cat: "subword", verified: true, note: "Space before version digit" },
-        { t: "4", id: 236812, cat: "digit", verified: true, note: "Digit '4'" },
+        { t: "<unused0>", id: 6, cat: "control", verified: true, note: "保留的 <unused0> 槽位（6,227 個中的第 1 個）— 可改用作自訂微調標籤，無需調整 262,144 × d_model 矩陣大小！" },
+        { t: "citation", id: 99697, cat: "word", verified: true, note: "保留控制標記內的自訂領域標籤或結構化承載資料" },
+        { t: "<unused1>", id: 7, cat: "control", verified: true, note: "保留的 <unused1> 槽位 — 已預先配置於詞彙表與嵌入表" },
+        { t: "▁Gemma", id: 147224, cat: "word", verified: true, note: "空白 + 模型名稱" },
+        { t: "▁", id: 236743, cat: "subword", verified: true, note: "版本數字前的空白" },
+        { t: "4", id: 236812, cat: "digit", verified: true, note: "數字 '4'" },
       ],
     },
     {
-      label: "Python Code",
+      label: "Python 程式碼",
       text: "def fibonacci(n):\n    return n if n <= 1",
       tokens: [
-        { t: "def", id: 2063, cat: "code", verified: true, note: "Python keyword token" },
-        { t: "▁fib", id: 10779, cat: "subword", verified: true, note: "Space + common identifier prefix" },
-        { t: "onacci", id: 78113, cat: "subword", verified: true, note: "Subword suffix completing 'fibonacci'" },
-        { t: "(", id: 236769, cat: "code", verified: true, note: "Open parenthesis" },
-        { t: "n", id: 236749, cat: "code", verified: true, note: "Parameter identifier" },
-        { t: "):", id: 1473, cat: "code", verified: true, note: "Merged closing paren + colon token for Python!" },
-        { t: "\\n", id: 107, cat: "control", verified: true, note: "Newline character token" },
-        { t: "▁▁▁▁", id: 140, cat: "code", verified: true, note: "4-space Python indentation compressed into a SINGLE token!" },
-        { t: "return", id: 2060, cat: "code", verified: true, note: "Python return keyword" },
-        { t: "▁n", id: 538, cat: "code", verified: true, note: "Space + variable n" },
-        { t: "▁if", id: 768, cat: "code", verified: true, note: "Space + conditional keyword" },
-        { t: "▁n", id: 538, cat: "code", verified: true, note: "Space + variable n" },
-        { t: "▁<=", id: 6605, cat: "code", verified: true, note: "Space + comparison operator" },
-        { t: "▁", id: 236743, cat: "subword", verified: true, note: "Space before numeric literal" },
-        { t: "1", id: 236770, cat: "digit", verified: true, note: "Digit '1'" },
+        { t: "def", id: 2063, cat: "code", verified: true, note: "Python 關鍵字詞元" },
+        { t: "▁fib", id: 10779, cat: "subword", verified: true, note: "空白 + 常見識別名稱前綴" },
+        { t: "onacci", id: 78113, cat: "subword", verified: true, note: "接續完成 'fibonacci' 的子詞後綴" },
+        { t: "(", id: 236769, cat: "code", verified: true, note: "左括號" },
+        { t: "n", id: 236749, cat: "code", verified: true, note: "參數識別名稱" },
+        { t: "):", id: 1473, cat: "code", verified: true, note: "為 Python 合併的右括號 + 冒號詞元！" },
+        { t: "\\n", id: 107, cat: "control", verified: true, note: "換行字元詞元" },
+        { t: "▁▁▁▁", id: 140, cat: "code", verified: true, note: "4 格空白的 Python 縮排壓縮為單一詞元！" },
+        { t: "return", id: 2060, cat: "code", verified: true, note: "Python return 關鍵字" },
+        { t: "▁n", id: 538, cat: "code", verified: true, note: "空白 + 變數 n" },
+        { t: "▁if", id: 768, cat: "code", verified: true, note: "空白 + 條件關鍵字" },
+        { t: "▁n", id: 538, cat: "code", verified: true, note: "空白 + 變數 n" },
+        { t: "▁<=", id: 6605, cat: "code", verified: true, note: "空白 + 比較運算子" },
+        { t: "▁", id: 236743, cat: "subword", verified: true, note: "數字字面值前的空白" },
+        { t: "1", id: 236770, cat: "digit", verified: true, note: "數字 '1'" },
       ],
     },
     {
-      label: "Chat Control Tokens",
+      label: "聊天控制詞元",
       text: "<|turn>user\n<|think|>Hello Gemma 4!<turn|>",
       tokens: [
-        { t: "<|turn>", id: 105, cat: "control", verified: true, note: "Special control token starting a turn" },
-        { t: "user", id: 2364, cat: "word", verified: true, note: "Role identifier token" },
-        { t: "\\n", id: 107, cat: "control", verified: true, note: "Newline separator after role" },
-        { t: "<|think|>", id: 98, cat: "control", verified: true, note: "Special Thinking Mode trigger token" },
-        { t: "Hello", id: 9259, cat: "word", verified: true, note: "Greeting word token" },
-        { t: "▁Gemma", id: 147224, cat: "word", verified: true, note: "Space + model name" },
-        { t: "▁", id: 236743, cat: "subword", verified: true, note: "Space before version digit" },
-        { t: "4", id: 236812, cat: "digit", verified: true, note: "Digit '4'" },
-        { t: "!", id: 236888, cat: "code", verified: true, note: "Exclamation mark" },
-        { t: "<turn|>", id: 106, cat: "control", verified: true, note: "Turn end / stop control token" },
+        { t: "<|turn>", id: 105, cat: "control", verified: true, note: "開始輪次的特殊控制詞元" },
+        { t: "user", id: 2364, cat: "word", verified: true, note: "角色識別詞元" },
+        { t: "\\n", id: 107, cat: "control", verified: true, note: "角色之後的換行分隔符" },
+        { t: "<|think|>", id: 98, cat: "control", verified: true, note: "特殊的思考模式觸發詞元" },
+        { t: "Hello", id: 9259, cat: "word", verified: true, note: "問候詞詞元" },
+        { t: "▁Gemma", id: 147224, cat: "word", verified: true, note: "空白 + 模型名稱" },
+        { t: "▁", id: 236743, cat: "subword", verified: true, note: "版本數字前的空白" },
+        { t: "4", id: 236812, cat: "digit", verified: true, note: "數字 '4'" },
+        { t: "!", id: 236888, cat: "code", verified: true, note: "驚嘆號" },
+        { t: "<turn|>", id: 106, cat: "control", verified: true, note: "輪次結束 / 停止控制詞元" },
       ],
     },
     {
-      label: "Compound Subwords",
+      label: "複合子詞",
       text: "Antidisestablishmentarianism and supercalifragilisticexpialidocious",
       tokens: [
-        { t: "Ant", id: 14054, cat: "subword", verified: true, note: "Prefix piece 1" },
-        { t: "idis", id: 33090, cat: "subword", verified: true, note: "Subword piece 2" },
-        { t: "establishment", id: 163524, cat: "subword", verified: true, note: "Root word piece inside compound word!" },
-        { t: "arian", id: 8225, cat: "subword", verified: true, note: "Suffix piece 1" },
-        { t: "ism", id: 1929, cat: "subword", verified: true, note: "Noun suffix piece 2" },
-        { t: "▁and", id: 532, cat: "word", verified: true, note: "Common conjunction" },
-        { t: "▁super", id: 2393, cat: "subword", verified: true, note: "Space + common prefix 'super'" },
-        { t: "cal", id: 1653, cat: "subword", verified: true, note: "Syllable subword" },
-        { t: "if", id: 584, cat: "subword", verified: true, note: "Syllable subword" },
-        { t: "rag", id: 16100, cat: "subword", verified: true, note: "Syllable subword" },
-        { t: "il", id: 543, cat: "subword", verified: true, note: "Syllable subword" },
-        { t: "istic", id: 3316, cat: "subword", verified: true, note: "Adjective suffix piece" },
-        { t: "exp", id: 4212, cat: "subword", verified: true, note: "Syllable subword" },
-        { t: "ial", id: 706, cat: "subword", verified: true, note: "Syllable subword" },
-        { t: "id", id: 547, cat: "subword", verified: true, note: "Syllable subword" },
-        { t: "ocious", id: 100466, cat: "subword", verified: true, note: "Ending subword — zero <unk> errors on any rare word!" },
+        { t: "Ant", id: 14054, cat: "subword", verified: true, note: "前綴片段 1" },
+        { t: "idis", id: 33090, cat: "subword", verified: true, note: "子詞片段 2" },
+        { t: "establishment", id: 163524, cat: "subword", verified: true, note: "複合詞中的詞根片段！" },
+        { t: "arian", id: 8225, cat: "subword", verified: true, note: "後綴片段 1" },
+        { t: "ism", id: 1929, cat: "subword", verified: true, note: "名詞後綴片段 2" },
+        { t: "▁and", id: 532, cat: "word", verified: true, note: "常見連接詞" },
+        { t: "▁super", id: 2393, cat: "subword", verified: true, note: "空白 + 常見前綴 'super'" },
+        { t: "cal", id: 1653, cat: "subword", verified: true, note: "音節子詞" },
+        { t: "if", id: 584, cat: "subword", verified: true, note: "音節子詞" },
+        { t: "rag", id: 16100, cat: "subword", verified: true, note: "音節子詞" },
+        { t: "il", id: 543, cat: "subword", verified: true, note: "音節子詞" },
+        { t: "istic", id: 3316, cat: "subword", verified: true, note: "形容詞後綴片段" },
+        { t: "exp", id: 4212, cat: "subword", verified: true, note: "音節子詞" },
+        { t: "ial", id: 706, cat: "subword", verified: true, note: "音節子詞" },
+        { t: "id", id: 547, cat: "subword", verified: true, note: "音節子詞" },
+        { t: "ocious", id: 100466, cat: "subword", verified: true, note: "結尾子詞 — 任何稀有詞都不會產生 <unk> 錯誤！" },
       ],
     },
   ];
@@ -398,8 +398,8 @@
       if (id1 !== undefined && id2 !== undefined && id1 + id2 < best2Score) {
         best2Score = id1 + id2;
         best2 = [
-          { t: p1, id: id1, cat: "subword", verified: true, note: "Verified Gemma 4 BPE subword prefix/root" },
-          { t: p2, id: id2, cat: "subword", verified: true, note: "Verified Gemma 4 BPE subword continuation" },
+          { t: p1, id: id1, cat: "subword", verified: true, note: "已驗證的 Gemma 4 BPE 子詞前綴/詞根" },
+          { t: p2, id: id2, cat: "subword", verified: true, note: "已驗證的 Gemma 4 BPE 子詞接續片段" },
         ];
       }
     }
@@ -419,9 +419,9 @@
         if (id2 !== undefined && id3 !== undefined && id1 + id2 + id3 < best3Score) {
           best3Score = id1 + id2 + id3;
           best3 = [
-            { t: p1, id: id1, cat: "subword", verified: true, note: "Verified Gemma 4 BPE subword piece 1/3" },
-            { t: p2, id: id2, cat: "subword", verified: true, note: "Verified Gemma 4 BPE subword piece 2/3" },
-            { t: p3, id: id3, cat: "subword", verified: true, note: "Verified Gemma 4 BPE subword piece 3/3" },
+            { t: p1, id: id1, cat: "subword", verified: true, note: "已驗證的 Gemma 4 BPE 子詞片段 1/3" },
+            { t: p2, id: id2, cat: "subword", verified: true, note: "已驗證的 Gemma 4 BPE 子詞片段 2/3" },
+            { t: p3, id: id3, cat: "subword", verified: true, note: "已驗證的 Gemma 4 BPE 子詞片段 3/3" },
           ];
         }
       }
@@ -455,7 +455,7 @@
             id: uId,
             cat: "control",
             verified: true,
-            note: `Reserved ${raw} token (1 of 6,227 unused slots) for custom fine-tuning without resizing the embedding matrix`,
+            note: `保留的 ${raw} 詞元（6,227 個未使用槽位中的 1 個），供自訂微調使用，無需調整嵌入矩陣大小`,
           });
           continue;
         }
@@ -468,28 +468,28 @@
           id: 238 + byteVal,
           cat: "subword",
           verified: true,
-          note: `UTF-8 raw byte fallback token ${bTok}`,
+          note: `UTF-8 原始位元組備援詞元 ${bTok}`,
         });
         continue;
       }
       if (CONTROL_TOKENS[raw]) {
         out.push({ t: raw, id: CONTROL_TOKENS[raw].id, cat: "control", verified: true, note: CONTROL_TOKENS[raw].note });
       } else if (raw === "\n") {
-        out.push({ t: "\\n", id: 107, cat: "control", verified: true, note: "Newline token" });
+        out.push({ t: "\\n", id: 107, cat: "control", verified: true, note: "換行詞元" });
       } else if (raw === "    ") {
-        out.push({ t: "▁▁▁▁", id: 140, cat: "code", verified: true, note: "4-space indentation token" });
+        out.push({ t: "▁▁▁▁", id: 140, cat: "code", verified: true, note: "4 格空白縮排詞元" });
       } else if (DIGIT_IDS[raw] !== undefined) {
-        out.push({ t: raw, id: DIGIT_IDS[raw], cat: "digit", verified: true, note: `Single digit '${raw}' token` });
+        out.push({ t: raw, id: DIGIT_IDS[raw], cat: "digit", verified: true, note: `單一數字 '${raw}' 詞元` });
       } else {
         const hasSpace = raw.startsWith(" ");
         const clean = hasSpace ? raw.slice(1) : raw;
         if (!clean) {
-          out.push({ t: "▁", id: 236743, cat: "subword", verified: true, note: "Standalone whitespace token" });
+          out.push({ t: "▁", id: 236743, cat: "subword", verified: true, note: "獨立空白詞元" });
           continue;
         }
         if (BYTE_FALLBACK_CHARS[clean]) {
           if (hasSpace) {
-            out.push({ t: "▁", id: 236743, cat: "subword", verified: true, note: "Leading space before byte-fallback character" });
+            out.push({ t: "▁", id: 236743, cat: "subword", verified: true, note: "位元組備援字元前的前導空白" });
           }
           for (const bTok of BYTE_FALLBACK_CHARS[clean]) {
             out.push(bTok);
@@ -505,19 +505,19 @@
             cat: isPunct ? "code" : "word",
             verified: true,
             note: isPunct
-              ? "Verified Gemma 4 punctuation / operator token"
-              : "Verified Gemma 4 vocabulary token",
+              ? "已驗證的 Gemma 4 標點符號 / 運算子詞元"
+              : "已驗證的 Gemma 4 詞彙表詞元",
           });
           continue;
         }
         if (hasSpace && KNOWN_VOCAB[clean] !== undefined) {
-          out.push({ t: "▁", id: 236743, cat: "subword", verified: true, note: "Leading space token" });
+          out.push({ t: "▁", id: 236743, cat: "subword", verified: true, note: "前導空白詞元" });
           out.push({
             t: clean,
             id: KNOWN_VOCAB[clean],
             cat: isPunct ? "code" : "word",
             verified: true,
-            note: "Verified Gemma 4 vocabulary token",
+            note: "已驗證的 Gemma 4 詞彙表詞元",
           });
           continue;
         }
@@ -544,15 +544,15 @@
             cat: "subword",
             verified: stemKnown,
             note: stemKnown
-              ? "Verified Gemma 4 subword root"
-              : "Offline fallback estimate (custom word root outside embedded subset)",
+              ? "已驗證的 Gemma 4 子詞詞根"
+              : "離線備援估計（自訂詞根不在內嵌子集內）",
           });
           out.push({
             t: matchedSuffix,
             id: KNOWN_VOCAB[matchedSuffix],
             cat: "subword",
             verified: true,
-            note: "Verified Gemma 4 subword suffix",
+            note: "已驗證的 Gemma 4 子詞後綴",
           });
         } else if (clean.length <= 7 || !/^[A-Za-z]+$/.test(clean)) {
           out.push({
@@ -560,7 +560,7 @@
             id: hashTokenId(display),
             cat: isPunct ? "code" : "word",
             verified: false,
-            note: "Offline fallback estimate (custom token outside embedded vocabulary subset)",
+            note: "離線備援估計（自訂詞元不在內嵌詞彙表子集內）",
           });
         } else {
           const mid = Math.ceil(clean.length * 0.55);
@@ -573,14 +573,14 @@
             id: hashTokenId(p1),
             cat: "subword",
             verified: p1Known,
-            note: p1Known ? "Verified Gemma 4 subword piece" : "Offline fallback estimate (leading subword piece)",
+            note: p1Known ? "已驗證的 Gemma 4 子詞片段" : "離線備援估計（前導子詞片段）",
           });
           out.push({
             t: p2,
             id: hashTokenId(p2),
             cat: "subword",
             verified: p2Known,
-            note: p2Known ? "Verified Gemma 4 subword piece" : "Offline fallback estimate (trailing subword piece)",
+            note: p2Known ? "已驗證的 Gemma 4 子詞片段" : "離線備援估計（後續子詞片段）",
           });
         }
       }
@@ -650,7 +650,7 @@
         const ch = utf8Decoder ? utf8Decoder.decode(bytes) : "";
         const validChar = ch && !ch.includes("\uFFFD") ? ch : null;
         const cp = validChar ? validChar.codePointAt(0) : null;
-        const cpHex = cp !== null ? `U+${cp.toString(16).toUpperCase().padStart(4, "0")}` : "raw UTF-8";
+        const cpHex = cp !== null ? `U+${cp.toString(16).toUpperCase().padStart(4, "0")}` : "原始 UTF-8";
         for (let k = 0; k < groupLen; k++) {
           const idx = cursor + k;
           const hex = rawTokens[idx].slice(3, 5).toUpperCase();
@@ -662,8 +662,8 @@
             cat: "subword",
             verified: true,
             note: validChar
-              ? `UTF-8 byte ${k + 1}/${groupLen} of '${validChar}' (${cpHex} → ${hexList.join(" ")}) — zero <unk> loss!`
-              : `UTF-8 raw byte fallback token <0x${hex}>`,
+              ? `'${validChar}' 的 UTF-8 位元組 ${k + 1}/${groupLen} (${cpHex} → ${hexList.join(" ")}) — <unk> 零遺失！`
+              : `UTF-8 原始位元組備援詞元 <0x${hex}>`,
           });
         }
         cursor += groupLen;
@@ -706,7 +706,7 @@
           id,
           cat: "control",
           verified: true,
-          note: `Reserved ${piece} slot (1 of 6,227) — repurpose for custom fine-tuning tags without resizing the 262,144 × d_model matrix!`,
+          note: `保留的 ${piece} 槽位（6,227 個中的第 1 個）— 可改用作自訂微調標籤，無需調整 262,144 × d_model 矩陣大小！`,
         };
       }
       if (/^\n+$/.test(piece)) {
@@ -717,7 +717,7 @@
           id,
           cat: "control",
           verified: true,
-          note: n === 1 ? "Newline character token" : `${n} consecutive newlines merged into a single token`,
+          note: n === 1 ? "換行字元詞元" : `${n} 個連續換行合併為單一詞元`,
         };
       }
       if (/^[0-9]$/.test(piece)) {
@@ -727,7 +727,7 @@
           id,
           cat: "digit",
           verified: true,
-          note: `Individual digit '${piece}' token (Gemma 4 splits all digits 0–9 for consistent arithmetic)`,
+          note: `個別數字 '${piece}' 詞元（Gemma 4 將所有數字 0–9 逐一拆分，以確保運算一致性）`,
         };
       }
       if (piece === "▁") {
@@ -737,7 +737,7 @@
           id,
           cat: "subword",
           verified: true,
-          note: "Standalone space token ▁ (U+2581)",
+          note: "獨立空白詞元 ▁ (U+2581)",
         };
       }
       if (/^▁{2,}$/.test(piece)) {
@@ -748,7 +748,7 @@
           id,
           cat: "code",
           verified: true,
-          note: `${n}-space indentation compressed into a SINGLE token!`,
+          note: `${n} 格空白的縮排壓縮為單一詞元！`,
         };
       }
       if (/^\t+$/.test(piece)) {
@@ -759,7 +759,7 @@
           id,
           cat: "code",
           verified: true,
-          note: n === 1 ? "Tab character token" : `${n}-tab indentation compressed into a single token`,
+          note: n === 1 ? "Tab 字元詞元" : `${n} 個 Tab 的縮排壓縮為單一詞元`,
         };
       }
       const clean = piece.replace(/^▁/, "");
@@ -770,7 +770,7 @@
           id,
           cat: "subword",
           verified: true,
-          note: "Dedicated emoji token in Gemma 4's 262K vocabulary (no UTF-8 byte fallback needed)",
+          note: "Gemma 4 的 262K 詞彙表中的專用表情符號詞元（無需 UTF-8 位元組備援）",
         };
       }
       if (clean.length > 0 && !/[\p{L}\p{N}]/u.test(clean)) {
@@ -781,8 +781,8 @@
           cat: "code",
           verified: true,
           note: piece.startsWith("▁")
-            ? "Space + punctuation / operator token"
-            : "Punctuation / operator token",
+            ? "空白 + 標點符號 / 運算子詞元"
+            : "標點符號 / 運算子詞元",
         };
       }
       const prevP = i > 0 ? rawTokens[i - 1] : null;
@@ -797,8 +797,8 @@
           cat: "subword",
           verified: true,
           note: !hasLeftAttach
-            ? "Initial subword piece from Gemma 4's 262K vocabulary"
-            : "Subword continuation piece from Gemma 4's 262K vocabulary",
+            ? "來自 Gemma 4 的 262K 詞彙表的起始子詞片段"
+            : "來自 Gemma 4 的 262K 詞彙表的子詞接續片段",
         };
       }
       if (CODE_KEYWORDS.has(clean)) {
@@ -808,7 +808,7 @@
           id,
           cat: "code",
           verified: true,
-          note: "Programming keyword token in Gemma 4's vocabulary",
+          note: "Gemma 4 詞彙表中的程式設計關鍵字詞元",
         };
       }
       return {
@@ -818,15 +818,15 @@
         cat: "word",
         verified: true,
         note: piece.startsWith("▁")
-          ? "Whole word with leading space marker ▁ (U+2581)"
-          : "Whole word token in Gemma 4's 262K vocabulary",
+          ? "帶有前導空白標記 ▁ (U+2581) 的完整單詞"
+          : "Gemma 4 的 262K 詞彙表中的完整單詞詞元",
       };
     });
   };
 
   const createRealTokenizerService = () => {
     let status = "idle"; // "idle" | "loading" | "ready" | "error"
-    let statusLabel = "Loading Gemma 4 tokenizer…";
+    let statusLabel = "正在載入 Gemma 4 分詞器…";
     let worker = null;
     let mainTokenizer = null;
     let initPromise = null;
@@ -917,10 +917,10 @@
     const fetchTokenizerArtifacts = async (onProgress) => {
       const cached = await idbRead();
       if (cached && cached.jsonBytes && cached.configText) {
-        onProgress("Initializing cached Gemma 4 BPE…");
+        onProgress("正在初始化已快取的 Gemma 4 BPE…");
         return cached;
       }
-      onProgress("Downloading tokenizer.json (0%)…");
+      onProgress("正在下載 tokenizer.json (0%)…");
       const [tokRes, cfgRes] = await Promise.all([
         fetch(GEMMA4_TOKENIZER_URLS.tokenizerJson),
         fetch(GEMMA4_TOKENIZER_URLS.tokenizerConfig),
@@ -945,7 +945,7 @@
           if (now - lastTick > 80) {
             lastTick = now;
             const pct = Math.min(99, Math.round((loaded / total) * 100));
-            onProgress(`Downloading tokenizer.json (${pct}%)…`);
+            onProgress(`正在下載 tokenizer.json (${pct}%)…`);
           }
         }
         jsonBytes = new Uint8Array(loaded);
@@ -1113,21 +1113,21 @@
     const ensureReady = () => {
       if (status === "ready") return Promise.resolve(true);
       if (initPromise) return initPromise;
-      setStatus("loading", "Loading Gemma 4 tokenizer…");
+      setStatus("loading", "正在載入 Gemma 4 分詞器…");
       initPromise = (async () => {
         try {
           const artifacts = await fetchTokenizerArtifacts((msg) => setStatus("loading", msg));
-          setStatus("loading", "Building 262K BPE table…");
+          setStatus("loading", "正在建立 262K BPE 表…");
           try {
             await startWorkerEngine(artifacts);
           } catch (_) {
             await startMainThreadEngine(artifacts);
           }
-          setStatus("ready", "● Live: google/gemma-4-E2B-it");
+          setStatus("ready", "● 即時連線：google/gemma-4-E2B-it");
           return true;
         } catch (_) {
           initPromise = null;
-          setStatus("error", "⚠ Offline subset · Click to retry");
+          setStatus("error", "⚠ 離線子集 · 點選重試");
           return false;
         }
       })();
@@ -1173,31 +1173,31 @@
 
   const TOKEN_CAT_META = {
     word: {
-      name: "Whole Word Token",
+      name: "完整單詞詞元",
       bg: "var(--gemma-cat-turn-bg)",
       fg: "var(--gemma-cat-turn-fg)",
       border: "var(--gemma-cat-turn-border)",
     },
     subword: {
-      name: "Subword Piece",
+      name: "子詞片段",
       bg: "var(--gemma-cat-multi-bg)",
       fg: "var(--gemma-cat-multi-fg)",
       border: "var(--gemma-cat-multi-border)",
     },
     digit: {
-      name: "Individual Digit Token",
+      name: "個別數字詞元",
       bg: "var(--gemma-cat-think-bg)",
       fg: "var(--gemma-cat-think-fg)",
       border: "var(--gemma-cat-think-border)",
     },
     control: {
-      name: "Special Control Token",
+      name: "特殊控制詞元",
       bg: "var(--gemma-cat-role-bg)",
       fg: "var(--gemma-cat-role-fg)",
       border: "var(--gemma-cat-role-border)",
     },
     code: {
-      name: "Code / Punctuation Token",
+      name: "程式碼 / 標點符號詞元",
       bg: "var(--gemma-cat-tool-bg)",
       fg: "var(--gemma-cat-tool-fg)",
       border: "var(--gemma-cat-tool-border)",
@@ -1216,17 +1216,17 @@
 
     el.innerHTML = `
       <div class="llm-widget__header">
-        <p class="llm-widget__title">Interactive: Gemma 4 SentencePiece Tokenizer</p>
+        <p class="llm-widget__title">互動示範：Gemma 4 SentencePiece 分詞器</p>
         <div class="llm-pill-row" style="margin-bottom:0">
-          <span class="llm-widget__badge llm-widget__badge--loading" data-role="engine-status" title="Real google/gemma-4-E2B-it tokenizer via @huggingface/tokenizers">Loading Gemma 4 tokenizer…</span>
-          <span class="llm-widget__badge">Vocab: 262,144 tokens</span>
+          <span class="llm-widget__badge llm-widget__badge--loading" data-role="engine-status" title="透過 @huggingface/tokenizers 執行真正的 google/gemma-4-E2B-it 分詞器">正在載入 Gemma 4 分詞器…</span>
+          <span class="llm-widget__badge">詞彙表：262,144 個詞元</span>
         </div>
       </div>
-      <div class="llm-toolbar llm-toolbar--compact" role="group" aria-label="Select text scenario">
-        <span class="llm-toolbar__label">Scenario</span>
+      <div class="llm-toolbar llm-toolbar--compact" role="group" aria-label="選擇文字情境">
+        <span class="llm-toolbar__label">情境</span>
         <div class="llm-toolbar__group" data-role="presets"></div>
       </div>
-      <textarea class="llm-input" rows="1" data-role="input" spellcheck="false" aria-label="Text to tokenize with Gemma 4"></textarea>
+      <textarea class="llm-input" rows="1" data-role="input" spellcheck="false" aria-label="要用 Gemma 4 切分為詞元的文字"></textarea>
       <div class="llm-panel llm-scanner-wrap" data-role="stream-panel">
         <div class="llm-token-stream" data-role="stream"></div>
       </div>
@@ -1331,27 +1331,27 @@
             <span class="llm-widget__badge" style="background:${catMeta.bg};border-color:${catMeta.border};color:${catMeta.fg};">${catMeta.name}</span>
             <span style="color:var(--gemma-text-secondary)">— ${escapeHtml(active.note)}</span>
           </div>
-          <svg viewBox="0 0 420 26" style="width:100%;height:26px;display:block;margin-top:0.35rem;" aria-label="Vocabulary lookup beam">
+          <svg viewBox="0 0 420 26" style="width:100%;height:26px;display:block;margin-top:0.35rem;" aria-label="詞彙表查詢光束">
             <rect x="2" y="5" width="96" height="16" rx="3" fill="${catMeta.bg}" stroke="${catMeta.fg}" />
             <text x="50" y="16" text-anchor="middle" font-size="9.5" font-family="monospace" font-weight="700" fill="${catMeta.fg}">${escapeHtml(svgTokLabel)}</text>
             <line x1="98" y1="13" x2="${125 + vocabPct * 1.6}" y2="13" stroke="${catMeta.fg}" stroke-width="2" class="llm-beam-line" />
             <rect x="125" y="5" width="290" height="16" rx="3" fill="var(--gemma-surface-sunken)" stroke="var(--gemma-border-strong)" />
             <rect x="${125 + vocabPct * 2.6}" y="5" width="28" height="16" rx="2" fill="${catMeta.bg}" stroke="${catMeta.fg}" stroke-width="1.2" />
-            <text x="270" y="16" text-anchor="middle" font-size="9" font-family="monospace" fill="var(--gemma-text-secondary)">262,144 Vocab Row ${isVerified ? "#" : "~#"}${active.id}</text>
+            <text x="270" y="16" text-anchor="middle" font-size="9" font-family="monospace" fill="var(--gemma-text-secondary)">262,144 詞彙表列 ${isVerified ? "#" : "~#"}${active.id}</text>
           </svg>
         `;
       } else {
-        inspectorEl.innerHTML = `<span style="font-size:0.82rem;color:var(--gemma-text-muted)">Type above to inspect real Gemma 4 tokens.</span>`;
+        inspectorEl.innerHTML = `<span style="font-size:0.82rem;color:var(--gemma-text-muted)">在上方輸入文字，檢視真正的 Gemma 4 詞元。</span>`;
       }
 
       const charCount = currentText.length;
       const tokCount = tokens.length;
       const ratioNum = tokCount ? charCount / tokCount : 0;
       statsEl.innerHTML = `
-        <div class="llm-stat">Characters<strong data-stat="chars">${charCount}</strong></div>
-        <div class="llm-stat">Gemma 4 Tokens<strong data-stat="toks">${tokCount}</strong></div>
-        <div class="llm-stat">Chars / Token<strong data-stat="ratio">${ratioNum.toFixed(2)}</strong></div>
-        <div class="llm-stat">Vocabulary Size<strong>262,144</strong></div>
+        <div class="llm-stat">字元數<strong data-stat="chars">${charCount}</strong></div>
+        <div class="llm-stat">Gemma 4 詞元數<strong data-stat="toks">${tokCount}</strong></div>
+        <div class="llm-stat">每詞元字元數<strong data-stat="ratio">${ratioNum.toFixed(2)}</strong></div>
+        <div class="llm-stat">詞彙表大小<strong>262,144</strong></div>
       `;
 
       if (animateEntrance) {
@@ -1500,27 +1500,27 @@
      values + illustrative 2D semantic projection & PLE circuit visuals.
      ===================================================================== */
   const EMBED_POINTS = [
-    // Animals & Multimodal (Dims 0-2 active: cos(cat,kitten)=0.43, cos(kitten,puppy)=0.54, cos(kitten-cat+dog,puppy)=0.51)
-    { label: "▁cat", shortLabel: "▁cat", id: 5866, x: 84, y: 76, cluster: "Animals & Multimodal", realVec8: [-0.0049, -0.0491, -0.0098, 0.0133, 0.0476, -0.0437, 0.0315, -0.0099], vec: [1.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000] },
-    { label: "▁kitten", shortLabel: "▁kitten", id: 55095, x: 146, y: 46, cluster: "Animals & Multimodal", realVec8: [0.0801, -0.0488, -0.0084, 0.0308, 0.0193, -0.0403, -0.0053, -0.0043], vec: [0.4300, 0.9028, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000] },
-    { label: "▁dog", shortLabel: "▁dog", id: 4799, x: 90, y: 118, cluster: "Animals & Multimodal", realVec8: [-0.0059, -0.0237, -0.0186, -0.0074, -0.0176, 0.0184, 0.0466, -0.0898], vec: [0.5200, 0.0736, 0.8510, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000] },
-    { label: "▁puppy", shortLabel: "▁puppy", id: 34646, x: 152, y: 88, cluster: "Animals & Multimodal", realVec8: [0.0576, -0.0091, 0.0104, -0.0002, 0.0371, 0.0347, 0.0537, -0.0063], vec: [0.3300, 0.4409, 0.2200, 0.0000, 0.0000, 0.0000, 0.8054, 0.0000] },
-    { label: "🖼 [Image: cat]", shortLabel: "🖼 Image", id: 258880, x: 22, y: 46, cluster: "Animals & Multimodal", isSoftToken: true, realVec8: [-0.0018, -0.0029, 0.0596, -0.0439, 0.0171, 0.0055, 0.0093, 0.0309], vec: [0.6800, 0.3400, 0.0800, 0.0000, 0.0000, 0.0000, 0.0000, 0.6447] },
-    { label: "🔊 [Audio: meow]", shortLabel: "🔊 Audio", id: 258881, x: 22, y: 108, cluster: "Animals & Multimodal", isSoftToken: true, realVec8: [-0.0003, -0.0015, 0.0569, -0.0459, 0.0192, 0.0053, 0.0082, 0.0284], vec: [0.6400, 0.3100, 0.1200, 0.0000, 0.0000, 0.0000, 0.0000, -0.6927] },
-    // Royalty & People (Dims 3-5 active: cos(king,queen)=0.58, cos(man,woman)=0.60, cos(king-man+woman,queen)=0.56)
-    { label: "▁king", shortLabel: "▁king", id: 9615, x: 244, y: 52, cluster: "Royalty & People", realVec8: [-0.0199, -0.0092, 0.0525, -0.0361, -0.0054, 0.0488, 0.0325, -0.0262], vec: [0.0000, 0.0000, 0.0000, 0.7200, 0.4583, -0.5212, 0.0000, 0.0000] },
-    { label: "▁queen", shortLabel: "▁queen", id: 26476, x: 332, y: 48, cluster: "Royalty & People", realVec8: [-0.0147, 0.0347, 0.0405, -0.0193, 0.0605, 0.0154, 0.0022, -0.0013], vec: [0.0000, 0.0000, 0.0000, 0.7200, -0.4583, -0.5212, 0.0000, 0.0000] },
-    { label: "▁man", shortLabel: "▁man", id: 880, x: 230, y: 112, cluster: "Royalty & People", realVec8: [0.0063, 0.0126, 0.0070, 0.0072, 0.0002, -0.0447, 0.0074, 0.0073], vec: [0.0000, 0.0000, 0.0000, 0.7500, 0.4472, 0.4873, 0.0000, 0.0000] },
-    { label: "▁woman", shortLabel: "▁woman", id: 3875, x: 318, y: 108, cluster: "Royalty & People", realVec8: [0.0008, 0.0130, 0.0059, 0.0220, 0.0161, -0.0282, 0.0060, -0.0086], vec: [0.0000, 0.0000, 0.0000, 0.7500, -0.4472, 0.4873, 0.0000, 0.0000] },
-    // Tech & AI
-    { label: "▁Gemma", shortLabel: "▁Gemma", id: 147224, x: 238, y: 176, cluster: "Tech & AI", realVec8: [-0.0087, 0.0037, 0.0039, 0.0311, -0.0398, 0.0220, 0.0200, 0.0298], vec: [0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.7800, 0.6258] },
-    { label: "▁model", shortLabel: "▁model", id: 2028, x: 328, y: 216, cluster: "Tech & AI", realVec8: [0.0041, 0.0074, 0.0542, 0.0669, 0.0007, 0.0273, 0.0115, -0.0281], vec: [0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.2800, 0.6800, 0.6776] },
-    { label: "▁token", shortLabel: "▁token", id: 8369, x: 230, y: 218, cluster: "Tech & AI", realVec8: [0.0154, -0.0182, 0.0469, -0.0294, -0.0021, -0.0393, 0.0305, -0.0513], vec: [0.0000, 0.0000, 0.0000, 0.0000, 0.2500, 0.0000, 0.6400, 0.7266] },
-    { label: "▁neural", shortLabel: "▁neural", id: 22823, x: 326, y: 170, cluster: "Tech & AI", realVec8: [-0.0222, 0.0043, 0.0276, -0.0283, -0.0188, -0.0186, 0.0239, 0.0210], vec: [0.0000, 0.0000, 0.0000, 0.0000, -0.2500, 0.0000, 0.7100, 0.6583] },
-    // Actions & Code
-    { label: "▁run", shortLabel: "▁run", id: 1845, x: 46, y: 174, cluster: "Actions & Code", realVec8: [0.0062, -0.0062, 0.0128, -0.0087, 0.0292, -0.0214, 0.0552, 0.0001], vec: [0.0000, 0.0000, 0.1800, 0.0000, 0.0000, 0.0000, -0.7600, 0.6245] },
-    { label: "▁sprint", shortLabel: "▁sprint", id: 29991, x: 34, y: 214, cluster: "Actions & Code", realVec8: [0.0767, -0.0620, -0.0143, -0.0854, 0.0110, -0.0267, 0.0723, 0.0309], vec: [0.0000, 0.1500, 0.0000, 0.0000, 0.0000, 0.0000, -0.6800, 0.7177] },
-    { label: "▁python", shortLabel: "▁python", id: 23181, x: 122, y: 194, cluster: "Actions & Code", realVec8: [0.0011, 0.0532, -0.0038, -0.0461, -0.0085, 0.0535, -0.0206, 0.0250], vec: [0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, -0.3200, 0.9474] },
+    // 動物與多模態 (Dims 0-2 active: cos(cat,kitten)=0.43, cos(kitten,puppy)=0.54, cos(kitten-cat+dog,puppy)=0.51)
+    { label: "▁cat", shortLabel: "▁cat", id: 5866, x: 84, y: 76, cluster: "動物與多模態", realVec8: [-0.0049, -0.0491, -0.0098, 0.0133, 0.0476, -0.0437, 0.0315, -0.0099], vec: [1.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000] },
+    { label: "▁kitten", shortLabel: "▁kitten", id: 55095, x: 146, y: 46, cluster: "動物與多模態", realVec8: [0.0801, -0.0488, -0.0084, 0.0308, 0.0193, -0.0403, -0.0053, -0.0043], vec: [0.4300, 0.9028, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000] },
+    { label: "▁dog", shortLabel: "▁dog", id: 4799, x: 90, y: 118, cluster: "動物與多模態", realVec8: [-0.0059, -0.0237, -0.0186, -0.0074, -0.0176, 0.0184, 0.0466, -0.0898], vec: [0.5200, 0.0736, 0.8510, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000] },
+    { label: "▁puppy", shortLabel: "▁puppy", id: 34646, x: 152, y: 88, cluster: "動物與多模態", realVec8: [0.0576, -0.0091, 0.0104, -0.0002, 0.0371, 0.0347, 0.0537, -0.0063], vec: [0.3300, 0.4409, 0.2200, 0.0000, 0.0000, 0.0000, 0.8054, 0.0000] },
+    { label: "🖼 [Image: cat]", shortLabel: "🖼 影像", id: 258880, x: 22, y: 46, cluster: "動物與多模態", isSoftToken: true, realVec8: [-0.0018, -0.0029, 0.0596, -0.0439, 0.0171, 0.0055, 0.0093, 0.0309], vec: [0.6800, 0.3400, 0.0800, 0.0000, 0.0000, 0.0000, 0.0000, 0.6447] },
+    { label: "🔊 [Audio: meow]", shortLabel: "🔊 音訊", id: 258881, x: 22, y: 108, cluster: "動物與多模態", isSoftToken: true, realVec8: [-0.0003, -0.0015, 0.0569, -0.0459, 0.0192, 0.0053, 0.0082, 0.0284], vec: [0.6400, 0.3100, 0.1200, 0.0000, 0.0000, 0.0000, 0.0000, -0.6927] },
+    // 王室與人物 (Dims 3-5 active: cos(king,queen)=0.58, cos(man,woman)=0.60, cos(king-man+woman,queen)=0.56)
+    { label: "▁king", shortLabel: "▁king", id: 9615, x: 244, y: 52, cluster: "王室與人物", realVec8: [-0.0199, -0.0092, 0.0525, -0.0361, -0.0054, 0.0488, 0.0325, -0.0262], vec: [0.0000, 0.0000, 0.0000, 0.7200, 0.4583, -0.5212, 0.0000, 0.0000] },
+    { label: "▁queen", shortLabel: "▁queen", id: 26476, x: 332, y: 48, cluster: "王室與人物", realVec8: [-0.0147, 0.0347, 0.0405, -0.0193, 0.0605, 0.0154, 0.0022, -0.0013], vec: [0.0000, 0.0000, 0.0000, 0.7200, -0.4583, -0.5212, 0.0000, 0.0000] },
+    { label: "▁man", shortLabel: "▁man", id: 880, x: 230, y: 112, cluster: "王室與人物", realVec8: [0.0063, 0.0126, 0.0070, 0.0072, 0.0002, -0.0447, 0.0074, 0.0073], vec: [0.0000, 0.0000, 0.0000, 0.7500, 0.4472, 0.4873, 0.0000, 0.0000] },
+    { label: "▁woman", shortLabel: "▁woman", id: 3875, x: 318, y: 108, cluster: "王室與人物", realVec8: [0.0008, 0.0130, 0.0059, 0.0220, 0.0161, -0.0282, 0.0060, -0.0086], vec: [0.0000, 0.0000, 0.0000, 0.7500, -0.4472, 0.4873, 0.0000, 0.0000] },
+    // 科技與 AI
+    { label: "▁Gemma", shortLabel: "▁Gemma", id: 147224, x: 238, y: 176, cluster: "科技與 AI", realVec8: [-0.0087, 0.0037, 0.0039, 0.0311, -0.0398, 0.0220, 0.0200, 0.0298], vec: [0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.7800, 0.6258] },
+    { label: "▁model", shortLabel: "▁model", id: 2028, x: 328, y: 216, cluster: "科技與 AI", realVec8: [0.0041, 0.0074, 0.0542, 0.0669, 0.0007, 0.0273, 0.0115, -0.0281], vec: [0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.2800, 0.6800, 0.6776] },
+    { label: "▁token", shortLabel: "▁token", id: 8369, x: 230, y: 218, cluster: "科技與 AI", realVec8: [0.0154, -0.0182, 0.0469, -0.0294, -0.0021, -0.0393, 0.0305, -0.0513], vec: [0.0000, 0.0000, 0.0000, 0.0000, 0.2500, 0.0000, 0.6400, 0.7266] },
+    { label: "▁neural", shortLabel: "▁neural", id: 22823, x: 326, y: 170, cluster: "科技與 AI", realVec8: [-0.0222, 0.0043, 0.0276, -0.0283, -0.0188, -0.0186, 0.0239, 0.0210], vec: [0.0000, 0.0000, 0.0000, 0.0000, -0.2500, 0.0000, 0.7100, 0.6583] },
+    // 動作與程式碼
+    { label: "▁run", shortLabel: "▁run", id: 1845, x: 46, y: 174, cluster: "動作與程式碼", realVec8: [0.0062, -0.0062, 0.0128, -0.0087, 0.0292, -0.0214, 0.0552, 0.0001], vec: [0.0000, 0.0000, 0.1800, 0.0000, 0.0000, 0.0000, -0.7600, 0.6245] },
+    { label: "▁sprint", shortLabel: "▁sprint", id: 29991, x: 34, y: 214, cluster: "動作與程式碼", realVec8: [0.0767, -0.0620, -0.0143, -0.0854, 0.0110, -0.0267, 0.0723, 0.0309], vec: [0.0000, 0.1500, 0.0000, 0.0000, 0.0000, 0.0000, -0.6800, 0.7177] },
+    { label: "▁python", shortLabel: "▁python", id: 23181, x: 122, y: 194, cluster: "動作與程式碼", realVec8: [0.0011, 0.0532, -0.0038, -0.0461, -0.0085, 0.0535, -0.0206, 0.0250], vec: [0.0000, 0.0000, 0.0000, 0.0000, 0.0000, 0.0000, -0.3200, 0.9474] },
   ];
 
   const cosineSim = (a, b) => {
@@ -1543,9 +1543,9 @@
       idxC: 9, // ▁woman (318, 108)
       idxD: 7, // ▁queen (332, 48)
       activeSet: [6, 7, 8, 9],
-      deltaLabel: "Δ Royalty (+14, −60)",
+      deltaLabel: "Δ 王室 (+14, −60)",
       sim1536d: "0.56",
-      steps: ["1. Δ = A − B", "2. Shift Δ → C", "3. C + Δ ≈ D"],
+      steps: ["1. Δ = A − B", "2. 將 Δ 平移到 C", "3. C + Δ ≈ D"],
     },
     pets: {
       hudFormula: "vec(▁kitten) − vec(▁cat) + vec(▁dog) ≈ vec(▁puppy)",
@@ -1554,19 +1554,19 @@
       idxC: 2, // ▁dog (90, 118)
       idxD: 3, // ▁puppy (152, 88)
       activeSet: [0, 1, 2, 3],
-      deltaLabel: "Δ Youth (+62, −30)",
+      deltaLabel: "Δ 年輕 (+62, −30)",
       sim1536d: "0.51",
-      steps: ["1. Δ = A − B", "2. Shift Δ → C", "3. C + Δ ≈ D"],
+      steps: ["1. Δ = A − B", "2. 將 Δ 平移到 C", "3. C + Δ ≈ D"],
     },
     multimodal: {
       hudFormula: "Proj(🖼 #258880) ≈ Proj(🔊 #258881) ≈ vec(▁cat #5866)",
-      idxA: 4, // 🖼 Image
-      idxB: 5, // 🔊 Audio
+      idxA: 4, // 🖼 影像
+      idxB: 5, // 🔊 音訊
       idxC: 0, // ▁cat
       idxD: 0, // ▁cat
       activeSet: [0, 4, 5],
       sim1536d: "1,536-d",
-      steps: ["1. Vision Proj", "2. Audio Proj", "3. Shared Space"],
+      steps: ["1. 視覺投影", "2. 音訊投影", "3. 共享空間"],
     },
   };
 
@@ -1605,7 +1605,7 @@
     },
     {
       id: "12b",
-      pill: "12B · No PLE",
+      pill: "12B · 無 PLE",
       shortTag: "12B",
       fullName: "Gemma 4 12B Unified",
       hasPle: false,
@@ -1621,7 +1621,7 @@
     },
     {
       id: "26b",
-      pill: "26B MoE · No PLE",
+      pill: "26B MoE · 無 PLE",
       shortTag: "26B",
       fullName: "Gemma 4 26B A4B MoE",
       hasPle: false,
@@ -1637,7 +1637,7 @@
     },
     {
       id: "31b",
-      pill: "31B · No PLE",
+      pill: "31B · 無 PLE",
       shortTag: "31B",
       fullName: "Gemma 4 31B Dense",
       hasPle: false,
@@ -1653,7 +1653,7 @@
     },
   ];
 
-  const PLE_SAMPLE_IDXS = [0, 6, 16, 4]; // ▁cat, ▁king, ▁python, 🖼 Image
+  const PLE_SAMPLE_IDXS = [0, 6, 16, 4]; // ▁cat, ▁king, ▁python, 🖼 影像
 
   const SPACE_TOUR_ORDER = [0, 1, 4, 5, 6, 7, 16, 12];
 
@@ -1682,12 +1682,12 @@
 
     el.innerHTML = `
       <div class="llm-widget__header">
-        <p class="llm-widget__title">Semantic Vector Space &amp; Per-Layer Embeddings (PLE)</p>
-        <div class="llm-toolbar__group" role="group" aria-label="Embeddings view mode">
-          <span class="llm-toolbar__label">View</span>
+        <p class="llm-widget__title">語意向量空間 &amp; 逐層嵌入 (PLE)</p>
+        <div class="llm-toolbar__group" role="group" aria-label="嵌入檢視模式">
+          <span class="llm-toolbar__label">檢視</span>
           <div class="llm-seg">
-            <button type="button" class="llm-seg__btn llm-seg__btn--active" data-emb-tab="space">Tab A: Lookup &amp; Vector Space</button>
-            <button type="button" class="llm-seg__btn" data-emb-tab="ple">Tab B: Per-Layer Embeddings (PLE)</button>
+            <button type="button" class="llm-seg__btn llm-seg__btn--active" data-emb-tab="space">分頁 A：查詢與向量空間</button>
+            <button type="button" class="llm-seg__btn" data-emb-tab="ple">分頁 B：逐層嵌入 (PLE)</button>
           </div>
         </div>
       </div>
@@ -2004,7 +2004,7 @@
           )
           .join("");
 
-        const hudText = `${cfg.hudFormula}  ·  1536d cos = ${cfg.sim1536d}`;
+        const hudText = `${cfg.hudFormula}  ·  1536d 餘弦相似度 = ${cfg.sim1536d}`;
         overlaySvg = `
           ${polyFill}
           ${roleBadges}
@@ -2083,7 +2083,7 @@
         ? `
           <rect x="110" y="22" width="96" height="34" rx="5" fill="var(--gemma-cat-multi-bg)" stroke="var(--gemma-cat-multi-border)" stroke-width="1.2" stroke-dasharray="3 2" />
           <text x="158" y="36" text-anchor="middle" font-size="7.6" font-weight="700" font-family="monospace" fill="var(--gemma-cat-multi-fg)">${target.id === 258880 ? "vision_proj" : "audio_proj"}</text>
-          <text x="158" y="48" text-anchor="middle" font-size="6.8" font-family="monospace" fill="var(--gemma-text-secondary)">runtime → 1,536d</text>
+          <text x="158" y="48" text-anchor="middle" font-size="6.8" font-family="monospace" fill="var(--gemma-text-secondary)">執行階段 → 1,536d</text>
         `
         : `
           <rect x="110" y="21" width="96" height="36" rx="4" fill="var(--gemma-surface)" stroke="var(--gemma-border-strong)" />
@@ -2127,12 +2127,12 @@
       if (!bodyEl.querySelector('[data-role="space-stage"]')) {
         bodyEl.innerHTML = `
           <div class="llm-toolbar" data-role="space-toolbar" style="justify-content:space-between;margin-bottom:var(--gemma-space-2);">
-            <div class="llm-toolbar__group" role="group" aria-label="Select vector scenario">
-              <span class="llm-toolbar__label">Scenario</span>
-              <button type="button" class="llm-scenario-btn" data-analogy="none">Free Explore</button>
+            <div class="llm-toolbar__group" role="group" aria-label="選擇向量情境">
+              <span class="llm-toolbar__label">情境</span>
+              <button type="button" class="llm-scenario-btn" data-analogy="none">自由探索</button>
               <button type="button" class="llm-scenario-btn" data-analogy="royalty">king − man + woman ≈ queen</button>
               <button type="button" class="llm-scenario-btn" data-analogy="pets">kitten − cat + dog ≈ puppy</button>
-              <button type="button" class="llm-scenario-btn" data-analogy="multimodal">🖼 Image + 🔊 Audio ≈ ▁cat</button>
+              <button type="button" class="llm-scenario-btn" data-analogy="multimodal">🖼 影像 + 🔊 音訊 ≈ ▁cat</button>
             </div>
             <div data-role="space-toolbar-right" style="display:inline-flex;align-items:center;gap:0.35rem;"></div>
           </div>
@@ -2154,7 +2154,7 @@
             spaceRightEl.innerHTML = `
               <button type="button" class="llm-action-btn" data-action="tour-space"></button>
               <button type="button" class="llm-action-btn" data-action="jump-ple">
-                ⚡ PLE Layer Injection &rarr;
+                ⚡ PLE 層注入 &rarr;
               </button>
             `;
           } else {
@@ -2179,7 +2179,7 @@
           if (tourBtn) {
             tourBtn.classList.toggle("llm-action-btn--running", Boolean(spaceTourTimer));
             tourBtn.classList.toggle("llm-btn--primary", !spaceTourTimer);
-            const nextTxt = spaceTourTimer ? "⏸ Stop" : "▶ Auto-Tour";
+            const nextTxt = spaceTourTimer ? "⏸ 停止" : "▶ 自動導覽";
             if (tourBtn.textContent !== nextTxt) tourBtn.textContent = nextTxt;
           }
         } else {
@@ -2192,7 +2192,7 @@
           if (replayBtn) {
             replayBtn.classList.toggle("llm-action-btn--running", Boolean(analogyTimer));
             replayBtn.classList.toggle("llm-btn--primary", !analogyTimer);
-            const nextTxt = analogyTimer ? "⏸ Stop" : "↻ Replay";
+            const nextTxt = analogyTimer ? "⏸ 停止" : "↻ 重播";
             if (replayBtn.textContent !== nextTxt) replayBtn.textContent = nextTxt;
           }
         }
@@ -2201,17 +2201,17 @@
       const spaceStageEl = bodyEl.querySelector('[data-role="space-stage"]');
       spaceStageEl.innerHTML = `
         <div class="llm-split">
-          <svg class="llm-svg-stage" viewBox="0 0 420 264" data-role="canvas" aria-label="2D semantic projection of Gemma 4 embedding space">
+          <svg class="llm-svg-stage" viewBox="0 0 420 264" data-role="canvas" aria-label="Gemma 4 嵌入空間的 2D 語意投影">
             <!-- Semantic Cluster Regions -->
             <rect x="8" y="8" width="194" height="126" rx="8" fill="var(--gemma-cat-turn-bg)" fill-opacity="0.34" stroke="var(--gemma-cat-turn-border)" stroke-opacity="0.6" />
             <rect x="210" y="8" width="202" height="126" rx="8" fill="var(--gemma-cat-think-bg)" fill-opacity="0.3" stroke="var(--gemma-cat-think-border)" stroke-opacity="0.6" />
             <rect x="8" y="142" width="194" height="114" rx="8" fill="var(--gemma-cat-tool-bg)" fill-opacity="0.28" stroke="var(--gemma-cat-tool-border)" stroke-opacity="0.6" />
             <rect x="210" y="142" width="202" height="114" rx="8" fill="var(--gemma-cat-multi-bg)" fill-opacity="0.3" stroke="var(--gemma-cat-multi-border)" stroke-opacity="0.6" />
             ${gridLines.join("")}
-            <text x="16" y="20" fill="var(--gemma-cat-turn-fg)" font-size="8" font-family="monospace" font-weight="700">ANIMALS &amp; MULTIMODAL</text>
-            <text x="218" y="20" fill="var(--gemma-cat-think-fg)" font-size="8" font-family="monospace" font-weight="700">ROYALTY &amp; PEOPLE</text>
-            <text x="16" y="249" fill="var(--gemma-cat-tool-fg)" font-size="8" font-family="monospace" font-weight="700" opacity="${analogyMode ? "0.28" : "0.9"}">ACTIONS &amp; CODE</text>
-            <text x="404" y="249" text-anchor="end" fill="var(--gemma-cat-multi-fg)" font-size="8" font-family="monospace" font-weight="700" opacity="${analogyMode ? "0.28" : "0.9"}">TECH &amp; AI</text>
+            <text x="16" y="20" fill="var(--gemma-cat-turn-fg)" font-size="8" font-family="monospace" font-weight="700">動物與多模態</text>
+            <text x="218" y="20" fill="var(--gemma-cat-think-fg)" font-size="8" font-family="monospace" font-weight="700">王室與人物</text>
+            <text x="16" y="249" fill="var(--gemma-cat-tool-fg)" font-size="8" font-family="monospace" font-weight="700" opacity="${analogyMode ? "0.28" : "0.9"}">動作與程式碼</text>
+            <text x="404" y="249" text-anchor="end" fill="var(--gemma-cat-multi-fg)" font-size="8" font-family="monospace" font-weight="700" opacity="${analogyMode ? "0.28" : "0.9"}">科技與 AI</text>
             ${raysSvg}
             ${sonarSvg}
             ${overlaySvg}
@@ -2243,8 +2243,8 @@
 
           <div style="display:flex;flex-direction:column;gap:var(--gemma-space-2);">
             <!-- Card 1: O(1) Embedding Lookup + Verified E2B BF16 [:8] Heatmap -->
-            <svg class="llm-svg-stage" viewBox="0 0 304 118" aria-label="O(1) embedding table row lookup and BF16 vector slice">
-              <text x="10" y="14" font-size="8" font-weight="700" font-family="monospace" fill="var(--gemma-accent)">${target.isSoftToken ? "SOFT-TOKEN PROJECTION" : "O(1) TABLE LOOKUP · 262K × 1,536"}</text>
+            <svg class="llm-svg-stage" viewBox="0 0 304 118" aria-label="O(1) 嵌入表列查詢與 BF16 向量切片">
+              <text x="10" y="14" font-size="8" font-weight="700" font-family="monospace" fill="var(--gemma-accent)">${target.isSoftToken ? "軟詞元投影" : "O(1) 表格查詢 · 262K × 1,536"}</text>
               <text x="294" y="14" text-anchor="end" font-size="7.5" font-weight="700" font-family="monospace" fill="var(--gemma-text-muted)">ID #${target.id}</text>
 
               <!-- Token ID box -->
@@ -2276,7 +2276,7 @@
 
             <!-- Card 2: Cosine Angle Gauge + Interactive Nearest Neighbors -->
             <div class="llm-panel" style="margin-bottom:0;padding:0.5rem 0.65rem;">
-              <svg viewBox="0 0 304 38" style="width:100%;height:auto;display:block;margin-bottom:0.3rem;" aria-label="Cosine angle and similarity scale">
+              <svg viewBox="0 0 304 38" style="width:100%;height:auto;display:block;margin-bottom:0.3rem;" aria-label="餘弦角度與相似度刻度">
                 <!-- Angle quadrant -->
                 <line x1="${arcOriginX}" y1="${arcOriginY}" x2="${arcOriginX + vecLen}" y2="${arcOriginY}" stroke="var(--gemma-accent)" stroke-width="1.8" stroke-linecap="round" />
                 <line x1="${arcOriginX}" y1="${arcOriginY}" x2="${bx.toFixed(1)}" y2="${by.toFixed(1)}" stroke="var(--gemma-status-success)" stroke-width="1.8" stroke-linecap="round" />
@@ -2339,7 +2339,7 @@
       const earlyEnd = Math.round(m.layers * 0.29);
       const midEnd = Math.round(m.layers * 0.68);
       const activeBand = selectedPleLayer <= earlyEnd ? 0 : selectedPleLayer <= midEnd ? 1 : 2;
-      const bandLabels = ["Syntax / POS", "Semantics / Entity", "Phrasing / Next-Tok"];
+      const bandLabels = ["語法／詞性", "語意／實體", "措辭／下一個詞元"];
 
       const layerColsSvg = Array.from({ length: m.layers }, (_, i) => {
         const lNum = i + 1;
@@ -2413,9 +2413,9 @@
       const pleBusSvg = m.hasPle
         ? `
           <!-- Specialization Zone Labels -->
-          <text x="${(cx(1) + cx(earlyEnd)) / 2}" y="30" text-anchor="middle" font-size="7.2" font-family="monospace" font-weight="${activeBand === 0 ? "700" : "500"}" fill="${activeBand === 0 ? "var(--gemma-cat-think-fg)" : "var(--gemma-text-muted)"}">L1–L${earlyEnd} Syntax</text>
-          <text x="${(cx(earlyEnd + 1) + cx(midEnd)) / 2}" y="30" text-anchor="middle" font-size="7.2" font-family="monospace" font-weight="${activeBand === 1 ? "700" : "500"}" fill="${activeBand === 1 ? "var(--gemma-cat-think-fg)" : "var(--gemma-text-muted)"}">L${earlyEnd + 1}–L${midEnd} Semantics</text>
-          <text x="${(cx(midEnd + 1) + cx(m.layers)) / 2}" y="30" text-anchor="middle" font-size="7.2" font-family="monospace" font-weight="${activeBand === 2 ? "700" : "500"}" fill="${activeBand === 2 ? "var(--gemma-cat-think-fg)" : "var(--gemma-text-muted)"}">L${midEnd + 1}–L${m.layers} Phrasing</text>
+          <text x="${(cx(1) + cx(earlyEnd)) / 2}" y="30" text-anchor="middle" font-size="7.2" font-family="monospace" font-weight="${activeBand === 0 ? "700" : "500"}" fill="${activeBand === 0 ? "var(--gemma-cat-think-fg)" : "var(--gemma-text-muted)"}">L1–L${earlyEnd} 語法</text>
+          <text x="${(cx(earlyEnd + 1) + cx(midEnd)) / 2}" y="30" text-anchor="middle" font-size="7.2" font-family="monospace" font-weight="${activeBand === 1 ? "700" : "500"}" fill="${activeBand === 1 ? "var(--gemma-cat-think-fg)" : "var(--gemma-text-muted)"}">L${earlyEnd + 1}–L${midEnd} 語意</text>
+          <text x="${(cx(midEnd + 1) + cx(m.layers)) / 2}" y="30" text-anchor="middle" font-size="7.2" font-family="monospace" font-weight="${activeBand === 2 ? "700" : "500"}" fill="${activeBand === 2 ? "var(--gemma-cat-think-fg)" : "var(--gemma-text-muted)"}">L${midEnd + 1}–L${m.layers} 措辭</text>
 
           <!-- Flash PLE Distribution Rail -->
           <line x1="156" y1="40" x2="${cx(m.layers)}" y2="40" stroke="var(--gemma-status-warning)" stroke-width="1.8" stroke-dasharray="5 3" data-flow-wire="20" />
@@ -2425,7 +2425,7 @@
         : `
           <line x1="156" y1="38" x2="${cx(m.layers)}" y2="38" stroke="var(--gemma-border-strong)" stroke-width="1" stroke-dasharray="3 3" opacity="0.45" />
           <rect x="282" y="29" width="276" height="16" rx="8" fill="var(--gemma-surface-sunken)" stroke="var(--gemma-border-strong)" />
-          <text x="420" y="39.8" text-anchor="middle" font-size="7.4" font-family="monospace" font-weight="600" fill="var(--gemma-text-muted)">0B Flash PLE · Wide ${m.dModelFmt}-d Layer-0 stream in (V)RAM</text>
+          <text x="420" y="39.8" text-anchor="middle" font-size="7.4" font-family="monospace" font-weight="600" fill="var(--gemma-text-muted)">0B Flash PLE · (V)RAM 中的寬 ${m.dModelFmt}-d 第 0 層資料流</text>
         `;
 
       // --- Bottom-Left SVG (334 x 168): Layer PLE Gated Injection Circuit ---
@@ -2450,9 +2450,9 @@
         `;
 
       const circuitLeftSvg = `
-        <svg class="llm-svg-stage" viewBox="0 0 334 168" style="${gateHot && m.hasPle ? "border-color:var(--gemma-status-success);box-shadow:var(--gemma-shadow-sm);" : sliceHot && m.hasPle ? "border-color:var(--gemma-status-warning);box-shadow:var(--gemma-shadow-sm);" : ""}" aria-label="Per-Layer Embedding gated injection circuit">
-          <text x="10" y="16" font-size="8.8" font-weight="700" font-family="monospace" fill="${gateHot && m.hasPle ? "var(--gemma-cat-tool-fg)" : "var(--md-default-fg-color)"}">L${selectedPleLayer} · ${m.hasPle ? "PLE Gate Circuit" : "Bypassed (No PLE)"}</text>
-          <text x="324" y="16" text-anchor="end" font-size="7.6" font-weight="700" font-family="monospace" fill="${m.hasPle ? "var(--gemma-cat-think-fg)" : "var(--gemma-text-muted)"}">${m.hasPle ? `${m.dModelFmt} → 256 → ${m.dModelFmt}` : `h_l (${m.dModelFmt}-d) direct`}</text>
+        <svg class="llm-svg-stage" viewBox="0 0 334 168" style="${gateHot && m.hasPle ? "border-color:var(--gemma-status-success);box-shadow:var(--gemma-shadow-sm);" : sliceHot && m.hasPle ? "border-color:var(--gemma-status-warning);box-shadow:var(--gemma-shadow-sm);" : ""}" aria-label="逐層嵌入門控注入電路">
+          <text x="10" y="16" font-size="8.8" font-weight="700" font-family="monospace" fill="${gateHot && m.hasPle ? "var(--gemma-cat-tool-fg)" : "var(--md-default-fg-color)"}">L${selectedPleLayer} · ${m.hasPle ? "PLE 門控電路" : "已繞過（無 PLE）"}</text>
+          <text x="324" y="16" text-anchor="end" font-size="7.6" font-weight="700" font-family="monospace" fill="${m.hasPle ? "var(--gemma-cat-think-fg)" : "var(--gemma-text-muted)"}">${m.hasPle ? `${m.dModelFmt} → 256 → ${m.dModelFmt}` : `h_l (${m.dModelFmt}-d) 直接通過`}</text>
           <line x1="8" y1="23" x2="326" y2="23" stroke="var(--gemma-border)" />
 
           <!-- Main Residual Stream h_l -> h'_l -->
@@ -2466,7 +2466,7 @@
             <path d="M 56 44 L 56 80 L 192 80 L 192 99.5" fill="none" stroke="var(--gemma-cat-think-border)" stroke-width="1.5" ${m.hasPle ? "" : 'stroke-dasharray="3 2"'} />
             <rect x="64" y="68" width="72" height="24" rx="4" fill="var(--gemma-surface-sunken)" stroke="var(--gemma-border-strong)" />
             <text x="100" y="79" text-anchor="middle" font-size="7.4" font-weight="700" font-family="monospace" fill="var(--md-default-fg-color)">input_gate</text>
-            <text x="100" y="88" text-anchor="middle" font-size="6.6" font-family="monospace" fill="var(--gemma-text-muted)">${m.hasPle ? `${m.dModelFmt}→256` : "✕ disabled"}</text>
+            <text x="100" y="88" text-anchor="middle" font-size="6.6" font-family="monospace" fill="var(--gemma-text-muted)">${m.hasPle ? `${m.dModelFmt}→256` : "✕ 已停用"}</text>
 
             <rect x="142" y="68" width="36" height="24" rx="4" fill="var(--gemma-cat-think-bg)" stroke="var(--gemma-cat-think-border)" />
             <text x="160" y="83" text-anchor="middle" font-size="7.6" font-weight="700" font-family="monospace" fill="var(--gemma-cat-think-fg)">GELU</text>
@@ -2546,20 +2546,20 @@
       }).join("");
 
       const spectrumRightSvg = `
-        <svg class="llm-svg-stage" viewBox="0 0 334 168" aria-label="(V)RAM vs Flash memory split and 256-d gated PLE spectrum">
-          <text x="10" y="16" font-size="8.2" font-weight="700" font-family="monospace" fill="var(--md-default-fg-color)">(V)RAM COMPUTE vs. FLASH LOOKUP</text>
+        <svg class="llm-svg-stage" viewBox="0 0 334 168" aria-label="(V)RAM 與 Flash 記憶體劃分及 256-d 門控 PLE 頻譜">
+          <text x="10" y="16" font-size="8.2" font-weight="700" font-family="monospace" fill="var(--md-default-fg-color)">(V)RAM 運算 vs. FLASH 查詢</text>
           <g transform="translate(202, 7)" font-size="6.8" font-family="monospace">
             <rect x="0" y="1" width="7" height="7" rx="1.5" fill="var(--gemma-accent-fill)" />
             <text x="9" y="7" fill="var(--gemma-text-secondary)">(V)RAM</text>
             <rect x="46" y="1" width="7" height="7" rx="1.5" fill="var(--gemma-status-warning)" />
-            <text x="55" y="7" fill="var(--gemma-text-secondary)">Flash PLE+Emb</text>
+            <text x="55" y="7" fill="var(--gemma-text-secondary)">Flash PLE+嵌入</text>
           </g>
           <line x1="8" y1="22" x2="326" y2="22" stroke="var(--gemma-border)" />
           ${memRowsSvg}
 
           <line x1="8" y1="92" x2="326" y2="92" stroke="var(--gemma-border)" />
           <text x="10" y="105" font-size="7.8" font-weight="700" font-family="monospace" fill="var(--md-default-fg-color)">L${selectedPleLayer} · GELU ⊙ ple (${escapeHtml(target.shortLabel || target.label)})</text>
-          <text x="324" y="105" text-anchor="end" font-size="7.4" font-weight="700" font-family="monospace" fill="${m.hasPle ? "var(--gemma-cat-tool-fg)" : "var(--gemma-text-muted)"}">${m.hasPle ? bandLabels[activeBand] : "0 PLE dims"}</text>
+          <text x="324" y="105" text-anchor="end" font-size="7.4" font-weight="700" font-family="monospace" fill="${m.hasPle ? "var(--gemma-cat-tool-fg)" : "var(--gemma-text-muted)"}">${m.hasPle ? bandLabels[activeBand] : "0 個 PLE 維度"}</text>
 
           <!-- 3 Subspace Band Highlights -->
           <rect x="12" y="112" width="101" height="42" rx="4" fill="${m.hasPle && activeBand === 0 ? "var(--gemma-cat-tool-bg)" : "var(--gemma-surface-sunken)"}" fill-opacity="${m.hasPle && activeBand === 0 ? "0.55" : "0.4"}" stroke="${m.hasPle && activeBand === 0 ? "var(--gemma-status-success)" : "var(--gemma-border)"}" />
@@ -2568,23 +2568,23 @@
           <line x1="14" y1="137" x2="320" y2="137" stroke="var(--gemma-border-strong)" stroke-width="0.6" />
           ${spectrumBarsSvg}
 
-          <text x="62" y="163" text-anchor="middle" font-size="6.8" font-family="monospace" font-weight="${m.hasPle && activeBand === 0 ? "700" : "500"}" fill="${m.hasPle && activeBand === 0 ? "var(--gemma-cat-tool-fg)" : "var(--gemma-text-muted)"}">d₀..₈₅ Syntax</text>
-          <text x="166" y="163" text-anchor="middle" font-size="6.8" font-family="monospace" font-weight="${m.hasPle && activeBand === 1 ? "700" : "500"}" fill="${m.hasPle && activeBand === 1 ? "var(--gemma-cat-tool-fg)" : "var(--gemma-text-muted)"}">d₈₆..₁₇₀ Semantics</text>
-          <text x="271" y="163" text-anchor="middle" font-size="6.8" font-family="monospace" font-weight="${m.hasPle && activeBand === 2 ? "700" : "500"}" fill="${m.hasPle && activeBand === 2 ? "var(--gemma-cat-tool-fg)" : "var(--gemma-text-muted)"}">d₁₇₁..₂₅₅ Phrasing</text>
+          <text x="62" y="163" text-anchor="middle" font-size="6.8" font-family="monospace" font-weight="${m.hasPle && activeBand === 0 ? "700" : "500"}" fill="${m.hasPle && activeBand === 0 ? "var(--gemma-cat-tool-fg)" : "var(--gemma-text-muted)"}">d₀..₈₅ 語法</text>
+          <text x="166" y="163" text-anchor="middle" font-size="6.8" font-family="monospace" font-weight="${m.hasPle && activeBand === 1 ? "700" : "500"}" fill="${m.hasPle && activeBand === 1 ? "var(--gemma-cat-tool-fg)" : "var(--gemma-text-muted)"}">d₈₆..₁₇₀ 語意</text>
+          <text x="271" y="163" text-anchor="middle" font-size="6.8" font-family="monospace" font-weight="${m.hasPle && activeBand === 2 ? "700" : "500"}" fill="${m.hasPle && activeBand === 2 ? "var(--gemma-cat-tool-fg)" : "var(--gemma-text-muted)"}">d₁₇₁..₂₅₅ 措辭</text>
         </svg>
       `;
 
       if (!bodyEl.querySelector('[data-role="ple-stage"]')) {
         bodyEl.innerHTML = `
           <div class="llm-toolbar" data-role="ple-toolbar" style="justify-content:space-between;margin-bottom:var(--gemma-space-2);">
-            <div class="llm-toolbar__group" role="group" aria-label="Select model and token for PLE">
-              <span class="llm-toolbar__label">Model</span>
+            <div class="llm-toolbar__group" role="group" aria-label="選擇 PLE 的模型與詞元">
+              <span class="llm-toolbar__label">模型</span>
               ${PLE_MODELS.map(
                 (mod, idx) =>
                   `<button type="button" class="llm-scenario-btn" data-ple-mod="${idx}">${escapeHtml(mod.pill)}</button>`
               ).join("")}
               <span class="llm-toolbar__sep" aria-hidden="true"></span>
-              <span class="llm-toolbar__label">Token</span>
+              <span class="llm-toolbar__label">詞元</span>
               <div class="llm-seg" data-role="ple-tokens"></div>
             </div>
             <button type="button" class="llm-action-btn" data-action="cascade-ple"></button>
@@ -2623,32 +2623,32 @@
         cascadeBtn.classList.toggle("llm-action-btn--running", Boolean(pleCascadeTimer));
         cascadeBtn.classList.toggle("llm-btn--primary", !pleCascadeTimer);
         const nextLabel = pleCascadeTimer
-          ? "⏸ Stop"
-          : `▶ ${m.hasPle ? "Inject PLE" : "Forward Pass"} (L1 → L${m.layers})`;
+          ? "⏸ 停止"
+          : `▶ ${m.hasPle ? "注入 PLE" : "前向傳播"} (L1 → L${m.layers})`;
         if (cascadeBtn.textContent !== nextLabel) cascadeBtn.textContent = nextLabel;
       }
 
       const pleStageEl = bodyEl.querySelector('[data-role="ple-stage"]');
       pleStageEl.innerHTML = `
-        <svg class="llm-svg-stage" viewBox="0 0 680 134" aria-label="${escapeHtml(m.fullName)} dual O(1) lookup and per-layer embedding bus">
-          <text x="12" y="15" font-size="8.6" font-weight="700" font-family="monospace" fill="var(--md-default-fg-color)">${escapeHtml(m.fullName)} · ${m.hasPle ? `O(1) Flash PLE (${m.layers}×256d) + ${m.dModelFmt}d Residual` : `Layer-0 Only (${m.dModelFmt}d Residual · No PLE)`}</text>
+        <svg class="llm-svg-stage" viewBox="0 0 680 134" aria-label="${escapeHtml(m.fullName)} 雙 O(1) 查詢與逐層嵌入匯流排">
+          <text x="12" y="15" font-size="8.6" font-weight="700" font-family="monospace" fill="var(--md-default-fg-color)">${escapeHtml(m.fullName)} · ${m.hasPle ? `O(1) Flash PLE (${m.layers}×256d) + ${m.dModelFmt}d 殘差` : `僅第 0 層 (${m.dModelFmt}d 殘差 · 無 PLE)`}</text>
           <g transform="translate(422, 6)" font-size="7.4" font-family="monospace">
             <rect x="0" y="1" width="8.5" height="8.5" rx="2" fill="var(--gemma-status-warning)" />
             <text x="11" y="8" fill="var(--gemma-text-secondary)">Flash PLE (256d)</text>
             <rect x="96" y="1" width="8.5" height="8.5" rx="2" fill="var(--gemma-surface-sunken)" stroke="var(--gemma-border-strong)" />
             <text x="107" y="8" fill="var(--gemma-text-secondary)">Attn+FFN</text>
             <circle cx="166" cy="5.2" r="3.5" fill="var(--gemma-status-success)" />
-            <text x="173" y="8" fill="var(--gemma-text-secondary)">Gate ⊕</text>
+            <text x="173" y="8" fill="var(--gemma-text-secondary)">門控 ⊕</text>
           </g>
 
           <!-- Top-left: Flash Sparse PLE Lookup Box -->
           <g opacity="${m.hasPle ? "1" : "0.35"}">
             <rect x="12" y="24" width="144" height="46" rx="5" fill="var(--gemma-cat-think-bg)" stroke="var(--gemma-status-warning)" stroke-width="1.2" ${m.hasPle ? "" : 'stroke-dasharray="3 2"'} />
-            <text x="19" y="36" font-size="7" font-weight="700" font-family="monospace" fill="var(--gemma-cat-think-fg)">FLASH · SPARSE O(1) PLE</text>
+            <text x="19" y="36" font-size="7" font-weight="700" font-family="monospace" fill="var(--gemma-cat-think-fg)">FLASH · 稀疏 O(1) PLE</text>
             <text x="19" y="48" font-size="7.5" font-weight="700" font-family="monospace" fill="var(--md-default-fg-color)">embed_tokens_per_layer</text>
             <text x="19" y="60" font-size="6.9" font-family="monospace" fill="var(--gemma-text-secondary)">${
               !m.hasPle
-                ? "0B · Not present"
+                ? "0B · 不存在"
                 : target.isSoftToken
                   ? `pad #0 + model_proj (${m.layers}×256d)`
                   : `262K×${m.layers}×256d · ${m.pleB}B`
@@ -2657,7 +2657,7 @@
 
           <!-- Bottom-left: (V)RAM Layer-0 Lookup Box -->
           <rect x="12" y="78" width="144" height="46" rx="5" fill="var(--gemma-cat-turn-bg)" stroke="var(--gemma-accent)" stroke-width="1.2" />
-          <text x="19" y="90" font-size="7" font-weight="700" font-family="monospace" fill="var(--gemma-accent)">(V)RAM · LAYER-0 EMBED</text>
+          <text x="19" y="90" font-size="7" font-weight="700" font-family="monospace" fill="var(--gemma-accent)">(V)RAM · 第 0 層嵌入</text>
           <text x="19" y="102" font-size="7.5" font-weight="700" font-family="monospace" fill="var(--md-default-fg-color)">${target.isSoftToken ? "multimodal_proj" : "embed_tokens"} (#${target.id})</text>
           <text x="19" y="114" font-size="6.9" font-family="monospace" fill="var(--gemma-text-secondary)">262K×${m.dModelFmt}d · ${m.embB.toFixed(2)}B</text>
 
@@ -2673,7 +2673,7 @@
           ${circuitLeftSvg}
           ${spectrumRightSvg}
         </div>
-        <p style="margin:var(--gemma-space-2) 0 0;font-size:0.74rem;line-height:1.45;color:var(--gemma-text-muted);"><strong style="color:var(--gemma-text-secondary);">Note:</strong> The strict split into <code>Syntax</code>, <code>Semantics</code>, and <code>Phrasing</code> subspaces on the bottom-right visualization is a didactic simplification. In reality, neural networks learn continuous, distributed representations.</p>
+        <p style="margin:var(--gemma-space-2) 0 0;font-size:0.74rem;line-height:1.45;color:var(--gemma-text-muted);"><strong style="color:var(--gemma-text-secondary);">註：</strong> 右下角視覺化圖中，將子空間嚴格劃分為 <code>語法</code>、<code>語意</code> 與 <code>措辭</code>，是一種教學上的簡化。實際上，神經網路學到的是連續、分散式的表示法。
       `;
     };
 
@@ -2878,7 +2878,7 @@
       },
     },
     {
-      label: 'Late clue: "fragile."',
+      label: '晚出現的線索：「fragile.」',
       words: ["The", "robot", "picked", "up", "the", "glass", "ball", "because", "it", "was", "fragile."],
       focusIdx: 10,
       weights: {
@@ -3019,12 +3019,12 @@
 
     el.innerHTML = `
       <div class="llm-widget__header">
-        <p class="llm-widget__title">Causal Attention, KV Cache &amp; FFN / MoE</p>
-        <div class="llm-toolbar__group" role="group" aria-label="Attention view mode">
-          <span class="llm-toolbar__label">View</span>
+        <p class="llm-widget__title">因果注意力、KV Cache 與 FFN / MoE</p>
+        <div class="llm-toolbar__group" role="group" aria-label="注意力檢視模式">
+          <span class="llm-toolbar__label">檢視</span>
           <div class="llm-seg">
-            <button type="button" class="llm-seg__btn llm-seg__btn--active" data-tab="context">Tab A: Causal Q·K·V + FFN</button>
-            <button type="button" class="llm-seg__btn" data-tab="layers">Tab B: Layer Stack &amp; KV Sharing</button>
+            <button type="button" class="llm-seg__btn llm-seg__btn--active" data-tab="context">分頁 A：因果 Q·K·V + FFN</button>
+            <button type="button" class="llm-seg__btn" data-tab="layers">分頁 B：層堆疊與 KV 共享</button>
           </div>
         </div>
       </div>
@@ -3255,7 +3255,7 @@
                     : ""
                 }
                 <text x="${x}" y="158" text-anchor="middle" font-size="8.5" font-family="monospace"
-                  fill="${isFocus ? "var(--gemma-white)" : "var(--gemma-text-muted)"}">${isMasked ? "∅ mask" : Math.round(weight * 100) + "%"}</text>
+                  fill="${isFocus ? "var(--gemma-white)" : "var(--gemma-text-muted)"}">${isMasked ? "∅ 遮罩" : Math.round(weight * 100) + "%"}</text>
               </g>
             `;
           })
@@ -3281,8 +3281,8 @@
         if (!bodyEl.querySelector('[data-role="attn-causal-stage"]')) {
           bodyEl.innerHTML = `
             <div class="llm-toolbar" data-role="attn-causal-toolbar" style="justify-content:space-between;margin-bottom:var(--gemma-space-3);">
-              <div class="llm-toolbar__group" role="group" aria-label="Select sentence scenario">
-                <span class="llm-toolbar__label">Scenario</span>
+              <div class="llm-toolbar__group" role="group" aria-label="選擇句子情境">
+                <span class="llm-toolbar__label">情境</span>
                 ${ATTN_SENTENCES.map(
                   (item, idx) =>
                     `<button type="button" class="llm-scenario-btn" data-sent="${idx}">${escapeHtml(item.label)}</button>`
@@ -3303,21 +3303,21 @@
         if (scanBtn) {
           scanBtn.classList.toggle("llm-action-btn--running", Boolean(scanTimer));
           scanBtn.classList.toggle("llm-btn--primary", !scanTimer);
-          const nextScanLabel = scanTimer ? "⏸ Stop" : "▶ Auto-Scan";
+          const nextScanLabel = scanTimer ? "⏸ 停止" : "▶ 自動掃描";
           if (scanBtn.textContent !== nextScanLabel) scanBtn.textContent = nextScanLabel;
         }
 
         const causalStageEl = bodyEl.querySelector('[data-role="attn-causal-stage"]');
         causalStageEl.innerHTML = `
-          <svg class="llm-svg-stage" viewBox="0 0 ${svgWidth} 318" aria-label="Causal self-attention and GeGLU FFN dataflow">
-            <text x="18" y="22" font-size="9.2" font-weight="700" font-family="monospace" fill="${attnHot ? "var(--gemma-accent)" : "var(--gemma-text-muted)"}">SUBLAYER A · CAUSAL SELF-ATTENTION (softmax(QKᵀ/√dₖ + M))</text>
+          <svg class="llm-svg-stage" viewBox="0 0 ${svgWidth} 318" aria-label="因果自注意力與 GeGLU FFN 資料流">
+            <text x="18" y="22" font-size="9.2" font-weight="700" font-family="monospace" fill="${attnHot ? "var(--gemma-accent)" : "var(--gemma-text-muted)"}">子層 A · 因果自注意力 (softmax(QKᵀ/√dₖ + M))</text>
             <g transform="translate(446, 12)" font-size="8.5" font-family="monospace">
               <rect x="0" y="0" width="13" height="11" rx="3" fill="var(--gemma-accent-fill)" />
-              <text x="17" y="9" fill="var(--gemma-text-secondary)" font-weight="600">Query</text>
+              <text x="17" y="9" fill="var(--gemma-text-secondary)" font-weight="600">查詢</text>
               <rect x="58" y="0" width="19" height="11" rx="3" fill="var(--gemma-cat-tool-bg)" stroke="var(--gemma-cat-tool-border)" />
-              <text x="81" y="9" fill="var(--gemma-text-secondary)" font-weight="600">Past K·V</text>
+              <text x="81" y="9" fill="var(--gemma-text-secondary)" font-weight="600">先前的 K·V</text>
               <rect x="136" y="0" width="15" height="11" rx="3" fill="var(--gemma-surface-sunken)" stroke="var(--gemma-border-strong)" stroke-dasharray="2 1.5" />
-              <text x="155" y="9" fill="var(--gemma-text-muted)">Masked</text>
+              <text x="155" y="9" fill="var(--gemma-text-muted)">已遮罩</text>
             </g>
 
             ${arcs}
@@ -3351,7 +3351,7 @@
             <!-- Sublayer B: GeGLU FFN Circuit -->
             <rect x="304" y="202" width="280" height="90" rx="7" fill="var(--gemma-surface)"
               stroke="${ffnHot ? "var(--gemma-status-success)" : "var(--gemma-cat-tool-border)"}" stroke-width="${ffnHot ? "2" : "1.1"}" />
-            <text x="574" y="215" text-anchor="end" font-size="8" font-weight="700" font-family="monospace" fill="var(--gemma-cat-tool-fg)">SUBLAYER B · GeGLU FFN</text>
+            <text x="574" y="215" text-anchor="end" font-size="8" font-weight="700" font-family="monospace" fill="var(--gemma-cat-tool-fg)">子層 B · GeGLU FFN</text>
 
             <path d="${gatePath}" fill="none" stroke="var(--gemma-cat-think-border)" stroke-width="1.6" />
             <path d="${upPath}" fill="none" stroke="var(--gemma-cat-tool-border)" stroke-width="1.6" />
@@ -3468,7 +3468,7 @@
               .join("")}
             <circle r="3.2" fill="var(--gemma-accent-fill)" data-anim-pts="${activeGlobX},42;${activeGlobX},71" data-dur="1360" data-phase="0" />
             <rect x="${(railX1 + railX2) / 2 - 86}" y="31" width="172" height="16" rx="8" fill="var(--gemma-cat-multi-bg)" stroke="var(--gemma-cat-multi-border)" />
-            <text x="${(railX1 + railX2) / 2}" y="41.8" text-anchor="middle" font-size="8.2" font-weight="700" font-family="monospace" fill="var(--gemma-cat-multi-fg)">Unified K = V · ${m.globalGqa} Global GQA</text>
+            <text x="${(railX1 + railX2) / 2}" y="41.8" text-anchor="middle" font-size="8.2" font-weight="700" font-family="monospace" fill="var(--gemma-cat-multi-fg)">統一 K = V · ${m.globalGqa} 全域 GQA</text>
           `;
         }
 
@@ -3564,10 +3564,10 @@
             <path d="M 198 118 L 210 118" fill="none" stroke="var(--gemma-status-warning)" stroke-width="1.9" />
             <path d="M 198 150 L 210 150" fill="none" stroke="var(--gemma-status-warning)" stroke-width="1.9" />
             <rect x="114" y="102" width="84" height="84" rx="6" fill="var(--gemma-cat-think-bg)" stroke="var(--gemma-status-warning)" stroke-width="1.6" />
-            <text x="156" y="121" text-anchor="middle" font-size="8.4" font-weight="700" font-family="monospace" fill="var(--gemma-cat-think-fg)">KV Shared</text>
-            <text x="156" y="138" text-anchor="middle" font-size="8.8" font-weight="700" font-family="monospace" fill="var(--gemma-accent)">← Layer L${activeSrc}</text>
+            <text x="156" y="121" text-anchor="middle" font-size="8.4" font-weight="700" font-family="monospace" fill="var(--gemma-cat-think-fg)">KV 共享</text>
+            <text x="156" y="138" text-anchor="middle" font-size="8.8" font-weight="700" font-family="monospace" fill="var(--gemma-accent)">← 第 L${activeSrc} 層</text>
             <text x="156" y="155" text-anchor="middle" font-size="7.6" font-family="monospace" fill="var(--gemma-text-secondary)">${kvHeads}KV · ${headDim}d</text>
-            <text x="156" y="172" text-anchor="middle" font-size="7.4" font-weight="700" font-family="monospace" fill="var(--gemma-cat-tool-fg)">0 new KV RAM</text>
+            <text x="156" y="172" text-anchor="middle" font-size="7.4" font-weight="700" font-family="monospace" fill="var(--gemma-cat-tool-fg)">新增 KV RAM：0</text>
           `;
           kvParticlesSvg = `
             <circle r="3" fill="var(--gemma-status-warning)" data-anim-pts="198,118;210,118" data-dur="1360" data-phase="0" />
@@ -3604,8 +3604,8 @@
         }
 
         const sublayerASvg = `
-          <svg class="llm-svg-stage" viewBox="0 0 334 210" style="${attnPhaseHot ? "border-color:var(--gemma-accent);box-shadow:var(--gemma-shadow-sm);" : ""}" aria-label="Sublayer A Attention and KV Cache circuit">
-            <text x="12" y="21" font-size="9.6" font-weight="700" font-family="monospace" fill="${attnPhaseHot ? "var(--gemma-accent)" : "var(--md-default-fg-color)"}">L${selectedLayer} · ${isGlobal ? "🌐 Global Attn" : "⚡ Local Attn"}</text>
+          <svg class="llm-svg-stage" viewBox="0 0 334 210" style="${attnPhaseHot ? "border-color:var(--gemma-accent);box-shadow:var(--gemma-shadow-sm);" : ""}" aria-label="子層 A 注意力與 KV Cache 電路">
+            <text x="12" y="21" font-size="9.6" font-weight="700" font-family="monospace" fill="${attnPhaseHot ? "var(--gemma-accent)" : "var(--md-default-fg-color)"}">L${selectedLayer} · ${isGlobal ? "🌐 全域注意力" : "⚡ 局部注意力"}</text>
             <text x="322" y="21" text-anchor="end" font-size="8.4" font-weight="700" font-family="monospace" fill="var(--gemma-accent)">${isGlobal ? m.globalCtxShort + " · p-RoPE 25%" : m.windowShort + " · RoPE 10K"}</text>
             <line x1="10" y1="31" x2="324" y2="31" stroke="var(--gemma-border)" />
 
@@ -3684,9 +3684,9 @@
           const sharedPath = "M 80 120 L 94 166 L 298 166 L 312 129";
 
           sublayerBSvg = `
-            <svg class="llm-svg-stage" viewBox="0 0 334 210" style="${ffnPhaseHot ? "border-color:var(--gemma-status-success);box-shadow:var(--gemma-shadow-sm);" : ""}" aria-label="Sublayer B Mixture of Experts circuit">
+            <svg class="llm-svg-stage" viewBox="0 0 334 210" style="${ffnPhaseHot ? "border-color:var(--gemma-status-success);box-shadow:var(--gemma-shadow-sm);" : ""}" aria-label="子層 B 混合專家電路">
               <text x="12" y="21" font-size="9.6" font-weight="700" font-family="monospace" fill="${ffnPhaseHot ? "var(--gemma-cat-tool-fg)" : "var(--md-default-fg-color)"}">L${selectedLayer} · GeGLU MoE</text>
-              <text x="322" y="21" text-anchor="end" font-size="8.4" font-weight="700" font-family="monospace" fill="var(--gemma-cat-tool-fg)">8/128 Routed + 1 Shared</text>
+              <text x="322" y="21" text-anchor="end" font-size="8.4" font-weight="700" font-family="monospace" fill="var(--gemma-cat-tool-fg)">8/128 路由 + 1 共享</text>
               <line x1="10" y1="31" x2="324" y2="31" stroke="var(--gemma-border)" />
 
               <path d="M 21 108 L 21 41 L 312 41 L 312 110" fill="none" stroke="var(--gemma-border-strong)" stroke-width="1.1" stroke-dasharray="3 2" data-flow-wire="68" />
@@ -3701,17 +3701,17 @@
               <path d="${sharedPath}" fill="none" stroke="var(--gemma-cat-multi-border)" stroke-width="1.6" />
 
               <rect x="90" y="69" width="46" height="30" rx="4.5" fill="var(--gemma-cat-think-bg)" stroke="var(--gemma-status-warning)" />
-              <text x="113" y="82.5" text-anchor="middle" font-size="8.2" font-weight="700" font-family="monospace" fill="var(--gemma-cat-think-fg)">Router</text>
+              <text x="113" y="82.5" text-anchor="middle" font-size="8.2" font-weight="700" font-family="monospace" fill="var(--gemma-cat-think-fg)">路由器</text>
               <text x="113" y="93" text-anchor="middle" font-size="7.2" font-family="monospace" fill="var(--gemma-text-secondary)">Top-8</text>
 
               ${routerRays.join("")}
               ${expertCells.join("")}
-              <text x="212" y="138" text-anchor="middle" font-size="7.4" font-family="monospace" fill="var(--gemma-text-muted)">8 of 128 GeGLU Experts (704d)</text>
+              <text x="212" y="138" text-anchor="middle" font-size="7.4" font-family="monospace" fill="var(--gemma-text-muted)">128 個 GeGLU 專家中啟用 8 個 (704d)</text>
               <line x1="276" y1="90" x2="304" y2="116" stroke="var(--gemma-status-success)" stroke-width="1.5" />
 
               <rect x="148" y="150" width="126" height="32" rx="5" fill="var(--gemma-cat-multi-bg)" stroke="var(--gemma-cat-multi-border)" stroke-width="1.4" />
-              <text x="211" y="164" text-anchor="middle" font-size="8" font-weight="700" font-family="monospace" fill="var(--gemma-cat-multi-fg)">1 Shared GeGLU Expert</text>
-              <text x="211" y="175.5" text-anchor="middle" font-size="7.2" font-family="monospace" fill="var(--gemma-text-secondary)">Always-On · 2,112d</text>
+              <text x="211" y="164" text-anchor="middle" font-size="8" font-weight="700" font-family="monospace" fill="var(--gemma-cat-multi-fg)">1 個共享 GeGLU 專家</text>
+              <text x="211" y="175.5" text-anchor="middle" font-size="7.2" font-family="monospace" fill="var(--gemma-text-secondary)">常駐啟用 · 2,112d</text>
 
               <circle cx="312" cy="120" r="9" fill="var(--gemma-surface)" stroke="var(--gemma-status-success)" stroke-width="1.4" />
               <text x="312" y="123.5" text-anchor="middle" font-size="10" font-weight="700" fill="var(--gemma-cat-tool-fg)">⊕</text>
@@ -3730,14 +3730,14 @@
           const ffnDownPath = "M 254 120 L 307 120";
 
           sublayerBSvg = `
-            <svg class="llm-svg-stage" viewBox="0 0 334 210" style="${ffnPhaseHot ? "border-color:var(--gemma-status-success);box-shadow:var(--gemma-shadow-sm);" : ""}" aria-label="Sublayer B GeGLU Feed-Forward circuit">
-              <text x="12" y="21" font-size="9.6" font-weight="700" font-family="monospace" fill="${ffnPhaseHot ? "var(--gemma-cat-tool-fg)" : "var(--md-default-fg-color)"}">L${selectedLayer} · GeGLU FFN${isDoubleWide ? " (2× Wide)" : ""}</text>
+            <svg class="llm-svg-stage" viewBox="0 0 334 210" style="${ffnPhaseHot ? "border-color:var(--gemma-status-success);box-shadow:var(--gemma-shadow-sm);" : ""}" aria-label="子層 B GeGLU 前饋電路">
+              <text x="12" y="21" font-size="9.6" font-weight="700" font-family="monospace" fill="${ffnPhaseHot ? "var(--gemma-cat-tool-fg)" : "var(--md-default-fg-color)"}">L${selectedLayer} · GeGLU FFN${isDoubleWide ? " (2× 寬)" : ""}</text>
               <text x="322" y="21" text-anchor="end" font-size="8.4" font-weight="700" font-family="monospace" fill="var(--gemma-cat-tool-fg)">${m.dModel} → ${dFfLabel} → ${m.dModel}</text>
               <line x1="10" y1="31" x2="324" y2="31" stroke="var(--gemma-border)" />
 
               <!-- Residual bypass -->
               <path d="M 21 108 L 21 41 L 316 41 L 316 111" fill="none" stroke="var(--gemma-border-strong)" stroke-width="1.1" stroke-dasharray="3 2" data-flow-wire="68" />
-              <text x="168" y="52" text-anchor="middle" font-size="7.4" font-family="monospace" fill="var(--gemma-text-muted)">residual skip</text>
+              <text x="168" y="52" text-anchor="middle" font-size="7.4" font-family="monospace" fill="var(--gemma-text-muted)">殘差跳接</text>
 
               <rect x="10" y="108" width="22" height="24" rx="4.5" fill="var(--gemma-surface-sunken)" stroke="var(--gemma-border-strong)" />
               <text x="21" y="123" text-anchor="middle" font-size="9" font-weight="700" font-family="monospace" fill="var(--md-default-fg-color)">x</text>
@@ -3784,8 +3784,8 @@
         if (!bodyEl.querySelector('[data-role="attn-arch-stage"]')) {
           bodyEl.innerHTML = `
             <div class="llm-toolbar" data-role="attn-arch-toolbar" style="justify-content:space-between;margin-bottom:var(--gemma-space-3);">
-              <div class="llm-toolbar__group" role="group" aria-label="Select model architecture">
-                <span class="llm-toolbar__label">Model</span>
+              <div class="llm-toolbar__group" role="group" aria-label="選擇模型架構">
+                <span class="llm-toolbar__label">模型</span>
                 ${GEMMA_MODELS_ARCH.map(
                   (mod, idx) =>
                     `<button type="button" class="llm-scenario-btn" data-mod="${idx}">${escapeHtml(mod.name)}</button>`
@@ -3806,21 +3806,21 @@
         if (animBtn) {
           animBtn.classList.toggle("llm-action-btn--running", Boolean(cascadeTimer));
           animBtn.classList.toggle("llm-btn--primary", !cascadeTimer);
-          const nextAnimLabel = cascadeTimer ? "⏸ Stop" : `▶ Forward Pass (L1 → L${m.layers})`;
+          const nextAnimLabel = cascadeTimer ? "⏸ 停止" : `▶ 前向傳播 (L1 → L${m.layers})`;
           if (animBtn.textContent !== nextAnimLabel) animBtn.textContent = nextAnimLabel;
         }
 
         const archStageEl = bodyEl.querySelector('[data-role="attn-arch-stage"]');
         archStageEl.innerHTML = `
-          <svg class="llm-svg-stage" viewBox="0 0 680 162" aria-label="${escapeHtml(m.fullName)} hybrid layer stack and KV sharing">
-            <text x="16" y="20" font-size="9.4" font-weight="700" font-family="monospace" fill="var(--md-default-fg-color)">${escapeHtml(m.fullName)} · ${m.period - 1}:1 Local:Global</text>
+          <svg class="llm-svg-stage" viewBox="0 0 680 162" aria-label="${escapeHtml(m.fullName)} 混合層堆疊與 KV 共享">
+            <text x="16" y="20" font-size="9.4" font-weight="700" font-family="monospace" fill="var(--md-default-fg-color)">${escapeHtml(m.fullName)} · ${m.period - 1}:1 局部:全域</text>
             <g transform="translate(${m.doubleWideKvShared ? 298 : 356}, 10)" font-size="8" font-family="monospace">
               <rect x="0" y="1" width="10" height="10" rx="2" fill="var(--gemma-surface-sunken)" stroke="var(--gemma-border-strong)" />
-              <text x="13" y="9" fill="var(--gemma-text-secondary)">Local ${m.windowShort}</text>
+              <text x="13" y="9" fill="var(--gemma-text-secondary)">局部 ${m.windowShort}</text>
               <rect x="80" y="0" width="10" height="11" rx="2" fill="var(--gemma-accent-fill)" />
-              <text x="93" y="9" fill="var(--gemma-text-secondary)">Global ${m.globalCtxShort}</text>
+              <text x="93" y="9" fill="var(--gemma-text-secondary)">全域 ${m.globalCtxShort}</text>
               <rect x="168" y="1" width="10" height="10" rx="2" fill="${hasKvShare ? "var(--gemma-cat-think-bg)" : "var(--gemma-cat-multi-bg)"}" stroke="${hasKvShare ? "var(--gemma-status-warning)" : "var(--gemma-cat-multi-border)"}" ${hasKvShare ? 'stroke-dasharray="2 1"' : ""} />
-              <text x="181" y="9" fill="var(--gemma-text-secondary)">${hasKvShare ? `KV-Shared (${m.kvSharedLayers}L)` : `K=V (${m.globalGqa})`}</text>
+              <text x="181" y="9" fill="var(--gemma-text-secondary)">${hasKvShare ? `KV 共享 (${m.kvSharedLayers}L)` : `K=V (${m.globalGqa})`}</text>
               <rect x="270" y="1" width="10" height="10" rx="2" fill="${m.id === "26b" ? "var(--gemma-cat-multi-bg)" : "var(--gemma-cat-tool-bg)"}" stroke="${m.id === "26b" ? "var(--gemma-cat-multi-border)" : "var(--gemma-cat-tool-border)"}" />
               <text x="283" y="9" fill="var(--gemma-text-secondary)">${m.id === "26b" ? "MoE" : "FFN"}</text>
               ${
@@ -3839,7 +3839,7 @@
           </div>
           ${
             hasKvShare
-              ? `<p style="margin:var(--gemma-space-3) 0 0;font-size:0.76rem;line-height:1.5;color:var(--gemma-text-muted);"><strong style="color:var(--gemma-text-secondary);">Note:</strong> <strong>E2B</strong> doubles FFN width (<code>6,144d → 12,288d</code>, highlighted in darker green) across its KV-shared layers (<code>L16–L35</code>) to reinvest saved K/V parameters, whereas <strong>E4B</strong> keeps a uniform <code>10,240d</code> FFN across all 42 layers.</p>`
+              ? `<p style="margin:var(--gemma-space-3) 0 0;font-size:0.76rem;line-height:1.5;color:var(--gemma-text-muted);"><strong style="color:var(--gemma-text-secondary);">說明：</strong> <strong>E2B</strong> 將 FFN 寬度加倍（<code>6,144d → 12,288d</code>，以較深的綠色標示）橫跨其 KV 共享層（<code>L16–L35</code>），把省下的 K/V 參數重新投入；而 <strong>E4B</strong> 則在全部 42 層維持一致的 <code>10,240d</code> FFN。</p>`
               : ""
           }
         `;
@@ -3969,7 +3969,7 @@
      ===================================================================== */
   const SAMPLING_PROMPTS = [
     {
-      label: "Factual Geography",
+      label: "事實地理",
       basePrompt: "The capital of France is",
       steps: [
         [
@@ -4009,7 +4009,7 @@
       mtpTarget: ["▁Paris", ",", "▁famous", "▁for"],
     },
     {
-      label: "Creative Story",
+      label: "創意故事",
       basePrompt: "Deep in the glowing forest, the little fox discovered a",
       steps: [
         [
@@ -4049,7 +4049,7 @@
       mtpTarget: ["▁crystal", "▁lantern", "▁that", "▁was"],
     },
     {
-      label: "Python Loop",
+      label: "Python 迴圈",
       basePrompt: "for i in range(",
       steps: [
         [
@@ -4352,21 +4352,21 @@
 
     el.innerHTML = `
       <div class="llm-widget__header">
-        <p class="llm-widget__title">Next-Token Sampling &amp; Speculative Decoding</p>
-        <div class="llm-toolbar__group" role="group" aria-label="Decoding mode">
-          <span class="llm-toolbar__label">Mode</span>
+        <p class="llm-widget__title">下一個詞元取樣 &amp; 推測式解碼</p>
+        <div class="llm-toolbar__group" role="group" aria-label="解碼模式">
+          <span class="llm-toolbar__label">模式</span>
           <div class="llm-seg">
-            <button type="button" class="llm-seg__btn llm-seg__btn--active" data-mtp-mode="off">Standard (1-Token)</button>
-            <button type="button" class="llm-seg__btn" data-mtp-mode="on">Gemma 4 MTP (4-Token)</button>
+            <button type="button" class="llm-seg__btn llm-seg__btn--active" data-mtp-mode="off">標準（1 個詞元）</button>
+            <button type="button" class="llm-seg__btn" data-mtp-mode="on">Gemma 4 MTP（4 個詞元）</button>
           </div>
         </div>
       </div>
       <div class="llm-toolbar" style="justify-content:space-between;margin-bottom:var(--gemma-space-3);">
-        <div class="llm-toolbar__group" role="group" aria-label="Select prompt scenario" data-role="prompts"></div>
-        <div class="llm-toolbar__group" role="group" aria-label="Sampling actions">
-          <button type="button" class="llm-action-btn llm-btn--primary" data-action="sample">🎲 Sample Next</button>
-          <button type="button" class="llm-action-btn" data-action="auto-gen">▶ Auto-Generate</button>
-          <button type="button" class="llm-action-btn llm-action-btn--ghost" data-action="reset-prompt">↺ Reset</button>
+        <div class="llm-toolbar__group" role="group" aria-label="選擇提示情境" data-role="prompts"></div>
+        <div class="llm-toolbar__group" role="group" aria-label="取樣操作">
+          <button type="button" class="llm-action-btn llm-btn--primary" data-action="sample">🎲 取樣下一個</button>
+          <button type="button" class="llm-action-btn" data-action="auto-gen">▶ 自動生成</button>
+          <button type="button" class="llm-action-btn llm-action-btn--ghost" data-action="reset-prompt">↺ 重置</button>
         </div>
       </div>
       <div class="llm-sampling-stage">
@@ -4376,10 +4376,10 @@
           <div data-role="bars-list"></div>
         </div>
       </div>
-      <div class="llm-sampling-params" aria-label="Sampling parameters">
+      <div class="llm-sampling-params" aria-label="取樣參數">
         <div class="llm-sampling-params__head">
-          <span class="llm-toolbar__label">Sampling Parameters</span>
-          <button type="button" class="llm-action-btn llm-action-btn--ghost" data-action="reset-defaults" style="padding:0.15rem 0.5rem;font-size:0.7rem;">Reset Defaults (T=1.0, K=64, P=0.95)</button>
+          <span class="llm-toolbar__label">取樣參數</span>
+          <button type="button" class="llm-action-btn llm-action-btn--ghost" data-action="reset-defaults" style="padding:0.15rem 0.5rem;font-size:0.7rem;">重設為預設值（T=1.0, K=64, P=0.95）</button>
         </div>
         <div class="llm-slider-grid" style="margin-bottom:0;">
           <label class="llm-slider-card">
@@ -4396,7 +4396,7 @@
           </label>
           <label class="llm-slider-card">
             <div style="display:flex;justify-content:space-between;">
-              <strong>Top-P (Nucleus)</strong><code data-role="topp-val">0.95</code>
+              <strong>Top-P（Nucleus）</strong><code data-role="topp-val">0.95</code>
             </div>
             <input type="range" min="0.10" max="1.00" step="0.05" value="0.95" data-role="topp" />
           </label>
@@ -4496,9 +4496,9 @@
         const keptByK = idx < topK;
         const keptByP = idx === 0 || prevCum < topP;
         const active = keptByK && keptByP;
-        let reason = "Active (In Nucleus)";
-        if (!keptByK) reason = `Filtered (Top-K > ${topK})`;
-        else if (!keptByP) reason = `Filtered (Top-P > ${topP.toFixed(2)})`;
+        let reason = "有效（在 Nucleus 內）";
+        if (!keptByK) reason = `已過濾（Top-K > ${topK}）`;
+        else if (!keptByP) reason = `已過濾（Top-P > ${topP.toFixed(2)}）`;
         return { ...c, prob, cumP, active, reason };
       });
     };
@@ -4515,7 +4515,7 @@
 
       const autoBtn = el.querySelector('[data-action="auto-gen"]');
       autoBtn.classList.toggle("llm-action-btn--running", autoGenRunning);
-      autoBtn.textContent = autoGenRunning ? "⏸ Stop Auto-Generate" : "▶ Auto-Generate";
+      autoBtn.textContent = autoGenRunning ? "⏸ 停止自動生成" : "▶ 自動生成";
 
       if (!promptsEl.children.length) {
         promptsEl.innerHTML = SAMPLING_PROMPTS.map(
@@ -4534,8 +4534,8 @@
       const sampledAtStep = generatedTokens[clampedStepIdx];
       const streamStepLabel =
         generatedTokens.length === 0
-          ? `Step 1 of ${totalSteps} — Ready to sample`
-          : `Step ${clampedStepIdx + 1} of ${totalSteps} (${generatedTokens.length}/${totalSteps} sampled)`;
+          ? `步驟 1 / ${totalSteps} — 準備取樣`
+          : `步驟 ${clampedStepIdx + 1} / ${totalSteps}（已取樣 ${generatedTokens.length}/${totalSteps}）`;
 
       const mtpRunning =
         mtpMode &&
@@ -4552,25 +4552,25 @@
               mtpPhase === "verifying" ? "llm-token-ghost--checking" : "",
               isRejecting ? "llm-token-ghost--rejected" : "",
             ].join(" ");
-            return `<span class="${cls}" title="${isRejecting ? "Draft missed — target model replacing" : "Draft token (not yet verified)"}">${escapeHtml(fmtTok(tok))}</span>`;
+            return `<span class="${cls}" title="${isRejecting ? "草稿未命中 — 目標模型正在替換" : "草稿詞元（尚未驗證）"}">${escapeHtml(fmtTok(tok))}</span>`;
           })
           .join("")
         : "";
 
       seqEl.innerHTML = `
         <div style="font-size:0.78rem;color:var(--gemma-text-muted);margin-bottom:0.35rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.35rem;">
-          <span><strong>Generated Sequence</strong> · ${streamStepLabel}</span>
-          ${mtpMode ? `<span class="llm-widget__badge">⚡ 3.2× Speculative Speedup</span>` : ""}
+          <span><strong>已生成的序列</strong> · ${streamStepLabel}</span>
+          ${mtpMode ? `<span class="llm-widget__badge">⚡ 3.2× 推測式加速</span>` : ""}
         </div>
         <div style="font-family:var(--md-code-font-family, monospace);font-size:0.95rem;display:flex;flex-wrap:wrap;align-items:center;gap:3px;min-height:1.9rem;">
           <span>${escapeHtml(p.basePrompt)}</span>${generatedTokens
           .map((tok, idx) => {
             const isInspected = idx === clampedStepIdx;
             const displayTok = fmtTok(tok);
-            return `<button type="button" class="token-turn ${idx === justSampledIdx ? "llm-token-fly" : ""}" data-step-idx="${idx}" title="Click to inspect Step ${idx + 1} distribution (${escapeHtml(tok)})" style="margin-left:2px;cursor:pointer;border:${isInspected ? "2px solid var(--gemma-accent)" : "1px solid transparent"};font-family:inherit;font-size:inherit;">${escapeHtml(displayTok)}</button>`;
+            return `<button type="button" class="token-turn ${idx === justSampledIdx ? "llm-token-fly" : ""}" data-step-idx="${idx}" title="點擊查看步驟 ${idx + 1} 的分布（${escapeHtml(tok)}）" style="margin-left:2px;cursor:pointer;border:${isInspected ? "2px solid var(--gemma-accent)" : "1px solid transparent"};font-family:inherit;font-size:inherit;">${escapeHtml(displayTok)}</button>`;
           })
           .join("")}${ghostHtml}${!mtpRunning && generatedTokens.length < totalSteps && clampedStepIdx === generatedTokens.length
-            ? `<span class="llm-widget__badge" style="margin-left:4px;opacity:0.85;">${scanningRowIdx >= 0 ? "🎲 Rolling…" : "Next: Step " + (generatedTokens.length + 1)}</span>`
+            ? `<span class="llm-widget__badge" style="margin-left:4px;opacity:0.85;">${scanningRowIdx >= 0 ? "🎲 擲骰中…" : "下一步：步驟 " + (generatedTokens.length + 1)}</span>`
             : ""
           }
         </div>
@@ -4585,18 +4585,18 @@
           const canSelect = idx <= generatedTokens.length;
           const wasReplaced = mtpMode && tok && p.mtpDraft[idx] !== p.mtpTarget[idx] && tok === p.mtpTarget[idx];
           const label = tok
-            ? `Step ${idx + 1}: ${tok.replace(/^▁/, "")} ${wasReplaced ? "↻" : "✓"}`
+            ? `步驟 ${idx + 1}：${tok.replace(/^▁/, "")} ${wasReplaced ? "↻" : "✓"}`
             : idx === generatedTokens.length
-              ? `Step ${idx + 1} (Next)`
-              : `Step ${idx + 1}`;
+              ? `步驟 ${idx + 1}（下一步）`
+              : `步驟 ${idx + 1}`;
           return `<button type="button" class="llm-seg__btn ${isCurrent ? "llm-seg__btn--active" : ""}" data-step-idx="${idx}" ${canSelect ? "" : "disabled"}>${escapeHtml(label)}</button>`;
         })
         .join("");
 
       barsHeadEl.innerHTML = `<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.5rem;margin-bottom:0.45rem;font-size:0.78rem;color:var(--gemma-text-muted);">
-          <span><strong style="color:var(--md-default-fg-color);">Candidate Probabilities</strong> · ${sampledAtStep !== undefined
-          ? `Sampled <code>${escapeHtml(sampledAtStep)}</code>`
-          : "Ready to sample"
+          <span><strong style="color:var(--md-default-fg-color);">候選詞元機率</strong> · ${sampledAtStep !== undefined
+          ? `已取樣 <code>${escapeHtml(sampledAtStep)}</code>`
+          : "準備取樣"
         }</span>
           <div class="llm-seg">${stepPillsHtml}</div>
         </div>`;
@@ -4626,12 +4626,12 @@
         const isDraftMissRow = isMtpMissStep && item.t === stepDraft;
         const statusLabel = isWin
           ? isMtpMissStep
-            ? "🎯 Target Replaced!"
-            : "🎲 Sampled!"
+            ? "🎯 已由目標模型替換！"
+            : "🎲 已取樣！"
           : isDraftMissRow
-            ? `✗ Drafter Miss (${item.active ? "Low Prob" : item.reason})`
+            ? `✗ 草稿器未命中（${item.active ? "低機率" : item.reason}）`
             : item.active
-              ? "✓ Kept"
+              ? "✓ 保留"
               : item.reason;
         const statusColor = isDraftMissRow
           ? "var(--gemma-cat-role-fg)"
@@ -4652,7 +4652,7 @@
       });
 
       if (firstFilteredIdx >= 0) {
-        cutoffEl.textContent = `✂ Nucleus / Top-K Cutoff (Top-P = ${topP.toFixed(2)}, Top-K = ${topK}) — Tokens below are zeroed out`;
+        cutoffEl.textContent = `✂ Nucleus / Top-K 截斷（Top-P = ${topP.toFixed(2)}, Top-K = ${topK}）— 以下詞元的機率歸零`;
         const anchorRow = barRows[firstFilteredIdx].row;
         if (cutoffEl.parentNode !== barsListEl || cutoffEl.nextElementSibling !== anchorRow) {
           barsListEl.insertBefore(cutoffEl, anchorRow);
@@ -4670,7 +4670,7 @@
       const n = p.mtpDraft.length;
       const phaseOrder = { idle: -1, drafting: 0, verifying: 1, accepting: 2, rejecting: 2, done: 3 };
       const cur = phaseOrder[mtpPhase];
-      const phases = [`① Draft ×${n}`, "② Verify (1 target pass)", "③ Accept & Replace"];
+      const phases = [`① 草稿 ×${n}`, "② 驗證（目標模型 1 次傳播）", "③ 接受並替換"];
       const phaseHtml = phases
         .map((label, i) => {
           const state = cur === i ? "llm-mtp-phase--active" : cur > i ? "llm-mtp-phase--done" : "";
@@ -4687,7 +4687,7 @@
           if (idx < mtpVerifiedCount) {
             if (isMiss) {
               cls = `llm-mtp-chip--replaced ${idx === mtpPopIdx ? "llm-mtp-chip--accept" : ""}`;
-              innerHtml = `<s class="llm-mtp-chip__miss" title="Drafter proposed ${escapeHtml(d)} (rejected by target model)">${escapeHtml(d)}</s> <span class="llm-mtp-chip__arrow">→</span> ${escapeHtml(targetTok)} <span class="llm-mtp-chip__icon">↻</span>`;
+              innerHtml = `<s class="llm-mtp-chip__miss" title="草稿器提出了 ${escapeHtml(d)}（已被目標模型拒絕）">${escapeHtml(d)}</s> <span class="llm-mtp-chip__arrow">→</span> ${escapeHtml(targetTok)} <span class="llm-mtp-chip__icon">↻</span>`;
             } else {
               cls = `llm-mtp-chip--verified ${idx === mtpPopIdx ? "llm-mtp-chip--accept" : ""}`;
               innerHtml = `${escapeHtml(d)} <span class="llm-mtp-chip__icon">✓</span>`;
@@ -4710,14 +4710,14 @@
       const acceptedDrafts = p.mtpDraft.filter((d, i) => d === p.mtpTarget[i]).length;
       const missIdx = p.mtpDraft.findIndex((d, i) => d !== p.mtpTarget[i]);
       let status;
-      if (mtpPhase === "drafting") status = `Drafter proposing token ${mtpDraftedCount}/${n}…`;
-      else if (mtpPhase === "verifying") status = `Target model scoring all ${n} drafts in one parallel forward pass…`;
-      else if (mtpPhase === "accepting") status = `Accepted ${mtpVerifiedCount}/${n} — committing verified drafts to context…`;
+      if (mtpPhase === "drafting") status = `草稿器正在提出詞元 ${mtpDraftedCount}/${n}…`;
+      else if (mtpPhase === "verifying") status = `目標模型以一次平行前向傳播為全部 ${n} 個草稿評分…`;
+      else if (mtpPhase === "accepting") status = `已接受 ${mtpVerifiedCount}/${n} — 正在將已驗證的草稿寫入上下文…`;
       else if (mtpPhase === "rejecting")
-        status = `✗ Draft #${missIdx + 1} (${p.mtpDraft[missIdx]}) missed — replacing with target model's prediction (${p.mtpTarget[missIdx]})…`;
+        status = `✗ 草稿 #${missIdx + 1}（${p.mtpDraft[missIdx]}）未命中 — 正在改用目標模型的預測（${p.mtpTarget[missIdx]}）…`;
       else if (mtpPhase === "done")
-        status = `✓ ${acceptedDrafts}/${n} drafts accepted · Final draft (${p.mtpDraft[missIdx]}) missed → replaced with target model's ${p.mtpTarget[missIdx]} in 1 pass`;
-      else status = "Press “Sample Next” to run one speculative step";
+        status = `✓ 已接受 ${acceptedDrafts}/${n} 個草稿 · 最後一個草稿（${p.mtpDraft[missIdx]}）未命中 → 已在 1 次傳播內改用目標模型的 ${p.mtpTarget[missIdx]}`;
+      else status = "按「取樣下一個」執行一次推測步驟";
 
       const drafterBlocks = p.mtpDraft
         .map((_, i) => `<span class="llm-mtp-cost__block llm-mtp-cost__block--mini ${i < mtpDraftedCount ? "llm-mtp-cost__block--lit" : ""}"></span>`)
@@ -4728,17 +4728,17 @@
       return `<div class="llm-mtp-panel">
           <div class="llm-mtp-phases">${phaseHtml}</div>
           <div class="llm-mtp-row">
-            <span class="token-think">MTP Drafter (4-Layer Assistant)</span>
+            <span class="token-think">MTP 草稿器（4 層輔助模型）</span>
             <div class="llm-mtp-track ${mtpPhase === "verifying" ? "llm-mtp-track--verifying" : ""} ${mtpPhase === "done" ? "llm-mtp-track--done" : ""}">${chipsHtml}</div>
           </div>
           <div class="llm-mtp-status ${mtpPhase === "done" ? "llm-mtp-status--done" : ""}" aria-live="polite">${escapeHtml(status)}</div>
           <div class="llm-mtp-cost">
-            <span>Standard</span>
+            <span>標準</span>
             <span class="llm-mtp-cost__blocks">${standardBlocks}</span>
-            <span>${n} target passes</span>
+            <span>${n} 次目標模型傳播</span>
             <span>MTP</span>
             <span class="llm-mtp-cost__blocks">${drafterBlocks}<span class="llm-mtp-cost__plus">+</span><span class="llm-mtp-cost__block ${targetCls}"></span></span>
-            <span>${n} light drafter steps + 1 target pass</span>
+            <span>${n} 個輕量草稿器步驟 + 1 次目標模型傳播</span>
           </div>
         </div>`;
     };
@@ -5019,7 +5019,7 @@
      ===================================================================== */
   const PLAYGROUND_SYSTEM_PROMPT = "You are a helpful assistant.";
 
-  const PLAYGROUND_CAT_THUMB_SVG = `<svg width="60" height="44" viewBox="0 0 60 44" aria-label="Orange tabby cat sleeping on a sunny windowsill" role="img" style="display:block;border-radius:4px;flex-shrink:0;border:1px solid var(--gemma-border);">
+  const PLAYGROUND_CAT_THUMB_SVG = `<svg width="60" height="44" viewBox="0 0 60 44" aria-label="橘色虎斑貓在陽光充足的窗台上睡覺" role="img" style="display:block;border-radius:4px;flex-shrink:0;border:1px solid var(--gemma-border);">
     <rect width="60" height="34" fill="#dbeafe"/>
     <polygon points="8,0 38,0 54,34 18,34" fill="#fef08a" opacity="0.65"/>
     <line x1="30" y1="0" x2="30" y2="34" stroke="#cbd5e1" stroke-width="1.2"/>
@@ -5042,7 +5042,7 @@
   const PLAYGROUND_SCENARIOS = [
     {
       id: "math",
-      label: "Math & Logic Puzzle",
+      label: "數學與邏輯謎題",
       userPrompt: "A bat and a ball cost $1.10 in total. The bat costs $1.00 more than the ball. How much is the ball?",
       thought: "Let ball = x. Then bat = x + 1.00. Total: x + (x + 1.00) = 1.10 → 2x = 0.10 → x = $0.05 (5 cents).",
       answer: "The ball costs <strong>$0.05 (5 cents)</strong>, and the bat costs <strong>$1.05</strong> ($0.05 + $1.00 = $1.05, totaling $1.10).",
@@ -5050,7 +5050,7 @@
     },
     {
       id: "vision",
-      label: "Vision (<|image|>)",
+      label: "視覺 (<|image|>)",
       userPrompt: "<|image|>What is the cat doing in this photo?",
       imageName: "cat_windowsill.jpg",
       thought: "Inspecting 256 projected image soft tokens: an orange tabby cat with closed eyes is curled up asleep in a warm sunbeam on a wooden windowsill.",
@@ -5059,7 +5059,7 @@
     },
     {
       id: "tool",
-      label: "Tool Call (<|tool_call>)",
+      label: "工具呼叫 (<|tool_call>)",
       userPrompt: "What's the current weather in Tokyo?",
       thought: 'User asks for live weather in Tokyo. I should invoke the declared get_current_weather tool with location="Tokyo".',
       toolDeclSig: "get_current_weather(location: string)",
@@ -5086,27 +5086,27 @@
 
     el.innerHTML = `
       <div class="llm-widget__header">
-        <p class="llm-widget__title">Interactive: End-to-End Gemma 4 Chat, Thinking &amp; Tool Stream</p>
+        <p class="llm-widget__title">互動示範：Gemma 4 端到端聊天、思考與工具串流</p>
       </div>
-      <div class="llm-toolbar llm-toolbar--compact" role="group" aria-label="Select prompt scenario">
-        <span class="llm-toolbar__label">Scenario</span>
+      <div class="llm-toolbar llm-toolbar--compact" role="group" aria-label="選擇提示情境">
+        <span class="llm-toolbar__label">情境</span>
         <div class="llm-toolbar__group" data-role="scenarios"></div>
       </div>
       <div class="llm-toolbar llm-toolbar--split">
-        <div class="llm-toolbar__group" role="group" aria-label="View mode and reasoning controls">
-          <span class="llm-toolbar__label">View</span>
-          <div class="llm-seg" role="group" aria-label="Output format">
-            <button type="button" class="llm-seg__btn llm-seg__btn--active" data-view-mode="formatted">Formatted UI</button>
-            <button type="button" class="llm-seg__btn" data-view-mode="raw">Raw Token Stream</button>
+        <div class="llm-toolbar__group" role="group" aria-label="檢視模式與推理控制">
+          <span class="llm-toolbar__label">檢視</span>
+          <div class="llm-seg" role="group" aria-label="輸出格式">
+            <button type="button" class="llm-seg__btn llm-seg__btn--active" data-view-mode="formatted">格式化介面</button>
+            <button type="button" class="llm-seg__btn" data-view-mode="raw">原始詞元串流</button>
           </div>
           <span class="llm-toolbar__sep" aria-hidden="true"></span>
           <button type="button" class="llm-switch llm-switch--on" role="switch" aria-checked="true" data-action="toggle-think">
             <span class="llm-switch__track" aria-hidden="true"><span class="llm-switch__thumb"></span></span>
-            <span>Thinking <code>&lt;|think|&gt;</code></span>
+            <span>思考模式 <code>&lt;|think|&gt;</code></span>
           </button>
         </div>
-        <div class="llm-toolbar__group" role="group" aria-label="Stream playback actions">
-          <button type="button" class="llm-action-btn llm-btn--primary" data-action="play-full">▶ Stream Response</button>
+        <div class="llm-toolbar__group" role="group" aria-label="串流播放操作">
+          <button type="button" class="llm-action-btn llm-btn--primary" data-action="play-full">▶ 串流回應</button>
         </div>
       </div>
       <div class="llm-panel" data-role="output"></div>
@@ -5158,7 +5158,7 @@
       });
       playBtn.classList.toggle("llm-btn--primary", !isPlaying);
       playBtn.classList.toggle("llm-action-btn--running", isPlaying);
-      playBtn.textContent = isPlaying ? "⏸ Stop Streaming" : "▶ Stream Response";
+      playBtn.textContent = isPlaying ? "⏸ 停止串流" : "▶ 串流回應";
 
       const thoughtWordsCount = thinkingOn ? s.thought.split(" ").length : 0;
       const isThoughtComplete =
@@ -5182,14 +5182,14 @@
 
       const statusBadgeText =
         isPlaying && isToolScenario && isThoughtComplete && toolStep === 1
-          ? `⏸ Paused on <|tool_response> — executing ${s.toolCallSig}…`
+          ? `⏸ 已在 <|tool_response> 暫停 — 正在執行 ${s.toolCallSig}…`
           : isPlaying
-            ? `⚡ Streaming: ${streamedTokCount} tokens · ~84 tok/s`
-            : "✓ Generation Complete (stopped on <turn|>)";
+            ? `⚡ 串流中：${streamedTokCount} 個詞元 · ~84 tok/s`
+            : "✓ 生成完成（停在 <turn|>）";
 
       const telemetryBar = `
         <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.4rem;margin-bottom:0.5rem;padding-bottom:0.4rem;border-bottom:1px solid var(--gemma-border);font-size:0.74rem;color:var(--gemma-text-muted);">
-          <span><strong>Chat Template:</strong> <code>&lt;|turn&gt;system</code> · <code>&lt;|turn&gt;user</code> · <code>&lt;|turn&gt;model</code></span>
+          <span><strong>聊天範本：</strong> <code>&lt;|turn&gt;system</code> · <code>&lt;|turn&gt;user</code> · <code>&lt;|turn&gt;model</code></span>
           <span class="llm-widget__badge">${escapeHtml(statusBadgeText)}</span>
         </div>
       `;
@@ -5207,7 +5207,7 @@
                 <div style="font-size:0.75rem;font-weight:600;color:var(--md-default-fg-color);">${escapeHtml(s.imageName)}</div>
                 <div style="font-size:0.69rem;color:var(--gemma-text-muted);display:flex;align-items:center;gap:0.25rem;margin-top:0.1rem;">
                   <span class="token-multi" style="font-size:0.66rem;">&lt;|image|&gt;</span>
-                  <span>256 soft tokens</span>
+                  <span>256 個 soft tokens</span>
                 </div>
               </div>
             </div>`
@@ -5226,13 +5226,13 @@
           const toolCallRawHtml =
             isThoughtComplete && toolStep >= 1
               ? `<div style="margin-top:0.2rem;"><span class="token-tool">&lt;|tool_call&gt;</span><code>${s.toolCallRaw}</code><span class="token-tool">&lt;tool_call|&gt;</span><span class="token-tool">&lt;|tool_response&gt;</span>${toolStep < 2 ? cursorHtml : ""
-              } <span style="font-size:0.7rem;color:var(--gemma-text-muted);font-family:var(--md-text-font-family, sans-serif);white-space:nowrap;">← 1. Halts on &lt;|tool_response&gt;</span></div>`
+              } <span style="font-size:0.7rem;color:var(--gemma-text-muted);font-family:var(--md-text-font-family, sans-serif);white-space:nowrap;">← 1. 停在 &lt;|tool_response&gt;</span></div>`
               : isThoughtComplete
                 ? cursorHtml
                 : "";
           const toolRespRawHtml =
             isThoughtComplete && toolStep >= 2
-              ? `<div style="margin-top:0.2rem;"><code>${s.toolRespRaw}</code><span class="token-tool">&lt;tool_response|&gt;</span> <span style="font-size:0.7rem;color:var(--gemma-text-muted);font-family:var(--md-text-font-family, sans-serif);white-space:nowrap;">← 2. App injects result</span></div>`
+              ? `<div style="margin-top:0.2rem;"><code>${s.toolRespRaw}</code><span class="token-tool">&lt;tool_response|&gt;</span> <span style="font-size:0.7rem;color:var(--gemma-text-muted);font-family:var(--md-text-font-family, sans-serif);white-space:nowrap;">← 2. App 注入結果</span></div>`
               : "";
           const finalAnsRawHtml =
             isThoughtComplete && toolStep >= 2
@@ -5258,7 +5258,7 @@
           ${telemetryBar}
           <div style="font-family:var(--md-code-font-family, monospace);font-size:0.82rem;line-height:1.8;overflow-wrap:anywhere;">
             <div style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:var(--gemma-text-muted);margin-bottom:0.15rem;">
-              Pre-Populated Input Prompt (<code style="text-transform:none;">apply_chat_template</code> prefill — ends at <code style="text-transform:none;">&lt;|turn&gt;model\\n</code>)
+              預先填入的輸入提示（<code style="text-transform:none;">apply_chat_template</code> 預填 — 結尾為 <code style="text-transform:none;">&lt;|turn&gt;model\\n</code>)
             </div>
             <div>
               <span class="token-turn">&lt;|turn&gt;</span><span class="token-role">system</span><code>\\n</code>${
@@ -5270,7 +5270,7 @@
             </div>
             <div style="margin-top:0.25rem;padding-top:0.25rem;border-top:1px dashed var(--gemma-border);">
               <div style="font-size:0.7rem;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:var(--gemma-text-muted);margin-bottom:0.1rem;">
-                Model Turn (Prompt Prefix <code style="text-transform:none;">&lt;|turn&gt;model\\n</code> + Generated Output Stream)
+                模型輪次（提示前綴 <code style="text-transform:none;">&lt;|turn&gt;model\\n</code> + 已生成的輸出串流）
               </div>
               <span class="token-turn">&lt;|turn&gt;</span><span class="token-role">model</span><code>\\n</code>${modelStreamRaw}
             </div>
@@ -5284,7 +5284,7 @@
           `<span>${escapeHtml(PLAYGROUND_SYSTEM_PROMPT)}</span>`,
           isToolScenario
             ? `<span style="display:inline-flex;align-items:center;flex-wrap:wrap;gap:0.25rem;padding:0.1rem 0.45rem;border-radius:4px;border:1px solid var(--gemma-cat-tool-border);background:var(--gemma-surface-sunken);font-size:0.74rem;">
-                <strong>🛠 Declared Tool:</strong> <code>${escapeHtml(s.toolDeclSig)}</code>
+                <strong>🛠 已宣告的工具：</strong> <code>${escapeHtml(s.toolDeclSig)}</code>
                 <span class="token-tool" style="font-size:0.68rem;">&lt;|tool&gt;…&lt;tool|&gt;</span>
               </span>`
             : "",
@@ -5295,7 +5295,7 @@
         const thoughtBoxHtml = thinkingOn
           ? `<div class="${!isThoughtComplete ? "llm-thinking-box--streaming" : ""}" style="padding:0.5rem 0.75rem;margin-bottom:0.55rem;border:1px solid var(--gemma-cat-think-border);border-left:3px solid var(--gemma-status-warning);background:var(--gemma-surface-sunken);border-radius:4px;font-size:0.8rem;">
               <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.35rem;margin-bottom:0.2rem;">
-                <strong>🧠 ${isToolScenario ? "1. " : ""}Thought Process:</strong>
+                <strong>🧠 ${isToolScenario ? "1. " : ""}思考過程：</strong>
                 <span style="font-family:var(--md-code-font-family, monospace);font-size:0.7rem;">
                   <span class="token-think">&lt;|channel&gt;thought</span>…${isThoughtComplete ? `<span class="token-think">&lt;channel|&gt;</span>` : ""}
                 </span>
@@ -5309,13 +5309,13 @@
         if (isToolScenario) {
           const toolCallCardHtml = !isThoughtComplete
             ? `<div style="font-size:0.78rem;color:var(--gemma-text-muted);font-style:italic;">
-                Waiting for model to finish <code>&lt;|channel&gt;thought</code> before emitting <code>&lt;|tool_call&gt;</code>…
+                等待模型完成 <code>&lt;|channel&gt;thought</code>，再發出 <code>&lt;|tool_call&gt;</code>…
               </div>`
             : toolStep >= 1
               ? `<div style="padding:0.5rem 0.75rem;margin-bottom:0.35rem;border:1px solid var(--gemma-cat-tool-border);border-left:3px solid var(--gemma-cat-tool-border);background:var(--gemma-surface-sunken);border-radius:4px;font-size:0.8rem;">
                   <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.35rem;margin-bottom:0.25rem;">
-                    <span><strong>🔧 2. Model Tool Call Request:</strong> <code>${escapeHtml(s.toolCallSig)}</code></span>
-                    <span class="llm-widget__badge" style="font-size:0.68rem;">⏸ Halts on &lt;|tool_response&gt; stop token</span>
+                    <span><strong>🔧 2. 模型工具呼叫請求：</strong> <code>${escapeHtml(s.toolCallSig)}</code></span>
+                    <span class="llm-widget__badge" style="font-size:0.68rem;">⏸ 停在 &lt;|tool_response&gt; 停止詞元</span>
                   </div>
                   <div style="font-family:var(--md-code-font-family, monospace);font-size:0.76rem;color:var(--gemma-text-secondary);overflow-x:auto;">
                     <span class="token-tool">&lt;|tool_call&gt;</span><code>${s.toolCallRaw}</code><span class="token-tool">&lt;tool_call|&gt;</span><span class="token-tool">&lt;|tool_response&gt;</span>${toolStep < 2 ? cursorHtml : ""}
@@ -5326,12 +5326,12 @@
           const toolRespCardHtml =
             isThoughtComplete && toolStep >= 2
               ? `<div style="display:flex;align-items:center;gap:0.4rem;margin:0.2rem 0 0.35rem 0.5rem;font-size:0.74rem;color:var(--gemma-text-muted);">
-                  <span>↳ <strong>Your App Runtime</strong> intercepts call, executes <code>${escapeHtml(s.toolCallSig)}</code>, and appends result:</span>
+                  <span>↳ <strong>你的 App 執行環境</strong>攔截呼叫、執行 <code>${escapeHtml(s.toolCallSig)}</code>，並附加結果：</span>
                 </div>
                 <div style="padding:0.5rem 0.75rem;margin-bottom:0.55rem;border:1px solid var(--gemma-border-strong);border-left:3px solid var(--gemma-accent);background:var(--gemma-surface-sunken);border-radius:4px;font-size:0.8rem;">
                   <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:0.35rem;margin-bottom:0.25rem;">
-                    <span><strong>⚡ 3. Injected Tool Response:</strong> <code>${escapeHtml(s.toolRespJson)}</code></span>
-                    <span class="llm-widget__badge" style="font-size:0.68rem;">App → Model Context</span>
+                    <span><strong>⚡ 3. 注入的工具回應：</strong> <code>${escapeHtml(s.toolRespJson)}</code></span>
+                    <span class="llm-widget__badge" style="font-size:0.68rem;">App → 模型上下文</span>
                   </div>
                   <div style="font-family:var(--md-code-font-family, monospace);font-size:0.76rem;color:var(--gemma-text-secondary);overflow-x:auto;">
                     <code>${s.toolRespRaw}</code><span class="token-tool">&lt;tool_response|&gt;</span>
@@ -5339,7 +5339,7 @@
                 </div>`
               : isThoughtComplete && toolStep === 1
                 ? `<div style="font-size:0.76rem;color:var(--gemma-text-muted);font-style:italic;margin:0.25rem 0;">
-                    ⏳ Waiting for external application to execute <code>${escapeHtml(s.toolCallSig)}</code> and return <code>&lt;tool_response|&gt;</code>…
+                    ⏳ 等待外部應用程式執行 <code>${escapeHtml(s.toolCallSig)}</code> 並回傳 <code>&lt;tool_response|&gt;</code>…
                   </div>`
                 : "";
 
@@ -5347,7 +5347,7 @@
             isThoughtComplete && toolStep >= 2
               ? `<div style="padding:0.45rem 0.75rem;border:1px solid var(--gemma-border);border-radius:4px;background:var(--gemma-surface);line-height:1.6;">
                   <div style="font-size:0.74rem;font-weight:700;color:var(--gemma-text-muted);margin-bottom:0.15rem;">
-                    💬 4. Final Assistant Response (synthesized from tool output)
+                    💬 4. 最終助理回應（由工具輸出合成）
                   </div>
                   <div>
                     ${visibleAnswer}${isAnswerComplete ? ` <span class="token-turn" style="font-size:0.72rem;">&lt;turn|&gt;</span>` : cursorHtml}
@@ -5359,7 +5359,7 @@
         } else {
           const answerRowHtml = !isThoughtComplete
             ? `<div style="font-size:0.78rem;color:var(--gemma-text-muted);font-style:italic;">
-                Waiting for model to emit closing <code>&lt;channel|&gt;</code> before generating final answer…
+                等待模型發出結尾的 <code>&lt;channel|&gt;</code>，再生成最終答案…
               </div>`
             : `<div style="line-height:1.6;">
                 ${visibleAnswer}${isAnswerComplete ? ` <span class="token-turn" style="font-size:0.72rem;">&lt;turn|&gt;</span>` : cursorHtml
@@ -5490,52 +5490,52 @@
     {
       no: "01",
       stepId: "tokenization",
-      shortTitle: "1. Tokenization",
-      line1: "Text → Token IDs",
-      line2: "(262,144 vocab)",
-      traceLabel: "01 · Tokenization",
+      shortTitle: "1. 分詞",
+      line1: "文字 → 詞元 ID",
+      line2: "（262,144 詞彙表）",
+      traceLabel: "01 · 分詞",
       traceHtml: `<code>"The cat sat on the"</code> → <span class="llm-ov-tok">The <small>#818</small></span> <span class="llm-ov-tok">▁cat <small>#5866</small></span> <span class="llm-ov-tok">▁sat <small>#2838</small></span> <span class="llm-ov-tok">▁on <small>#580</small></span> <span class="llm-ov-tok">▁the <small>#506</small></span>`,
-      cta: "Explore 01 →",
+      cta: "探索 01 →",
     },
     {
       no: "02",
       stepId: "embeddings",
-      shortTitle: "2. Embeddings",
-      line1: "IDs → Meaning",
+      shortTitle: "2. 嵌入",
+      line1: "ID → 意義",
       line2: "Vectors + PLE",
-      traceLabel: "02 · Embeddings",
-      traceHtml: `Row lookup in <code>262,144 × 1,536</code> table: <code>▁cat (#5866)</code> → <code>[−0.0049, −0.0491, −0.0098, +0.0133, …]</code>`,
-      cta: "Explore 02 →",
+      traceLabel: "02 · 嵌入",
+      traceHtml: `在 <code>262,144 × 1,536</code> 表中查詢該列：<code>▁cat (#5866)</code> → <code>[−0.0049, −0.0491, −0.0098, +0.0133, …]</code>`,
+      cta: "探索 02 →",
     },
     {
       no: "03",
       stepId: "attention",
-      shortTitle: "3. Layers",
-      line1: "Local/Global Attn",
+      shortTitle: "3. 層",
+      line1: "局部／全域注意力",
       line2: "+ GeGLU FFN / MoE",
-      traceLabel: "03 · Transformer Layers",
-      traceHtml: `Hybrid Local &amp; Global Attention (<code>p-RoPE</code> + <code>K=V</code> or KV sharing) links <code>▁the</code> ← <code>▁sat</code> + <code>▁cat</code>, then <strong>GeGLU FFN / MoE</strong> refines each vector`,
-      cta: "Explore 03 →",
+      traceLabel: "03 · Transformer 層",
+      traceHtml: `混合式局部 &amp; 全域注意力（<code>p-RoPE</code> + <code>K=V</code> 或 KV 共享）連結 <code>▁the</code> ← <code>▁sat</code> + <code>▁cat</code>，接著由 <strong>GeGLU FFN / MoE</strong> 精煉每個向量`,
+      cta: "探索 03 →",
     },
     {
       no: "04",
       stepId: "sampling",
-      shortTitle: "4. Sampling",
+      shortTitle: "4. 取樣",
       line1: "Logits → Softmax",
       line2: "Temp / K / Top-P",
-      traceLabel: "04 · Next-Token Sampling",
-      traceHtml: `<code>262,144</code> logits → Softmax: <span class="llm-ov-tok llm-ov-tok--win">▁mat 68% ✓</span> <span class="llm-ov-tok">▁rug 18%</span> <span class="llm-ov-tok">▁floor 9%</span> → samples <strong><code>▁mat</code></strong>`,
-      cta: "Explore 04 →",
+      traceLabel: "04 · 下一個詞元取樣",
+      traceHtml: `<code>262,144</code> 個 logits → Softmax：<span class="llm-ov-tok llm-ov-tok--win">▁mat 68% ✓</span> <span class="llm-ov-tok">▁rug 18%</span> <span class="llm-ov-tok">▁floor 9%</span> → 取樣得到 <strong><code>▁mat</code></strong>`,
+      cta: "探索 04 →",
     },
     {
       no: "05",
       stepId: "putting-it-together",
-      shortTitle: "5. Auto-Loop",
-      line1: "Append token ID",
-      line2: "& repeat from #2",
-      traceLabel: "05 · Autoregressive Loop",
-      traceHtml: `Appends <strong><code>▁mat (#1756)</code></strong> ↺ loops back to <strong>Stage 2 (Embeddings)</strong> to vectorize the new ID until <span class="token-turn" style="font-size:0.78rem">&lt;turn|&gt;</span>`,
-      cta: "Explore 05 →",
+      shortTitle: "5. 自回歸迴圈",
+      line1: "附加詞元 ID",
+      line2: "& 從 #2 重複",
+      traceLabel: "05 · 自回歸迴圈",
+      traceHtml: `附加 <strong><code>▁mat (#1756)</code></strong> ↺ 迴圈回到 <strong>第 2 階段（嵌入）</strong>，將新的 ID 向量化，直到 <span class="token-turn" style="font-size:0.78rem">&lt;turn|&gt;</span>`,
+      cta: "探索 05 →",
     },
   ];
 
@@ -5547,15 +5547,15 @@
     const shell = el.closest("[data-llm-shell]");
 
     el.innerHTML = `
-      <div class="llm-overview-pipe" role="region" aria-label="The 5-stage LLM pipeline preview">
+      <div class="llm-overview-pipe" role="region" aria-label="五階段 LLM 管線預覽">
         <div class="llm-overview-pipe__head">
           <div class="llm-toolbar__group">
-            <span class="llm-overview-pipe__kicker">Interactive: The 5-stage LLM pipeline</span>
-            <span class="llm-overview-pipe__hint">· Click any stage to preview, double-click to open</span>
+            <span class="llm-overview-pipe__kicker">互動示範：五階段 LLM 管線</span>
+            <span class="llm-overview-pipe__hint">· 點選任一階段預覽，點兩下開啟</span>
           </div>
           <button type="button" class="llm-action-btn" data-overview-auto style="border-radius:var(--gemma-radius-pill);"></button>
         </div>
-        <svg class="llm-overview-pipe__svg" viewBox="0 0 656 122" data-role="ov-svg" aria-label="Flowchart of the 5-stage Gemma 4 LLM pipeline"></svg>
+        <svg class="llm-overview-pipe__svg" viewBox="0 0 656 122" data-role="ov-svg" aria-label="Gemma 4 五階段 LLM 管線流程圖"></svg>
         <div class="llm-overview-pipe__trace" data-role="ov-trace"></div>
       </div>
     `;
@@ -5669,7 +5669,7 @@
     };
 
     const render = () => {
-      autoBtn.textContent = autoPlay ? "⏸ Pause Auto-Play" : "▶ Auto-Play";
+      autoBtn.textContent = autoPlay ? "⏸ 暫停自動播放" : "▶ 自動播放";
       autoBtn.classList.toggle("llm-action-btn--running", autoPlay);
       autoBtn.setAttribute("aria-pressed", String(autoPlay));
 
@@ -5716,7 +5716,7 @@
             stroke="${loopActive ? "var(--gemma-accent)" : "var(--gemma-border-strong)"}" stroke-width="1" />
           <text x="${midLoopX}" y="108" text-anchor="middle" font-size="9.2" font-weight="700"
             font-family="var(--md-code-font-family, monospace)"
-            fill="${loopActive ? "var(--gemma-cat-turn-fg)" : "var(--gemma-text-muted)"}">↺ Next step (embed new ID)</text>
+            fill="${loopActive ? "var(--gemma-cat-turn-fg)" : "var(--gemma-text-muted)"}">↺ 下一步（嵌入新的 ID）</text>
         </g>
       `;
 

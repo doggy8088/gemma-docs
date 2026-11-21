@@ -1,63 +1,63 @@
 ---
-title: Unused tokens
-seo_title: Fine-tune Gemma 4 unused tokens
-description: Turn Gemma 4's 6,227 reserved token slots into single-token routing tags, source tags, and domain terms without resizing the vocabulary.
+title: 未使用詞元
+seo_title: 微調 Gemma 4 未使用詞元
+description: 把 Gemma 4 的 6,227 個保留詞元槽位變成單一詞元路由標籤、來源標籤與領域詞彙，無需調整詞彙表大小。
 models: [gemma-4/e2b, gemma-4/e4b, gemma-4/12b, gemma-4/31b]
 frameworks: [transformers, peft, trl]
 colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs/notebooks/unused-tokens-gemma-4-e2b.ipynb
 ---
 
-# Unused tokens
+# 未使用詞元
 
-Every Gemma 4 checkpoint ships with **6,227 reserved token slots**, namely `<unused0>` (token ID `6`) through `<unused6226>` (token ID `262143`). Those unused tokens are already built into its 262,144-token vocabulary. This allows us to keep the vocabulary size and reuse the `<unused*>` slots in place. Keeping the vocabulary size fixed at `262,144` works on **every** Gemma 4 model without breaking per-layer embeddings or downstream GGUF and LiteRT-LM exports.
+每個 Gemma 4 檢查點都附帶 **6,227 個保留詞元槽位**，也就是從 `<unused0>`（詞元 ID `6`）到 `<unused6226>`（詞元 ID `262143`）。這些未使用詞元已經內建在 262,144 個詞元的詞彙表中。如此一來，我們可以保持詞彙表大小不變，就地重複使用 `<unused*>` 槽位。把詞彙表大小固定在 `262,144`，適用於**每種** Gemma 4 模型，不會破壞各層嵌入，也不會影響後續的 GGUF 與 LiteRT-LM 匯出。
 
-In this guide, we turn eight unused slots into single-token routing and source tags on `google/gemma-4-E2B-it`.
-
----
-
-## 1. Reusing slots versus resizing the vocabulary
-
-On **Gemma 4 E2B** and **E4B**, each decoder layer looks up a separate per-layer embedding table alongside the main embedding table. If we were to expand the actual vocabulary, we would have a problem since the per-layer embeddings stay at `262,144` tokens, which causes an error:
-
-![Comparing vocabulary resizing against reusing an unused slot across main and per-layer embeddings](../assets/tuning/vocab_01_unused_slots_vs_resize.svg)
+在本指南中，我們把八個未使用槽位變成 `google/gemma-4-E2B-it` 上的單一詞元路由標籤與來源標籤。
 
 ---
 
-## 2. Initializing and training selected tokens
+## 1. 重複使用槽位，對比調整詞彙表大小
 
-Because `<unused0>` through `<unused6226>` were, as their name imply, unused, their embeddings have no task meaning yet. Training them from scratch takes longer, while unfreezing the full 262,144-row embedding table adds over 400 million trainable weights.
+在 **Gemma 4 E2B** 與 **E4B** 上，每個解碼器層除了主嵌入表之外，還會查找一張獨立的各層嵌入表。如果我們擴大實際詞彙表，就會出問題，因為各層嵌入仍維持在 `262,144` 個詞元，進而引發錯誤：
 
-We can avoid both problems in two steps, namely initializing an unused token from subword embeddings and training only that row:
-
-1. **Initialize from existing words:** Before attaching LoRA, split a short description of each new token (such as `"route billing"` for `<unused0>`{.token-tool}) into its existing subwords and copy their average into that slot's row.
-2. **Train only the rows you use:** Pass `trainable_token_indices` in `LoraConfig` so PEFT updates only your chosen rows (for 8 tokens on E2B, fewer than 100K weights instead of 402M) and folds them cleanly back into the model when you merge.
-
-![Initializing an unused token from subword embeddings and training only that row](../assets/tuning/vocab_02_trainable_token_indices.svg)
-
-It's a very neat trick that prevents us from training entirely from scratch.
-
-!!! important "Initialize rows before wrapping the model with PEFT"
-    PEFT copies the starting embedding rows at the moment you call `get_peft_model()`. Always run your subword initialization **before** calling `get_peft_model()` so training starts from your averaged vectors.
+![比較在主嵌入與各層嵌入上，調整詞彙表大小與重複使用未使用槽位的差異](../assets/tuning/vocab_01_unused_slots_vs_resize.svg)
 
 ---
 
-## 3. Creating single tokens
+## 2. 初始化並訓練選定的詞元
 
-Plain-text tags like `[ROUTE: billing]` or `[DOC2]` split into several tokens every time the model generates them. Mapping those tags to `<unused0>` through `<unused7>` turns each one into a single generation step:
+由於 `<unused0>` 到 `<unused6226>` 如其名所示從未使用過，它們的嵌入目前還沒有任務意義。從頭訓練它們需要更長時間，而解凍完整的 262,144 列嵌入表又會增加超過 4 億個可訓練權重。
 
-![Comparing an 11-token plain-text response against a 4-token unused-token response](../assets/tuning/vocab_03_fertility_and_action_compression.svg)
+我們可以用兩個步驟避開這兩個問題：先從子詞嵌入初始化未使用詞元，再只訓練該列：
 
-Using single tokens for structured tags helps in three ways:
+1. **從現有詞彙初始化**：在附加 LoRA 之前，把每個新詞元的簡短描述（例如 `<unused0>`{.token-tool} 的 `"route billing"`）切成現有的子詞，再把子詞的平均值複製到該槽位的列中。
+2. **只訓練您使用的列**：在 `LoraConfig` 中傳入 `trainable_token_indices`，讓 PEFT 只更新您選定的列（E2B 上 8 個詞元不到 10 萬個權重，而非 4.02 億個），合併時也能乾淨地折回模型。
 
-- **Faster generation:** Writing `<unused0>`{.token-tool} and `<unused5>`{.token-multi} takes one step each instead of nine bracket, colon, and label tokens.
-- **One-step routing scores:** Looking at the first generated token's probabilities across IDs `6` to `11` gives you a direct confidence score for every route in a single forward pass.
-- **No broken brackets:** A single token ID cannot be cut off mid-tag like `[ROUTE: billing`.
+![從子詞嵌入初始化未使用詞元，並只訓練該列](../assets/tuning/vocab_02_trainable_token_indices.svg)
+
+這是個很巧妙的技巧，讓我們不必完全從頭訓練。
+
+!!! important "在以 PEFT 包裝模型之前先初始化列"
+    PEFT 會在您呼叫 `get_peft_model()` 的當下複製起始嵌入列。請務必在呼叫 `get_peft_model()` **之前**執行子詞初始化，讓訓練從平均後的向量開始。
 
 ---
 
-## 4. Set up the environment
+## 3. 建立單一詞元
 
-As always, we install the Hugging Face post-training and evaluation libraries:
+`[ROUTE: billing]` 或 `[DOC2]` 這類純文字標籤，每次模型生成時都會被切成好幾個詞元。把這些標籤對應到 `<unused0>` 至 `<unused7>`，每個標籤就變成單一生成步驟：
+
+![比較 11 個詞元的純文字回應與 4 個詞元的未使用詞元回應](../assets/tuning/vocab_03_fertility_and_action_compression.svg)
+
+使用單一詞元表示結構化標籤有三個好處：
+
+- **更快的生成**：寫出 `<unused0>`{.token-tool} 與 `<unused5>`{.token-multi} 各只需一步，而不是九個括號、冒號與標籤詞元。
+- **單步路由分數**：觀察第一個生成詞元在 ID `6` 到 `11` 上的機率，就能在單次前向傳遞中直接得到每條路由的信心分數。
+- **不會斷在括號中間**：單一詞元 ID 不會像 `[ROUTE: billing` 這樣在標籤中間被截斷。
+
+---
+
+## 4. 設定環境
+
+一如往常，我們先安裝 Hugging Face 後訓練與評估函式庫：
 
 ```python { .notebook-cell }
 # Install Hugging Face post-training, quantization, multimodal, and evaluation libraries
@@ -65,7 +65,7 @@ As always, we install the Hugging Face post-training and evaluation libraries:
 %pip install -q -U evaluate sacrebleu jiwer pillow soundfile librosa matplotlib tensorboard
 ```
 
-If you plan to push your adapter to the Hugging Face Hub, log in with a write token:
+如果您打算把轉接器推送到 Hugging Face Hub，請用寫入權杖登入：
 
 ```python { .notebook-cell }
 from huggingface_hub import login
@@ -76,9 +76,9 @@ from huggingface_hub import login
 
 ---
 
-## 5. Register unused tokens
+## 5. 註冊未使用詞元
 
-To register the unused tokens, we start by loading the `google/gemma-4-E2B-it` tokenizer. We then check how many `<unused*>` slots it has and register `<unused0>` through `<unused7>` (IDs `6` through `13`):
+要註冊未使用詞元，我們先載入 `google/gemma-4-E2B-it` 分詞器，接著檢查它有多少個 `<unused*>` 槽位，並註冊 `<unused0>` 至 `<unused7>`（ID `6` 到 `13`）：
 
 ```python { .notebook-cell .model-swap }
 from tokenizers import AddedToken
@@ -137,11 +137,11 @@ Token compression: 11 plain tokens -> 4 compact tokens
 
 ---
 
-## 6. Prepare the dataset
+## 6. 準備資料集
 
-We take six task categories from [`databricks/databricks-dolly-15k`](https://huggingface.co/datasets/databricks/databricks-dolly-15k) and map them to `<unused0>` through `<unused5>`. These are specific categories that we want to add to the data so that we can fill the unused tokens with information about these categories. Note that this is merely an example and that you can use any type of data, like different languages or domains.
+我們從 [`databricks/databricks-dolly-15k`](https://huggingface.co/datasets/databricks/databricks-dolly-15k) 取六種任務類別，對應到 `<unused0>` 至 `<unused5>`。我們想把這些特定類別加入資料，讓未使用詞元承載這些類別的資訊。請注意，這只是範例，您可以使用任何類型的資料，例如不同語言或領域。
 
-At the end of each answer, we add `<unused6>` when the answer uses a reference passage or `<unused7>` when it relies on general knowledge:
+每個答案結尾，如果答案使用了參考段落就加上 `<unused6>`，如果仰賴通用知識就加上 `<unused7>`：
 
 ```python { .notebook-cell }
 from datasets import load_dataset
@@ -207,9 +207,9 @@ Sample completion: <unused4>Garth the Gardener, John the Oak, Gilbert of the Vin
 
 ---
 
-## 7. Load the model
+## 7. 載入模型
 
-We now load the model, `google/gemma-4-E2B-it`, in 4-bit NF4 precision. We initialize rows `6` through `13` from the average of their subwords. Finally, we configure LoRA to train only those eight token rows alongside the linear adapters:
+現在我們以 4-bit NF4 精度載入 `google/gemma-4-E2B-it` 模型，從子詞平均值初始化第 `6` 到 `13` 列，最後設定 LoRA，讓它在線性轉接器之外只訓練這八個詞元列：
 
 ```python { .notebook-cell }
 import torch
@@ -289,8 +289,8 @@ trainable params: 24,242,176 || all params: 5,128,539,680 || trainable%: 0.4727
 ```
 
 <!-- notebook:skip-start -->
-??? tip "Shortening long domain terms with `<unused*>`"
-    You can use the same `initialize_unused_tokens` helper to shorten recurring domain terms (such as medical codes, product IDs, or financial metrics) that normally split into many subwords:
+??? tip "用 `<unused*>` 縮短長領域詞彙"
+    您可以用同一個 `initialize_unused_tokens` 輔助函式，把經常出現的領域詞彙（例如醫療代碼、產品 ID 或財務指標）縮短，這些詞彙原本會被切成許多子詞：
 
     ```python
     # Map recurring multi-token terms to <unused100>..<unused102>
@@ -307,14 +307,14 @@ trainable params: 24,242,176 || all params: 5,128,539,680 || trainable%: 0.4727
     )
     ```
 
-    Replace those strings in your dataset before tokenizing (and map `<unused100>` back to `"EGFR_T790M"` after decoding) to shorten sequences while keeping the vocabulary at `262,144`.
+    在分詞之前，先把資料集中的這些字串替換掉（解碼後再把 `<unused100>` 對應回 `"EGFR_T790M"`），即可在詞彙表維持 `262,144` 的情況下縮短序列。
 <!-- notebook:skip-end -->
 
 ---
 
-## 8. Evaluate the base model
+## 8. 評估基礎模型
 
-First, we check how often the base model writes valid `<unused*>` tags on 40 held-out examples:
+首先，我們檢查基礎模型在 40 個保留範例上寫出有效 `<unused*>` 標籤的頻率：
 
 ```python { .notebook-cell }
 from torch.optim import AdamW
@@ -360,13 +360,13 @@ print(f"Before SFT: {before_metrics}")
 Before SFT: {'valid_tag_pct': 0.0, 'route_acc_pct': 0.0, 'cite_acc_pct': 0.0}
 ```
 
-Before training, the model outputs `0.0%` valid `<unused*>` tag pairs, even when asked in the system prompt, because rows `6` through `13` have never been trained in conversation.
+訓練前，即使系統提示詞有要求，模型輸出的有效 `<unused*>` 標籤配對仍是 `0.0%`，因為第 `6` 到 `13` 列從未在對話中訓練過。
 
 ---
 
-## 9. Train the model
+## 9. 訓練模型
 
-Now, we can train the model for two epochs using a `2e-4` learning rate on LoRA adapters and `1e-4` on the selected token rows:
+現在，我們可以用 `2e-4` 的學習率訓練 LoRA 轉接器、以 `1e-4` 訓練選定的詞元列，訓練兩個週期：
 
 ```python { .notebook-cell }
 lora_lr = 2e-4
@@ -432,15 +432,15 @@ trainer.train()
 ```
 
 <!-- notebook:skip-start -->
-??? info "Inspect the training curve"
+??? info "檢視訓練曲線"
     ![Training and validation loss across epochs](../assets/tuning/unused-tokens_loss.svg)
 <!-- notebook:skip-end -->
 
 ---
 
-## 10. Evaluate the fine-tuned model
+## 10. 評估微調後的模型
 
-After training, we re-run the evaluation on the held-out examples and save the adapter and updated tokenizer afterwards:
+訓練後，我們在保留範例上重新執行評估，再儲存轉接器與更新後的分詞器：
 
 ```python { .notebook-cell }
 after_metrics = evaluate_primitives(test_slice)
@@ -480,31 +480,31 @@ Expected route: <unused4> (route open question answering)
   <unused5> (route creative brainstorming): 11.2%
 ```
 
-After two epochs of supervised fine-tuning, the performance is quite a bit higher! By leveraging unused tokens, there is less of a risk of a regression in performance since those will be mostly targeted.
+經過兩個週期的監督式微調，效能提升了不少！善用未使用詞元後，效能退化的風險較低，因為訓練大多集中在這些詞元上。
 
 ---
 
-## What's next
+## 接下來
 
 <div class="card-grid">
 <a class="card" href="custom-chat-template.md">
   <span class="card-icon">{{ icon('lucide/notebook-pen') }}</span>
-  <div class="card-title">Custom chat templates</div>
-  <p class="card-desc">Turn a pre-trained base model into a multi-turn chat assistant using ChatML and QLoRA.</p>
+  <div class="card-title">自訂聊天範本</div>
+  <p class="card-desc">使用 ChatML 與 QLoRA，把預訓練基礎模型變成多輪聊天助手。</p>
 </a>
 <a class="card" href="continued-pretraining.md">
   <span class="card-icon">{{ icon('lucide/book-open') }}</span>
-  <div class="card-title">Continued pre-training</div>
-  <p class="card-desc">Pack unlabeled domain documents and adapt Gemma 4 to new languages.</p>
+  <div class="card-title">持續預訓練</div>
+  <p class="card-desc">打包未標註的領域文件，讓 Gemma 4 適應新語言。</p>
 </a>
 <a class="card" href="datasets-formatting.md">
   <span class="card-icon">{{ icon('lucide/braces') }}</span>
-  <div class="card-title">Dataset formatting</div>
-  <p class="card-desc">Structure thinking blocks, multi-turn history, and chained tool calls.</p>
+  <div class="card-title">資料集格式</div>
+  <p class="card-desc">整理思考區塊、多輪歷史與串連工具呼叫。</p>
 </a>
 <a class="card" href="export.md">
   <span class="card-icon">{{ icon('lucide/rocket') }}</span>
-  <div class="card-title">Export</div>
-  <p class="card-desc">Convert merged 262,144-vocab checkpoints to vLLM, GGUF, and LiteRT-LM.</p>
+  <div class="card-title">匯出</div>
+  <p class="card-desc">把合併後的 262,144 詞彙表檢查點轉換為 vLLM、GGUF 與 LiteRT-LM。</p>
 </a>
 </div>

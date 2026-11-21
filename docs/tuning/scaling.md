@@ -1,33 +1,33 @@
 ---
-title: Scaling
-seo_title: Scale Gemma 4 training with FSDP2 and QAT
-description: Scale Gemma 4 training across multi-GPU clusters with PyTorch FSDP2, and recover 4-bit accuracy after custom fine-tuning with TorchAO quantization-aware training.
+title: 擴展規模
+seo_title: 使用 FSDP2 與 QAT 擴展 Gemma 4 訓練規模
+description: 使用 PyTorch FSDP2 將 Gemma 4 訓練擴展到多 GPU 叢集，並使用 TorchAO 量化感知訓練，在自訂微調後恢復 4 位元精度。
 models: [gemma-4]
 frameworks: [transformers, peft, trl, torchao]
 ---
 
-# Scaling
+# 擴展規模
 
-Once your fine-tuning or alignment recipe works on a small sample, two scaling techniques help take it into production:
+當微調或對齊流程在小樣本上跑通之後，兩種擴展技術可以協助你把它推向正式環境：
 
-* **Multi-GPU training**: Sharding training across multiple GPUs when a model or batch size exceeds a single card.
-* **Quantization-aware training** *(QAT)*: Running QAT to go from 16-bit accuracy to 4-bit accuracy with minimal loss in quality.
+* **多 GPU 訓練**：當模型或批次大小超出單張顯示卡時，把訓練分片到多張 GPU 上。
+* **量化感知訓練**（QAT）：執行 QAT，以最小的品質損失，從 16 位元精度走向 4 位元精度。
 
-This guide covers multi-GPU sharding with PyTorch FSDP2 and Accelerate, multi-GPU QLoRA data parallelism, and post-tuning QAT with TorchAO. To package finished checkpoints for vLLM, GGUF, or LiteRT-LM, see [Export](export.md).
+本指南涵蓋使用 PyTorch FSDP2 與 Accelerate 的多 GPU 分片、多 GPU QLoRA 資料並行，以及使用 TorchAO 的訓練後 QAT。若要把完成的檢查點打包給 vLLM、GGUF 或 LiteRT-LM 使用，請見[匯出](export.md)。
 
 ---
 
-## 1. Multi-GPU training with FSDP2
+## 1. 使用 FSDP2 進行多 GPU 訓練
 
-Normally, when you use multiple GPUs for training, every GPU will have a copy of the model weights, gradients, and optimizer states. For Gemma 4 31B, that would mean around 370 GB per GPU (~60 GB weights, ~60 GB gradients, and ~250 GB optimizer states). This is four times larger than the memory of an 80 GB GPU, for example.
+一般來說，使用多張 GPU 訓練時，每張 GPU 都會有一份模型權重、梯度與最佳化器狀態的副本。對 Gemma 4 31B 而言，每張 GPU 大約需要 370 GB（權重約 60 GB、梯度約 60 GB、最佳化器狀態約 250 GB），是 80 GB GPU 記憶體的四倍多。
 
-To split the weights, gradients, and optimizer states evenly across your GPUs, we can use **PyTorch FSDP2** (Fully Sharded Data Parallel). Instead of duplicating the full model on every card, FSDP2 slices the training state across all GPUs so each card only stores a fraction of it. Across eight GPUs, each card holds just one eighth of the total (~46 GB per GPU), which fits comfortably on an 80 GB GPU:
+要把權重、梯度與最佳化器狀態平均分配到各張 GPU 上，我們可以使用 **PyTorch FSDP2**（完全分片資料並行，Fully Sharded Data Parallel）。FSDP2 不會在每張顯示卡上複製完整模型，而是把訓練狀態切分到所有 GPU 上，讓每張顯示卡只儲存其中一部分。在八張 GPU 上，每張顯示卡只持有總量的八分之一（每張 GPU 約 46 GB），可以輕鬆放進 80 GB GPU：
 
-![Data parallel vs fully sharded memory per GPU](../assets/tuning/scale_01_fsdp2_zero3_sharding.svg)
+![資料並行與完全分片的每 GPU 記憶體比較](../assets/tuning/scale_01_fsdp2_zero3_sharding.svg)
 
-During the forward and backward pass, GPUs gather the weights for one layer at a time over NVLink and free the temporary copies as soon as that layer finishes.
+在前向與反向傳播期間，GPU 會透過 NVLink 一次收集一層的權重，並在該層完成後立即釋放暫存副本。
 
-You can then save the following configuration as `fsdp2_config.yaml` to shard Gemma 4 layers across an 8-GPU node (adjust `num_processes` to match your GPU count):
+接著，你可以把以下設定儲存為 `fsdp2_config.yaml`，把 Gemma 4 的層分片到 8 GPU 節點上（請依你的 GPU 數量調整 `num_processes`）：
 
 ```yaml
 compute_environment: LOCAL_MACHINE
@@ -54,14 +54,14 @@ same_network: true
 use_cpu: false
 ```
 
-To use it, launch any TRL script (`SFTTrainer`, `DPOTrainer`, or `GRPOTrainer`) with `accelerate launch`:
+要使用它，請用 `accelerate launch` 啟動任何 TRL 腳本（`SFTTrainer`、`DPOTrainer` 或 `GRPOTrainer`）：
 
 ```bash
 accelerate launch --config_file fsdp2_config.yaml train_sft.py
 ```
 
-??? tip "Multi-GPU QLoRA data parallelism"
-    If you are running 4-bit QLoRA across multiple GPUs to increase batch throughput and the 4-bit model already fits on a single GPU, do not use `device_map="auto"`. Instead, pin each process to its local GPU rank:
+??? tip "多 GPU QLoRA 資料並行"
+    如果你在多張 GPU 上執行 4 位元 QLoRA 以提高批次處理量，而且 4 位元模型已經放得進單張 GPU，請不要使用 `device_map="auto"`。請改為把每個處理程序固定到各自的本機 GPU 排名：
 
     ```python
     from accelerate import PartialState
@@ -78,25 +78,25 @@ accelerate launch --config_file fsdp2_config.yaml train_sft.py
 
 ---
 
-## 2. Quantization-aware training
+## 2. 量化感知訓練
 
-When you quantize a 16-bit model to 4-bit integers after training finishes, rounding each weight to one of 16 discrete values adds noise that can hurt accuracy on math, coding, and strict formatting tasks.
+當你在訓練完成後把 16 位元模型量化為 4 位元整數時，把每個權重四捨五入為 16 個離散值之一，會引入雜訊，可能損害數學、程式設計與嚴格格式任務的精度。
 
-Quantization-aware training (QAT) simulates 4-bit rounding during the final 500 to 1,500 steps of fine-tuning so the model can adapt to the rounding grid.
+量化感知訓練（QAT）會在微調的最後 500 至 1,500 步期間模擬 4 位元四捨五入，讓模型適應四捨五入的網格。
 
-!!! note "Start from Google's official QAT checkpoints if you are not fine-tuning"
-    If you want 4-bit Gemma 4 weights without custom fine-tuning, download Google's prebuilt QAT checkpoints (`-qat-q4_0-gguf`, `-qat-w4a16-ct`, or `-qat-q4_0-unquantized`) directly — see [Quantization-aware training](../get-started/qat.md). Run the TorchAO loop below when you want to recover 4-bit accuracy *after* custom `bfloat16` fine-tuning or alignment.
+!!! note "如果不做微調，請從 Google 官方 QAT 檢查點開始"
+    如果你想要 4 位元 Gemma 4 權重而不做自訂微調，請直接下載 Google 預先建置的 QAT 檢查點（`-qat-q4_0-gguf`、`-qat-w4a16-ct` 或 `-qat-q4_0-unquantized`）——請見[量化感知訓練](../get-started/qat.md)。只有在自訂 `bfloat16` 微調或對齊之後想恢復 4 位元精度時，才執行下方的 TorchAO 迴圈。
 
-![Quantization-aware training loop with 16-bit weights and 4-bit copy](../assets/tuning/scale_02_qat_fake_quant_loop.svg)
+![量化感知訓練迴圈：16 位元權重與 4 位元副本](../assets/tuning/scale_02_qat_fake_quant_loop.svg)
 
-As shown above, each QAT step follows a two-stage loop:
+如上所示，每個 QAT 步驟都遵循兩階段迴圈：
 
-1. **Round for the forward pass**: Training keeps master weights in 16-bit precision (for example, -0.37, 0.14, and 0.82), but rounds a temporary copy to 4-bit values (-0.35, 0.12, and 0.82) before computing the forward pass and the loss.
-2. **Update the 16-bit weights**: During the backward pass, gradients flow back to update the 16-bit master weights so they settle into values that round cleanly.
+1. **為前向傳播四捨五入**：訓練會把主權重保持在 16 位元精度（例如 -0.37、0.14 與 0.82），但在計算前向傳播與損失之前，先把暫存副本四捨五入為 4 位元值（-0.35、0.12 與 0.82）。
+2. **更新 16 位元權重**：在反向傳播期間，梯度會回流並更新 16 位元主權重，讓它們穩定在能乾淨四捨五入的值上。
 
-With PyTorch's [TorchAO](https://github.com/pytorch/ao) library, running QAT on a fine-tuned Gemma 4 model takes three steps: prepare the model to simulate 4-bit rounding, run a short training pass, and convert the weights into packed 4-bit integers.
+使用 PyTorch 的 [TorchAO](https://github.com/pytorch/ao) 函式庫，在微調後的 Gemma 4 模型上執行 QAT 只需三個步驟：準備模型以模擬 4 位元四捨五入、執行一次簡短的訓練、把權重轉換為打包的 4 位元整數。
 
-We also pass a small filter function so QAT only targets the linear layers in the text decoder and leaves the embeddings and vision or audio encoders in 16-bit precision:
+我們還會傳入一個小型篩選函式，讓 QAT 只針對文字解碼器中的線性層，並把嵌入與視覺或音訊編碼器保持在 16 位元精度：
 
 ```python
 import torch
@@ -171,28 +171,28 @@ processor.save_pretrained("gemma-4-e2b-int4-qat-exported")
 
 ---
 
-## What's next
+## 接下來
 
 <div class="card-grid">
 <a class="card" href="export.md">
   <span class="card-icon">{{ icon('lucide/rocket') }}</span>
-  <div class="card-title">Export</div>
-  <p class="card-desc">Package and serve your fine-tuned Gemma 4 checkpoints with vLLM, GGUF, Ollama, or LiteRT-LM.</p>
+  <div class="card-title">匯出</div>
+  <p class="card-desc">使用 vLLM、GGUF、Ollama 或 LiteRT-LM 打包並提供微調後的 Gemma 4 檢查點。</p>
 </a>
 <a class="card" href="../get-started/qat.md">
   <span class="card-icon">{{ icon('lucide/cpu') }}</span>
-  <div class="card-title">Quantization-aware training</div>
-  <p class="card-desc">Explore official QAT checkpoint formats and memory footprints across GPU, desktop, and mobile hardware.</p>
+  <div class="card-title">量化感知訓練</div>
+  <p class="card-desc">探索官方 QAT 檢查點格式，以及 GPU、桌上型電腦與行動硬體上的記憶體占用。</p>
 </a>
 <a class="card" href="full-finetune.md">
   <span class="card-icon">{{ icon('lucide/sliders-horizontal') }}</span>
-  <div class="card-title">Full fine-tuning</div>
-  <p class="card-desc">Review single-GPU full fine-tuning hyperparameters, cosine schedules, and loss-curve diagnostics.</p>
+  <div class="card-title">完整微調</div>
+  <p class="card-desc">檢視單 GPU 完整微調的超參數、餘弦排程與損失曲線診斷。</p>
 </a>
 <a class="card" href="index.md">
   <span class="card-icon">{{ icon('lucide/graduation-cap') }}</span>
-  <div class="card-title">Fine-tuning overview</div>
-  <p class="card-desc">Return to the Gemma 4 fine-tuning overview to compare methods and hardware requirements.</p>
+  <div class="card-title">微調總覽</div>
+  <p class="card-desc">回到 Gemma 4 微調總覽，比較各種方法與硬體需求。</p>
 </a>
 </div>
 

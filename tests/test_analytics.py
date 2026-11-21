@@ -31,7 +31,7 @@ HAS_ZENSICAL = importlib.util.find_spec("zensical") is not None
 class AnalyticsBuildTests(unittest.TestCase):
     def test_inject_analytics_property_updates_config(self):
         source = (build_docs.agent_docs.REPO_ROOT / "zensical.toml").read_text(encoding="utf-8")
-        self.assertIn('property = "G-CWMC2KTTGQ"', source)
+        self.assertIn('property = ""', source)  # zh-tw: GA ID is injected at build time, no upstream default
         injected = build_docs.inject_analytics_property(source, "G-TEST123456")
         self.assertIn('property = "G-TEST123456"', injected)
         cleared = build_docs.inject_analytics_property(source, "")
@@ -39,7 +39,7 @@ class AnalyticsBuildTests(unittest.TestCase):
 
     def test_inject_site_url_updates_config(self):
         source = (build_docs.agent_docs.REPO_ROOT / "zensical.toml").read_text(encoding="utf-8")
-        self.assertIn('site_url = "https://gemma.ai"', source)
+        self.assertIn('site_url = "https://gemma.gh.miniasp.com"', source)  # zh-tw custom domain
         injected = build_docs.inject_site_url(source, "https://example.invalid//pr-42")
         self.assertIn('site_url = "https://example.invalid/pr-42"', injected)
 

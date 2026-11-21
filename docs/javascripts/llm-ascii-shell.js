@@ -718,7 +718,7 @@
     const tHandle = shell.querySelector("[data-llm-terminal-handle]");
     const tFiles = shell.querySelectorAll("[data-llm-terminal-file]");
 
-    const formatWords = (n) => (n >= 950 ? `${(n / 1000).toFixed(1)}k words` : `${n} words`);
+    const formatWords = (n) => (n >= 950 ? `${(n / 1000).toFixed(1)}k 字` : `${n} 字`);
 
     const steps = [...shell.querySelectorAll(".llm-shell__tab[data-llm-step]")].map((tab) => {
       const id = tab.dataset.llmStep;
@@ -761,17 +761,17 @@
         terminalState.mode === "open" && terminalState.height ? `${terminalState.height}px` : "",
       );
       if (tToggle) tToggle.setAttribute("aria-expanded", open ? "true" : "false");
-      if (tToggleLabel) tToggleLabel.textContent = open ? "Collapse" : "Expand";
+      if (tToggleLabel) tToggleLabel.textContent = open ? "收合" : "展開";
       if (tMax) {
         const isMax = terminalState.mode === "max";
-        const maxLabel = isMax ? "Restore terminal" : "Maximize terminal";
+        const maxLabel = isMax ? "還原終端機" : "最大化終端機";
         tMax.setAttribute("aria-pressed", isMax ? "true" : "false");
         tMax.setAttribute("title", maxLabel);
         tMax.setAttribute("aria-label", maxLabel);
       }
       if (tBody) tBody.toggleAttribute("inert", !open);
       if (tHint && current) {
-        tHint.textContent = `${current.words}${current.words ? " · " : ""}${open ? "drag the edge to resize" : "click to read"}`;
+        tHint.textContent = `${current.words}${current.words ? " · " : ""}${open ? "拖曳邊緣以調整大小" : "點選以閱讀"}`;
       }
       try {
         localStorage.setItem(STORAGE_KEY, terminalState.mode);
@@ -829,7 +829,7 @@
       for (const el of tFiles) el.textContent = next.file;
       if (tHint) {
         const open = terminalState.mode !== "closed";
-        tHint.textContent = `${next.words}${next.words ? " · " : ""}${open ? "drag the edge to resize" : "click to read"}`;
+        tHint.textContent = `${next.words}${next.words ? " · " : ""}${open ? "拖曳邊緣以調整大小" : "點選以閱讀"}`;
       }
       if (changed) {
         if (next.panel) next.panel.scrollTop = 0;

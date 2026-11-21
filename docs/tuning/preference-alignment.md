@@ -1,71 +1,71 @@
 ---
-title: Preference optimization
-seo_title: Preference optimization (DPO) with Gemma 4
-description: Train Gemma 4 on pairs of chosen and rejected answers using DPO, ORPO, and KTO in Hugging Face TRL.
+title: 偏好最佳化
+seo_title: 使用 Gemma 4 進行偏好最佳化（DPO）
+description: 使用 Hugging Face TRL 的 DPO、ORPO 與 KTO，以偏好與拒絕的回應配對訓練 Gemma 4。
 models: [gemma-4/e2b, gemma-4/e4b, gemma-4/12b, gemma-4/31b]
 frameworks: [transformers, peft, trl]
 colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs/notebooks/preference-alignment-gemma-4-e2b.ipynb
 ---
 
-# Preference optimization
+# 偏好最佳化
 
-Supervised fine-tuning (SFT) shows Gemma 4 what a good answer looks like but not what a bad answer looks like. As a result, training with SFT can result in overfitting on the task.
+監督式微調（SFT）只讓 Gemma 4 知道好的答案長什麼樣子，卻沒讓它知道不好的答案長什麼樣子。因此，只用 SFT 訓練可能導致模型在該任務上過度擬合。
 
-Preference optimization trains on pairs instead. For every prompt, you give the model one answer you prefer (chosen) and one you do not (rejected). This guide shows how a reinforcement learning technique called Direct Preference Optimization (DPO) learns from those pairs, how LoRA avoids loading a second copy of the model, and how to run DPO end to end with Hugging Face TRL.
-
----
-
-## 1. Learning from chosen and rejected answers
-
-In SFT, each training example is a prompt with one target answer. The loss pushes that answer up. However, the model never sees any answers that you want to the model to stop generating.
-
-Direct Preference Optimization (DPO) trains on a prompt with two answers. Take the SQL assistant: for the prompt "Active users?", the chosen query filters on active users, while the rejected query forgets the filter and returns every user. 
-
-
-During training, the model learns to increase the likelihood of accepted answers and decreases the likelihood of rejected answers:
-
-![SFT raises only the chosen answer while DPO also lowers the rejected answer](../assets/tuning/dpo_01_sft_vs_dpo_objective.svg)
-
-DPO measures every update against a frozen copy of the starting model, called the reference model, to make sure the model doesn't drift too far from it. We assume that the original model is a great model that we want to improve, so it is important that it does not forget things it already did well. The beta regularization setting controls this. A small value gives the model more room to change whereas a higher value keeps it closer to the original. Because the loss works directly on your pairs, DPO needs no separate reward model and no reinforcement learning loop, which makes it much simpler than classic Reinforcement Learning from Human Feedback (RLHF; [Rafailov et al., 2023](https://arxiv.org/abs/2305.18290)).
+偏好最佳化改用配對來訓練。針對每個提示，您給模型一個偏好的答案（chosen）和一個不偏好的答案（rejected）。本指南將說明一種名為直接偏好最佳化（DPO）的強化學習技術如何從這些配對中學習、LoRA 如何避免載入第二份模型副本，以及如何用 Hugging Face TRL 端到端執行 DPO。
 
 ---
 
-## 2. Sharing the reference model with LoRA
+## 1. 從偏好與拒絕的答案中學習
 
-Every DPO step scores the chosen and rejected answers twice. Once with the model you are training and once with the reference model. In full fine-tuning, those are two separate copies of Gemma 4 in GPU memory. For Gemma 4 31B in bfloat16, the second copy alone takes about 62 GB.
+在 SFT 中，每個訓練範例是一個提示搭配一個目標答案，損失函式會提升該答案的機率。然而，模型從未見過您希望它停止產生的答案。
 
-With LoRA, the reference model comes for free! The base weights never change during training, so switching the adapter off gives you back the original model:
+直接偏好最佳化（DPO）針對一個提示搭配兩個答案進行訓練。以 SQL 助理為例：對於「Active users?」這個提示，偏好的查詢會篩選活躍使用者，而拒絕的查詢則漏了篩選條件，回傳所有使用者。
 
-![Full DPO keeps two model copies while LoRA DPO reuses one frozen base](../assets/tuning/dpo_02_peft_reference_sharing.svg)
 
-Note how **LoRA DPO** holds one frozen base and a small adapter, with no second copy. For every batch, the trainer runs the model once with the adapter on (the trainable model) and once with the adapter off (the reference model).
+訓練期間，模型學會提高被接受答案的機率，並降低被拒絕答案的機率：
+
+![SFT 只提升偏好答案，DPO 還會降低拒絕答案](../assets/tuning/dpo_01_sft_vs_dpo_objective.svg)
+
+DPO 會將每次更新與起始模型的凍結副本（稱為參考模型）比較，確保模型不會偏離太遠。我們假設原始模型已經很出色、值得進一步改進，因此它不忘記原本擅長的事很重要。beta 正則化設定控制這一點：值越小，模型改變的空間越大；值越大，模型越接近原始模型。由於損失函式直接作用於您的配對，DPO 不需要獨立的獎勵模型，也不需要強化學習迴圈，因此比經典的人類回饋強化學習（RLHF；[Rafailov et al., 2023](https://arxiv.org/abs/2305.18290)）簡單得多。
 
 ---
 
-## 3. Choosing between DPO, ORPO, and KTO
+## 2. 用 LoRA 共用參考模型
 
-Hugging Face TRL supports three preference methods, each with their own benefits. Pick the one that matches the feedback you have:
+每個 DPO 步驟會對偏好與拒絕的答案各評分兩次：一次用正在訓練的模型，一次用參考模型。在完整微調中，這是 GPU 記憶體中的兩份 Gemma 4 副本。以 bfloat16 的 Gemma 4 31B 而言，僅第二份副本就佔用約 62 GB。
 
-| Method | Data you need | Reference pass | Best for |
+使用 LoRA 時，參考模型是免費的！基礎權重在訓練期間永不改變，因此關閉轉接器就能取回原始模型：
+
+![完整 DPO 保留兩份模型副本，LoRA DPO 則重用一份凍結的基礎模型](../assets/tuning/dpo_02_peft_reference_sharing.svg)
+
+請注意，**LoRA DPO** 只有一份凍結的基礎模型與一個小型轉接器，沒有第二份副本。每個批次中，訓練器會執行模型兩次：一次開啟轉接器（可訓練的模型），一次關閉轉接器（參考模型）。
+
+---
+
+## 3. 在 DPO、ORPO 與 KTO 之間選擇
+
+Hugging Face TRL 支援三種偏好方法，各有優點。請依您手邊的回饋類型選擇：
+
+| 方法 | 需要的資料 | 參考模型傳遞 | 最適合 |
 | :--- | :--- | :--- | :--- |
-| **DPO** (`DPOTrainer`) | Prompt, chosen, and rejected answers | Yes, adapter off with LoRA | Tone, length, and safety after SFT |
-| **ORPO** (`ORPOTrainer`) | Prompt, chosen, and rejected answers | No | SFT and preference alignment in one run |
-| **KTO** (`KTOTrainer`) | Prompt, completion, and a binary label | Yes, adapter off with LoRA | Thumbs-up and thumbs-down feedback from users |
+| **DPO** (`DPOTrainer`) | 提示、偏好與拒絕的答案 | 是，LoRA 關閉轉接器 | SFT 之後的語氣、長度與安全性 |
+| **ORPO** (`ORPOTrainer`) | 提示、偏好與拒絕的答案 | 否 | 一次執行完成 SFT 與偏好對齊 |
+| **KTO** (`KTOTrainer`) | 提示、完成內容與二元標籤 | 是，LoRA 關閉轉接器 | 使用者的讚與倒讚回饋 |
 
-Arguably, the most common method is DPO, so we will be focusing on that one. The following settings matter most for using DPO on Gemma 4:
+DPO 可以說是最常用的方法，因此我們將聚焦於此。以下設定在使用 DPO 訓練 Gemma 4 時最為關鍵：
 
-- **Learning rate**: Use `5e-6` to `5e-5` for standard LoRA DPO on large on-policy datasets (`5e-5` to `1e-4` with anchored `apo_zero` loss on sub-1,000-pair runs), and `5e-7` for full fine-tuning. Full-weight SFT rates on unanchored DPO quickly push the model too far from the reference.
-- **Epochs**: One epoch is usually enough. Repeating the same preference pairs for a second epoch causes validation loss to climb and reward accuracy to drop as the adapter memorizes surface shortcuts.
-- **Length desensitization (`ld_alpha`) and beta**: Keep `beta=0.1` as your starting KL anchor. When chosen and rejected answers differ sharply in length (for example, conciseness alignment on off-policy pairs), set `ld_alpha=0.1` so token count alone cannot dominate the summed log-ratio.
+- **學習率**：在大型同策略資料集上進行標準 LoRA DPO 時，使用 `5e-6` 至 `5e-5`（在少於 1,000 組配對的執行中使用錨定 `apo_zero` 損失時為 `5e-5` 至 `1e-4`）；完整微調則使用 `5e-7`。在未錨定的 DPO 上使用完整權重 SFT 的學習率，會很快把模型推離參考模型太遠。
+- **Epoch**：通常一個 epoch 就夠了。將相同的偏好配對重複訓練第二個 epoch，會讓驗證損失上升、獎勵正確率下降，因為轉接器開始記住表面的捷徑。
+- **長度去敏感化（`ld_alpha`）與 beta**：將 `beta=0.1` 作為起始的 KL 錨點。當偏好與拒絕的答案長度差異很大時（例如在異策略配對上做簡潔度對齊），將 `ld_alpha` 設為 `0.1`，讓詞元數量本身無法主導加總後的對數比率。
 
-!!! tip "Running DPO after a LoRA SFT stage"
-    When `DPOTrainer` trains with a single LoRA adapter (`ref_model=None`), it computes reference log-probabilities by temporarily disabling the active LoRA adapter. If you already trained a domain LoRA adapter during SFT, **merge that SFT adapter into the base checkpoint first** (`model.merge_and_unload()`) and attach a fresh LoRA adapter for DPO.
+!!! tip "在 LoRA SFT 階段之後執行 DPO"
+    當 `DPOTrainer` 以單一 LoRA 轉接器訓練（`ref_model=None`）時，它會暫時停用作用中的 LoRA 轉接器來計算參考對數機率。如果您在 SFT 期間已經訓練了一個領域 LoRA 轉接器，請先將該 SFT 轉接器合併到基礎檢查點（`model.merge_and_unload()`），再為 DPO 掛上全新的 LoRA 轉接器。
 
 ---
 
-## 4. Set up the environment
+## 4. 設定環境
 
-We start by installing the post-training and evaluation libraries:
+我們先安裝後訓練與評估函式庫：
 
 ```python { .notebook-cell }
 # Install Hugging Face post-training, quantization, multimodal, and evaluation libraries
@@ -73,7 +73,7 @@ We start by installing the post-training and evaluation libraries:
 %pip install -q -U evaluate sacrebleu jiwer pillow soundfile librosa matplotlib tensorboard
 ```
 
-If you plan to push your aligned adapter to the Hugging Face Hub, log in with a write token:
+如果您打算把對齊後的轉接器推送到 Hugging Face Hub，請使用寫入權杖登入：
 
 ```python { .notebook-cell }
 from huggingface_hub import login
@@ -84,11 +84,11 @@ from huggingface_hub import login
 
 ---
 
-## 5. Prepare the dataset
+## 5. 準備資料集
 
-For this example, we are going to be using human-rated conciseness pairs from [`nvidia/HelpSteer2`](https://huggingface.co/datasets/nvidia/HelpSteer2). It is a dataset that aligns models to become more helpful, factually correct, and coherent. Although this is not needed for the various Gemma models, it shows how you can steer a style preference—such as reducing the verbosity of the output—without hurting quality. This dataset has scores on `helpfulness`, `correctness`, and `verbosity`.
+在本範例中，我們將使用來自 [`nvidia/HelpSteer2`](https://huggingface.co/datasets/nvidia/HelpSteer2) 的人工評分簡潔度配對。這個資料集能讓模型對齊得更有幫助、事實更正確、表達更連貫。雖然各個 Gemma 模型並不需要這樣做，但它示範了如何引導風格偏好（例如降低輸出的冗長程度）而不損害品質。這個資料集包含 `helpfulness`、`correctness` 與 `verbosity` 三項分數。
 
-To prepare our chosen/rejected pairs, we keep only answers that are accurate and helpful (`>= 3`), then pair the concise answer (`chosen`) against the overly verbose one (`rejected`):
+為了準備偏好／拒絕配對，我們只保留正確且有幫助（`>= 3`）的答案，再將簡潔的答案（`chosen`）與過於冗長的答案（`rejected`）配對：
 
 ```python { .notebook-cell }
 from collections import defaultdict
@@ -153,9 +153,9 @@ Rejected (250 words): C# (pronounced "C sharp") is a modern, object-oriented pro
 
 ---
 
-## 6. Load the model
+## 6. 載入模型
 
-Now that we have created the dataset, let's load in the model to fine-tune:
+建立好資料集後，接著載入要微調的模型：
 
 ```python { .notebook-cell .model-swap }
 import torch
@@ -185,9 +185,9 @@ tokenizer = AutoTokenizer.from_pretrained(model_id)
 
 ---
 
-## 7. Evaluate the base model
+## 7. 評估基礎模型
 
-Next, we create a helper function that generates responses so we can check how verbose the unmodified model is across our held-out validation prompts:
+接著，我們建立一個輔助函式來產生回應，藉此檢查未修改的模型在保留的驗證提示上有多冗長：
 
 ```python { .notebook-cell }
 # Helper to generate deterministic responses across validation prompts
@@ -233,9 +233,9 @@ Baseline mean length across 47 validation prompts: 254.8 words
 
 ---
 
-## 8. Train the model
+## 8. 訓練模型
 
-To train the model, we start by defining the `LoraConfig` as we did in previous fine-tuning guides:
+要訓練模型，我們先像先前的微調指南一樣定義 `LoraConfig`：
 
 ```python { .notebook-cell }
 # Prepare the 4-bit model and configure LoRA adapters on the seven decoder projections
@@ -260,10 +260,10 @@ peft_config = LoraConfig(
 )
 ```
 
-For the training settings, we use `DPOConfig` to define the parameters. Much is similar to regular SFT with several differences to point out:
+訓練設定方面，我們使用 `DPOConfig` 來定義參數。大部分與一般 SFT 相似，有幾個差異值得指出：
 
-- `ld_alpha=0.1` down-weights tokens past the shared `min(|chosen|, |rejected|)` length so long rejected answers are not penalized purely for having more tokens.
-- `loss_type=["apo_zero", "sft"]` with `loss_weights=[1.0, 0.1]` uses Anchored Preference Optimization (`apo_zero`) to push `rewards/chosen` above `0` and `rewards/rejected` below `0`, paired with a light `0.1` SFT weight so the model learns to emit `<turn|>` cleanly at the end of concise answers.
+- `ld_alpha=0.1` 會降低超過共用 `min(|chosen|, |rejected|)` 長度的詞元權重，讓較長的拒絕答案不會只因詞元較多就受到懲罰。
+- `loss_type=["apo_zero", "sft"]` 搭配 `loss_weights=[1.0, 0.1]`，使用錨定偏好最佳化（`apo_zero`）將 `rewards/chosen` 推到 `0` 以上、`rewards/rejected` 推到 `0` 以下，並搭配 `0.1` 的輕量 SFT 權重，讓模型學會在簡潔答案結尾乾淨地輸出 `<turn|>`。
 
 
 ```python { .notebook-cell }
@@ -327,26 +327,26 @@ trainer.save_model()
 ```
 
 <!-- notebook:skip-start -->
-??? info "Inspect the training curve"
-    ![Training and validation loss across epoch 1](../assets/tuning/preference-alignment_loss.svg)
+??? info "檢視訓練曲線"
+    ![第 1 個 epoch 的訓練與驗證損失](../assets/tuning/preference-alignment_loss.svg)
 <!-- notebook:skip-end -->
 
 
-Training all 819 pairs finishes in about 9 minutes on an A100 GPU. For larger datasets, scale `gradient_accumulation_steps` to reach 16 to 32 pairs per step, as listed in [Best practices](best-practices.md).
+在 A100 GPU 上訓練全部 819 組配對約需 9 分鐘。對於較大的資料集，請如[最佳實務](best-practices.md)所列，調整 `gradient_accumulation_steps`，讓每步達到 16 至 32 組配對。
 
-### How to read the DPO logs
+### 如何解讀 DPO 日誌
 
-DPO calls its log-probability shifts "rewards". Each reward measures how much more (above `0`) or less (below `0`) likely the trained adapter makes an answer **compared with the frozen starting model**, scaled by `beta`.
+DPO 將對數機率的偏移稱為「獎勵」。每個獎勵衡量經過訓練的轉接器讓某個答案變得更可能（高於 `0`）或更不可能（低於 `0`）的程度，是相對於凍結的起始模型、並以 `beta` 縮放後的結果。
 
-Because these numbers measure *change relative to the starting model* rather than absolute answer quality, every column starts at `0.0000` at step 0 (when the untrained adapter is still identical to the reference model—not because the base model gave bad answers!). As training progresses:
+由於這些數字衡量的是相對於起始模型的變化，而非答案的絕對品質，因此在步驟 0 時每個欄位都是 `0.0000`（因為未經訓練的轉接器仍與參考模型完全相同，並不是基礎模型給了不好的答案！）。隨著訓練進行：
 
-- **`rewards/chosen`** and **`rewards/rejected`** show how much more likely the concise answer became (and how much less likely the verbose answer became) relative to the starting checkpoint.
-- **`rewards/margins`** is the gap between those two shifts (`chosen - rejected`).
-- **`rewards/accuracies`** is the share of pairs where the adapter shifted toward the concise answer more than the verbose one.
+- **`rewards/chosen`** 與 **`rewards/rejected`** 顯示簡潔答案變得更可能、冗長答案變得更不可能的程度，是相對於起始檢查點而言。
+- **`rewards/margins`** 是這兩項偏移之間的差距（`chosen - rejected`）。
+- **`rewards/accuracies`** 是轉接器朝簡潔答案偏移多於冗長答案的配對占比。
 
 <!-- notebook:skip-start -->
-??? tip "Alternative: one-stage alignment with ORPOTrainer"
-    If you have preference pairs but no SFT checkpoint yet, ORPO (Odds Ratio Preference Optimization) runs SFT on the chosen answers and pushes down the rejected answers in the same pass without a reference model:
+??? tip "替代方案：用 ORPOTrainer 進行單階段對齊"
+    如果您已有偏好配對但還沒有 SFT 檢查點，ORPO（勝算比偏好最佳化）會在同一次傳遞中對偏好答案執行 SFT，同時壓低拒絕答案，而且不需要參考模型：
 
     ```python
     from trl.experimental.orpo import ORPOConfig, ORPOTrainer
@@ -379,9 +379,9 @@ Because these numbers measure *change relative to the starting model* rather tha
 
 ---
 
-## 9. Evaluate the fine-tuned model
+## 9. 評估微調後的模型
 
-We free up the GPU memory, load in the trained model, and compare it against the baseline:
+我們釋放 GPU 記憶體、載入訓練好的模型，並與基準進行比較：
 
 ```python { .notebook-cell }
 # Free trainer memory and reload the saved adapter onto a fresh 4-bit base model
@@ -440,37 +440,37 @@ Here's a breakdown of what it is and what it's used for:
 Yes, I do. **Discord** is a very popular **free voice, video, and text chat app** that is primarily used by communities, gamers, and groups of people to communicate.
 ```
 
-The results show that DPO steered the model toward noticeably shorter, more direct replies across the held-out prompts while keeping answers clear and accurate:
+結果顯示，DPO 讓模型在保留的提示上產生明顯更短、更直接的回覆，同時保持答案清晰正確：
 
-| Metric | Before DPO | After DPO | Change |
+| 指標 | DPO 之前 | DPO 之後 | 變化 |
 | :--- | :--- | :--- | :--- |
-| **Mean response length** | 254.8 words | **198.3 words** | **-22.2%** |
-| **Validation prompts shortened** | — | **41 / 47** | **87.2%** |
+| **平均回應長度** | 254.8 words | **198.3 words** | **-22.2%** |
+| **變短的驗證提示** | — | **41 / 47** | **87.2%** |
 
 ---
 
-## What's next
+## 接下來
 
 <div class="card-grid">
 <a class="card" href="reinforcement-learning.md">
   <span class="card-icon">{{ icon('lucide/brain') }}</span>
-  <div class="card-title">Verifiable rewards</div>
-  <p class="card-desc">Teach Gemma 4 to reason with GRPO and rewards that your code can check.</p>
+  <div class="card-title">可驗證獎勵</div>
+  <p class="card-desc">教 Gemma 4 用 GRPO 與程式碼可以檢查的獎勵進行推理。</p>
 </a>
 <a class="card" href="qlora.md">
   <span class="card-icon">{{ icon('lucide/zap') }}</span>
   <div class="card-title">(Q)LoRA</div>
-  <p class="card-desc">Run the supervised fine-tuning step that usually comes before DPO.</p>
+  <p class="card-desc">執行通常在 DPO 之前的監督式微調步驟。</p>
 </a>
 <a class="card" href="datasets-formatting.md">
   <span class="card-icon">{{ icon('lucide/braces') }}</span>
-  <div class="card-title">Dataset formatting</div>
-  <p class="card-desc">Format chat turns and mask prompt tokens before you train.</p>
+  <div class="card-title">資料集格式</div>
+  <p class="card-desc">在訓練前格式化對話輪次並遮罩提示詞元。</p>
 </a>
 <a class="card" href="export.md">
   <span class="card-icon">{{ icon('lucide/rocket') }}</span>
-  <div class="card-title">Export</div>
-  <p class="card-desc">Merge your aligned adapter and export it to vLLM, GGUF, or LiteRT-LM.</p>
+  <div class="card-title">匯出</div>
+  <p class="card-desc">合併對齊後的轉接器，並匯出為 vLLM、GGUF 或 LiteRT-LM。</p>
 </a>
 </div>
 

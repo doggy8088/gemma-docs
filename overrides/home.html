@@ -17,12 +17,12 @@
 {% extends "main.html" %}
 
 {% block container %}
-<section class="gemma-stage" id="gemma-stage" aria-label="Gemma interactive hero">
+<section class="gemma-stage" id="gemma-stage" aria-label="Gemma 互動式主視覺">
   <canvas class="gemma-hero-canvas" id="gemma-hero-canvas" aria-hidden="true"></canvas>
 
   <div class="gemma-teaser">
     <h1 class="gemma-title">Gemma</h1>
-    <p class="gemma-tagline">Our most capable open models</p>
+    <p class="gemma-tagline">我們最強大的開放模型</p>
 
     <div class="gemma-hero-search" id="gemma-hero-search">
       <div class="gemma-hero-search__bar">
@@ -31,34 +31,34 @@
           <path d="m21 21-4.3-4.3"></path>
         </svg>
         <div class="gemma-hero-search__field" id="gemma-hero-search-field">
-          <input type="search" class="gemma-hero-search__input" id="gemma-hero-search-input" aria-label="Search Gemma documentation" autocomplete="off" spellcheck="false">
-          <span class="gemma-hero-search__rotator is-visible" id="gemma-hero-search-rotator-a">Run Gemma 4 locally with Ollama…</span>
+          <input type="search" class="gemma-hero-search__input" id="gemma-hero-search-input" aria-label="搜尋 Gemma 文件" autocomplete="off" spellcheck="false">
+          <span class="gemma-hero-search__rotator is-visible" id="gemma-hero-search-rotator-a">在本機使用 Ollama 執行 Gemma 4…</span>
           <span class="gemma-hero-search__rotator" id="gemma-hero-search-rotator-b" aria-hidden="true"></span>
         </div>
-        <button type="button" class="gemma-hero-search__go" id="gemma-hero-search-go" aria-label="Jump to topic">
-          <span>Explore</span>
+        <button type="button" class="gemma-hero-search__go" id="gemma-hero-search-go" aria-label="跳到主題">
+          <span>探索</span>
           <span aria-hidden="true">↵</span>
         </button>
       </div>
-      <div class="gemma-hero-search__results" id="gemma-hero-search-results" role="listbox" aria-label="Search suggestions" hidden></div>
+      <div class="gemma-hero-search__results" id="gemma-hero-search-results" role="listbox" aria-label="搜尋建議" hidden></div>
     </div>
   </div>
 
-  <div class="gemma-actions" role="group" aria-label="Primary actions">
+  <div class="gemma-actions" role="group" aria-label="主要操作">
     <a class="gemma-btn gemma-btn--primary" href="get-started/">
-      <span>Get started</span>
+      <span>開始使用</span>
       <svg class="gemma-btn__icon gemma-btn__icon--slide" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
         <path d="M3.25 8H12.75M12.75 8L8.5 3.75M12.75 8L8.5 12.25" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
     </a>
     <a class="gemma-btn gemma-btn--glass" href="https://aistudio.google.com/prompts/new_chat?model=gemma-4-31b-it" target="_blank" rel="noopener">
-      <span>Try in Google AI Studio</span>
+      <span>在 Google AI Studio 中試用</span>
       <svg class="gemma-btn__icon gemma-btn__icon--pop" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
         <path d="M4.5 11.5L11.5 4.5M11.5 4.5H5.75M11.5 4.5V10.25" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
       </svg>
     </a>
     <a class="gemma-btn gemma-btn--glass" href="models/">
-      <span>Explore models</span>
+      <span>探索模型</span>
     </a>
   </div>
 </section>
@@ -467,12 +467,12 @@
       if (!input || !field || !rotatorA || !rotatorB || !resultsBox) return;
 
       var prompts = [
-        { text: 'Run Gemma 4 locally with Ollama…', title: 'Run Gemma with Ollama', url: 'deployment/ollama/', path: 'Run › Local' },
-        { text: 'Compare Gemma 4 model sizes & context…', title: 'Gemma 4 model overview', url: 'models/gemma-4/', path: 'Models › Gemma 4' },
-        { text: 'Fine-tune with QLoRA or Unsloth…', title: 'QLoRA fine-tuning guide', url: 'tuning/qlora/', path: 'Fine-tune › Guides' },
-        { text: 'Multimodal vision, audio, and video…', title: 'Vision & multimodal capabilities', url: 'get-started/capabilities/vision/', path: 'Get started › Multimodal' },
-        { text: 'Function calling & tool use…', title: 'Function calling with Gemma', url: 'get-started/capabilities/function-calling/', path: 'Get started › Text' },
-        { text: 'Try DiffusionGemma or PaliGemma 2…', title: 'DiffusionGemma overview', url: 'models/diffusiongemma/', path: 'Models › Variants' }
+        { text: '在本機使用 Ollama 執行 Gemma 4…', title: '使用 Ollama 執行 Gemma', url: 'deployment/ollama/', path: '執行 › 本機' },
+        { text: '比較 Gemma 4 模型尺寸與上下文…', title: 'Gemma 4 模型總覽', url: 'models/gemma-4/', path: '模型 › Gemma 4' },
+        { text: '使用 QLoRA 或 Unsloth 微調…', title: 'QLoRA 微調指南', url: 'tuning/qlora/', path: '微調 › 指南' },
+        { text: '多模態視覺、音訊與影片…', title: '視覺與多模態能力', url: 'get-started/capabilities/vision/', path: '開始使用 › 多模態' },
+        { text: '函式呼叫與工具使用…', title: '使用 Gemma 進行函式呼叫', url: 'get-started/capabilities/function-calling/', path: '開始使用 › 文字' },
+        { text: '試用 DiffusionGemma 或 PaliGemma 2…', title: 'DiffusionGemma 總覽', url: 'models/diffusiongemma/', path: '模型 › 變體' }
       ];
 
       var promptIdx = 0;

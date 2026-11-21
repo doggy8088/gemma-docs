@@ -1,107 +1,88 @@
 ---
-title: FunctionGemma formatting and best practices
-description: FunctionGemma is a specialized version of the Gemma 3 270M model, trained specifically for function calling (i.e., tool use).
+title: FunctionGemma 格式與最佳實務
+description: FunctionGemma 是 Gemma 3 270M 模型的專門版本，專為函式呼叫（function calling，即工具使用）訓練。
 models: [functiongemma]
 source_url: "https://ai.google.dev/gemma/docs/functiongemma/formatting-and-best-practices.md.txt"
 ---
-# FunctionGemma formatting and best practices
+# FunctionGemma 格式與最佳實務
 
-FunctionGemma is a specialized version of the Gemma 3 270M model,
-trained specifically for **function calling** (i.e., tool use).
+FunctionGemma 是 Gemma 3 270M 模型的專門版本，
+專為**函式呼叫**（即工具使用）訓練。
 
-To manage the interaction between natural language instructions and structured,
-tool-related data, FunctionGemma uses a specific set of formatting control
-tokens. These tokens are essential for the model to distinguish between
-conversation and data, and to understand tool definitions, tool calls, and tool
-results.
+為了管理自然語言指令與結構化工具相關資料之間的互動，FunctionGemma 使用一組特定的格式控制詞元。這些詞元是模型區分對話與資料、理解工具定義、工具呼叫與工具結果的關鍵。
 
-## Base Prompt Structure
+## 基礎提示結構
 
-FunctionGemma builds on the [Gemma prompt structure](../../get-started/prompt-formatting.md), using
-`<start_of_turn>role`{.token-turn} and `<end_of_turn>`{.token-turn} to describe conversational turns.
-The `role`{.token-role} is typically `user`{.token-role} or `model`{.token-role} (and sometimes `developer`{.token-role} for
-providing initial context, as seen below).
+FunctionGemma 建立在 [Gemma 提示結構](../../get-started/prompt-formatting.md)之上，使用
+`<start_of_turn>role`{.token-turn} 與 `<end_of_turn>`{.token-turn} 來描述對話回合。
+`role`{.token-role} 通常是 `user`{.token-role} 或 `model`{.token-role}（有時也會用 `developer`{.token-role}
+來提供初始上下文，如下所示）。
 
-The function-specific tokens are used *within* these turns to structure the
-tool-related information.
+函式專用的詞元用在這些回合*之內*，用來組織工具相關的資訊。
 
-### Control Tokens
+### 控制詞元
 
-FunctionGemma is trained on six special tokens to manage the "tool use"
-lifecycle.
+FunctionGemma 訓練了六個特殊詞元來管理「工具使用」的生命週期。
 
-| Token Pair | Purpose |
+| 詞元對 | 用途 |
 |---|---|
-| `<start_function_declaration>`{.token-tool} `<end_function_declaration>`{.token-tool} | Defines a tool. |
-| `<start_function_call>`{.token-tool} `<end_function_call>`{.token-tool} | Indicates a model's request to use a tool. |
-| `<start_function_response>`{.token-tool} `<end_function_response>`{.token-tool} | Provides a tool's result back to the model. |
+| `<start_function_declaration>`{.token-tool} `<end_function_declaration>`{.token-tool} | 定義一個工具。 |
+| `<start_function_call>`{.token-tool} `<end_function_call>`{.token-tool} | 表示模型要求使用某個工具。 |
+| `<start_function_response>`{.token-tool} `<end_function_response>`{.token-tool} | 將工具的結果傳回給模型。 |
 
 !!! Note
-    `<start_function_response>`{.token-tool} is an additional stop sequence for the
-    inference engine.
+    `<start_function_response>`{.token-tool} 是推論引擎的額外停止序列。
 
 
-### Delimiter for String Values: `<escape>`{.token-tool}
+### 字串值的分隔符：`<escape>`{.token-tool}
 
-A single token, `<escape>`{.token-tool}, is used as a delimiter for **all string values**
-within the structured data blocks.
+單一詞元 `<escape>`{.token-tool} 作為結構化資料區塊中**所有字串值**的分隔符。
 
-- **Purpose:** This token ensures that any special characters (like `{`, `}`, `,`, or quotes) inside a string are treated as literal text and not as part of the data structure's syntax.
-- **Usage:** All string literals in your function declarations, calls, and responses must be enclosed, like: <code>key:<span class="token-tool">&lt;escape&gt;</span>string value<span class="token-tool">&lt;escape&gt;</span></code>.
+- **目的：**這個詞元確保字串內任何特殊字元（如 `{`、`}`、`,` 或引號）都被視為字面文字，而非資料結構語法的一部分。
+- **用法：**函式宣告、呼叫與回覆中的所有字串字面值都必須用這種方式包起來，例如：<code>key:<span class="token-tool">&lt;escape&gt;</span>string value<span class="token-tool">&lt;escape&gt;</span></code>。
 
-## Training Scope and Limitations
+## 訓練範疇與限制
 
-FunctionGemma is trained for specific types of agentic workflows. It is
-important to understand the model's training context to ensure reliability in
-production environments.
+FunctionGemma 針對特定類型的代理式工作流程訓練。了解模型的訓練背景對生產環境的可靠性很重要。
 
-### Supported Workflows
+### 支援的工作流程
 
-The model has been explicitly trained on **Single Turn** and **Parallel**
-function calling.
+模型已明確在**單回合**與**平行**函式呼叫上訓練。
 
-- **Single Turn:** The user provides a query, and the model selects a single tool to address it.
-- **Parallel:** The user provides a query containing multiple independent requests, and the model generates multiple tool calls simultaneously.
+- **單回合：**使用者提出查詢，模型選擇單一工具來處理。
+- **平行：**使用者的查詢包含多個獨立請求，模型在單一回覆中同時生成多個工具呼叫。
 
-**Example: Parallel (Supported)**
-> **User:** "What is the weather in Tokyo and what is the stock price of Google?"
+**範例：平行（支援）**
+> **使用者：**「東京的天氣如何，以及 Google 的股價是多少？」
 
-The model generates calls for `get_weather(Tokyo)` and
-`get_stock_price(GOOG)` in a single response. These actions don't depend on
-each other.
+模型在單一回覆中為 `get_weather(Tokyo)` 與 `get_stock_price(GOOG)` 生成呼叫。這兩個動作互不依賴。
 
-### Unsupported Workflows
+### 不支援的工作流程
 
-The model has **not** been explicitly trained on **Multi-Turn** or
-**Multi-Step** workflows.
+模型**沒有**明確在**多回合**或**多步驟**工作流程上訓練。
 !!! Note
-    We expect the model to be able to generalize a bit to these
-    scenarios, especially if fine-tuned on specific use cases, but it has not been
-    trained to perform these tasks out of the box.
+    我們預期模型在這些情境下能有一定程度的泛化能力，特別是針對特定使用場景微調後，但它並非開箱即能執行這些任務。
 
 
-- **Multi-Step (Chaining):** Scenarios where the output of one tool is
-  required as the argument for a subsequent tool.
+- **多步驟（串連）：**某個工具的輸出必須作為後續工具的引數的情境。
 
-    - **Example:** "Roll a die with 20 sides and check if the number is prime."
-    - **Complexity:** This requires rolling a die first (Tool A), and *then* using the result to check if the number is prime (Tool B). FunctionGemma is not trained to reason through this dependency chain automatically.
-- **Multi-Turn:** Scenarios requiring the model to maintain state or context
-  over a long back-and-forth conversation to determine tool parameters.
+    - **範例：**「擲一顆 20 面骰子，檢查數字是否為質數。」
+    - **複雜度：**這需要先擲骰子（工具 A），*然後*用結果檢查是否為質數（工具 B）。FunctionGemma 沒有受過訓練，無法自動推理想出這種依賴鏈。
+- **多回合：**需要模型在漫長的一來一回對話中維持狀態或上下文來決定工具參數的情境。
 
-> **User:** "Book me a table."  
+> **使用者：**「幫我訂一張桌子。」
 >
-> **Model:** "For how many people?"  
+> **模型：**「幾位呢？」
 >
-> **User:** "Four."
+> **使用者：**「四位。」
 
-- **Complexity:** The model is not explicitly trained to aggregate these separate turns into a final `book_table(people=4)` call without external state management.
+- **複雜度：**模型沒有受過明確訓練，無法在沒有外部狀態管理的情況下，把這些分散的回合彙整成最終的 `book_table(people=4)` 呼叫。
 
-### Semantic Nuances
+### 語意細微差別
 
-The model may sometimes miss the relationship between semantically related
-concepts if the user's prompt is abstract or indirect.
+如果使用者的提示抽象或間接，模型有時會錯過語意相關概念之間的關聯。
 
-Here's an example function.
+以下是一個範例函式。
 
 ```python
 def get_current_temperature(location: str, unit: str):
@@ -115,93 +96,73 @@ def get_current_temperature(location: str, unit: str):
     return 22.0
 ```
 
-For example, concepts like "cold" or "hot" imply temperature, but might not
-immediately trigger a specific tool named `get_current_temperature` if the model
-does not make the semantic connection in that specific context.
+例如，「cold」或「hot」這類概念隱含溫度，但在該特定上下文中如果模型沒有建立語意連結，可能就不會觸發名為 `get_current_temperature` 的特定工具。
 
-- **Mitigation Strategies:**
-    - **Enriched Tool Definition:** This is often the most effective fix. Expanding the function's description to include semantic keywords helps the model bridge the gap. For example, adding "This function can be used to determine if the weather is hot or cold in a given location" to the docstring allows FunctionGemma to correctly map those qualitative descriptors to the tool.
-    - **Prompt Engineering:** Making the user query more detailed or explicit can help the model trigger the correct tool, though this relies on user behavior.
-    - **Fine-tuning:** For production environments where users frequently use highly indirect language (e.g., "is it nice out?" versus "get weather"), we recommend [fine-tuning](fine-tuning.md) the model on a dataset that explicitly maps these semantic nuances to the correct tool definitions.
+- **緩解策略：**
+    - **豐富的工具定義：**這通常是最有效的修正方式。擴充函式描述，加入語意關鍵字，幫助模型搭起這座橋。例如，在 docstring 中加入「此函式可用來判斷給定地點的天氣是熱還是冷」，就能讓 FunctionGemma 正確地把這些質性描述詞對應到工具。
+    - **提示工程：**把使用者查詢寫得更詳細或更明確，可以幫助模型觸發正確的工具，但這仰賴使用者的行為。
+    - **微調：**對於使用者經常使用高度間接語言的生產環境（例如「外面天氣好嗎？」相對於「查天氣」），我們建議在明確對應這些語意細微差別與正確工具定義的資料集上[微調](fine-tuning.md)模型。
 
-**Example: Make Semantic Connection**
-> **User:** "Hey, is it cold in Paris right now?"
+**範例：建立語意連結**
+> **使用者：**「嘿，巴黎現在冷嗎？」
 
-**Scenario A: Limited Description** If the tool description is just `Get the
-current temperature at a location.`, the model might fail to associate "cold"
-with get_current_temperature and respond that it cannot provide weather
-information.
+**情境 A：有限的描述** 如果工具描述只有 `Get the current temperature at a location.`，模型可能無法把「cold」與 get_current_temperature 連結起來，而回覆無法提供天氣資訊。
 
-**Scenario B: Enriched Description** If the tool description is updated to
-include: `Get the current temperature at a location. This function can be used
-to determine if the weather is hot or cold in a given location.`, the model
-successfully makes the connection:  
+**情境 B：豐富的描述** 如果工具描述更新為包含：`Get the current temperature at a location. This function can be used to determine if the weather is hot or cold in a given location.`，模型就能成功建立連結：
 
 <code><span class="token-tool">&lt;start_function_call&gt;</span>call:get_current_temperature{location:<span class="token-tool">&lt;escape&gt;</span>Paris<span class="token-tool">&lt;escape&gt;</span>,unit:<span class="token-tool">&lt;escape&gt;</span>celsius<span class="token-tool">&lt;escape&gt;</span>}<span class="token-tool">&lt;end_function_call&gt;</span></code>
 
-## Example: Weather Tool Flow
+## 範例：天氣工具流程
 
-Here is a complete, step-by-step formatted example demonstrating the flow for
-using the `get_current_weather` tool.
+以下是使用 `get_current_weather` 工具的完整逐步格式範例，示範整個流程。
 
-![A diagram of Weather Tool Flow](../../assets/functiongemma/functiongemma_flow.png)
+![天氣工具流程圖](../../assets/functiongemma/functiongemma_flow.png)
 
-### Turn 1: Tool Definition (Developer)
+### 回合 1：工具定義（開發者）
 
-First, you provide the model with the definitions of all available tools. This
-is done as the first turn from a `developer` role. This block is used to provide
-the model with the "schema" of an available function, including its name, a
-description of what it does, and its parameters.
+首先，您以 `developer` 角色的第一個回合提供模型所有可用工具的定義。這個區塊用來提供模型可用函式的「schema」，包括函式名稱、功能描述與參數。
 
-It is important to include the system prompt `You are a model that can do
-function calling with the following functions` to enable the model to call
-tools. This phrase acts as a prompt-based trigger to switch between tooling
-capability and general conversation.
+務必包含系統提示 `You are a model that can do function calling with the following functions` 來啟用模型的工具呼叫能力。這句話是個基於提示的觸發器，用來在工具能力與一般對話之間切換。
 
 <pre><code>
 <span class="token-turn">&lt;start_of_turn&gt;</span><span class="token-role">developer</span>
 You are a model that can do function calling with the following functions<span class="token-tool">&lt;start_function_declaration&gt;</span>declaration:get_current_weather{description:<span class="token-tool">&lt;escape&gt;</span>Gets the current weather in a given location.<span class="token-tool">&lt;escape&gt;</span>,parameters:{properties:{location:{description:<span class="token-tool">&lt;escape&gt;</span>The city and state, e.g. "San Francisco, CA" or "Tokyo, JP"<span class="token-tool">&lt;escape&gt;</span>,type:<span class="token-tool">&lt;escape&gt;</span>STRING<span class="token-tool">&lt;escape&gt;</span>},unit:{description:<span class="token-tool">&lt;escape&gt;</span>The unit to return the temperature in.<span class="token-tool">&lt;escape&gt;</span>,enum:[<span class="token-tool">&lt;escape&gt;</span>celsius<span class="token-tool">&lt;escape&gt;</span>,<span class="token-tool">&lt;escape&gt;</span>fahrenheit<span class="token-tool">&lt;escape&gt;</span>],type:<span class="token-tool">&lt;escape&gt;</span>STRING<span class="token-tool">&lt;escape&gt;</span>}},required:[<span class="token-tool">&lt;escape&gt;</span>location<span class="token-tool">&lt;escape&gt;</span>],type:<span class="token-tool">&lt;escape&gt;</span>OBJECT<span class="token-tool">&lt;escape&gt;</span>}<span class="token-tool">&lt;end_function_declaration&gt;</span><span class="token-turn">&lt;end_of_turn&gt;</span>
 </code></pre>
 
-### Turn 2: User Prompt (User)
+### 回合 2：使用者提示（使用者）
 
-Next, the user asks a question that requires the tool you just defined.
+接著，使用者提出一個需要用到剛定義的工具的問題。
 
 <pre><code>
 <span class="token-turn">&lt;start_of_turn&gt;</span><span class="token-role">user</span>
 Hey, what's the weather in Tokyo right now?<span class="token-turn">&lt;end_of_turn&gt;</span>
 </code></pre>
 
-### Turn 3: Model Issues Function Call (Model)
+### 回合 3：模型發出函式呼叫（模型）
 
-The model processes the user's request and the tool definition. It determines it
-needs to call the `get_current_weather` function and outputs the following turn.
+模型處理使用者的請求與工具定義。它判斷需要呼叫 `get_current_weather` 函式，並輸出以下回合。
 
 <pre><code>
 <span class="token-turn">&lt;start_of_turn&gt;</span><span class="token-role">model</span>
 <span class="token-tool">&lt;start_function_call&gt;</span>call:get_current_weather{location:<span class="token-tool">&lt;escape&gt;</span>Tokyo, Japan<span class="token-tool">&lt;escape&gt;</span>}<span class="token-tool">&lt;end_function_call&gt;</span>
 </code></pre>
 
-> **Application Logic:** At this point, your application must intercept this output. Instead of displaying it to the user, you parse the function call (e.g., `get_current_weather(location="Tokyo, Japan")`), execute this function in your own code, and get the result (e.g., a JSON object).
+> **應用程式邏輯：**此時您的應用程式必須攔截這個輸出。不要直接顯示給使用者，而是解析函式呼叫（例如 `get_current_weather(location="Tokyo, Japan")`），在您自己的程式碼中執行這個函式，取得結果（例如一個 JSON 物件）。
 
-### Turn 4: Application Provides Function Response (Developer)
+### 回合 4：應用程式提供函式回覆（開發者）
 
-You now send the return value from your function back to the model. This turn
-uses the function response tokens.
+現在您把函式的回傳值送回給模型。這個回合使用函式回覆詞元。
 
 <pre><code>
 <span class="token-tool">&lt;start_function_response&gt;</span>response:get_current_weather{temperature:15,weather:<span class="token-tool">&lt;escape&gt;</span>sunny<span class="token-tool">&lt;escape&gt;</span>}<span class="token-tool">&lt;end_function_response&gt;</span>
 </code></pre>
 
-### Turn 5: Model Generates Final Answer (Model)
+### 回合 5：模型生成最終答案（模型）
 
-The model receives the function's result from Turn 4. It now has all the
-information needed to answer the user's original question from Turn 2. It
-processes this new context and generates the final, natural language response.
+模型收到回合 4 的函式結果。現在它已經掌握回答回合 2 使用者原始問題所需的全部資訊，處理這個新上下文後生成最終的自然語言回覆。
 
 <pre><code>
 The current weather in Tokyo is sunny with a temperature of 15 degrees Celsius.<span class="token-turn">&lt;end_of_turn&gt;</span>
 </code></pre>
 
-You can see more complete version of this example in the
-[Full function calling sequence with FunctionGemma](full-sequence.md)
+您可以在 [FunctionGemma 完整函式呼叫序列](full-sequence.md) 看到這個範例更完整的版本
