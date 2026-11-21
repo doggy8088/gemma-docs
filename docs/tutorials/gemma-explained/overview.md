@@ -11,9 +11,9 @@ source_url: https://developers.googleblog.com/gemma-explained-overview-gemma-mod
     最初發表於
     [Google Developers 部落格](https://developers.googleblog.com/gemma-explained-overview-gemma-model-family-architectures)。
 
-![banner](../../assets/gemma-explained/overview-banner.png)
+![Gemma 模型家族架構總覽橫幅](../../assets/gemma-explained/overview-banner.png)
 
-[Gemma](https://ai.google.dev/gemma) 是一系列輕量、最先進的開放模型家族，採用與打造 Gemini 模型相同的研發成果與技術。
+[Gemma](../../models/index.md) 是一系列輕量、最先進的開放模型家族，採用與打造 Gemini 模型相同的研發成果與技術。
 
 Gemma 的不同版本是為不同的使用場景與模態設計的，例如：
 

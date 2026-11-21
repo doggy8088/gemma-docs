@@ -4,9 +4,9 @@ description: "Gemma 3 多模態模型的模型卡：128K 上下文、140 種以�
 models: [gemma-3]
 source_url: "https://ai.google.dev/gemma/docs/core/model_card_3.md.txt"
 ---
-# 模型卡
+# Gemma 3 模型卡
 
-**模型頁面**：[Gemma](index.md)
+**模型頁面**：[Gemma](../index.md)
 
 **資源與技術文件**：
 

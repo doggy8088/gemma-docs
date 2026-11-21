@@ -4,7 +4,7 @@ description: ShieldGemma 2 是在 Gemma 3 的 4B IT 檢查點上訓練的模型�
 models: [shieldgemma-2]
 source_url: "https://ai.google.dev/gemma/docs/shieldgemma/model_card_2.md.txt"
 ---
-# ShieldGemma 模型卡
+# ShieldGemma 2 模型卡
 
 **模型頁面** : [ShieldGemma](index.md)
 

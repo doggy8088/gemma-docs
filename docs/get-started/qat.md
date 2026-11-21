@@ -1,5 +1,6 @@
 ---
 title: 量化感知訓練（Quantization-Aware Training）
+seo_title: Gemma 4 量化感知訓練（QAT）
 description: 說明各引擎應下載哪一組 Gemma 4 量化權重，以及在 4 位元下 QAT 為何優於訓練後量化。
 models: [gemma-4]
 frameworks: [llamacpp, vllm]

@@ -4,7 +4,7 @@ description: "FunctionGemma 模型卡：函式呼叫的輸入與輸出、訓練�
 models: [functiongemma]
 source_url: "https://ai.google.dev/gemma/docs/functiongemma/model_card.md.txt"
 ---
-# 模型卡
+# FunctionGemma 模型卡
 
 **模型頁面** : [FunctionGemma](index.md)
 

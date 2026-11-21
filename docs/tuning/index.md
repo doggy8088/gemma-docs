@@ -1,5 +1,6 @@
 ---
 title: 微調總覽
+seo_title: 微調 Gemma 4 模型
 description: 微調 Gemma 4 之前，先選好訓練階段、方法、GPU 預算與基底檢查點，再開始訓練。
 models: [gemma-4]
 source_url: "https://ai.google.dev/gemma/docs/tune.md.txt"

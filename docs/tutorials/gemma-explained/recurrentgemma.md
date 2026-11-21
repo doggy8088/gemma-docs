@@ -11,7 +11,7 @@ source_url: https://developers.googleblog.com/gemma-explained-recurrentgemma-arc
     最初發表於
     [Google Developers 部落格](https://developers.googleblog.com/gemma-explained-recurrentgemma-architecture/)。
 
-![banner](../../assets/gemma-explained/gemma-var-banner.png)
+![RecurrentGemma 架構橫幅](../../assets/gemma-explained/gemma-var-banner.png)
 
 在「Gemma 詳解」系列的[上一篇文章](/tutorials/gemma-explained/gemma-2/)中，我們討論了最新的 Gemma 2 架構。在這篇文章中，你將探索 RecurrentGemma 架構。讓我們開始吧！
 

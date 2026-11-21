@@ -41,10 +41,10 @@ class AgentDocsTests(unittest.TestCase):
         rendered = agent_docs.render_llms()
         self.assertTrue(rendered.startswith("# Gemma Documentation\n"))
         self.assertIn("https://gemma.ai/get-started.md", rendered)
-        self.assertIn("- [總覽](https://gemma.ai/deployment.md):", rendered)  # zh-tw title
-        self.assertNotIn("[Gemma 4 — 總覽](https://gemma.ai/deployment.md)", rendered)  # zh-tw title
+        self.assertIn("- [執行與部署 Gemma 模型](https://gemma.ai/deployment.md):", rendered)  # zh-tw title
+        self.assertNotIn("[Gemma 4 — 執行與部署 Gemma 模型](https://gemma.ai/deployment.md)", rendered)  # zh-tw title
         self.assertIn(
-            "- [DiffusionGemma — 生成輸出](https://gemma.ai/models/diffusiongemma/inference.md):",
+            "- [使用 DiffusionGemma 生成文字](https://gemma.ai/models/diffusiongemma/inference.md):",
             rendered,
         )
         self.assertIn(

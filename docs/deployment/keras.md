@@ -15,8 +15,7 @@ Gemma 3 及後續模型支援文字與圖像輸入。較早版本的 Gemma 僅�
 !!! Note
     這本筆記本在使用 Gemma 4 時無法在 T4 上執行。請使用 L4 或更高階的 GPU。
 
-
-### 安裝 Keras 套件
+## 安裝 Keras 套件
 
 安裝 Keras 與 KerasHub Python 套件。
 
@@ -24,7 +23,7 @@ Gemma 3 及後續模型支援文字與圖像輸入。較早版本的 Gemma 僅�
 pip install -q -U keras keras-hub keras-nlp
 ```
 
-### 選擇後端
+## 選擇後端
 
 Keras 是設計簡單易用的高階多框架深度學習 API。[Keras 3](https://keras.io/keras_3) 讓您選擇後端：TensorFlow、JAX 或 PyTorch。三者都適用於本教學。在本教學中，請將後端設定為 JAX，因為它通常提供更好的效能。
 
@@ -35,7 +34,7 @@ os.environ["KERAS_BACKEND"] = "jax"  # Or "tensorflow" or "torch".
 os.environ["XLA_PYTHON_CLIENT_MEM_FRACTION"] = "1.00"
 ```
 
-### 匯入套件
+## 匯入套件
 
 匯入 Keras 與 KerasHub 套件。
 

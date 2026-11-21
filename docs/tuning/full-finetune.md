@@ -1,5 +1,6 @@
 ---
 title: 完整微調
+seo_title: 使用 Gemma 4 進行完整微調
 description: 使用 Hugging Face Transformers、TRL、餘弦暖身排程與 8 位元 AdamW，在 Gemma 4 上執行全參數 bfloat16 微調。
 models: [gemma-4]
 frameworks: [transformers, trl, torchao]

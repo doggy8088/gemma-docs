@@ -1,5 +1,6 @@
 ---
 title: 快速入門
+seo_title: 開始使用 Gemma
 description: 用一條指令完成第一次 Gemma 4 生成，再挑選適合您硬體的引擎、模型尺寸與檢查點。
 models: [gemma-4]
 frameworks: [transformers, llamacpp, ollama, mlx, vllm, lmstudio]
@@ -15,7 +16,7 @@ Gemma 是輕量且技術領先的開放模型家族，基於開發 [Gemini](http
 Gemma 家族的最新成員是 [Gemma 4](../models/gemma-4/index.md)，支援多模態（文字、圖像、音訊）輸入。
 
 !!! tip "第一次接觸 Gemma？"
-    想深入了解 Gemma 模型家族，請造訪[模型家族](../models/index.md)頁面一覽。
+    想深入了解 Gemma 模型家族，請造訪[模型家族](../models/index.md)頁面一覽，或探索圖解版[架構指南](../learn/index.md)。
 
 ## 選擇模型
 

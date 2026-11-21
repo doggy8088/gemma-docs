@@ -1,5 +1,6 @@
 ---
 title: 視覺微調
+seo_title: 使用 Gemma 4 進行視覺微調
 description: 使用 QLoRA、可選的視覺詞元預算與僅針對補全的多模態損失遮罩，在自訂影像-文字資料集上微調 Gemma 4。
 models: [gemma-4/e2b, gemma-4/e4b, gemma-4/12b, gemma-4/31b]
 frameworks: [transformers, peft, trl]

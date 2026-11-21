@@ -17,12 +17,12 @@ Gemma 3n 是針對日常裝置（如手機、筆記型電腦與平板）使用�
 
 Gemma 3n 具備以下主要功能：
 
-- **音訊輸入** ：處理聲音資料以進行語音辨識、翻譯與音訊資料分析。[深入了解](../../deployment/huggingface.md#從音訊資料生成文字)
-- **視覺與文字輸入** ：多模態能力讓您能處理視覺、聲音與文字，協助理解與分析周遭世界。[深入了解](../../deployment/huggingface.md#從圖像資料生成文字)
-- **視覺編碼器：**高效能 MobileNet-V5 編碼器大幅提升處理視覺資料的速度與準確度。[深入了解](https://developers.googleblog.com/en/introducing-gemma-3n-developer-guide/#mobilenet-v5:-new-state-of-the-art-vision-encoder){ data-model="gemma-3n" }
-- **PLE 快取** ：這些模型中的逐層嵌入（Per-Layer Embedding, PLE）參數可快取至快速的本地儲存，以降低模型的記憶體成本。[深入了解](index.md#ple-快取)
-- **MatFormer 架構：**套娃式 Transformer（Matryoshka Transformer）架構可針對每次請求選擇性啟用模型參數，以降低運算成本與回應時間。[深入了解](index.md#matformer-架構)
-- **條件式參數載入：**略過載入模型中的視覺與音訊參數，以減少載入的參數總數並節省記憶體資源。[深入了解](index.md#條件式參數載入)
+- **音訊輸入** ：處理聲音資料以進行語音辨識、翻譯與音訊資料分析。[音訊輸入指南](../../deployment/huggingface.md#從音訊資料生成文字)
+- **視覺與文字輸入** ：多模態能力讓您能處理視覺、聲音與文字，協助理解與分析周遭世界。[視覺輸入指南](../../deployment/huggingface.md#從圖像資料生成文字)
+- **視覺編碼器：**高效能 MobileNet-V5 編碼器大幅提升處理視覺資料的速度與準確度。[MobileNet-V5 視覺編碼器總覽](https://developers.googleblog.com/en/introducing-gemma-3n-developer-guide/#mobilenet-v5:-new-state-of-the-art-vision-encoder){ data-model="gemma-3n" }
+- **PLE 快取** ：這些模型中的逐層嵌入（Per-Layer Embedding, PLE）參數可快取至快速的本地儲存，以降低模型的記憶體成本。[PLE 快取詳細資訊](index.md#ple-快取)
+- **MatFormer 架構：**套娃式 Transformer（Matryoshka Transformer）架構可針對每次請求選擇性啟用模型參數，以降低運算成本與回應時間。[MatFormer 架構詳細資訊](index.md#matformer-架構)
+- **條件式參數載入：**略過載入模型中的視覺與音訊參數，以減少載入的參數總數並節省記憶體資源。[條件式參數載入詳細資訊](index.md#條件式參數載入)
 - **廣泛的語言支援**：具備廣泛的語言能力，在超過 140 種語言上訓練。
 - **32K 詞元上下文**：充裕的輸入上下文，用於分析資料與處理任務。
 

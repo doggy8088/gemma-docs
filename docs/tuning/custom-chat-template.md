@@ -1,5 +1,6 @@
 ---
 title: 自訂聊天範本
+seo_title: Gemma 4 自訂聊天範本
 description: 使用 ChatML 範本與 QLoRA，把預訓練 Gemma 4 基礎模型變成多輪聊天助手。
 models: [gemma-4/e2b, gemma-4/e4b, gemma-4/12b, gemma-4/31b]
 frameworks: [transformers, peft, trl]

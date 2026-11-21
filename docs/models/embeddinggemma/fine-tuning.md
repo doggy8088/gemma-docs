@@ -1,5 +1,6 @@
 ---
 title: 使用 Sentence Transformers 微調 EmbeddingGemma
+seo_title: 微調 EmbeddingGemma 2
 description: 使用 Sentence Transformers 的對比式三元組微調（triplet fine-tuning），讓 EmbeddingGemma 2 適應特定領域術語。
 models: [embeddinggemma-2]
 frameworks: [sentence-transformers, transformers]
@@ -10,7 +11,7 @@ source_url: "https://ai.google.dev/gemma/docs/embeddinggemma/fine-tuning-embeddi
 
 微調有助於彌補模型的通用理解與應用所需的特定領域高精度表現之間的落差。雖然 **EmbeddingGemma 2** 在文字與多模態輸入上提供了強大的開箱即用語義表示，但特定領域的術語通常能從有針對性的調適中獲益。
 
-### 範例情境：金融知識庫搜尋
+## 範例情境：金融知識庫搜尋
 
 想像您的公司「Shibuya Financial」提供各種複雜的金融產品，例如投資信託、**NISA 帳戶**（日本免稅儲蓄帳戶）和房屋貸款。客服人員依賴內部語義搜尋引擎，為客戶諮詢檢索相關的政策文件。
 

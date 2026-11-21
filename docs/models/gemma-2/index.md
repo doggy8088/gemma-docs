@@ -4,9 +4,9 @@ description: "Gemma 2 文字轉文字模型的模型卡：模型說明、輸入�
 models: [gemma-2]
 source_url: "https://ai.google.dev/gemma/docs/core/model_card_2.md.txt"
 ---
-# 模型卡
+# Gemma 2 模型卡
 
-**模型頁面**：[Gemma](index.md)
+**模型頁面**：[Gemma](../index.md)
 
 **資源與技術文件**：
 

@@ -1,5 +1,6 @@
 ---
 title: 學習
+seo_title: 了解 Gemma 模型的運作方式
 description: 用圖解方式說明 Gemma 模型如何運作：從整體架構深入到注意力機制、嵌入等個別關鍵機制。
 ---
 

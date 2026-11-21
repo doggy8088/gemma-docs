@@ -4,7 +4,7 @@ description: RecurrentGemma 是在 Google 開發的全新遞迴架構上打造�
 models: [recurrentgemma]
 source_url: "https://ai.google.dev/gemma/docs/recurrentgemma/model_card.md.txt"
 ---
-# 模型卡
+# RecurrentGemma 模型卡
 
 **模型頁面：** [RecurrentGemma](index.md)
 

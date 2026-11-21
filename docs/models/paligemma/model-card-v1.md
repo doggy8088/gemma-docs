@@ -4,7 +4,7 @@ description: PaliGemma 是一款多功能、輕量的視覺語言模型（VLM）
 models: [paligemma]
 source_url: "https://ai.google.dev/gemma/docs/paligemma/model-card.md.txt"
 ---
-# 模型卡
+# PaliGemma 模型卡
 
 **模型頁面：** [PaliGemma](index.md)
 

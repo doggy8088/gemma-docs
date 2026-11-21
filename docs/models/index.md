@@ -121,4 +121,8 @@ Gemma 3 世代的裝置端成員。
 
 如需所有版本的完整發布時程，請見[版本發布紀錄](releases.md)。
 
+## 授權與政策
+
+請參閱 [Apache 2.0 授權](../resources/apache-2.md)（適用於 Gemma 4）、[Gemma 使用條款](../resources/terms.md)、[禁止使用政策](../resources/prohibited-use.md)與[預期用途聲明](../resources/intended-use.md)。
+
 --8<-- "glossary.md"

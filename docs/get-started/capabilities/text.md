@@ -1,5 +1,6 @@
 ---
 title: 推論
+seo_title: 使用 Gemma 4 生成文字
 description: "在 Hugging Face Transformers 中使用 Gemma 4 進行基本文字推論：單輪提示、多輪對話與系統指令。"
 models: [gemma-4]
 frameworks: [transformers]

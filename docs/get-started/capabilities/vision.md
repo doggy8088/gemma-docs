@@ -1,5 +1,6 @@
 ---
 title: 視覺總覽
+seo_title: Gemma 4 視覺總覽
 description: 準備視覺資料並傳遞給 Gemma 4，以執行物件偵測、光學字元辨識（OCR）、視覺問答、圖說生成與多圖推理。
 models: [gemma-4, gemma-3, gemma-3n, paligemma]
 source_url: "https://ai.google.dev/gemma/docs/capabilities/vision.md.txt"

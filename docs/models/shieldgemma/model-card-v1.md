@@ -25,7 +25,7 @@ source_url: "https://ai.google.dev/gemma/docs/shieldgemma/model_card.md.txt"
 ### 描述
 
 ShieldGemma 是基於
-[Gemma 2](https://ai.google.dev/gemma#gemma-2){ data-model="gemma-2" } 建構的一系列安全內容審核模型，鎖定四種傷害類別（色情內容、危險內容、仇恨、騷擾）。它們是文字對文字、僅解碼器的大型語言模型，提供英文開放權重，共三種規模：2B、9B 與 27B 參數。
+[Gemma 2](../gemma-2/index.md){ data-model="gemma-2" } 建構的一系列安全內容審核模型，鎖定四種傷害類別（色情內容、危險內容、仇恨、騷擾）。它們是文字對文字、僅解碼器的大型語言模型，提供英文開放權重，共三種規模：2B、9B 與 27B 參數。
 
 ### 輸入與輸出
 
@@ -105,7 +105,7 @@ ShieldGemma 針對安全準則使用不同的措辭，取決於待分類內容�
 
 ### 訓練資料集
 
-基礎模型使用包含多種來源的文字資料集進行訓練，更多詳情請參閱 [Gemma 2 文件](https://ai.google.dev/gemma#gemma-2){ data-model="gemma-2" }。
+基礎模型使用包含多種來源的文字資料集進行訓練，更多詳情請參閱 [Gemma 2 文件](../gemma-2/index.md){ data-model="gemma-2" }。
 ShieldGemma 模型則在內部合成生成的資料與公開可用的資料集上進行微調。更多詳情請參閱
 [ShieldGemma 技術報告](https://storage.googleapis.com/deepmind-media/gemma/shieldgemma-report.pdf){ data-model="shieldgemma" }。
 

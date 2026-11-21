@@ -1,5 +1,6 @@
 ---
 title: Gemma trainer 技能
+seo_title: 使用 gemma-trainer 微調 Gemma 4
 description: 安裝 gemma-trainer 代理技能，自動完成 Gemma 4 的資料集驗證、超參數調整、微調、評估與匯出。
 models: [gemma-4]
 frameworks: [transformers, unsloth]

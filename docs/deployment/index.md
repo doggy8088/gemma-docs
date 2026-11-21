@@ -1,9 +1,12 @@
 ---
-title: 總覽
+title: 執行與部署 Gemma 模型
 description: 依您的硬體選擇合適的執行框架與 Gemma 模型變體，逐步完成環境設定並執行您的第一個文字生成與推論請求。
 models: [gemma-4]
 source_url: "https://ai.google.dev/gemma/docs/run.md.txt"
 ---
+
+# 執行與部署 Gemma 模型
+
 當您想執行 Gemma 模型時，有兩個關鍵決策：1）要執行哪個 Gemma 變體，2）要用哪個 AI 執行框架來執行？
 這兩個決策的關鍵都與您和您的使用者可用的硬體有關。
 
@@ -75,7 +78,7 @@ Gemma 執行於廣泛的生態系工具。哪一個適合您，取決於您的�
 
 {{ engines(["transformers", "unsloth", "keras"]) }}
 
-另請參閱 [Tunix](https://tunix.readthedocs.io/en/latest/)，以在 JAX 中進行微調。
+另請參閱[開始使用 Gemma 與 LangChain](langchain.md)，以建構代理式與 RAG 工作流程，以及 [Tunix](https://tunix.readthedocs.io/en/latest/)，以在 JAX 中進行微調。
 
 ### 大規模服務
 

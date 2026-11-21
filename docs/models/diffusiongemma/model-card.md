@@ -13,7 +13,7 @@ source_url: "https://ai.google.dev/gemma/docs/diffusiongemma/model_card.md.txt"
 [發布部落格](https://blog.google/innovation-and-ai/technology/developers-tools/diffusion-gemma-faster-text-generation/) \|
 [說明文件](index.md)
 
-**授權** : [Apache 2.0](https://gemma.ai/resources/apache-2) \| **作者** : [Google DeepMind](https://deepmind.google/models/gemma/)
+**授權** : [Apache 2.0](https://gemma.ai/resources/apache-2/) \| **作者** : [Google DeepMind](https://deepmind.google/models/gemma/)
 
 </div>
 

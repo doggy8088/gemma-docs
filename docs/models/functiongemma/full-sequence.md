@@ -1,5 +1,6 @@
 ---
 title: FunctionGemma 完整函式呼叫序列
+seo_title: FunctionGemma 完整工具呼叫序列
 description: "FunctionGemma 完整的工具呼叫循環：模型的呼叫、開發者的執行，以及用工具輸出建構的最終回覆。"
 models: [functiongemma]
 frameworks: [transformers]

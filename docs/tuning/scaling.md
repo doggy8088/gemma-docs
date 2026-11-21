@@ -1,5 +1,6 @@
 ---
 title: 擴展規模
+seo_title: 使用 FSDP2 與 QAT 擴展 Gemma 4 訓練規模
 description: 使用 PyTorch FSDP2 將 Gemma 4 訓練擴展到多 GPU 叢集，並使用 TorchAO 量化感知訓練，在自訂微調後恢復 4 位元精度。
 models: [gemma-4]
 frameworks: [transformers, peft, trl, torchao]

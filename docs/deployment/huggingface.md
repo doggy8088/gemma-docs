@@ -15,7 +15,7 @@ colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs
     Gemma 3 及後續模型支援圖像與文字兩種輸入。較早版本的 Gemma 僅支援文字輸入，但部分變體除外，包括 [PaliGemma](../models/paligemma/index.md)。
 
 
-### 安裝 Python 套件
+## 安裝 Python 套件
 
 安裝執行 Gemma 模型與發出請求所需的 Hugging Face 函式庫。
 

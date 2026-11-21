@@ -1,5 +1,6 @@
 ---
 title: 使用 JAX 與 Flax 以 RecurrentGemma 執行推論
+seo_title: 使用 JAX 與 Flax 執行 RecurrentGemma
 description: 使用 Google DeepMind 的 recurrentgemma 函式庫與 JAX，執行 RecurrentGemma 2B Instruct 的取樣與推論。
 models: [recurrentgemma]
 frameworks: [jax]

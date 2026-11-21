@@ -1,5 +1,6 @@
 ---
 title: 使用 Hugging Face Transformers 進行函式呼叫
+seo_title: 使用 FunctionGemma 進行函式呼叫
 description: 使用 Hugging Face Transformers 搭配 FunctionGemma 呼叫函式，以手動 JSON schema 或原始 Python 函式傳遞工具。
 models: [functiongemma]
 frameworks: [transformers]

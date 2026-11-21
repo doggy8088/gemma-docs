@@ -1,12 +1,12 @@
 ---
-title: Gemma 模型卡
+title: Gemma 1 模型卡
 description: "第一代 Gemma 文字轉文字模型的模型卡：模型說明、輸入與輸出格式、訓練資料、評測結果與使用限制。"
 models: [gemma-1]
 source_url: "https://ai.google.dev/gemma/docs/core/model_card.md.txt"
 ---
-# 模型卡
+# Gemma 1 模型卡
 
-**模型頁面**：[Gemma](index.md)
+**模型頁面**：[Gemma](../index.md)
 
 **資源與技術文件**：
 

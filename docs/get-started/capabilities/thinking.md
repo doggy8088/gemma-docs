@@ -1,5 +1,6 @@
 ---
 title: 推理
+seo_title: 使用 Gemma 4 進行推理與思考模式
 description: 使用 Gemma 4 的思考模式，在回答前先進行推理，適用於文字與圖像提示，並將推理過程與答案分開解析。
 models: [gemma-4]
 frameworks: [transformers]

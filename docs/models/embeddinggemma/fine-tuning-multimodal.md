@@ -1,5 +1,6 @@
 ---
 title: 使用 Sentence Transformers 微調多模態 EmbeddingGemma 2
+seo_title: 微調多模態 EmbeddingGemma 2
 description: 使用 Sentence Transformers 透過對比式多模態三元組微調（triplet fine-tuning），讓 EmbeddingGemma 2 適應文字與視覺輸入。
 models: [embeddinggemma-2]
 frameworks: [sentence-transformers, transformers]
@@ -13,7 +14,7 @@ source_url: "https://ai.google.dev/gemma/docs/embeddinggemma/fine-tuning-multimo
 !!! note "注意"
     本指南需要支援 bfloat16 資料型別的 GPU，例如 NVIDIA L4 或 NVIDIA A100。
 
-### 範例情境：韓國水墨畫典藏搜尋
+## 範例情境：韓國水墨畫典藏搜尋
 
 想像您正在為一場傳統朝鮮王朝韓國畫作的博物館展覽，打造一個數位典藏搜尋引擎：
 

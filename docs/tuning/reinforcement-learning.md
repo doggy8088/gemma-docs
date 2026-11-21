@@ -1,5 +1,6 @@
 ---
 title: 可驗證獎勵
+seo_title: 使用 Gemma 4 進行可驗證獎勵強化學習（GRPO）
 description: 使用群組相對策略最佳化、可驗證獎勵、TRL、PEFT 與 vLLM，訓練 Gemma 4 進行逐步推理與原生思考詞元。
 models: [gemma-4/e2b, gemma-4/e4b, gemma-4/12b, gemma-4/31b]
 frameworks: [transformers, peft, trl, vllm]

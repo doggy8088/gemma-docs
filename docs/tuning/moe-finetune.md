@@ -1,5 +1,6 @@
 ---
 title: MoE 微調
+seo_title: 微調 Gemma 4 26B A4B MoE
 description: 使用 LoRA、PEFT target_parameters 與分組 GEMM，微調 Gemma 4 26B A4B 的 128 專家混合專家（MoE）架構，且不發生路由崩潰。
 models: [gemma-4/26b-a4b]
 frameworks: [transformers, peft, trl]

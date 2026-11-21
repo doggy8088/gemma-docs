@@ -1,5 +1,6 @@
 ---
 title: "(Q)LoRA"
+seo_title: 使用 LoRA 與 QLoRA 微調 Gemma 4
 description: 使用 LoRA 與 4 位元 QLoRA 在單一 GPU 上微調 Gemma 4，從資料集到合併模型。
 models: [gemma-4/e2b, gemma-4/e4b, gemma-4/12b, gemma-4/31b]
 frameworks: [transformers, peft, trl]

@@ -1,5 +1,6 @@
 ---
 title: 圖像理解
+seo_title: 使用 Gemma 4 理解圖像
 description: "使用 Gemma 4 分析圖像，支援可變長寬比、可設定的視覺詞元預算與多圖像提示。"
 models: [gemma-4]
 frameworks: [transformers]

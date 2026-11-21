@@ -14,7 +14,7 @@ source_url: "https://ai.google.dev/gemma/docs/embeddinggemma/model_card_2.md.txt
 [文件](index.md) \|
 [技術報告](https://arxiv.org/abs/2610.37364)
 
-**授權**：[Apache 2.0](https://gemma.ai/resources/apache-2) \| **作者**：[Google DeepMind](https://deepmind.google/models/gemma/)
+**授權**：[Apache 2.0](https://gemma.ai/resources/apache-2/) \| **作者**：[Google DeepMind](https://deepmind.google/models/gemma/)
 
 </div>
 
@@ -31,7 +31,7 @@ EmbeddingGemma 2 承襲 Gemma 4 的架構與能力進展，提供以下核心特
 - **上下文長度：** 8K 詞元上下文視窗，可處理數分鐘的音訊或影片。
 - **任務導向表示：** 使用輕量文字指令前綴，針對不同任務（搜尋、分類、分群、語義相似度等）最佳化嵌入。
 
-### 模型概覽
+## 模型概覽
 
 | 參數 | 總計 | 740M |
 |---|---|---|

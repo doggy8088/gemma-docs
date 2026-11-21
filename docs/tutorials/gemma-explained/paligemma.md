@@ -11,7 +11,7 @@ source_url: https://developers.googleblog.com/gemma-explained-paligemma-architec
     最初發表於
     [Google Developers 部落格](https://developers.googleblog.com/gemma-explained-paligemma-architecture/)。
 
-![banner](../../assets/gemma-explained/gemma-var-banner.png)
+![PaliGemma 架構橫幅](../../assets/gemma-explained/gemma-var-banner.png)
 
 在「Gemma 詳解」系列的[上一篇文章](/tutorials/gemma-explained/recurrentgemma/)中，你複習了 RecurrentGemma 架構。在這篇部落格文章中，你將探索 PaliGemma 架構。讓我們深入了解！
 
@@ -155,7 +155,7 @@ PaliGemma 使用有 256000 個詞元的 Gemma 分詞器，但擴展了詞彙表�
 
 ![顯示貓位於座標 (382, 637) 與 (696, 784) 之間的輸出影像](../../assets/gemma-explained/image3_cB2oyye.original.png)
 
-遮罩由以下 16 個分割詞元編碼。神經網路模型（VQ-VAE）可以透過解碼這些值，從量化表示（碼本索引）重建遮罩。你可以從[這裡](https://huggingface.co/spaces/big-vision/paligemma/blob/main/paligemma_parse.py)探索實際程式碼。
+遮罩由以下 16 個分割詞元編碼。神經網路模型（VQ-VAE）可以透過解碼這些值，從量化表示（碼本索引）重建遮罩。你可以探索 [PaliGemma 遮罩解析實作](https://huggingface.co/spaces/big-vision/paligemma/blob/main/paligemma_parse.py)。
 
 最後，你可以從 PaliGemma 的輸出得到這個漂亮的成果。
 

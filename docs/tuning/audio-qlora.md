@@ -1,5 +1,6 @@
 ---
 title: 音訊微調
+seo_title: 使用 Gemma 4 進行音訊微調
 description: 在自訂語音轉錄、低資源語言與口說問答資料集上，以 LoRA、Transformers 與 TRL 微調 Gemma 4 E2B、E4B 與 12B。
 models: [gemma-4]
 requires: audio

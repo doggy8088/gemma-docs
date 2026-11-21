@@ -1,5 +1,6 @@
 ---
 title: 文字生成中的擴散模型解析
+seo_title: DiffusionGemma 文字擴散的運作方式
 description: 要理解 DiffusionGemma，有助於先檢視標準語言模型的核心限制，以及文字擴散（text-based diffusion）有何不同。
 models: [diffusiongemma]
 source_url: "https://ai.google.dev/gemma/docs/diffusiongemma/explained.md.txt"

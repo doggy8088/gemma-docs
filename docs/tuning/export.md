@@ -1,5 +1,6 @@
 ---
 title: 匯出
+seo_title: 將微調後的 Gemma 4 匯出為 GGUF 與 vLLM
 description: 將微調後的 Gemma 4 檢查點匯出，並透過 vLLM、GGUF（llama.cpp 與 Ollama）與 LiteRT-LM 提供服務。
 models: [gemma-4]
 frameworks: [vllm, llamacpp, litert]

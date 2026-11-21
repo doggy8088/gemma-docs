@@ -1,5 +1,6 @@
 ---
 title: 資料集格式
+seo_title: Gemma 4 微調資料集格式
 description: 為 Gemma 4 格式化單回合、多回合、思考與工具呼叫資料集，並使用僅計算完成部分的損失遮罩與思考內容剔除。
 models: [gemma-4]
 ---

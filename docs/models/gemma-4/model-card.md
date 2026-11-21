@@ -14,7 +14,7 @@ source_url: "https://ai.google.dev/gemma/docs/core/model_card_4.md.txt"
 [文件](index.md) \|
 [技術報告](https://arxiv.org/abs/2607.02770)
 
-**授權** : [Apache 2.0](https://gemma.ai/resources/apache-2) \| **作者** : [Google DeepMind](https://deepmind.google/models/gemma/)
+**授權** : [Apache 2.0](https://gemma.ai/resources/apache-2/) \| **作者** : [Google DeepMind](https://deepmind.google/models/gemma/)
 
 </div>
 

@@ -10,7 +10,7 @@ source_url: "https://ai.google.dev/gemma/docs/integrations/google-cloud.md.txt"
 Google Cloud 提供多種部署、服務與微調 Gemma 4 的途徑。請依您的需求挑選，
 而非依產品名稱——每張卡片都會跳到下方的詳細說明。
 
-### 服務它
+## 服務它
 
 <div class="card-grid">
 <a class="card" href="google-cloud.md#cloud-run">
@@ -35,7 +35,7 @@ Google Cloud 提供多種部署、服務與微調 Gemma 4 的途徑。請依您�
 </a>
 </div>
 
-### 用它來建構
+## 用它來建構
 
 <div class="card-grid">
 <a class="card" href="google-cloud.md#gemini-enterprise-agent-platform">
@@ -50,7 +50,7 @@ Google Cloud 提供多種部署、服務與微調 Gemma 4 的途徑。請依您�
 </a>
 </div>
 
-### 訓練它
+## 訓練它
 
 <div class="card-grid">
 <a class="card" href="google-cloud.md#gemini-enterprise-agent-platform-training-clusters">

@@ -4,7 +4,7 @@ description: "Gemma 3n 的模型卡：裝置端多模態輸入與輸出規格、
 models: [gemma-3n]
 source_url: "https://ai.google.dev/gemma/docs/gemma-3n/model_card.md.txt"
 ---
-# 模型卡
+# Gemma 3n 模型卡
 
 **模型頁面**：[Gemma 3n](index.md)
 
@@ -45,7 +45,7 @@ Gemma 3n 模型使用選擇性參數啟用技術來降低資源需求。此技�
 ```bibtex
 @article{gemma_3n_2025,
     title={Gemma 3n},
-    url={https://ai.google.dev/gemma/docs/gemma-3n},
+    url={https://gemma.ai/models/gemma-3n/},
     publisher={Google DeepMind},
     author={Gemma Team},
     year={2025}

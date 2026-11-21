@@ -1,5 +1,6 @@
 ---
 title: 影片理解
+seo_title: 使用 Gemma 4 理解影片
 description: "使用 Gemma 4 多模態視覺語言模型，分析影片片段與交錯的影格序列，深入理解影片內容。"
 models: [gemma-4]
 frameworks: [transformers]

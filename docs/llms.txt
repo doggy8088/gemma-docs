@@ -5,7 +5,7 @@ Start with Gemma 4 unless a page or the user's request names another generation.
 Follow the Markdown links below to read canonical page content without cloning the repository.
 
 ## 首頁
-- [Google Gemma 4 開放模型](https://gemma.ai/index.md): Google Gemma 4 開放權重 AI 模型的官方文件，涵蓋多模態能力、部署與微調。
+- [Google Gemma 開放模型](https://gemma.ai/index.md): Google DeepMind Gemma 開放權重 AI 模型的官方文件，涵蓋 Gemma 4、Gemma 3、多模態能力、部署與微調。
 
 ## 開始使用
 - [快速入門](https://gemma.ai/get-started.md): 用一條指令完成第一次 Gemma 4 生成，再挑選適合您硬體的引擎、模型尺寸與檢查點。
@@ -27,13 +27,13 @@ Follow the Markdown links below to read canonical page content without cloning t
 - [Gemma 4 模型卡](https://gemma.ai/models/gemma-4/model-card.md): Gemma 4（E2B、E4B、12B、26B A4B 與 31B）模型卡：架構、多模態輸入與輸出、訓練資料與評測基準。
 - [Gemma 3 模型卡](https://gemma.ai/models/gemma-3.md): Gemma 3 多模態模型的模型卡：128K 上下文、140 種以上語言、輸入與輸出、訓練資料與評測。
 - [Gemma 2 模型卡](https://gemma.ai/models/gemma-2.md): Gemma 2 文字轉文字模型的模型卡：模型說明、輸入與輸出格式、訓練資料、評測結果與安全評估。
-- [Gemma 模型卡](https://gemma.ai/models/gemma-1.md): 第一代 Gemma 文字轉文字模型的模型卡：模型說明、輸入與輸出格式、訓練資料、評測結果與使用限制。
+- [Gemma 1 模型卡](https://gemma.ai/models/gemma-1.md): 第一代 Gemma 文字轉文字模型的模型卡：模型說明、輸入與輸出格式、訓練資料、評測結果與使用限制。
 - [Gemma 3n 模型總覽](https://gemma.ai/models/gemma-3n.md): Gemma 3n 是針對日常裝置（如手機、筆記型電腦與平板）使用而優化的生成式 AI 模型。
 - [Gemma 3n 模型卡](https://gemma.ai/models/gemma-3n/model-card.md): Gemma 3n 的模型卡：裝置端多模態輸入與輸出規格、訓練資料、評測結果、預期用途與限制。
 - [DiffusionGemma 模型總覽](https://gemma.ai/models/diffusiongemma.md): DiffusionGemma 是一個實驗性的開放模型，探索文字擴散（text diffusion）——一種極為快速的文字生成方式。
 - [DiffusionGemma 模型卡](https://gemma.ai/models/diffusiongemma/model-card.md): DiffusionGemma（26B A4B MoE）模型卡：離散文字擴散架構、多模態輸入、訓練資料與評測基準。
 - [DiffusionGemma — 文字生成中的擴散模型解析](https://gemma.ai/models/diffusiongemma/explained.md): 要理解 DiffusionGemma，有助於先檢視標準語言模型的核心限制，以及文字擴散（text-based diffusion）有何不同。
-- [DiffusionGemma — 生成輸出](https://gemma.ai/models/diffusiongemma/inference.md): 使用 Hugging Face Transformers 搭配 DiffusionGemma 生成文字，包含模型所需的 GPU 記憶體。
+- [使用 DiffusionGemma 生成文字](https://gemma.ai/models/diffusiongemma/inference.md): 使用 Hugging Face Transformers 搭配 DiffusionGemma 生成文字，包含模型所需的 GPU 記憶體。
 - [FunctionGemma 模型總覽](https://gemma.ai/models/functiongemma.md): FunctionGemma 是我們的 Gemma 3 270M 模型的專門版本，針對函式呼叫微調。
 - [FunctionGemma 模型卡](https://gemma.ai/models/functiongemma/model-card.md): FunctionGemma 模型卡：函式呼叫的輸入與輸出、訓練資料、評估結果與預期用途。
 - [FunctionGemma 格式與最佳實務](https://gemma.ai/models/functiongemma/formatting.md): FunctionGemma 是 Gemma 3 270M 模型的專門版本，專為函式呼叫（function calling，即工具使用）訓練。
@@ -63,10 +63,10 @@ Follow the Markdown links below to read canonical page content without cloning t
 - [DataGemma](https://gemma.ai/models/datagemma.md): DataGemma 是一款研究工具，讓使用者能以淺白語言提問，並根據 Data Commons 儲存庫中公開的統計資料獲得答案。
 - [Gemma Scope](https://gemma.ai/models/gemma-scope.md): Gemma Scope 2 是為 Gemma 3 模型系列設計的全面、開放的可解釋性工具套件。
 - [Gemma 抽象命題分割（APS）](https://gemma.ai/models/gemma-aps.md): 抽象命題分割（APS）是一種將文字資訊拆解為原子命題要素的分析技術，可提升檢索與事實查核的精確度。
-- [版本發布紀錄](https://gemma.ai/models/releases.md): Gemma 模型家族的日期化發布歷史，從 Gemma 1 到 Gemma 4 以及專用變體。
+- [Gemma 模型版本發布紀錄](https://gemma.ai/models/releases.md): Gemma 模型家族的日期化發布歷史，從 Gemma 1 到 Gemma 4 以及專用變體。
 
 ## 執行
-- [總覽](https://gemma.ai/deployment.md): 依您的硬體選擇合適的執行框架與 Gemma 模型變體，逐步完成環境設定並執行您的第一個文字生成與推論請求。
+- [執行與部署 Gemma 模型](https://gemma.ai/deployment.md): 依您的硬體選擇合適的執行框架與 Gemma 模型變體，逐步完成環境設定並執行您的第一個文字生成與推論請求。
 - [使用 Ollama 執行 Gemma](https://gemma.ai/deployment/ollama.md): 使用 Ollama 在本機執行 Gemma 4 —— 模型標籤、圖像輸入，以及 OpenAI 相容伺服器。
 - [使用 llama.cpp 執行 Gemma](https://gemma.ai/deployment/llamacpp.md): 使用 llama.cpp 執行 Gemma 4 —— 各尺寸的 GGUF 儲存庫、圖像/音訊/視訊輸入，以及 OpenAI 相容伺服器。
 - [使用 LM Studio 執行 Gemma](https://gemma.ai/deployment/lmstudio.md): 使用 LM Studio 執行 Gemma 4 —— 桌面應用程式、lms CLI 與 OpenAI 相容的本機伺服器。
@@ -113,7 +113,7 @@ Follow the Markdown links below to read canonical page content without cloning t
 - [RecurrentGemma 架構](https://gemma.ai/tutorials/gemma-explained/recurrentgemma.md): 解說 RecurrentGemma 的 Griffin 架構：結合區域注意力與線性遞迴機制，在長序列上實現快速推論。
 - [PaliGemma 架構](https://gemma.ai/tutorials/gemma-explained/paligemma.md): 解說 PaliGemma 的模型架構：接受文字與影像輸入以產生文字輸出的視覺語言模型，及其訓練方式。
 - [Gemma 3 的新變化](https://gemma.ai/tutorials/gemma-explained/gemma-3.md): 解說 Gemma 3 的新變化：具備 5 對 1 交錯注意力機制與 128k 上下文處理能力的更新版視覺語言模型。
-- [EmbeddingGemma 架構](https://gemma.ai/tutorials/gemma-explained/embeddinggemma.md): 深入解說 EmbeddingGemma 的模型架構與訓練配方：專為搜尋與檢索任務設計的高品質文字嵌入模型。
+- [EmbeddingGemma 架構](https://gemma.ai/tutorials/gemma-explained/embeddinggemma.md): EmbeddingGemma 的編碼器架構、Matryoshka 表徵學習與訓練配方，如何打造精簡的搜尋與檢索功能。
 
 ## 資源
 - [資源](https://gemma.ai/resources.md): 探索 Gemma 生態系資源：互動展示、實用工具、社群專案，以及值得認識的外部存放庫與模型集合。

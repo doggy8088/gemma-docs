@@ -1,5 +1,6 @@
 ---
 title: 工具呼叫
+seo_title: 使用 Gemma 4 進行函式呼叫與工具使用
 description: "使用 Gemma 4 原生工具呼叫與結構化函式結構描述，在 Hugging Face Transformers 中打造代理式工作流程。"
 models: [gemma-4]
 frameworks: [transformers]

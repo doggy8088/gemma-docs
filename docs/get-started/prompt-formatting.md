@@ -1,5 +1,6 @@
 ---
 title: 提示格式
+seo_title: Gemma 提示格式與控制詞元
 description: Gemma 4 用於建構提示的控制詞元，以及 Gemma 1 至 3 使用的舊版 start_of_turn 格式。
 models: [gemma-4]
 ---

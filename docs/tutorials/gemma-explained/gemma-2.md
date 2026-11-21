@@ -11,7 +11,7 @@ source_url: https://developers.googleblog.com/gemma-explained-new-in-gemma-2/
     最初發表於
     [Google Developers 部落格](https://developers.googleblog.com/gemma-explained-new-in-gemma-2/)。
 
-![banner](../../assets/gemma-explained/gemma-2-banner.png)
+![Gemma 2 架構新功能橫幅](../../assets/gemma-explained/gemma-2-banner.png)
 
 在「Gemma 詳解」系列的[上一篇文章](/tutorials/gemma-explained/overview/)中，我們討論了 Gemma 架構。在這篇文章中，你將探索最新的模型 Gemma 2。讓我們開始吧！
 

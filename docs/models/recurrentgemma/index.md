@@ -26,6 +26,14 @@ RecurrentGemma 是基於
 
 RecurrentGemma 的模型卡包含模型的詳細資訊，包括實作資訊、評估資訊、模型用途與限制等。
 
+### [使用 JAX 生成輸出](inference.md)
+
+逐步使用 JAX 與 Flax 執行 RecurrentGemma 推論。
+
+### [使用 JAX 微調](fine-tuning.md)
+
+使用 JAX 與 Flax 在自訂資料集上微調 RecurrentGemma。
+
 ### [在 Kaggle 上查看](https://www.kaggle.com/models/google/recurrentgemma){ data-model="recurrentgemma" }
 
 在 Kaggle 上查看更多關於 RecurrentGemma 的程式碼、Colab 筆記本、資訊與討論。

@@ -1,5 +1,6 @@
 ---
 title: 使用 Sentence Transformers 產生嵌入
+seo_title: 使用 EmbeddingGemma 2 產生嵌入
 description: 使用 EmbeddingGemma 2 與 Sentence Transformers 產生文字嵌入、計算語義相似度、套用任務提示，並打造 RAG 與零樣本分類器。
 models: [embeddinggemma-2]
 frameworks: [sentence-transformers, transformers]

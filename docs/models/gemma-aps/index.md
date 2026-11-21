@@ -1,5 +1,6 @@
 ---
 title: Gemma 抽象命題分割（APS）
+seo_title: Gemma APS 命題分割
 description: 抽象命題分割（APS）是一種將文字資訊拆解為原子命題要素的分析技術，可提升檢索與事實查核的精確度。
 models: [gemma-aps]
 source_url: "https://ai.google.dev/gemma/docs/gemma-aps.md.txt"

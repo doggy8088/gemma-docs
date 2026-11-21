@@ -1,5 +1,6 @@
 ---
 title: 最佳實務
+seo_title: Gemma 4 微調最佳實務
 description: 適用於全部五款 Gemma 4 模型的實用指南、模型架構、超參數表與損失曲線判讀技巧。
 models: [gemma-4]
 ---

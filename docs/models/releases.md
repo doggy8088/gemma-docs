@@ -1,8 +1,11 @@
 ---
-title: 版本發布紀錄
+title: Gemma 模型版本發布紀錄
 description: Gemma 模型家族的日期化發布歷史，從 Gemma 1 到 Gemma 4 以及專用變體。
 source_url: "https://ai.google.dev/gemma/docs/releases.md.txt"
 ---
+
+# Gemma 模型版本發布紀錄
+
 本頁記錄 Gemma 模型家族的發布紀錄。
 
 ## 2026 年 10 月 6 日

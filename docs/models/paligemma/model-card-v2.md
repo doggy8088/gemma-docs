@@ -4,7 +4,7 @@ description: PaliGemma 2 是 PaliGemma 視覺語言模型（VLM）的更新版�
 models: [paligemma-2]
 source_url: "https://ai.google.dev/gemma/docs/paligemma/model-card-2.md.txt"
 ---
-# 模型卡
+# PaliGemma 2 模型卡
 
 **模型頁面：** [PaliGemma](index.md)
 

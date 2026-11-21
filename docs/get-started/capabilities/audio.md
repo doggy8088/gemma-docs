@@ -1,5 +1,6 @@
 ---
 title: 音訊理解
+seo_title: 使用 Gemma 4 理解音訊
 description: "使用 Gemma 4 與 Gemma 3n 的多模態音訊理解，處理並轉錄語音、音樂與聲音輸入。"
 models: [gemma-4]
 requires: audio

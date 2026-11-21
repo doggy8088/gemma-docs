@@ -188,7 +188,7 @@ content='Output:\nSure, here is the answer:\n\n3 + 3 = 6<'
 
 本節說明如何從 Kaggle 下載 Gemma 然後執行模型。
 
-要完成本節，您首先需要完成 [Gemma 設定][legacy-gemma-setup] 的設定說明。
+要完成本節，您首先需要完成[開始使用 Gemma](../get-started/index.md)中的設定說明。
 
 然後繼續下一節，在 Colab 環境中設定環境變數。
 

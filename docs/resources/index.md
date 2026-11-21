@@ -1,5 +1,6 @@
 ---
 title: 資源
+seo_title: Gemma 生態系與資源
 description: 探索 Gemma 生態系資源：互動展示、實用工具、社群專案，以及值得認識的外部存放庫與模型集合。
 ---
 
@@ -17,6 +18,11 @@ description: 探索 Gemma 生態系資源：互動展示、實用工具、社群
   <span class="card-icon">{{ icon('lucide/notebook-pen') }}</span>
   <div class="card-title">Gemma Cookbook <span class="card-ext">↗</span></div>
   <p class="card-desc">官方 Jupyter 筆記本，涵蓋推論、微調、RAG 與函式呼叫。</p>
+</a>
+<a class="card" href="gemma-skills.md">
+  <span class="card-icon">{{ icon('lucide/wrench') }}</span>
+  <div class="card-title">Gemma Skills</div>
+  <p class="card-desc">可安裝的代理技能，教導程式碼代理如何使用 Gemma 建構與微調。</p>
 </a>
 </div>
 

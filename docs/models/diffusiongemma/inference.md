@@ -1,11 +1,13 @@
 ---
-title: 生成輸出
+title: 使用 DiffusionGemma 生成文字
 description: 使用 Hugging Face Transformers 搭配 DiffusionGemma 生成文字，包含模型所需的 GPU 記憶體。
 models: [diffusiongemma]
 frameworks: [transformers]
 colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs/notebooks/diffusiongemma-inference.ipynb
 source_url: "https://ai.google.dev/gemma/docs/diffusiongemma/inference-diffusiongemma-with-hf.md.txt"
 ---
+
+# 使用 DiffusionGemma 生成文字
 
 DiffusionGemma 是一個實驗性的開放模型，探索文字擴散（text diffusion）——一種極為快速的文字生成方式。基於 26B（4B 啟動）混合專家（MoE）Gemma 4 架構，DiffusionGemma 使用離散擴散生成詞元。
 

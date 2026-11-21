@@ -1,5 +1,6 @@
 ---
 title: 持續預訓練
+seo_title: 使用 Gemma 4 進行持續預訓練
 description: 使用序列打包、詞彙表擴充與分開的嵌入學習率，將 Gemma 4 適應未標註的領域文字與新語言。
 models: [gemma-4/e2b, gemma-4/e4b, gemma-4/12b, gemma-4/31b]
 frameworks: [transformers, peft, trl]

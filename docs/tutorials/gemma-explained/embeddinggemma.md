@@ -1,6 +1,6 @@
 ---
 title: EmbeddingGemma 架構
-description: 深入解說 EmbeddingGemma 的模型架構與訓練配方：專為搜尋與檢索任務設計的高品質文字嵌入模型。
+description: EmbeddingGemma 的編碼器架構、Matryoshka 表徵學習與訓練配方，如何打造精簡的搜尋與檢索功能。
 models: [embeddinggemma]
 source_url: https://developers.googleblog.com/gemma-explained-embeddinggemma-architecture-and-recipe/
 ---
@@ -11,7 +11,7 @@ source_url: https://developers.googleblog.com/gemma-explained-embeddinggemma-arc
     最初發表於
     [Google Developers 部落格](https://developers.googleblog.com/gemma-explained-embeddinggemma-architecture-and-recipe/)。
 
-![banner](../../assets/gemma-explained/embeddinggemma-banner.png)
+![EmbeddingGemma 架構與配方橫幅](../../assets/gemma-explained/embeddinggemma-banner.png)
 
 「Gemma 詳解」系列先前的文章詳細介紹了 Gemma 模型家族的架構。各篇文章的連結如下：
 

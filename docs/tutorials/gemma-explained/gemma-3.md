@@ -11,7 +11,7 @@ source_url: https://developers.googleblog.com/gemma-explained-whats-new-in-gemma
     最初發表於
     [Google Developers 部落格](https://developers.googleblog.com/gemma-explained-whats-new-in-gemma-3/)。
 
-![banner](../../assets/gemma-explained/gemma-3-banner.png)
+![Gemma 3 架構新功能橫幅](../../assets/gemma-explained/gemma-3-banner.png)
 
 「Gemma 詳解」系列先前的文章詳細介紹了 Gemma 模型家族的架構。各篇文章的連結如下：
 

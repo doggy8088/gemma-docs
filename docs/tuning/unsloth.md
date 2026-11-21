@@ -1,5 +1,6 @@
 ---
 title: Unsloth
+seo_title: 使用 Unsloth 微調 Gemma 4
 description: 在任何單 GPU Gemma 4 教學中，把 Unsloth 的 FastVisionModel 或 FastModel 換入，以加速 LoRA、QLoRA 並匯出 GGUF。
 models: [gemma-4]
 frameworks: [unsloth, trl]

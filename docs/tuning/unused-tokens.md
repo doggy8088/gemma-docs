@@ -1,5 +1,6 @@
 ---
 title: 未使用詞元
+seo_title: 微調 Gemma 4 未使用詞元
 description: 把 Gemma 4 的 6,227 個保留詞元槽位變成單一詞元路由標籤、來源標籤與領域詞彙，無需調整詞彙表大小。
 models: [gemma-4/e2b, gemma-4/e4b, gemma-4/12b, gemma-4/31b]
 frameworks: [transformers, peft, trl]

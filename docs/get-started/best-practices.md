@@ -1,5 +1,6 @@
 ---
 title: 最佳做法
+seo_title: Gemma 4 最佳實務
 description: 能讓 Gemma 4 發揮最佳效果的取樣參數、思考模式詞元、模態順序與圖像詞元預算。
 models: [gemma-4]
 ---

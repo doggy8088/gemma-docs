@@ -1,5 +1,6 @@
 ---
 title: 偏好最佳化
+seo_title: 使用 Gemma 4 進行偏好最佳化（DPO）
 description: 使用 Hugging Face TRL 的 DPO、ORPO 與 KTO，以偏好與拒絕的回應配對訓練 Gemma 4。
 models: [gemma-4/e2b, gemma-4/e4b, gemma-4/12b, gemma-4/31b]
 frameworks: [transformers, peft, trl]

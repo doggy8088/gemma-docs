@@ -1,5 +1,6 @@
 ---
 title: 使用 Sentence Transformers 的多模態嵌入
+seo_title: 使用 EmbeddingGemma 2 的多模態嵌入
 description: 使用 EmbeddingGemma 2 與 Sentence Transformers 產生統一的圖像、音訊、影片與交錯式多模態嵌入。
 models: [embeddinggemma-2]
 frameworks: [sentence-transformers, transformers]
