@@ -1,141 +1,140 @@
 ---
-title: Fine-tuning overview
-seo_title: Fine-tune Gemma 4 models
-description: Pick a training stage, a method, a GPU budget, and a base checkpoint before you fine-tune Gemma 4.
+title: 微調總覽
+seo_title: 微調 Gemma 4 模型
+description: 微調 Gemma 4 之前，先選好訓練階段、方法、GPU 預算與基底檢查點，再開始訓練。
 models: [gemma-4]
 source_url: "https://ai.google.dev/gemma/docs/tune.md.txt"
 ---
 
-# Fine-tuning overview
+# 微調總覽
 
-Gemma 4 can reason through problems, call tools, and understand images and audio. Fine-tuning allows you to teach it things it did not know before like domain-specific terminology, a new language or corpus, and capabilities outside of it current skillset.
-These sets of pages will guide you through fine-tuning, from continued pre-Training and supervised fine-Tuning all the way to reinforcement learning and multi-gpu training.
+Gemma 4 能推理問題、呼叫工具，也能理解圖片與音訊。微調可以教它原本不知道的事物，例如特定領域的術語、新語言或語料，以及超出其現有技能範圍的能力。這組頁面將引導您完成微調，從持續預訓練與監督式微調，一路到強化學習與多 GPU 訓練。
 
-Fine-tuning is not trivial and might get overwhelming quickly. This page helps you find your way, starting with a map of common paths you can take for fine-tuning Gemma 4 based on specific tasks.
+微調並不簡單，很快就可能讓人不知所措。本頁協助您找到方向，首先是一張地圖，呈現依特定任務微調 Gemma 4 時常見的路徑。
 
 <div class="tmap" id="gemma-tuning-map">
   <div class="tmap-canvas">
     <div class="tmap-stage">
       <div class="tmap-stage__meta">
-        <span class="tmap-pill">Foundations</span>
-        <span class="tmap-stage__name">Before you train</span>
-        <span class="tmap-stage__hint">Models, settings, turn masks</span>
+        <span class="tmap-pill">基礎</span>
+        <span class="tmap-stage__name">訓練前</span>
+        <span class="tmap-stage__hint">模型、設定、輪次遮罩</span>
       </div>
       <div class="tmap-nodes">
         <a class="tmap-node" data-guide="best-practices" href="best-practices.md">
-          <div class="tmap-node__top"><span class="tmap-node__title">Best practices</span></div>
-          <span class="tmap-node__desc">Pick a model size, learning rate, and dataset setup.</span>
+          <div class="tmap-node__top"><span class="tmap-node__title">最佳實務</span></div>
+          <span class="tmap-node__desc">選擇模型大小、學習率與資料集設定。</span>
         </a>
         <a class="tmap-node" data-guide="datasets-formatting" href="datasets-formatting.md">
-          <div class="tmap-node__top"><span class="tmap-node__title">Dataset formatting</span></div>
-          <span class="tmap-node__desc">Format chat turns and mask prompt tokens from the loss.</span>
+          <div class="tmap-node__top"><span class="tmap-node__title">資料集格式</span></div>
+          <span class="tmap-node__desc">格式化對話輪次，並把提示詞 token 排除在損失計算之外。</span>
         </a>
       </div>
     </div>
 
     <div class="tmap-stage">
       <div class="tmap-stage__meta">
-        <span class="tmap-pill">Stage 1</span>
-        <span class="tmap-stage__name">Base models</span>
-        <span class="tmap-stage__hint">Pre-trained checkpoints (no -it)</span>
+        <span class="tmap-pill">階段 1</span>
+        <span class="tmap-stage__name">基底模型</span>
+        <span class="tmap-stage__hint">預訓練檢查點（無 -it）</span>
       </div>
       <div class="tmap-nodes">
         <a class="tmap-node" data-guide="continued-pretraining" href="continued-pretraining.md">
-          <div class="tmap-node__top"><span class="tmap-node__title">Continued pre-training</span></div>
-          <span class="tmap-node__desc">Pack unlabeled domain text with a 10% replay buffer.</span>
+          <div class="tmap-node__top"><span class="tmap-node__title">持續預訓練</span></div>
+          <span class="tmap-node__desc">用 10% 重播緩衝打包未標註的領域文字。</span>
         </a>
         <a class="tmap-node" data-guide="custom-chat-template" href="custom-chat-template.md">
-          <div class="tmap-node__top"><span class="tmap-node__title">Custom chat templates</span></div>
-          <span class="tmap-node__desc">Turn a base checkpoint into a chat model with ChatML.</span>
+          <div class="tmap-node__top"><span class="tmap-node__title">自訂聊天範本</span></div>
+          <span class="tmap-node__desc">用 ChatML 把基底檢查點變成對話模型。</span>
         </a>
       </div>
     </div>
 
     <div class="tmap-stage">
       <div class="tmap-stage__meta">
-        <span class="tmap-pill">Stage 2</span>
-        <span class="tmap-stage__name">Supervised tuning</span>
-        <span class="tmap-stage__hint">Tasks, modalities, custom tokens</span>
+        <span class="tmap-pill">階段 2</span>
+        <span class="tmap-stage__name">監督式微調</span>
+        <span class="tmap-stage__hint">任務、模態、自訂 token</span>
       </div>
       <div class="tmap-nodes tmap-nodes--three">
         <a class="tmap-node" data-guide="qlora" href="qlora.md">
           <div class="tmap-node__top"><span class="tmap-node__title">(Q)LoRA</span></div>
-          <span class="tmap-node__desc">Train a 4-bit or 16-bit adapter on a single GPU.</span>
+          <span class="tmap-node__desc">在單一 GPU 上訓練 4 位元或 16 位元轉接器。</span>
         </a>
         <a class="tmap-node" data-guide="full-finetune" href="full-finetune.md">
-          <div class="tmap-node__top"><span class="tmap-node__title">Full fine-tuning</span></div>
-          <span class="tmap-node__desc">Update every weight in bfloat16 with 8-bit AdamW.</span>
+          <div class="tmap-node__top"><span class="tmap-node__title">完整微調</span></div>
+          <span class="tmap-node__desc">以 8 位元 AdamW 在 bfloat16 下更新每一個權重。</span>
         </a>
         <a class="tmap-node" data-guide="moe-finetune" href="moe-finetune.md">
-          <div class="tmap-node__top"><span class="tmap-node__title">MoE fine-tuning</span></div>
-          <span class="tmap-node__desc">Adapt all 128 routed experts while keeping the router frozen.</span>
-          <div class="tmap-node__tags"><span class="tmap-tag">26B A4B only</span></div>
+          <div class="tmap-node__top"><span class="tmap-node__title">MoE 微調</span></div>
+          <span class="tmap-node__desc">調整全部 128 個路由專家，同時保持路由器凍結。</span>
+          <div class="tmap-node__tags"><span class="tmap-tag">僅限 26B A4B</span></div>
         </a>
         <a class="tmap-node" data-guide="vision-qlora" href="vision-qlora.md">
-          <div class="tmap-node__top"><span class="tmap-node__title">Vision fine-tuning</span></div>
-          <span class="tmap-node__desc">Train on images, receipts, and documents with soft-token budgets.</span>
+          <div class="tmap-node__top"><span class="tmap-node__title">視覺微調</span></div>
+          <span class="tmap-node__desc">用軟 token 預算，在圖片、收據與文件上訓練。</span>
         </a>
         <a class="tmap-node" data-guide="audio-qlora" href="audio-qlora.md">
-          <div class="tmap-node__top"><span class="tmap-node__title">Audio fine-tuning</span></div>
-          <span class="tmap-node__desc">Train speech transcription in bfloat16 LoRA.</span>
-          <div class="tmap-node__tags"><span class="tmap-tag">E2B, E4B, 12B only</span></div>
+          <div class="tmap-node__top"><span class="tmap-node__title">音訊微調</span></div>
+          <span class="tmap-node__desc">以 bfloat16 LoRA 訓練語音轉錄。</span>
+          <div class="tmap-node__tags"><span class="tmap-tag">僅限 E2B、E4B、12B</span></div>
         </a>
         <a class="tmap-node" data-guide="unused-tokens" href="unused-tokens.md">
-          <div class="tmap-node__top"><span class="tmap-node__title">Unused tokens</span></div>
-          <span class="tmap-node__desc">Map routing or source tags to single reserved token slots.</span>
+          <div class="tmap-node__top"><span class="tmap-node__title">未使用詞元</span></div>
+          <span class="tmap-node__desc">把路由或來源標籤對應到單一保留 token 位置。</span>
         </a>
       </div>
     </div>
 
     <div class="tmap-stage">
       <div class="tmap-stage__meta">
-        <span class="tmap-pill">Stage 3</span>
-        <span class="tmap-stage__name">Reinforcement learning</span>
-        <span class="tmap-stage__hint">Preferences, verifiable rewards</span>
+        <span class="tmap-pill">階段 3</span>
+        <span class="tmap-stage__name">強化學習</span>
+        <span class="tmap-stage__hint">偏好、可驗證獎勵</span>
       </div>
       <div class="tmap-nodes">
         <a class="tmap-node" data-guide="preference-alignment" href="preference-alignment.md">
-          <div class="tmap-node__top"><span class="tmap-node__title">Preference optimization</span></div>
-          <span class="tmap-node__desc">Shape style and conciseness on chosen vs. rejected pairs.</span>
+          <div class="tmap-node__top"><span class="tmap-node__title">偏好最佳化</span></div>
+          <span class="tmap-node__desc">以選擇與拒絕的配對形塑風格與簡潔度。</span>
         </a>
         <a class="tmap-node" data-guide="reinforcement-learning" href="reinforcement-learning.md">
-          <div class="tmap-node__top"><span class="tmap-node__title">Verifiable rewards</span></div>
-          <span class="tmap-node__desc">Boost math, code, or SQL accuracy with GRPO reward checks.</span>
+          <div class="tmap-node__top"><span class="tmap-node__title">可驗證獎勵</span></div>
+          <span class="tmap-node__desc">用 GRPO 獎勵檢查提升數學、程式碼或 SQL 的準確度。</span>
         </a>
       </div>
     </div>
 
     <div class="tmap-stage">
       <div class="tmap-stage__meta">
-        <span class="tmap-pill">Stage 4</span>
-        <span class="tmap-stage__name">Deployment</span>
-        <span class="tmap-stage__hint">Multi-GPU sharding, serving</span>
+        <span class="tmap-pill">階段 4</span>
+        <span class="tmap-stage__name">部署</span>
+        <span class="tmap-stage__hint">多 GPU 分割、服務</span>
       </div>
       <div class="tmap-nodes">
         <a class="tmap-node" data-guide="scaling" href="scaling.md">
-          <div class="tmap-node__top"><span class="tmap-node__title">Scaling</span></div>
-          <span class="tmap-node__desc">Shard multi-GPU runs with FSDP2 and recover 4-bit accuracy with QAT.</span>
+          <div class="tmap-node__top"><span class="tmap-node__title">擴展</span></div>
+          <span class="tmap-node__desc">以 FSDP2 分割多 GPU 執行，並用 QAT 恢復 4 位元準確度。</span>
         </a>
         <a class="tmap-node" data-guide="export" href="export.md">
-          <div class="tmap-node__top"><span class="tmap-node__title">Export</span></div>
-          <span class="tmap-node__desc">Serve merged checkpoints in vLLM, GGUF, Ollama, or LiteRT-LM.</span>
+          <div class="tmap-node__top"><span class="tmap-node__title">匯出</span></div>
+          <span class="tmap-node__desc">以 vLLM、GGUF、Ollama 或 LiteRT-LM 提供合併後的檢查點。</span>
         </a>
         <a class="tmap-node" data-guide="unsloth" href="unsloth.md">
           <div class="tmap-node__top"><span class="tmap-node__title">Unsloth</span></div>
-          <span class="tmap-node__desc">Accelerate single-GPU 4-bit runs and export directly to GGUF.</span>
+          <span class="tmap-node__desc">加速單 GPU 4 位元執行，並直接匯出為 GGUF。</span>
         </a>
         <a class="tmap-node" data-guide="gemma-trainer" href="gemma-trainer.md">
           <div class="tmap-node__top"><span class="tmap-node__title">Gemma trainer</span></div>
-          <span class="tmap-node__desc">Let a coding agent configure, run, and evaluate local jobs.</span>
+          <span class="tmap-node__desc">讓程式撰寫代理設定、執行並評估本機工作。</span>
         </a>
       </div>
     </div>
   </div>
 </div>
 
-!!! example "Using a coding agent?"
+!!! example "使用程式撰寫代理？"
 
-    Install the [gemma-trainer](gemma-trainer.md) skill so your agent can prepare your data, pick settings for your GPU, and run fine-tuning for you:
+    安裝 [gemma-trainer](gemma-trainer.md) 技能，讓代理為您準備資料、依 GPU 選擇設定並執行微調：
 
     ```bash
     npx skills add google-gemma/gemma-skills --skill gemma-trainer --global
@@ -143,75 +142,75 @@ Fine-tuning is not trivial and might get overwhelming quickly. This page helps y
 
 ---
 
-## 1. The four training stages
+## 1. 四個訓練階段
 
-LLMs are typically trained in stages. In each stage, the model often sees different kind of data and focuses on different tasks:
+LLM 通常分階段訓練。在每個階段，模型接觸的資料種類不同，專注的任務也不同：
 
-![A Gemma 4 model passing through four training stages](../assets/tuning/overview_01_post_training_stages.svg)
+![Gemma 4 模型通過四個訓練階段](../assets/tuning/overview_01_post_training_stages.svg)
 
-Here is what happens at each stage:
+各階段的情況如下：
 
-1. **Pre-training:** The model trains on a large corpus of web text, code, images, and audio to predict the next token. The resulting pre-trained checkpoint can continue any document you give it, but it does not follow instructions.
-2. **Continued pre-training:** You continue training on raw text from your domain, such as medical literature, a new language, or an internal codebase. The model picks up domain knowledge, terminology, and phrasing. See [Continued pre-training](continued-pretraining.md).
-3. **Supervised fine-tuning:** You train on example conversations, each pairing a prompt with the exact response you want. See [(Q)LoRA](qlora.md) and [Full fine-tuning](full-finetune.md).
-4. **Reinforcement learning:** Instead of imitating a single target answer, the model learns from scored outputs. In preference optimization, it compares chosen and rejected answers. With verifiable rewards, a reward function grades each answer the model generates. See [Preference optimization](preference-alignment.md) and [Verifiable rewards](reinforcement-learning.md).
+1. **預訓練**：模型在大量的網路文字、程式碼、圖片與音訊語料上訓練，以預測下一個 token。產生的預訓練檢查點可以接續您給它的任何文件，但不會遵循指示。
+2. **持續預訓練**：您繼續在所屬領域的原始文字上訓練，例如醫學文獻、新語言或內部程式碼庫。模型會學到領域知識、術語與表達方式。請參閱[持續預訓練](continued-pretraining.md)。
+3. **監督式微調**：您用範例對話訓練，每組對話都把提示詞與您想要的確切回應配對。請參閱 [(Q)LoRA](qlora.md) 與[完整微調](full-finetune.md)。
+4. **強化學習**：模型不是模仿單一目標答案，而是從評分過的輸出中學習。在偏好最佳化中，模型比較選擇與拒絕的答案；使用可驗證獎勵時，獎勵函式會為模型產生的每個答案評分。請參閱[偏好最佳化](preference-alignment.md)與[可驗證獎勵](reinforcement-learning.md)。
 
-You rarely need all four stages. Most teams start from the instruction-tuned (`-it`) checkpoint, which already follows instructions, and run supervised fine-tuning or reinforcement learning on top.
+您很少需要全部四個階段。多數團隊從指令微調（`-it`）檢查點開始，該檢查點已能遵循指示，再於其上執行監督式微調或強化學習。
 
 ---
 
-## 2. RAG, LoRA, or full fine-tuning
+## 2. RAG、LoRA 或完整微調
 
-Before you start training, ask yourself whether you actually need to update the weights at all, and if so, whether you need to update all of the model weights.
+開始訓練前，先問自己是否真的需要更新權重；如果需要，是否需要更新模型的全部權重。
 
-![RAG, LoRA, and full fine-tuning side by side](../assets/tuning/overview_02_adaptation_spectrum.svg)
+![RAG、LoRA 與完整微調並列比較](../assets/tuning/overview_02_adaptation_spectrum.svg)
 
-There are generally three approaches to improving your model:
+改善模型一般有三種方法：
 
-- **RAG** *(Retrieval-Augmented Generation)*: Leaves the model weights untouched and injects retrieved documents directly into the prompt.
-- **LoRA** *(Low-Rank Adaptation)*: Freezes the base model and trains two small low-rank matrices alongside each layer, updating only about 1% to 2% of the parameters. **QLoRA** *(Quantized Low-Rank Adaptation)* uses the exact same adapter technique while storing the frozen base weights in 4-bit precision to save GPU memory.
-- **Full fine-tuning:** Unfreezes and updates 100% of the model weights during backpropagation.
+- **RAG**（*檢索增強生成*）：不動模型權重，直接把檢索到的文件注入提示詞。
+- **LoRA**（*低秩適應*）：凍結基底模型，在每一層旁邊訓練兩個小型低秩矩陣，只更新約 1% 至 2% 的參數。**QLoRA**（*量化低秩適應*）使用完全相同的轉接器技術，同時以 4 位元精度儲存凍結的基底權重，以節省 GPU 記憶體。
+- **完整微調**：在反向傳播期間解凍並更新 100% 的模型權重。
 
-Use this table to match your goal to the right approach:
+用下表依目標選擇合適的方法：
 
-| Goal | Approach | Reasoning |
+| 目標 | 方法 | 原因 |
 | :--- | :--- | :--- |
-| Facts that change often, like live inventory or user records | **RAG** | Updating a search index takes seconds. Weights should learn skills, not changing facts. |
-| A new language or a large domain corpus | **Continued pre-training** | Deep domain shifts benefit from training on raw text before instruction tuning. |
-| A new output format, persona, tool schema, or task skill | **Supervised fine-tuning** | Small adapters learn new behavior from a modest chat dataset on a single GPU. |
-| Moving a large model's reasoning into E2B or E4B | **Supervised fine-tuning**  | Train the compact model on reasoning traces generated by 31B. |
-| Strict correctness, like verifiable code, math, or SQL | **Reinforcement learning** | Preference pairs or reward functions catch mistakes that supervised fine-tuning misses. |
+| 經常變動的事實，例如即時庫存或使用者記錄 | **RAG** | 更新搜尋索引只需幾秒。權重應該學習技能，而非變動的事實。 |
+| 新語言或大型領域語料 | **持續預訓練** | 在指令微調前先以原始文字訓練，有助於深層的領域轉換。 |
+| 新的輸出格式、人格、工具結構描述或任務技能 | **監督式微調** | 小型轉接器能用適量的對話資料集，在單一 GPU 上學會新行為。 |
+| 把大型模型的推理能力遷移至 E2B 或 E4B | **監督式微調**  | 用 31B 產生的推理軌跡訓練精簡模型。 |
+| 嚴格的正確性，例如可驗證的程式碼、數學或 SQL | **強化學習** | 偏好配對或獎勵函式能抓到監督式微調遺漏的錯誤。 |
 
-!!! tip "Combine RAG and LoRA"
-    RAG and fine-tuning complement each other nicely. A pattern that you see quite often is to fine-tune Gemma 4 using LoRA, so it learns your domain and then you can use RAG to give it more recent information.
+!!! tip "結合 RAG 與 LoRA"
+    RAG 與微調能很好地互補。常見的模式是先用 LoRA 微調 Gemma 4，讓它學會您的領域知識，再用 RAG 提供更新的資訊。
 
 ---
 
-## 3. GPU memory
+## 3. GPU 記憶體
 
-Training requires significantly more GPU memory than inference. For every parameter you train, the GPU must store three values:
+訓練需要的 GPU 記憶體遠多於推論。對於每個要訓練的參數，GPU 必須儲存三個值：
 
-- **The weight itself:** 2 bytes per parameter in `bfloat16`.
-- **Its gradient:** How much the weight should change during the backward pass, another 2 bytes.
-- **Optimizer states:** AdamW, and optimizer, tracks two running averages per trained weight. 2 bytes with an 8-bit optimizer, or 8 bytes in 32-bit precision.
+- **權重本身**：每個參數在 `bfloat16` 下佔 2 個位元組。
+- **梯度**：權重在反向傳播期間應改變的幅度，另外 2 個位元組。
+- **最佳化器狀態**：AdamW 這類最佳化器會為每個受訓權重追蹤兩個移動平均值。8 位元最佳化器佔 2 個位元組，32 位元精度則佔 8 個位元組。
 
-On top of those come the **activations**. These are the intermediate values from the forward pass kept in memory and are used to compute gradients during the backward pass.
+除此之外還有**活化值**，也就是前向傳播過程中保留在記憶體裡的中間值，用於在反向傳播期間計算梯度。
 
-Together, they give us the following overview when applied to **Gemma 4 12B**:
+綜合以上，套用至 **Gemma 4 12B** 時的概況如下：
 
-![GPU memory breakdown for training Gemma 4 12B with full fine-tuning, LoRA, and QLoRA](../assets/tuning/overview_03_vram_anatomy.svg)
+![以完整微調、LoRA 與 QLoRA 訓練 Gemma 4 12B 的 GPU 記憶體細分](../assets/tuning/overview_03_vram_anatomy.svg)
 
-Each method changes how much memory those components use:
+每種方法改變這些元件的記憶體用量：
 
-As you can see, different training techniques require different amounts of VRAM. The table below shows peak GPU memory (VRAM) across all five Gemma 4 models at a sequence length of 2,048 tokens:
+如您所見，不同訓練技術需要的顯示記憶體量不同。下表顯示全部五種 Gemma 4 模型在序列長度 2,048 個 token 時的 GPU 記憶體（VRAM）峰值：
 
 <table>
 <thead>
 <tr>
-<th>Model</th>
-<th>Parameters</th>
+<th>模型</th>
+<th>參數</th>
 <th>QLoRA</th>
-<th>Full fine-tuning</th>
+<th>完整微調</th>
 </tr>
 </thead>
 <tbody>
@@ -228,29 +227,29 @@ As you can see, different training techniques require different amounts of VRAM.
 
 ---
 
-## 4. Pre-trained or instruction-tuned
+## 4. 預訓練或指令微調
 
-Every Gemma 4 model size is released in two checkpoints:
+每種 Gemma 4 模型大小都有兩種檢查點：
 
-- **Pre-trained** (no suffix), such as `google/gemma-4-12B`.
-- **Instruction-tuned** (`-it` suffix), such as `google/gemma-4-12B-it`.
+- **預訓練**（無後綴），例如 `google/gemma-4-12B`。
+- **指令微調**（`-it` 後綴），例如 `google/gemma-4-12B-it`。
 
-A pre-trained model was only trained to continue documents and will generally not respond to instructions. In contrast, an instruction-tuned model will follow instructions, recognizes when to stop, and what the user turns and the model turns are.
+預訓練模型只受過接續文件的訓練，一般不會回應指示。相對地，指令微調模型會遵循指示、知道何時停止，也能分辨使用者輪次與模型輪次。
 
-![The same prompt sent to the pre-trained and the instruction-tuned Gemma 4 12B checkpoints](../assets/tuning/overview_04_pt_vs_it_checkpoints.svg)
+![同一個提示詞分別送入預訓練與指令微調的 Gemma 4 12B 檢查點](../assets/tuning/overview_04_pt_vs_it_checkpoints.svg)
 
-As such, the `google/gemma-4-12B-it` is a checkpoint that was fine-tuned from the pre-trained `google/gemma-4-12B` checkpoint. In most cases, users will start from `google/gemma-4-12B-it` and fine-tune it further. 
+因此，`google/gemma-4-12B-it` 是從預訓練的 `google/gemma-4-12B` 檢查點微調而來的檢查點。多數情況下，使用者會從 `google/gemma-4-12B-it` 開始再進一步微調。
 
-Use this rule of thumb when picking a checkpoint:
+選擇檢查點時可參考以下經驗法則：
 
-- **Start from the `-it` checkpoint for almost everything:** Use the `-it` checkpoint for supervised fine-tuning, tool use, vision and audio tuning, DPO, and GRPO. You build on top of existing instruction-following behavior instead of teaching it from scratch.
-- **Start from the pre-trained checkpoint for continued pre-training or custom chat formats:** Use a pre-trained checkpoint when you want to train on large amounts of data, add a new domain or language, or when you want to add your own chat template. This requires a significant amount of compute as it generally involves a lot of data to perform various stages of full tuning (continued pre-training, supervised fine-tuning, reinforcement learning, etc.).
+- **幾乎所有情況都從 `-it` 檢查點開始**：監督式微調、工具使用、視覺與音訊微調、DPO 及 GRPO 都使用 `-it` 檢查點。您是在現有的指令遵循行為之上繼續建構，而非從頭教起。
+- **持續預訓練或自訂對話格式時從預訓練檢查點開始**：想用大量資料訓練、新增領域或語言，或加入自己的聊天範本時，使用預訓練檢查點。這需要大量運算，因為一般涉及大量資料，才能完成完整微調的各個階段（持續預訓練、監督式微調、強化學習等）。
 
 ---
 
-## 5. Training frameworks
+## 5. 訓練框架
 
-Gemma 4 works out of the box with various tools frequently used in the ecosystem:
+Gemma 4 開箱即用，可搭配生態系中常用的各種工具：
 
 <!-- Generated from data/frameworks.yml -- edit that file, not this grid. -->
 {% set fwmap = {} %}
@@ -279,27 +278,27 @@ Gemma 4 works out of the box with various tools frequently used in the ecosystem
 
 ---
 
-## What's next
+## 接下來
 
 <div class="card-grid">
 <a class="card" href="best-practices.md">
   <span class="card-icon">{{ icon('lucide/sliders-horizontal') }}</span>
-  <div class="card-title">Best practices</div>
-  <p class="card-desc">Compare the five Gemma 4 models and pick learning rates and dataset settings.</p>
+  <div class="card-title">最佳實務</div>
+  <p class="card-desc">比較五種 Gemma 4 模型，選擇學習率與資料集設定。</p>
 </a>
 <a class="card" href="datasets-formatting.md">
   <span class="card-icon">{{ icon('lucide/braces') }}</span>
-  <div class="card-title">Dataset formatting</div>
-  <p class="card-desc">Format chat turns, mask prompt tokens, and train with thinking tokens.</p>
+  <div class="card-title">資料集格式</div>
+  <p class="card-desc">格式化對話輪次、遮罩提示詞 token，並用思考 token 訓練。</p>
 </a>
 <a class="card" href="qlora.md">
   <span class="card-icon">{{ icon('lucide/zap') }}</span>
   <div class="card-title">(Q)LoRA</div>
-  <p class="card-desc">Run your first fine-tuning job on a single GPU with TRL and PEFT.</p>
+  <p class="card-desc">用 TRL 與 PEFT 在單一 GPU 上執行第一個微調工作。</p>
 </a>
 <a class="card" href="moe-finetune.md">
   <span class="card-icon">{{ icon('lucide/split') }}</span>
-  <div class="card-title">MoE fine-tuning</div>
-  <p class="card-desc">Fine-tune the 26B A4B model with Split-LoRA, grouped GEMM, and a frozen router.</p>
+  <div class="card-title">MoE 微調</div>
+  <p class="card-desc">用 Split-LoRA、分組 GEMM 與凍結路由器微調 26B A4B 模型。</p>
 </a>
 </div>

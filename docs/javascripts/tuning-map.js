@@ -23,52 +23,52 @@
 
   const PIPELINE_GROUPS = [
     { group: null, items: ["all"] },
-    { group: "Supervised", items: ["quickstart", "full", "moe", "tokens"] },
-    { group: "Multimodal", items: ["vision", "audio"] },
-    { group: "Reinforcement learning", items: ["preference", "reasoning"] },
-    { group: "From base model", items: ["domain", "posttrain"] },
+    { group: "監督式", items: ["quickstart", "full", "moe", "tokens"] },
+    { group: "多模態", items: ["vision", "audio"] },
+    { group: "強化學習", items: ["preference", "reasoning"] },
+    { group: "從基礎模型開始", items: ["domain", "posttrain"] },
   ];
 
   const ROUTES = {
-    all: { label: "All guides", steps: [] },
+    all: { label: "全部指南", steps: [] },
     quickstart: {
-      label: "Quickstart",
+      label: "快速入門",
       steps: ["best-practices", "datasets-formatting", "qlora", "export"],
     },
     full: {
-      label: "Full fine-tuning",
+      label: "完整微調",
       steps: ["best-practices", "datasets-formatting", "full-finetune", "scaling", "export"],
     },
     moe: {
-      label: "MoE model",
+      label: "MoE 模型",
       steps: ["best-practices", "datasets-formatting", "moe-finetune", "export"],
     },
     tokens: {
-      label: "Custom tokens",
+      label: "自訂 token",
       steps: ["best-practices", "datasets-formatting", "unused-tokens", "export"],
     },
     vision: {
-      label: "Vision",
+      label: "視覺",
       steps: ["best-practices", "datasets-formatting", "vision-qlora", "export"],
     },
     audio: {
-      label: "Audio",
+      label: "音訊",
       steps: ["best-practices", "datasets-formatting", "audio-qlora", "export"],
     },
     preference: {
-      label: "Preference tuning",
+      label: "偏好微調",
       steps: ["datasets-formatting", "qlora", "preference-alignment", "export"],
     },
     reasoning: {
-      label: "Reasoning with RL",
+      label: "以 RL 進行推理",
       steps: ["datasets-formatting", "qlora", "reinforcement-learning", "export"],
     },
     domain: {
-      label: "Domain adaptation",
+      label: "領域適應",
       steps: ["best-practices", "continued-pretraining", "custom-chat-template", "export"],
     },
     posttrain: {
-      label: "Full post-training",
+      label: "完整後訓練",
       steps: [
         "best-practices",
         "datasets-formatting",
@@ -280,7 +280,7 @@
 
     const bar = el("div", "tmap-bar");
     const barLeft = el("div", "tmap-bar__left");
-    barLeft.appendChild(el("span", "tmap-bar__label", "Highlight a pipeline"));
+    barLeft.appendChild(el("span", "tmap-bar__label", "醒目顯示一條管線"));
 
     const dropdown = el("div", "tmap-dropdown");
     const trigger = el("button", "tmap-trigger");
@@ -304,7 +304,7 @@
 
     const menu = el("div", "tmap-menu");
     menu.setAttribute("role", "listbox");
-    menu.setAttribute("aria-label", "Fine-tuning pipelines");
+    menu.setAttribute("aria-label", "微調管線");
 
     const optionsByRoute = new Map();
     for (const grp of PIPELINE_GROUPS) {
@@ -319,7 +319,7 @@
         opt.setAttribute("role", "option");
         opt.dataset.route = routeId;
         opt.appendChild(el("span", "tmap-option__label", route.label));
-        const metaText = route.steps.length ? `${route.steps.length} steps` : "16 guides";
+        const metaText = route.steps.length ? `${route.steps.length} 個步驟` : "16 篇指南";
         opt.appendChild(el("span", "tmap-option__meta", metaText));
         menu.appendChild(opt);
         optionsByRoute.set(routeId, opt);
@@ -331,7 +331,7 @@
     barLeft.appendChild(dropdown);
     bar.appendChild(barLeft);
 
-    const resetBtn = el("button", "tmap-reset", "Reset");
+    const resetBtn = el("button", "tmap-reset", "重設");
     resetBtn.type = "button";
     resetBtn.hidden = true;
     bar.appendChild(resetBtn);
@@ -387,7 +387,7 @@
       const steps = route.steps;
       root.classList.toggle("has-route", steps.length > 0);
       resetBtn.hidden = steps.length === 0;
-      triggerText.textContent = steps.length ? `${route.label} · ${steps.length} steps` : route.label;
+      triggerText.textContent = steps.length ? `${route.label} · ${steps.length} 個步驟` : route.label;
 
       for (const [id, opt] of optionsByRoute.entries()) {
         const on = id === routeId;

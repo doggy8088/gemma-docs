@@ -1,14 +1,14 @@
 ---
 title: Gemma Terms of Use Archive
-description: Archive of previously published Gemma Terms of Use documents and historical licensing terms.
+description: Gemma 使用條款的歷史存檔：收錄先前發布的各版本 Gemma Terms of Use 文件，供查閱條款演變之用。
 source_url: "https://ai.google.dev/gemma/terms-archive.md.txt"
 ---
 
 # Terms of Use archive
 
-This archive contains previously published versions of the *Gemma Terms of Use*. These historical documents are provided for reference and record-keeping purposes. For the current terms governing Gemma models and Model Derivatives, see the latest [Gemma Terms of Use](../terms.md). For Gemma 4 models, see the [Gemma 4 license](../apache-2.md) (Apache 2.0).
+本存檔收錄先前發布的 *Gemma Terms of Use* 各版本。這些歷史文件僅供參考與紀錄保存。規範 Gemma 模型與 Model Derivatives 的現行條款，請參閱最新的 [Gemma 使用條款](../terms.md)。Gemma 4 模型的條款請參閱 [Gemma 4 授權](../apache-2.md)（Apache 2.0）。
 
-The following are links to previously published *Gemma Terms of Use* documents ordered by modification date:
+以下為先前發布的 *Gemma Terms of Use* 文件連結，依修改日期由新到舊排序。每份文件均保留發布時的原始內容，未做任何修改：
 
-- [April 1, 2024](terms_04_01_24.md) — Updated Terms of Use revising Section 4.1 regarding model updates and maintenance.
-- [February 21, 2024](terms_02_21_24.md) — Initial release of the Gemma Terms of Use governing early Gemma model releases and distributions.
+- [April 1, 2024](terms_04_01_24.md) — 更新的使用條款，修訂第 4.1 條關於模型更新與維護的內容。
+- [February 21, 2024](terms_02_21_24.md) — Gemma Terms of Use 的首次發布，規範早期 Gemma 模型的發布與散佈。

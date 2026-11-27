@@ -1,56 +1,56 @@
 ---
-title: Audio fine-tuning
-seo_title: Audio fine-tuning with Gemma 4
-description: Fine-tune Gemma 4 E2B, E4B, and 12B on custom speech transcription, low-resource languages, and spoken QA datasets with LoRA, Transformers, and TRL.
+title: 音訊微調
+seo_title: 使用 Gemma 4 進行音訊微調
+description: 在自訂語音轉錄、低資源語言與口說問答資料集上，以 LoRA、Transformers 與 TRL 微調 Gemma 4 E2B、E4B 與 12B。
 models: [gemma-4]
 requires: audio
 frameworks: [transformers, peft, trl]
 colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs/notebooks/audio-qlora-gemma-4-e2b.ipynb
 ---
 
-# Audio fine-tuning
+# 音訊微調
 
-Three models in the Gemma 4 family (E2B, E4B, and 12B) understand audio natively alongside text and images. You can fine-tune these checkpoints on custom audio datasets for low-resource speech recognition, regional dialect adaptation, medical dictation, and spoken question answering.
-
----
-
-## 1. Two architectures
-
-Just like vision, Gemma 4 processes audio through either a dedicated audio encoder (E2B and E4B) or no encoder at all (12B). As with vision, note how everything is frozen except the adapters:
-
-![Conformer audio tower versus encoder-free Gemma 4 12B audio stem](../assets/tuning/audio_01_conformer_vs_12b_waveform.svg)
-
-In both cases, the audio is sliced into 40 ms windows (25 audio soft tokens per second). They are then processed differently depending on the model:
-
-1. **Audio encoder** *(E2B and E4B)*: It slices the 16 kHz audio into 40 ms segments and extracts features via the audio tokenizer. They are then passes through a frozen 12-layer audio encoder before being projected into the Gemma model.
-2. **Encoder-free** *(12B)*: Has no separate audio encoder. Instead, identical 40 ms audio segments pass through a frozen linear projection layer straight into the 12B model.
-
-
-As with the vision examples, it is advised to start by keeping the audio encoder frozen and only train LoRA adapters on the language layers.
+Gemma 4 家族中的三個模型（E2B、E4B 與 12B）能與文字和圖片一起原生理解音訊。您可以在自訂音訊資料集上微調這些檢查點，用於低資源語音辨識、地區方言適應、醫療聽寫與口說問答。
 
 ---
 
-## 2. Masking tokens
+## 1. 兩種架構
 
-When preparing audio datasets for Gemma 4, each clip is resampled to 16 kHz mono and expanded into a sequence of audio soft tokens wrapped between `<|audio|>`{.token-multi} and `<audio|>`{.token-multi} tokens. During training, every prompt and audio token before the assistant response is masked out of the loss calculation:
+如同視覺任務，Gemma 4 會透過專用的音訊編碼器（E2B 與 E4B）或完全不使用編碼器（12B）來處理音訊。如同視覺任務，請注意除了轉接器之外，其他所有部分都是凍結的：
 
-![Completion-only masking for audio fine-tuning](../assets/tuning/audio_02_audio_soft_token_masking.svg)
+![Conformer 音訊塔與無編碼器的 Gemma 4 12B 音訊主幹對照](../assets/tuning/audio_01_conformer_vs_12b_waveform.svg)
 
-As with vision, this allows the model to focus all of its updates on the output rather than attempting to guess the input. 
+兩種情況下，音訊都會被切成 40 毫秒的窗口（每秒 25 個音訊軟 token），再依模型以不同方式處理：
 
-When training, here are some guidelines:
+1. **音訊編碼器** *(E2B 與 E4B)*：將 16 kHz 音訊切成 40 毫秒的片段，並透過音訊 tokenizer 提取特徵，接著通過凍結的 12 層音訊編碼器，再投影到 Gemma 模型中。
+2. **無編碼器** *(12B)*：沒有獨立的音訊編碼器。相同的 40 毫秒音訊片段改為通過凍結的線性投影層，直接進入 12B 模型。
 
-1. **Resample to 16,000 Hz mono**: Gemma 4's audio processor expects 16 kHz single-channel waveforms. Resample 44.1 kHz or 48 kHz recordings to 16 kHz and average stereo channels to mono.
-2. **Keep clips to 30 seconds or less**: The audio encoders support a maximum of 30 seconds, so split longer recordings at silence boundaries into 10 to 30 second clips.
-3. **Mask prompt and audio tokens**: Exclude all system, user, and audio soft tokens from the training loss so the model only learns to predict the text transcript.
+
+如同視覺範例，建議一開始先保持音訊編碼器凍結，只在語言層上訓練 LoRA 轉接器。
 
 ---
 
-## 3. Set up the environment
+## 2. 遮罩詞元
 
-We will fine-tune Gemma 4 on the Welsh (`cy_gb`) split of [`google/fleurs`](https://huggingface.co/datasets/google/fleurs) so it can learn to recognize Welsh. This task is commonly referred to as automatic speech recognition (ASR).
+在為 Gemma 4 準備音訊資料集時，每段音訊都會重新取樣為 16 kHz 單聲道，並展開為一串音訊軟 token，包在 `<|audio|>`{.token-multi} 與 `<audio|>`{.token-multi} token 之間。在訓練期間，助手回應之前的所有提示詞與音訊 token 都會從損失計算中遮罩掉：
 
-Install the Hugging Face post-training, quantization, multimodal, and evaluation libraries:
+![音訊微調的僅完成遮罩](../assets/tuning/audio_02_audio_soft_token_masking.svg)
+
+如同視覺任務，這能讓模型把所有更新集中在輸出上，而不必嘗試猜測輸入。 
+
+訓練時，請遵循以下準則：
+
+1. **重新取樣為 16,000 Hz 單聲道**：Gemma 4 的音訊處理器需要 16 kHz 單聲道波形。請將 44.1 kHz 或 48 kHz 的錄音重新取樣為 16 kHz，並將立體聲聲道平均為單聲道。
+2. **每段音訊不超過 30 秒**：音訊編碼器最多支援 30 秒，因此請在靜音邊界處將較長的錄音切成 10 到 30 秒的片段。
+3. **遮罩提示詞與音訊 token**：將所有系統、使用者與音訊軟 token 排除在訓練損失之外，讓模型只學習預測文字轉錄。
+
+---
+
+## 3. 設定環境
+
+我們將在 [`google/fleurs`](https://huggingface.co/datasets/google/fleurs) 的威爾斯語（`cy_gb`）切分上微調 Gemma 4，讓它學會辨識威爾斯語。這項任務通常稱為自動語音辨識（ASR）。
+
+安裝 Hugging Face 的訓練後、量化、多模態與評估函式庫：
 
 ```python { .notebook-cell }
 # Install Hugging Face post-training, quantization, multimodal, and evaluation libraries
@@ -58,7 +58,7 @@ Install the Hugging Face post-training, quantization, multimodal, and evaluation
 %pip install -q -U evaluate sacrebleu jiwer pillow soundfile librosa matplotlib tensorboard
 ```
 
-If you plan to push your trained adapter to the Hugging Face Hub, log in with a write token:
+如果您打算將訓練好的轉接器推送到 Hugging Face Hub，請使用具寫入權限的 token 登入：
 
 ```python { .notebook-cell }
 # Optional: Uncomment if using gated checkpoints or pushing to the Hub
@@ -68,9 +68,9 @@ If you plan to push your trained adapter to the Hugging Face Hub, log in with a 
 
 ---
 
-## 4. Prepare the dataset
+## 4. 準備資料集
 
-To load the data, we make use of the `librosa` and `soundfile` libraries to decode the waveforms and store it in memory. This prevents us from needing to write thousands of `.wav` files to disk.
+載入資料時，我們會使用 `librosa` 與 `soundfile` 函式庫來解碼波形並存放在記憶體中。這樣就不需要把數千個 `.wav` 檔案寫入磁碟。
 
 
 ```python { .notebook-cell }
@@ -114,10 +114,10 @@ Sample 0 transcript: Gellir ei wneud yn denau iawn, a'i lynu ar fetal arall. Gel
 
 ---
 
-## 5. Load the model
+## 5. 載入模型
 
 
-Load the instruction-tuned Gemma 4 checkpoint and multimodal processor in `bfloat16`:
+以 `bfloat16` 載入經過指令微調的 Gemma 4 檢查點與多模態處理器：
 
 ```python { .notebook-cell .model-swap }
 import torch
@@ -134,14 +134,14 @@ model = AutoModelForMultimodalLM.from_pretrained(
 processor = AutoProcessor.from_pretrained(model_id)
 ```
 
-!!! note "Why bfloat16 LoRA for audio?"
-    Uniform 4-bit NF4 quantization (`BitsAndBytesConfig(load_in_4bit=True)`) quantizes audio-critical projection layers and degrades speech recognition accuracy. Loading `E2B-it` in `bfloat16` with gradient checkpointing keeps audio projections at full precision and trains in ~11.9 GB of VRAM (for selective 4-bit quantization on smaller GPUs, see [Fine-tuning with Unsloth](unsloth.md)).
+!!! note "為什麼音訊要用 bfloat16 LoRA？"
+    統一的 4-bit NF4 量化（`BitsAndBytesConfig(load_in_4bit=True)`）會量化對音訊至關重要的投影層，並降低語音辨識準確度。以 `bfloat16` 載入 `E2B-it` 並搭配梯度檢查點，可讓音訊投影層保持完整精度，且只需約 11.9 GB 的顯示記憶體即可訓練（若要在較小的 GPU 上使用選擇性 4-bit 量化，請參閱[使用 Unsloth 進行微調](unsloth.md)）。
 
 ---
 
-## 6. Evaluate the base model
+## 6. 評估基底模型
 
-Before we actually start with training, let's perform baseline evaluation. We will use the commonly used normalized Word Error Rate (WER) and Character Error Rate (CER) across 100 held-out Welsh recordings:
+在真正開始訓練之前，先來進行基準評估。我們將在 100 段保留的威爾斯語錄音上，使用常用的正規化單詞錯誤率（WER）與字元錯誤率（CER）：
 
 ```python { .notebook-cell }
 import jiwer
@@ -230,13 +230,13 @@ Sample #0 ground truth : Mae'r term saffari mewn defnydd cyffredinol yn cyfeirio
 Sample #0 zero-shot    : Mar ten swfary, mae'n ddefnyddiol yn cyfderio astaethiad ostod i wal bywyd gwll syfratonnol Africa yn ywedig ar sffana.
 ```
 
-Without any fine-tuning, the model approximates Welsh phonetics and results in a **71.21%** Word Error Rate across the 100 unseen clips. Something we can improve upon!
+未經任何微調，模型只能近似威爾斯語的發音，在 100 段未見過的音訊上產生 **71.21%** 的單詞錯誤率。這正是我們可以改進之處！
 
 ---
 
-## 7. Train the model
+## 7. 訓練模型
 
-Next, let's define the LoRA adapters and target the same layers as we always do (language layers) while freezing the audio encoder:
+接著定義 LoRA 轉接器，並像往常一樣鎖定相同的層（語言層），同時凍結音訊編碼器：
 
 ```python { .notebook-cell }
 from peft import LoraConfig, get_peft_model
@@ -267,7 +267,7 @@ model.print_trainable_parameters()
 trainable params: 48,316,416 || all params: 5,152,613,920 || trainable%: 0.9377
 ```
 
-One last thing before we can train: we need a data collator to create audio/text batches and apply the masking to the input prompts:
+在開始訓練之前還有一件事：我們需要一個資料整理器來建立音訊／文字批次，並對輸入提示詞套用遮罩：
 
 ```python { .notebook-cell }
 target_tokens = processor.tokenizer.encode("<|turn>model\n", add_special_tokens=False)
@@ -323,7 +323,7 @@ def collate_fn(examples):
     return batch
 ```
 
-We can train the model! Let's configure `SFTConfig` for two epochs:
+我們可以開始訓練模型了！設定 `SFTConfig` 進行兩個訓練輪數：
 
 ```python { .notebook-cell }
 from trl import SFTConfig, SFTTrainer
@@ -381,15 +381,15 @@ AutoProcessor.from_pretrained(model_id).save_pretrained(final_model_path)
 ```
 
 <!-- notebook:skip-start -->
-??? info "Inspect the training curve"
-    ![Training and validation loss across epochs](../assets/tuning/audio-qlora_loss.svg)
+??? info "檢視訓練曲線"
+    ![跨訓練輪數的訓練與驗證損失](../assets/tuning/audio-qlora_loss.svg)
 <!-- notebook:skip-end -->
 
 ---
 
-## 8. Evaluate the fine-tuned model
+## 8. 評估微調後的模型
 
-We free the pipeline from GPU memory and load in our trained checkpoint so we can evaluate it on the unseen recordings:
+我們將管線從 GPU 記憶體中釋放，並載入訓練好的檢查點，以便在未見過的錄音上評估它：
 
 ```python { .notebook-cell }
 import gc
@@ -427,36 +427,36 @@ Before LoRA : Mar ten swfary, mae'n ddefnyddiol yn cyfderio astaethiad ostod i w
 After LoRA  : Mae'r Term Saffari, mewn defnydd cyffredinol, yn cyfeirio at steithio dros dro i'w wylbwyd gwyllt sefylladol Affrica, yn enwedig ar Safana.
 ```
 
-The scores are looking much better now with only two epochs and updating a small number of weights:
+只用兩個訓練輪數、更新少量權重，分數就大幅改善了：
 
-| Metric | Before LoRA | After LoRA | Change |
+| 指標 | 微調前 | 微調後 | 變化 |
 |---|---|---|---|
-| **Word Error Rate (WER, lower is better)** | 71.21% | **49.28%** | **-21.93 pp** |
-| **Character Error Rate (CER, lower is better)** | 29.63% | **22.24%** | **-7.39 pp** |
+| **單詞錯誤率（WER，越低越好）** | 71.21% | **49.28%** | **-21.93 個百分點** |
+| **字元錯誤率（CER，越低越好）** | 29.63% | **22.24%** | **-7.39 個百分點** |
 
 ---
 
-## What's next
+## 接下來
 
 <div class="card-grid">
 <a class="card" href="vision-qlora.md">
   <span class="card-icon">{{ icon('lucide/eye') }}</span>
-  <div class="card-title">Vision fine-tuning</div>
-  <p class="card-desc">Fine-tune Gemma 4 on custom images, charts, receipts, and documents using selectable vision token budgets.</p>
+  <div class="card-title">視覺微調</div>
+  <p class="card-desc">使用可選的視覺 token 預算，在自訂圖片、圖表、收據與文件上微調 Gemma 4。</p>
 </a>
 <a class="card" href="preference-alignment.md">
   <span class="card-icon">{{ icon('lucide/sliders-horizontal') }}</span>
-  <div class="card-title">Preference optimization</div>
-  <p class="card-desc">Shape your model's tone and conciseness using chosen and rejected response pairs.</p>
+  <div class="card-title">偏好最佳化</div>
+  <p class="card-desc">使用選定與拒絕的回應配對，塑造模型的語氣與簡潔程度。</p>
 </a>
 <a class="card" href="reinforcement-learning.md">
   <span class="card-icon">{{ icon('lucide/brain') }}</span>
-  <div class="card-title">Verifiable rewards</div>
-  <p class="card-desc">Train Gemma 4's thinking channel using verifiable reward functions.</p>
+  <div class="card-title">可驗證獎勵</div>
+  <p class="card-desc">使用可驗證的獎勵函數訓練 Gemma 4 的思考通道。</p>
 </a>
 <a class="card" href="export.md">
   <span class="card-icon">{{ icon('lucide/rocket') }}</span>
-  <div class="card-title">Export</div>
-  <p class="card-desc">Export your fine-tuned E2B, E4B, or 12B model to LiteRT-LM for on-device audio inference or vLLM for servers.</p>
+  <div class="card-title">匯出</div>
+  <p class="card-desc">將微調後的 E2B、E4B 或 12B 模型匯出至 LiteRT-LM，以進行裝置端音訊推論，或匯出至 vLLM 以用於伺服器。</p>
 </a>
 </div>

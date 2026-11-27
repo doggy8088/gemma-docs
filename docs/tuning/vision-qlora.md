@@ -1,64 +1,64 @@
 ---
-title: Vision fine-tuning
-seo_title: Vision fine-tuning with Gemma 4
-description: Fine-tune Gemma 4 on custom image-text datasets using QLoRA, selectable vision token budgets, and completion-only multimodal loss masking.
+title: 視覺微調
+seo_title: 使用 Gemma 4 進行視覺微調
+description: 使用 QLoRA、可選的視覺詞元預算與僅針對補全的多模態損失遮罩，在自訂影像-文字資料集上微調 Gemma 4。
 models: [gemma-4/e2b, gemma-4/e4b, gemma-4/12b, gemma-4/31b]
 frameworks: [transformers, peft, trl]
 source_url: "https://ai.google.dev/gemma/docs/core/huggingface_vision_finetune_qlora.md.txt"
 colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs/notebooks/vision-qlora-gemma-4-e2b.ipynb
 ---
 
-# Vision fine-tuning
+# 視覺微調
 
-Every model in the Gemma 4 family accepts images and text natively. Fine-tuning Gemma 4 on image-text pairs lets you build visual assistants for receipt and document OCR, medical imaging, chart extraction, UI grounding, and product cataloging.
+Gemma 4 家族的每個模型都能原生接受圖片與文字。在影像-文字配對上微調 Gemma 4，可以打造收據與文件 OCR、醫學影像、圖表擷取、UI 定位與商品編目等視覺助理。
 
-!!! note "Hardware requirements"
-    Vision fine-tuning requires a GPU that supports bfloat16 (such as an NVIDIA L4, A100, H100, or RTX 30/40/50 series) with at least 16 GB of VRAM for E2B and E4B, 24 GB for 12B, and 48 to 80 GB for 26B A4B and 31B.
-
----
-
-## 1. Choosing a vision token budget
-
-Many older vision-language models crop every image into a fixed square, which distorts wide charts and tall receipts. Gemma 4 preserves each image's original aspect ratio, slices it into patches, and pools them into a selectable token budget:
-
-![Gemma 4 vision token budgets from 70 to 1,120 tokens](../assets/tuning/vision_01_variable_token_budget.svg)
-
-Each image is wrapped between `<|image|>`{.token-multi} and `<image|>`{.token-multi} tokens and converted into soft tokens. The vision token budget decides how many tokens will be generated. Lowering the budget from 1,120 to 280 tokens cuts the visual token count by 4x, which reduces activation memory and lets you train with larger batch sizes. Here are some guiding principles for choosing the budget:
-
-- **70 or 140 tokens**: Best for thumbnails, multi-image prompts, or fast classification where you want larger batch sizes.
-- **280 tokens (default)**: Good balance for general visual question answering, product photos, and UI screenshots.
-- **560 or 1,120 tokens**: High-detail budgets for dense PDF pages, financial charts, schematics, and small-font OCR.
+!!! note "硬體需求"
+    視覺微調需要支援 bfloat16 的 GPU（例如 NVIDIA L4、A100、H100 或 RTX 30/40/50 系列），E2B 與 E4B 至少需要 16 GB VRAM，12B 需要 24 GB，26B A4B 與 31B 則需要 48 至 80 GB。
 
 ---
 
-## 2. Two architectures
+## 1. 選擇視覺詞元預算
 
-The image patches are processed through either dedicated vision encoder (all models except 12B) or an encoder-free embedder (12B). When fine-tuning the models, note how everything is frozen except for the adapters:
+許多較舊的視覺語言模型會把每張圖片裁切成固定正方形，導致寬圖表與高收據變形。Gemma 4 會保留每張圖片原本的長寬比，將其切成圖塊，再彙整為可選的詞元預算：
 
-![Separate vision tower versus encoder-free Gemma 4 12B](../assets/tuning/vision_02_12b_vs_siglip_vision.svg)
+![Gemma 4 視覺詞元預算，從 70 到 1,120 個詞元](../assets/tuning/vision_01_variable_token_budget.svg)
 
- As shown, there are two different architecture to encoding the input images and training the adapters:
- 
- 1. **Separate vision encoder** *(E2B, E4B, 26B A4B, and 31B)*: The images are sliced into 16x16 pixels which we call "patches" and are passed through a vision encoder. For most tasks such as OCR, captioning, and product descriptions, keep the vision encoder frozen and attach LoRA adapters to the language layers. Unfreeze the vision encoder only when you want the model to train on things it may not have seen before, like X-rays or satellite radar images.
- 2. **Encoder-free (12B)**: Gemma 4 12B has no separate vision encoder. Instead, 48x48 pixel patches pass through a frozen 1x embedder block into the 12B, so attaching LoRA adapters to the 12B layers adapts vision and text together.
+每張圖片會包在 `<|image|>`{.token-multi} 與 `<image|>`{.token-multi} 詞元之間，並轉換為軟詞元。視覺詞元預算決定會產生多少個詞元。將預算從 1,120 個詞元降到 280 個詞元，可將視覺詞元數量減少 4 倍，進而降低活化記憶體，讓您能使用更大的批次大小。以下是選擇預算的一些指導原則：
 
----
-
-## 3. Masking tokens
-
-As we have seen before, it is important to mask the input tokens so the loss only tries to predict the output tokens rather than trying to predict the input image tokens. 
-
-![Completion-only masking for vision fine-tuning](../assets/tuning/vision_03_vision_loss_masking.svg)
-
-If we would not mask the input image tokens, then the cross-entropy loss would attempt to predict the input image placeholder IDs which corrupts the gradients. Masking all prompt and image tokens directs 100% of the weight updates to the model's text answer and closing `<turn|>`{.token-turn} token.
+- **70 或 140 個詞元**：最適合縮圖、多圖提示，或想使用較大批次大小的快速分類。
+- **280 個詞元（預設）**：一般視覺問答、商品照片與 UI 截圖的良好平衡。
+- **560 或 1,120 個詞元**：適用於密集 PDF 頁面、財務圖表、示意圖與小字 OCR 的高細節預算。
 
 ---
 
-## 4. Set up the environment
+## 2. 兩種架構
 
-We will fine-tune Gemma 4 on [`naver-clova-ix/cord-v2`](https://huggingface.co/datasets/naver-clova-ix/cord-v2) which is a multimodal dataset for receipt parsing. We use 1000 examples from the dataset that we can train and validate on. The goal is to extract structured items like subtotals and discounts on the receipts. 
+圖片圖塊會透過專用的視覺編碼器（除 12B 以外的所有模型）或無編碼器的嵌入器（12B）處理。微調模型時，請注意除了轉接器之外，其他部分一律凍結：
 
-To start, we install the Hugging Face post-training, quantization, multimodal, and evaluation libraries:
+![獨立視覺塔與無編碼器的 Gemma 4 12B 之比較](../assets/tuning/vision_02_12b_vs_siglip_vision.svg)
+
+如圖所示，編碼輸入圖片與訓練轉接器有兩種不同的架構：
+
+1. **獨立視覺編碼器** *(E2B、E4B、26B A4B 與 31B)*：圖片會切成 16x16 像素的「圖塊」，再通過視覺編碼器。對於 OCR、圖說生成與商品描述等大多數任務，請保持視覺編碼器凍結，並將 LoRA 轉接器附加到語言層。只有當您希望模型學習它未曾見過的事物（例如 X 光片或衛星雷達影像）時，才解凍視覺編碼器。
+2. **無編碼器（12B）**：Gemma 4 12B 沒有獨立的視覺編碼器。取而代之的是，48x48 像素的圖塊會通過凍結的 1x 嵌入器區塊進入 12B，因此將 LoRA 轉接器附加到 12B 的各層，就能同時調整視覺與文字。
+
+---
+
+## 3. 遮罩詞元
+
+如前所述，遮罩輸入詞元很重要，這樣損失才只會嘗試預測輸出詞元，而不是嘗試預測輸入的圖片詞元。
+
+![僅針對補全的視覺微調遮罩](../assets/tuning/vision_03_vision_loss_masking.svg)
+
+如果不遮罩輸入圖片詞元，交叉熵損失會嘗試預測輸入圖片的佔位符 ID，進而破壞梯度。將所有提示與圖片詞元遮罩後，100% 的權重更新都會指向模型的文字回答與結尾的 `<turn|>`{.token-turn} 詞元。
+
+---
+
+## 4. 設定環境
+
+我們將在 [`naver-clova-ix/cord-v2`](https://huggingface.co/datasets/naver-clova-ix/cord-v2) 上微調 Gemma 4，這是一個用於收據解析的多模態資料集。我們會使用資料集中的 1000 個範例進行訓練與驗證。目標是擷取收據上的結構化品項，例如小計與折扣。
+
+首先，安裝 Hugging Face 的後訓練、量化、多模態與評估函式庫：
 
 ```python { .notebook-cell }
 # Install Hugging Face post-training, quantization, multimodal, and evaluation libraries
@@ -66,7 +66,7 @@ To start, we install the Hugging Face post-training, quantization, multimodal, a
 %pip install -q -U evaluate sacrebleu jiwer pillow soundfile librosa matplotlib tensorboard
 ```
 
-If you plan to push your trained adapter to the Hugging Face Hub, log in with a write token:
+如果您打算將訓練好的轉接器推送到 Hugging Face Hub，請使用具寫入權限的權杖登入：
 
 ```python { .notebook-cell }
 # Optional: Uncomment if using gated checkpoints or pushing to the Hub
@@ -76,10 +76,10 @@ If you plan to push your trained adapter to the Hugging Face Hub, log in with a 
 
 ---
 
-## 5. Prepare the dataset
+## 5. 準備資料集
 
 
-Next up is preparing the dataset such that they are in a conversational format:
+接下來是將資料集準備成對話格式：
 
 ```python { .notebook-cell }
 import json
@@ -137,13 +137,13 @@ Splits: train=800, val=100, test=100
 [{'role': 'system', 'content': 'You are a document extraction assistant that parses receipt images into structured JSON using the CORD schema (menu, sub_total, total). Return only valid JSON without markdown code fences.'}, {'role': 'user', 'content': [{'type': 'image', 'image': <PIL.Image.Image image mode=RGB size=864x1296>}, {'type': 'text', 'text': 'Extract all line items, subtotals, and totals from this receipt image as JSON.'}]}, {'role': 'assistant', 'content': [{'type': 'text', 'text': '{"menu": [{"nm": "Nasi Campur Bali", "cnt": "1 x", "price": "75,000"}, {"nm": "Bbk Bengil Nasi", "cnt": "1 x", "price": "125,000"}, ...], "sub_total": {"subtotal_price": "1,346,000", "service_price": "100,950", "tax_price": "144,695", "etc": "-45"}, "total": {"total_price": "1,591,600"}}'}]}]
 ```
 
-Note that the images in a given turn are always before the text. That was part of the training of Gemma 4 models and tends to result in a better performance rather than putting the images after the text.
+請注意，在同一個回合中，圖片一定在文字之前。這是 Gemma 4 模型訓練的一部分，比起把圖片放在文字之後，這樣的順序通常能帶來更好的效能。
 
 ---
 
-## 6. Load the model
+## 6. 載入模型
 
-We will load the Gemma 4 checkpoint in 4-bit and set the token budget to 560. 560 is a nice trade-off between accuracy and speed. Especially receipts benefit from more vision tokens, so it might be worthwhile to increase it even further to improve the performance (at the cost of speed).
+我們將以 4-bit 載入 Gemma 4 檢查點，並將詞元預算設為 560。560 是準確度與速度之間不錯的折衷。收據尤其能受益於更多的視覺詞元，因此值得進一步提高預算以改善效能（代價是速度變慢）。
 
 ```python { .notebook-cell .model-swap }
 import torch
@@ -175,9 +175,9 @@ processor.image_processor.max_soft_tokens = 560
 
 ---
 
-## 7. Evaluate the base model
+## 7. 評估基底模型
 
-We evaluate the base model on held-out receipts first to establish a baseline we can compare it to:
+我們先在保留的收據上評估基底模型，建立一個可供比較的基準：
 
 ```python { .notebook-cell }
 # Evaluate CORD schema adherence and exact total_price accuracy on held-out receipts
@@ -244,13 +244,13 @@ Before QLoRA (40 unseen receipts): {'schema_valid_pct': 0.0, 'total_price_acc_pc
 Sample #4 zero-shot output: {"menu": ["ICE BLACKCOFFEE", "AVOCADO COFFEE", "CHICKEN KATSUFF"], "sub_total": 144000, "total": 200000}
 ```
 
-Without any fine-tuning, the model has some failure modes like misreading values (for instance confusing the cash tendered `200000` with the actual `174,600` total) and not adhering to the exact nested CORD format (`{"total": {"total_price": "174,600"}}`), since our short prompt did not spell out every nested key or comma-formatting rule. This is a great signal as it allows us to identify why the model fails without any tuning. In practical use cases, you might want to identify the failure modes first before deciding what data to use and/or collect.
+未經任何微調，模型會出現一些失敗模式，例如誤讀數值（例如把實收現金 `200000` 誤認為實際的 `174,600` 總計），且未遵循精確的巢狀 CORD 格式（`{"total": {"total_price": "174,600"}}`），因為我們簡短的提示並未詳細說明每個巢狀鍵或逗號格式規則。這是很好的訊號，讓我們能在未經任何微調的情況下找出模型失敗的原因。在實際使用情境中，您可能想先找出失敗模式，再決定要使用或收集哪些資料。
 
 ---
 
-## 8. Train the model
+## 8. 訓練模型
 
-We start with defining the `LoraConfig` where we choose the same target projections as before and exclude the vision encoder (called the `vision_tower`). Remember that we are not fine-tuning the encoder itself (if you choose a non-12B model) since there is already much to be gained from fine-tuning the model itself.
+我們先定義 `LoraConfig`，選擇與之前相同的目標投影，並排除視覺編碼器（稱為 `vision_tower`）。請記住，我們不會微調編碼器本身（如果您選擇非 12B 模型），因為只微調模型本身就已經有很大的收穫。
 
 ```python { .notebook-cell }
 from peft import LoraConfig, prepare_model_for_kbit_training
@@ -278,7 +278,7 @@ peft_config = LoraConfig(
 )
 ```
 
-Next up, is training. The process is similar to other training processes in these guide with one difference, we need to properly build the multimodal batches. This means making sure that we they are padded correctly and the right input information is ignored during loss updates:
+接下來是訓練。這個過程與這些指南中的其他訓練過程類似，只有一處不同：我們需要正確建立多模態批次。這表示要確保批次正確填補，並在損失更新時忽略正確的輸入資訊：
 
 ```python { .notebook-cell }
 from trl import SFTConfig, SFTTrainer
@@ -370,17 +370,17 @@ trainer.save_model()
 ```
 
 <!-- notebook:skip-start -->
-??? info "Inspect the training curve"
-    ![Training and validation loss across epochs](../assets/tuning/vision-qlora_loss.svg)
+??? info "檢視訓練曲線"
+    ![訓練與驗證損失隨 epoch 的變化](../assets/tuning/vision-qlora_loss.svg)
 <!-- notebook:skip-end -->
 
-We see a healthy loss, which is definitely a good sign!
+我們看到健康的損失，這絕對是個好兆頭！
 
 ---
 
-## 9. Evaluate the fine-tuned model
+## 9. 評估微調後的模型
 
-To evaluate our model, let's free up the GPU memory and save the adapter first:
+要評估我們的模型，先釋放 GPU 記憶體並儲存轉接器：
 
 ```python { .notebook-cell }
 import gc
@@ -413,7 +413,7 @@ del base_model, peft_model, merged_model
 torch.cuda.empty_cache()
 ```
 
-Now, we can load the adapter that we merged into the checkpoint and explore how it performs across the unseen receipts:
+現在，我們可以載入已合併到檢查點中的轉接器，看看它在未見過的收據上的表現：
 
 ```python { .notebook-cell }
 # Reload the merged checkpoint and evaluate on the 40 unseen test receipts
@@ -444,31 +444,31 @@ Before QLoRA: {"menu": ["ICE BLACKCOFFEE", "AVOCADO COFFEE", "CHICKEN KATSUFF"],
 After QLoRA : {"menu": [{"nm": "ICE BLACKCOFFE", "cnt": "2", "price": "82,000"}, {"nm": "NEW AVOCADO COFFEE", "cnt": "1", "price": "61,000"}, {"nm": "OLBE CHIKEN KATSUFF", "cnt": "1", "price": "51,000"}], "sub_total": {"subtotal_price": "194,000", "discount_price": "19,400"}, "total": {"total_price": "174,600", "cashprice": "200,000", "changeprice": "28,400"}}
 ```
 
-The performance increased quite a bit! Fine-tuning only the language adapters taught the model the exact nested CORD JSON schema (`95.0%`) and raised exact `total_price` extraction to `91.9%` across unseen receipts—though notice in Sample #4 that harder character-level line-item OCR (such as `"NEW AVOCADO COFFEE"` and `"changeprice": "28,400"` vs. `"25,400"`) can still make occasional mistakes on a compact E2B model. It shows how far you can get with fine-tuning a small part of the model rather than the entire encoders.
+效能提升了不少！只微調語言轉接器，就讓模型學會了精確的巢狀 CORD JSON 結構描述（`95.0%`），並將未見過收據的精確 `total_price` 擷取率提高到 `91.9%`——不過請注意，在範例 #4 中，較困難的字元級品項 OCR（例如 `"NEW AVOCADO COFFEE"` 以及 `"changeprice": "28,400"` 對 `"25,400"`）在精簡的 E2B 模型上仍可能偶爾出錯。這顯示了只微調模型的一小部分（而非整個編碼器）能達到的效果。
 
 ---
 
-## What's next
+## 接下來
 
 <div class="card-grid">
 <a class="card" href="audio-qlora.md">
   <span class="card-icon">{{ icon('lucide/audio-lines') }}</span>
-  <div class="card-title">Audio fine-tuning</div>
-  <p class="card-desc">Fine-tune Gemma 4 E2B, E4B, and 12B on speech transcription, dialect adaptation, and spoken QA.</p>
+  <div class="card-title">音訊微調</div>
+  <p class="card-desc">針對語音轉錄、方言適應與口說問答，微調 Gemma 4 E2B、E4B 與 12B。</p>
 </a>
 <a class="card" href="preference-alignment.md">
   <span class="card-icon">{{ icon('lucide/sliders-horizontal') }}</span>
-  <div class="card-title">Preference optimization</div>
-  <p class="card-desc">Shape your model's tone and formatting using chosen and rejected response pairs.</p>
+  <div class="card-title">偏好最佳化</div>
+  <p class="card-desc">使用選定與拒絕的回應配對，塑造模型的語氣與格式。</p>
 </a>
 <a class="card" href="reinforcement-learning.md">
   <span class="card-icon">{{ icon('lucide/brain') }}</span>
-  <div class="card-title">Verifiable rewards</div>
-  <p class="card-desc">Train Gemma 4's thinking channel using verifiable reward functions.</p>
+  <div class="card-title">可驗證獎勵</div>
+  <p class="card-desc">使用可驗證的獎勵函式，訓練 Gemma 4 的思考通道。</p>
 </a>
 <a class="card" href="export.md">
   <span class="card-icon">{{ icon('lucide/rocket') }}</span>
-  <div class="card-title">Export</div>
-  <p class="card-desc">Export your multimodal Gemma 4 model to LiteRT-LM, GGUF, or vLLM.</p>
+  <div class="card-title">匯出</div>
+  <p class="card-desc">將多模態 Gemma 4 模型匯出為 LiteRT-LM、GGUF 或 vLLM。</p>
 </a>
 </div>

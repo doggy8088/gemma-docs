@@ -1,80 +1,80 @@
 ---
-title: Continued pre-training
-seo_title: Continued pre-training with Gemma 4
-description: Adapt Gemma 4 to unlabeled domain text and new languages using sequence packing, vocabulary extension, and separate embedding learning rates.
+title: 持續預訓練
+seo_title: 使用 Gemma 4 進行持續預訓練
+description: 使用序列打包、詞彙表擴充與分開的嵌入學習率，將 Gemma 4 適應未標註的領域文字與新語言。
 models: [gemma-4/e2b, gemma-4/e4b, gemma-4/12b, gemma-4/31b]
 frameworks: [transformers, peft, trl]
 colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs/notebooks/continued-pretraining-gemma-4-e2b.ipynb
 ---
 
-# Continued pre-training
+# 持續預訓練
 
-When you want Gemma 4 to learn from a large collection of unlabeled text, such as internal source code, medical papers, legal contracts, or a new language, supervised fine-tuning on a few thousand question-answer pairs is not always enough.
+當您想讓 Gemma 4 從大量未標註文字學習，例如內部原始碼、醫學論文、法律合約或一種新語言時，僅用數千組問答配對做監督式微調往往不夠。
 
-Instead, you can run continued pre-training on the raw documents first, and then follow up with a short supervised fine-tuning stage so the model knows how to chat. Be aware though that continued pre-training is generally more advanced since it requires additional supervised fine-tuning stages (potentially including reinforcement learning) to get the same or better performance compared to their `-it` counterparts.
+您可以先對原始文件執行持續預訓練，再接一段簡短的監督式微調，讓模型學會對話。不過請注意，持續預訓練通常更進階，因為它需要額外的監督式微調階段（可能還包括強化學習），才能達到與 `-it` 對應版本相同或更好的效能。
 
-!!! tip "Start from a base checkpoint"
-    Continued pre-training teaches the model to predict the next token across long documents. Always start from a pretrained base checkpoint (such as `google/gemma-4-E2B` or `google/gemma-4-12B`) rather than an instruction-tuned (`-it`) checkpoint. If you perform continued pre-training on an `-it` model, it will overwrite `<turn|>`{.token-turn} end-of-turn probabilities and causes endless generation. Once continued pre-training finishes, run [Custom chat templates](custom-chat-template.md) or [(Q)LoRA](qlora.md) to make the model follow instructions.
-
----
-
-## 1. Packing sequences to remove padding
-
-Documents vary in length. Some notes are 50 tokens long, while full articles span several thousand tokens.
-
-If you pad every short document out to a fixed length with padding tokens, most of each batch is wasted on empty slots. Sequence packing joins documents end-to-end, separates them with end-of-sequence tokens, and packs them into full rows with no padding:
-
-![Padded batch compared to a packed batch with EOS separators](../assets/tuning/cpt_01_sequence_packing.svg)
-
-**Doc A**, **Doc B**, and **Doc C** sit back-to-back in a single packed row separated by `<eos>`{.token-BosEos} tokens, so every slot in the batch carries real text instead of `<pad>`{.token-BosEos} tokens.
+!!! tip "從基礎檢查點開始"
+    持續預訓練是教模型在長文件上預測下一個詞元。請務必從預訓練基礎檢查點（例如 `google/gemma-4-E2B` 或 `google/gemma-4-12B`）開始，而不是指令微調（`-it`）檢查點。如果您在 `-it` 模型上執行持續預訓練，它會覆寫 `<turn|>`{.token-turn} 回合結束機率，導致無止境生成。持續預訓練完成後，請執行[自訂聊天範本](custom-chat-template.md)或 [(Q)LoRA](qlora.md)，讓模型學會遵循指示。
 
 ---
 
-## 2. Extending the vocabulary
+## 1. 序列打包以消除填充
 
-Before adding new tokens, check how many tokens Gemma 4 produces per word on your text. Because Gemma 4 already has a 262,144-token multilingual vocabulary, it handles over 140 languages, code, and scientific text out of the box.
+文件長度不一。有些筆記只有 50 個詞元，完整文章則有數千個詞元。
 
-You only need to add new tokens in one of these cases:
+如果您把每份短文件都用填充詞元補到固定長度，批次中大部分位置都會浪費在空白槽位上。序列打包是把文件首尾相接、以序列結束詞元分隔，再裝滿整列，完全不留填充：
 
-- **Domain strings:** Chemical SMILES strings, gene markers, or custom code symbols get split into 6 to 10 tiny pieces.
-- **Underrepresented scripts:** Everyday words in your target language regularly split into 3 or more tokens.
+![比較使用 EOS 分隔符的填充批次與打包批次](../assets/tuning/cpt_01_sequence_packing.svg)
 
-When you add new tokens to the vocabulary, the model appends new rows to its input embedding table and its tied output head.
-
-If those new rows start as random noise, they produce unstable predictions on the first step and cause loss spikes. Instead, subword mean initialization splits each new word into its existing subwords and initializes the new row as their average:
-
-![Initializing a new token embedding by averaging its subword rows](../assets/tuning/cpt_02_vocabulary_extension_resize.svg)
-
-Averaging the existing rows for "bio" and "marker" (`[0.2, 0.8, 0.4, 0.6]` and `[0.6, 0.2, 0.8, 0.4]`) gives the new "biomarker" row (`[0.4, 0.5, 0.6, 0.5]`) a reasonable starting vector before training begins.
-
-!!! info "Custom tokens on E2B and E4B vs. resizing on 12B+"
-    Gemma 4 E2B and E4B store extra token representations in per-layer embedding tables alongside the main embedding table. Because `resize_token_embeddings()` only resizes the main table, only call `resize_token_embeddings()` on **12B**, **26B A4B**, or **31B**. To add up to **6,227** custom routing, source, or domain tokens on **any** Gemma 4 model reuse their built-in `<unused0>`..`<unused6226>` slots in place as shown in [Unused tokens](unused-tokens.md).
+**Doc A**、**Doc B** 與 **Doc C** 在單一打包列中首尾相接，以 `<eos>`{.token-BosEos} 詞元分隔，因此批次中的每個位置都承載真實文字，而不是 `<pad>`{.token-BosEos} 詞元。
 
 ---
 
-## 3. Learning rate
+## 2. 擴充詞彙表
 
-When you unfreeze the embedding table and output head alongside your LoRA adapters, you are training two different kinds of weights at once:
+在新增詞元之前，請先檢查 Gemma 4 在您的文字上每個詞會產生多少詞元。Gemma 4 已有 262,144 個詞元的多語言詞彙表，開箱即支援超過 140 種語言、程式碼與科學文字。
 
-1. **LoRA adapters:** Small low-rank matrices that learn well at 5e-5.
-2. **Embeddings:** A 262,144-row lookup table shared between the input and output. Updating this table at 5e-5 shifts token representations too quickly.
+只有在以下情況才需要新增詞元：
 
-To keep training stable, use two optimizer groups and set the embedding learning rate five times lower (1e-5) than the LoRA adapter learning rate (5e-5):
+- **領域字串**：化學 SMILES 字串、基因標記或自訂程式碼符號會被切成 6 到 10 個小片段。
+- **較少見的文字系統**：目標語言的日常用詞經常被切成 3 個以上的詞元。
 
-![Separate learning rate schedules for LoRA adapters and embeddings](../assets/tuning/cpt_03_differential_lr_warmup.svg)
+當您在詞彙表中新增詞元時，模型會在輸入嵌入表與綁定的輸出頭中附加新的列。
 
-Notice how both parameter groups warm up over the first 10% of steps and then follow the same cosine decay shape, with the embeddings peaking five times lower than the adapters.
+如果這些新列一開始是隨機雜訊，第一步就會產生不穩定的預測並造成損失尖峰。子詞平均初始化的做法是把每個新詞切成現有的子詞，再以它們的平均值初始化新列：
 
-!!! tip "Mix in 5% to 10% general text"
-    Training only on narrow domain text can cause the model to lose general language skills. Mixing 5% to 10% general text (such as Wikipedia) into your dataset keeps everyday language quality intact.
+![以子詞列的平均值初始化新詞元嵌入](../assets/tuning/cpt_02_vocabulary_extension_resize.svg)
+
+將「bio」與「marker」現有的列取平均（`[0.2, 0.8, 0.4, 0.6]` 與 `[0.6, 0.2, 0.8, 0.4]`），可讓新的「biomarker」列（`[0.4, 0.5, 0.6, 0.5]`）在訓練開始前就有一個合理的起始向量。
+
+!!! info "E2B 與 E4B 的自訂詞元，對比 12B 以上的詞彙表擴充"
+    Gemma 4 E2B 與 E4B 會在主嵌入表之外，把額外的詞元表示存放在各層的嵌入表中。由於 `resize_token_embeddings()` 只會調整主表的大小，因此只有在 **12B**、**26B A4B** 或 **31B** 上才呼叫 `resize_token_embeddings()`。若要在**任何** Gemma 4 模型上加入最多 **6,227** 個自訂路由、來源或領域詞元，請如[未使用詞元](unused-tokens.md)所示，就地重複使用內建的 `<unused0>`..`<unused6226>` 槽位。
 
 ---
 
-## 4. Set up the environment
+## 3. 學習率
 
-Let's adapt `google/gemma-4-E2B` to **Faroese** (a North Germanic language spoken by roughly 75,000 people) using Faroese Wikipedia mixed with a 10% English Wikipedia replay buffer. By adding English data to the mix, we prevent the model from decreasing in performance on English.
+當您在 LoRA 轉接器之外，同時解凍嵌入表與輸出頭時，等於一次訓練兩種不同的權重：
 
-We start again by installing the post-training and evaluation libraries:
+1. **LoRA 轉接器**：小型低秩矩陣，在 5e-5 的學習率下學習效果很好。
+2. **嵌入**：輸入與輸出共用的 262,144 列查找表。用 5e-5 更新這張表會讓詞元表示變化得太快。
+
+為了保持訓練穩定，請使用兩個最佳化器群組，並把嵌入學習率設為 LoRA 轉接器學習率（5e-5）的五分之一（1e-5）：
+
+![LoRA 轉接器與嵌入各自的學習率排程](../assets/tuning/cpt_03_differential_lr_warmup.svg)
+
+請注意，兩個參數群組都在前 10% 的步驟中暖身，接著遵循相同的餘弦衰減形狀，而嵌入的峰值比轉接器低五倍。
+
+!!! tip "混入 5% 至 10% 通用文字"
+    只用狹窄的領域文字訓練，可能讓模型失去通用語言能力。把 5% 至 10% 通用文字（例如維基百科）混入資料集，可以保持日常語言品質不受影響。
+
+---
+
+## 4. 設定環境
+
+我們以**法羅語**（北日耳曼語，約 75,000 人使用）為例，把 `google/gemma-4-E2B` 加以調適：使用法羅語維基百科，並混入 10% 英語維基百科重播緩衝區。加入英語資料後，可以避免模型在英語上的效能下降。
+
+我們同樣先安裝後訓練與評估函式庫：
 
 ```python { .notebook-cell }
 # Install Hugging Face post-training, quantization, multimodal, and evaluation libraries
@@ -82,7 +82,7 @@ We start again by installing the post-training and evaluation libraries:
 %pip install -q -U evaluate sacrebleu jiwer pillow soundfile librosa matplotlib tensorboard
 ```
 
-If you plan to push your trained adapter to the Hugging Face Hub, log in with a write token:
+如果您打算把訓練好的轉接器推送到 Hugging Face Hub，請用寫入權杖登入：
 
 ```python { .notebook-cell }
 from huggingface_hub import login
@@ -93,9 +93,9 @@ from huggingface_hub import login
 
 ---
 
-## 5. Prepare the dataset
+## 5. 準備資料集
 
-For continued pre-training, `SFTTrainer` expects a plain `"text"` column rather than chat `"messages"`. Below, we load [Faroese Wikipedia](https://huggingface.co/datasets/wikimedia/wikipedia) (`20231101.fo`) and use 1,800 articles for training plus 50 unseen articles for evaluation. We also add 220 English Wikipedia that we can use to stabilize the training.
+在持續預訓練中，`SFTTrainer` 需要的是純 `"text"` 欄位，而不是對話用的 `"messages"`。以下我們載入[法羅語維基百科](https://huggingface.co/datasets/wikimedia/wikipedia)（`20231101.fo`），用 1,800 篇文章訓練，另外保留 50 篇未曾見過的文章做評估。我們還會加入 220 篇英語維基百科文章來穩定訓練。
 
 ```python { .notebook-cell }
 from datasets import Dataset, concatenate_datasets, load_dataset
@@ -145,9 +145,9 @@ Føroyar (danskt: Færøerne; 62° norðurbreidd, 7° vesturlongd) eru oyggjalan
 
 ---
 
-## 6. Load the model
+## 6. 載入模型
 
-To configure the LoRA as we did before and load in the pre-trained base checkpoint:
+接著如先前一樣設定 LoRA，並載入預訓練基礎檢查點：
 
 ```python { .notebook-cell .model-swap }
 import torch
@@ -178,8 +178,8 @@ model = prepare_model_for_kbit_training(model)
 ```
 
 <!-- notebook:skip-start -->
-??? note "Optional: Adding new tokens on 12B, 26B A4B, or 31B"
-    If you are training Gemma 4 12B, 26B A4B, or 31B and want to add custom domain tokens with subword mean initialization, split each new token into its existing subwords before resizing the embedding table:
+??? note "選用：在 12B、26B A4B 或 31B 上新增詞元"
+    如果您訓練的是 Gemma 4 12B、26B A4B 或 31B，想用子詞平均初始化加入自訂領域詞元，請在調整嵌入表大小之前，先把每個新詞元切成現有的子詞：
 
     ```python
     new_domain_tokens = ["<|chemical_smiles|>", "biomarker_panel", "cytokine_release"]
@@ -199,10 +199,10 @@ model = prepare_model_for_kbit_training(model)
                 embed_weight[old_vocab_size + offset] = embed_weight[ids].mean(dim=0)
     ```
 
-    When you resize embeddings on 12B, 26B A4B, or 31B, uncomment `modules_to_save=["embed_tokens", "lm_head"]` and `ensure_weight_tying=True` in `LoraConfig` below so the new rows are trained and saved with your adapter.
+    在 12B、26B A4B 或 31B 上調整嵌入大小時，請取消註解下方 `LoraConfig` 中的 `modules_to_save=["embed_tokens", "lm_head"]` 與 `ensure_weight_tying=True`，讓新列隨轉接器一起訓練並儲存。
 <!-- notebook:skip-end -->
 
-We configure LoRA with `r = 32` and `lora_alpha = 64` across all seven text decoder projections while skipping the vision and audio towers (`exclude_modules`):
+我們設定 LoRA 為 `r = 32`、`lora_alpha = 64`，涵蓋全部七個文字解碼器投影層，並跳過視覺與音訊塔（`exclude_modules`）：
 
 ```python { .notebook-cell }
 # Attach rank-32 LoRA adapters to all seven decoder projections
@@ -236,13 +236,13 @@ trainable params: 48,316,416 || all params: 5,152,613,920 || trainable%: 0.9377
 
 ---
 
-## 7. Evaluate the base model
+## 7. 評估基礎模型
 
-We can already build the `SFTTrainer` and evaluate it on our held out documents before training to establish a baseline. There are a bunch of parameters added, but the following are of note:
+在訓練之前，我們就可以先建立 `SFTTrainer`，並在保留的文件上評估它，以建立基準。新增的參數很多，但以下幾點值得注意：
 
-* We use parameter groups to that we can assign different learning rates to LoRA layers (`5e-5`) compared to embeddings (`1e-5`).
-* We enable `packing=True` to optimize the GPU usage
-* We pass both evaluation splits (`{"faroese": fo_eval, "english": en_eval}`) to track overfitting
+* 我們使用參數群組，以便為 LoRA 層（`5e-5`）與嵌入（`1e-5`）指定不同的學習率。
+* 我們啟用 `packing=True` 來最佳化 GPU 使用率。
+* 我們傳入兩個評估切分（`{"faroese": fo_eval, "english": en_eval}`）來追蹤過擬合。
 
 ```python { .notebook-cell }
 from torch.optim import AdamW
@@ -300,7 +300,7 @@ trainer = SFTTrainer(
 )
 ```
 
-Because LoRA initializes matrix `B` to zero, calling `trainer.evaluate()` before `trainer.train()` measures exact cross-entropy loss (`math.exp(loss)` = perplexity) on the unmodified `google/gemma-4-E2B` checkpoint:
+由於 LoRA 會把矩陣 `B` 初始化為零，在呼叫 `trainer.train()` 之前先呼叫 `trainer.evaluate()`，量測到的是未經修改的 `google/gemma-4-E2B` 檢查點上精確的交叉熵損失（`math.exp(loss)` = 困惑度）：
 
 ```python { .notebook-cell }
 import math
@@ -365,17 +365,17 @@ John Fitzgerald "Jack" Kennedy (29. mai 1917 – 22. november 1963) var 35. og y
 Kennedy var einn af fyrstu forset
 ```
 
-There are several failure modes before continued pre-training: 
+在持續預訓練之前，有幾種失敗模式：
 
-* The base model starts at a much higher Faroese perplexity than English.
-* The base model tends to use **Icelandic** vocabulary (`allra`, `kjörin`, `einn af`, `sem`).
-* The base model gets stuck repeating clauses and headings.
+* 基礎模型在法羅語的困惑度一開始遠高於英語。
+* 基礎模型傾向使用**冰島語**詞彙（`allra`、`kjörin`、`einn af`、`sem`）。
+* 基礎模型會卡在重複子句與標題。
 
 ---
 
-## 8. Train the model
+## 8. 訓練模型
 
-We can now run the continued pre-training pipeline and save the resulting adapter:
+現在我們可以執行持續預訓練管線並儲存產生的轉接器：
 
 ```python { .notebook-cell }
 # Run packed continued pre-training and save the adapter
@@ -395,15 +395,15 @@ trainer.save_model()
 ```
 
 <!-- notebook:skip-start -->
-??? info "Inspect the training curve"
+??? info "檢視訓練曲線"
     ![Training and Faroese validation loss across epochs](../assets/tuning/continued-pretraining_loss.svg)
 <!-- notebook:skip-end -->
 
 ---
 
-## 9. Evaluate the fine-tuned model
+## 9. 評估微調後的模型
 
-To evaluate the model, we re-run `trainer.evaluate()` and generate continuations on the same two unseen Faroese articles:
+要評估模型，請在相同的兩篇未曾見過的法羅語文章上重新執行 `trainer.evaluate()` 並產生接續文字：
 
 ```python { .notebook-cell }
 # Re-evaluate held-out Faroese and English perplexity after training
@@ -451,37 +451,37 @@ John Fitzgerald "Jack" Kennedy (29. mai 1917 – 22. november 1963) var 35. og y
 Kennedy varð føddur í Boston í Massachusetts, og hann varð uppvaksin í New York City. Hann var sonur Joseph Kennedy, eini av teimum ríkastu fólkum í USA, og
 ```
 
-The performance looks good, with the perplexity on the held-out Faroes dropping from `14.61` to `9.30` while English perplexity remains relatively stable. As a result, the model can now continues in better Faroese than it did before!
+表現看起來不錯，保留集法羅語的困惑度從 `14.61` 降到 `9.30`，英語困惑度則大致維持穩定。因此，模型現在能以比之前更好的法羅語繼續寫作！
 
-Once your continued pre-training run finishes, you can turn the model into a chat assistant in two steps:
+持續預訓練執行完畢後，您可以用兩個步驟把模型變成聊天助手：
 
-1. Merge the adapter into the base model with `merge_and_unload()`, as shown in the [(Q)LoRA](qlora.md) guide.
-2. Run supervised fine-tuning on example conversations. You can either use Gemma 4's standard chat template or adding a ChatML template in [Custom chat templates](custom-chat-template.md) so the model learns to answer questions.
+1. 用 `merge_and_unload()` 把轉接器合併到基礎模型，如 [(Q)LoRA](qlora.md) 指南所示。
+2. 在對話範例上執行監督式微調。您可以使用 Gemma 4 的標準聊天範本，或在[自訂聊天範本](custom-chat-template.md)中加入 ChatML 範本，讓模型學會回答問題。
 
 ---
 
-## What's next
+## 接下來
 
 <div class="card-grid">
 <a class="card" href="custom-chat-template.md">
   <span class="card-icon">{{ icon('lucide/notebook-pen') }}</span>
-  <div class="card-title">Custom chat templates</div>
-  <p class="card-desc">Add a ChatML template to your domain base model and train clean multi-turn chat.</p>
+  <div class="card-title">自訂聊天範本</div>
+  <p class="card-desc">為您的領域基礎模型加入 ChatML 範本，訓練乾淨的多輪對話。</p>
 </a>
 <a class="card" href="unused-tokens.md">
   <span class="card-icon">{{ icon('lucide/type') }}</span>
-  <div class="card-title">Unused tokens</div>
-  <p class="card-desc">Add up to 6,227 single-token domain terms or routing tags across all five Gemma 4 sizes.</p>
+  <div class="card-title">未使用詞元</div>
+  <p class="card-desc">在全部五種 Gemma 4 尺寸上，加入最多 6,227 個單一詞元領域詞彙或路由標籤。</p>
 </a>
 <a class="card" href="qlora.md">
   <span class="card-icon">{{ icon('lucide/sliders-horizontal') }}</span>
   <div class="card-title">(Q)LoRA</div>
-  <p class="card-desc">Run supervised fine-tuning on an instruction-tuned checkpoint with TRL and PEFT.</p>
+  <p class="card-desc">在指令微調檢查點上，使用 TRL 與 PEFT 執行監督式微調。</p>
 </a>
 <a class="card" href="preference-alignment.md">
   <span class="card-icon">{{ icon('lucide/sparkles') }}</span>
-  <div class="card-title">Preference optimization</div>
-  <p class="card-desc">Align your instruction-tuned model using chosen and rejected response pairs.</p>
+  <div class="card-title">偏好最佳化</div>
+  <p class="card-desc">使用選定與拒絕的回應配對，對齊您的指令微調模型。</p>
 </a>
 </div>
 

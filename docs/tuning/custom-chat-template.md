@@ -1,62 +1,62 @@
 ---
-title: Custom chat templates
-seo_title: Custom chat templates for Gemma 4
-description: Turn a pre-trained Gemma 4 base model into a multi-turn chat assistant using a ChatML template and QLoRA.
+title: 自訂聊天範本
+seo_title: Gemma 4 自訂聊天範本
+description: 使用 ChatML 範本與 QLoRA，把預訓練 Gemma 4 基礎模型變成多輪聊天助手。
 models: [gemma-4/e2b, gemma-4/e4b, gemma-4/12b, gemma-4/31b]
 frameworks: [transformers, peft, trl]
 colab: https://colab.research.google.com/github/google-gemma/docs/blob/main/docs/notebooks/custom-chat-template-gemma-4-e2b.ipynb
 ---
 
-# Custom chat templates
+# 自訂聊天範本
 
 {% raw %}
-Pre-trained Gemma 4 checkpoints (`google/gemma-4-E2B` through `google/gemma-4-31B`) only know how to continue documents. They ship with `tokenizer.chat_template = None`, so if you ask a question, the model treats your prompt like a web page and keeps writing instead of answering and stopping.
+預訓練 Gemma 4 檢查點（從 `google/gemma-4-E2B` 到 `google/gemma-4-31B`）只會接續文件。它們出廠時 `tokenizer.chat_template = None`，所以如果您提問，模型會把提示詞當成網頁，繼續寫下去，而不是回答並停下來。
 
-For most assistant tasks, starting from the instruction-tuned (`-it`) checkpoint and keeping Gemma 4's built-in chat template is the fastest path. You only need a custom chat template in two cases:
+對大多數助手任務來說，從指令微調（`-it`）檢查點開始、沿用 Gemma 4 內建聊天範本是最快的途徑。只有在兩種情況下才需要自訂聊天範本：
 
-- **After continued pre-training:** You adapted a base model to a new language or domain in [Continued pre-training](continued-pretraining.md), and now want to turn it into a chat assistant.
-- **Matching an existing serving format:** Your stack already expects a shared open format across models rather than Gemma 4's default `<|turn>`{.token-turn} ... `<turn|>`{.token-turn} markers.
+- **持續預訓練之後**：您已在[持續預訓練](continued-pretraining.md)中把基礎模型適應到新語言或領域，現在想把它變成聊天助手。
+- **配合現有的服務格式**：您的技術堆疊已要求各模型共用開放格式，而不是 Gemma 4 預設的 `<|turn>`{.token-turn} ... `<turn|>`{.token-turn} 標記。
 
-In this guide, we add a **ChatML** template (`<|im_start|>` and `<|im_end|>`) to `google/gemma-4-E2B` and train it on multi-turn conversations with QLoRA.
-
----
-
-## 1. Choosing a chat format
-
-When you post-train a base model, you can pick any clear turn format as long as you use the exact same template during training and inference.
-
-A popular vendor-neutral choice is **ChatML**, used across models such as Liquid AI's LFM3, NVIDIA's Nemotron 3, and Hugging Face's SmolLM. It wraps every message between `<|im_start|>` and `<|im_end|>`:
-
-![Mapping structured system, user, and assistant messages into ChatML text](../assets/tuning/chat_01_pt_to_custom_template.svg)
-
-You can use ChatML easily in Gemma 4 since the start and end tokens use subwords that are already in Gemma 4's vocabulary.
----
-
-## 2. Masking user turns
-
-In a multi-turn conversation, computing loss on every token wastes updates on memorizing system instructions and user questions.
-
-Instead, we wrap each assistant reply inside Jinja2 `{% generation %}...{% endgeneration %}` tags. That tells the trainer to mask out the prompt and compute loss only on the assistant's answers:
-
-![Multi-turn masking across Turn 1 and Turn 2 showing masked prompts and trained responses](../assets/tuning/chat_02_generation_tag_masking.svg)
+在本指南中，我們為 `google/gemma-4-E2B` 加入 **ChatML** 範本（`<|im_start|>` 與 `<|im_end|>`），並用 QLoRA 在多輪對話上訓練它。
 
 ---
 
-## 3. Stopping at the end of a turn
+## 1. 選擇對話格式
 
-In Gemma 4's tokenizer, `<|im_end|>` is six regular tokens (`<`, `|`, `im`, `_`, `end`, `|>`) rather than a single special end-of-sequence ID.
+後訓練基礎模型時，只要訓練與推論使用完全相同的範本，您可以選擇任何清楚的回合格式。
 
-During training, the model will learn to use that six-token sequence at the end of every answer. However, during inference the generator only watches for `<eos>` (`ID 1`) by default, so you need to pass `"<|im_end|>"` as a stop string:
+一個熱門的廠商中立選擇是 **ChatML**，Liquid AI 的 LFM3、NVIDIA 的 Nemotron 3 與 Hugging Face 的 SmolLM 等模型都在使用。它把每則訊息包在 `<|im_start|>` 與 `<|im_end|>` 之間：
 
-![Comparing generation without a stop string versus stopping cleanly on <|im_end|>](../assets/tuning/chat_03_eos_termination_mechanics.svg)
+![把結構化的系統、使用者與助手訊息對應為 ChatML 文字](../assets/tuning/chat_01_pt_to_custom_template.svg)
 
-Without a stop string, the model finishes writing `<|im_end|>` and continues to generate `<|im_start|>user` while continuing the generation. Passing `stop_strings=["<|im_end|>"]` in Transformers (or `stop=["<|im_end|>"]` in vLLM) stops generation as soon as `<|im_end|>` is generated.
+在 Gemma 4 上使用 ChatML 很容易，因為起始與結束詞元使用的子詞早已在 Gemma 4 的詞彙表中。
+---
+
+## 2. 遮罩使用者回合
+
+在多輪對話中，對每個詞元都計算損失，會把更新浪費在背誦系統指示與使用者問題上。
+
+我們改用 Jinja2 `{% generation %}...{% endgeneration %}` 標籤把每則助手回覆包起來，告訴訓練器遮罩掉提示詞，只對助手的回答計算損失：
+
+![第 1 輪與第 2 輪的多輪遮罩，顯示被遮罩的提示詞與受訓的回應](../assets/tuning/chat_02_generation_tag_masking.svg)
 
 ---
 
-## 4. Set up the environment
+## 3. 在回合結束時停止
 
-We install the Hugging Face post-training and evaluation libraries as always:
+在 Gemma 4 的分詞器中，`<|im_end|>` 是六個一般詞元（`<`、`|`、`im`、`_`、`end`、`|>`），而不是單一特殊序列結束 ID。
+
+訓練期間，模型會學會在每個答案結尾使用這六個詞元的序列。但推論時，生成器預設只會留意 `<eos>`（ID `1`），所以您需要把 `"<|im_end|>"` 當作停止字串傳入：
+
+![比較沒有停止字串的生成與在 <|im_end|> 乾淨停止的生成](../assets/tuning/chat_03_eos_termination_mechanics.svg)
+
+沒有停止字串時，模型寫完 `<|im_end|>` 後會繼續生成 `<|im_start|>user`，一直寫下去。在 Transformers 中傳入 `stop_strings=["<|im_end|>"]`（或在 vLLM 中傳入 `stop=["<|im_end|>"]`），生成一產生 `<|im_end|>` 就會立即停止。
+
+---
+
+## 4. 設定環境
+
+我們一如往常安裝 Hugging Face 後訓練與評估函式庫：
 
 ```python { .notebook-cell }
 # Install Hugging Face post-training, quantization, multimodal, and evaluation libraries
@@ -64,7 +64,7 @@ We install the Hugging Face post-training and evaluation libraries as always:
 %pip install -q -U evaluate sacrebleu jiwer pillow soundfile librosa matplotlib tensorboard
 ```
 
-If you plan to push your adapter to the Hugging Face Hub, log in with a write token:
+如果您打算把轉接器推送到 Hugging Face Hub，請用寫入權杖登入：
 
 ```python { .notebook-cell }
 from huggingface_hub import login
@@ -75,9 +75,9 @@ from huggingface_hub import login
 
 ---
 
-## 5. Add a chat template
+## 5. 加入聊天範本
 
-To add a chat template, we start by loading the pre-trained `google/gemma-4-E2B` tokenizer. Then, we double check that it indeed has no chat template, and add a ChatML Jinja2 template with `{% generation %}` tags around assistant replies:
+要加入聊天範本，我們先載入預訓練 `google/gemma-4-E2B` 分詞器，接著再三確認它確實沒有聊天範本，再加入一個 ChatML Jinja2 範本，在助手回合周圍加上 `{% generation %}` 標籤：
 
 ```python { .notebook-cell .model-swap }
 from transformers import AutoTokenizer
@@ -141,13 +141,13 @@ Madrid.<|im_end|>
 Total tokens: 88 | Trained tokens: 16
 ```
 
-As shown above, there's no chat template within the base model and it also shows what the ChatML template would look like. 
+如上所示，基礎模型內沒有聊天範本，同時也展示了 ChatML 範本的樣子。
 
 ---
 
-## 6. Prepare the dataset
+## 6. 準備資料集
 
-We use the `everyday-conversations` split of [SmolTalk](https://huggingface.co/datasets/HuggingFaceTB/smoltalk), a collection of short multi-turn dialogues. Each row already contains a `messages` list of alternating `user` and `assistant` turns, so we simply prepend a system message:
+我們使用 [SmolTalk](https://huggingface.co/datasets/HuggingFaceTB/smoltalk) 的 `everyday-conversations` 切分，這是一組簡短多輪對話的集合。每列已有一個 `messages` 清單，內含交替的 `user` 與 `assistant` 回合，因此我們只需在前面加上系統訊息：
 
 ```python { .notebook-cell }
 from datasets import load_dataset
@@ -181,9 +181,9 @@ Messages in first conversation: 9
 
 ---
 
-## 7. Load the model
+## 7. 載入模型
 
-We can now load `google/gemma-4-E2B` in 4-bit NF4 precision and add the LoRA adapters across the seven linear projections in each text layer, just like in [(Q)LoRA](qlora.md):
+現在我們可以 4-bit NF4 精度載入 `google/gemma-4-E2B`，並如 [(Q)LoRA](qlora.md) 一樣，在每個文字層的七個線性投影上加入 LoRA 轉接器：
 
 ```python { .notebook-cell }
 import torch
@@ -235,9 +235,9 @@ trainable params: 24,158,208 || all params: 5,128,455,712 || trainable%: 0.4711
 
 ---
 
-## 8. Evaluate the base model
+## 8. 評估基礎模型
 
-Before we train the model, let's first define a small helper that formats a conversation, stops generation on `"<|im_end|>"`, and checks how the unmodified base model responds before training:
+訓練模型之前，我們先定義一個小型輔助函式：格式化對話、在 `"<|im_end|>"` 停止生成，並檢查未經修改的基礎模型在訓練前的回應方式：
 
 ```python { .notebook-cell }
 def generate_reply(messages, max_new_tokens=96):
@@ -289,13 +289,13 @@ Reply before training:
 - **
 ```
 
-This baseline shows that the base model ignores `<|im_end|>`, starts writing a bulleted article, and gets cut off at the 60-token limit.
+這個基準顯示，基礎模型會忽略 `<|im_end|>`，開始寫一篇條列式文章，然後在 60 個詞元的上限處被截斷。
 
 ---
 
-## 9. Train the model
+## 9. 訓練模型
 
-Now, we can train the model:
+現在，我們可以訓練模型了：
 
 ```python { .notebook-cell }
 from trl import SFTConfig, SFTTrainer
@@ -341,21 +341,21 @@ trainer.train()
 ```
 
 <!-- notebook:skip-start -->
-??? info "Inspect the training curve"
+??? info "檢視訓練曲線"
     ![Training and validation loss across epochs](../assets/tuning/custom-chat-template_loss.svg)
 <!-- notebook:skip-end -->
 
 ---
 
-## 10. Evaluate the fine-tuned model
+## 10. 評估微調後的模型
 
-Let's run a two-turn conversation on the trained model to verify that it answers concisely, remembers context on Turn 2, and stops on `<|im_end|>` both times. We first ask:
+我們在訓練好的模型上執行一段兩輪對話，驗證它回答簡潔、在第二輪記得上下文，而且兩次都在 `<|im_end|>` 停止。我們先問：
 
-> *"What are three easy indoor plants for beginners?"*
+> 「*What are three easy indoor plants for beginners?*」
 
-and then follow up with:
+再追問：
 
-> *"Which of those needs the least sunlight?"*
+> 「*Which of those needs the least sunlight?*」
 
 ```python { .notebook-cell }
 # Turn 1: ask our initial question
@@ -381,13 +381,13 @@ Assistant: For beginners, I recommend Snake Plant, Spider Plant, and Pothos. The
 Assistant: The Snake Plant needs very little sunlight, making it ideal for low-light areas. The Spider Plant can tolerate some indirect light, while the Pothos can handle low light, but prefers bright, indirect light.
 ```
 
-It works! We gave the base model a chat template and the model is now reasonably capable of following instructions. In practice, you might want to train on significantly more data to make sure that the model can follow instructions in all kinds of different situations, ranging from short to long conversations and tasks.
+成功了！我們給了基礎模型一個聊天範本，模型現在已能合理地遵循指示。實務上，您可能想用多得多的資料訓練，確保模型在各種不同情境下都能遵循指示，從短對話到長對話與任務皆然。
 
-There are three things we need to save:
+有三樣東西需要儲存：
 
-* The model
-* The tokenizer
-* The generation configuration
+* 模型
+* 分詞器
+* 生成設定
 
 ```python { .notebook-cell }
 model.generation_config.stop_strings = ["<|im_end|>"]
@@ -397,33 +397,33 @@ tokenizer.save_pretrained("gemma-4-chatml")
 model.generation_config.save_pretrained("gemma-4-chatml")
 ```
 
-!!! tip "Serving with vLLM or OpenAI-compatible APIs"
-    When serving a merged checkpoint with `vllm serve`, save `tokenizer.save_pretrained(merged_dir)` alongside the merged weights so vLLM picks up `chat_template.jinja` automatically, and pass `stop: ["<|im_end|>"]` in your `/v1/chat/completions` requests.
+!!! tip "使用 vLLM 或 OpenAI 相容 API 提供服務"
+    使用 `vllm serve` 提供合併後檢查點的服務時，請把 `tokenizer.save_pretrained(merged_dir)` 與合併後的權重一起儲存，讓 vLLM 自動讀取 `chat_template.jinja`，並在 `/v1/chat/completions` 請求中傳入 `stop: ["<|im_end|>"]`。
 {% endraw %}
 
 ---
 
-## What's next
+## 接下來
 
 <div class="card-grid">
 <a class="card" href="continued-pretraining.md">
   <span class="card-icon">{{ icon('lucide/book-open') }}</span>
-  <div class="card-title">Continued pre-training</div>
-  <p class="card-desc">Adapt a base checkpoint to raw domain text or a new language before running chat SFT.</p>
+  <div class="card-title">持續預訓練</div>
+  <p class="card-desc">在執行對話監督式微調之前，先把基礎檢查點適應到原始領域文字或新語言。</p>
 </a>
 <a class="card" href="unused-tokens.md">
   <span class="card-icon">{{ icon('lucide/type') }}</span>
-  <div class="card-title">Unused tokens</div>
-  <p class="card-desc">Turn Gemma 4's reserved token slots into single-token routing tags, source tags, and domain terms.</p>
+  <div class="card-title">未使用詞元</div>
+  <p class="card-desc">把 Gemma 4 的保留詞元槽位變成單一詞元路由標籤、來源標籤與領域詞彙。</p>
 </a>
 <a class="card" href="preference-alignment.md">
   <span class="card-icon">{{ icon('lucide/sparkles') }}</span>
-  <div class="card-title">Preference optimization</div>
-  <p class="card-desc">Merge your SFT adapter and align responses with DPO on chosen and rejected pairs.</p>
+  <div class="card-title">偏好最佳化</div>
+  <p class="card-desc">合併監督式微調轉接器，再用 DPO 以選定與拒絕的配對對齊回應。</p>
 </a>
 <a class="card" href="export.md">
   <span class="card-icon">{{ icon('lucide/rocket') }}</span>
-  <div class="card-title">Export</div>
-  <p class="card-desc">Deploy merged checkpoints to vLLM, GGUF (llama.cpp and Ollama), and LiteRT-LM.</p>
+  <div class="card-title">匯出</div>
+  <p class="card-desc">把合併後的檢查點部署到 vLLM、GGUF（llama.cpp 與 Ollama）與 LiteRT-LM。</p>
 </a>
 </div>

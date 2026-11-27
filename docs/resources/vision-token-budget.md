@@ -1,12 +1,12 @@
 ---
-title: Vision token budget
-description: Explore how Gemma 4 resizes images and allocates visual tokens across aspect ratios.
+title: 視覺詞元預算
+description: 探索 Gemma 4 的視覺詞元預算機制：模型如何調整圖像大小，以及在不同長寬比下如何分配視覺詞元。
 models: [gemma-4]
 hide:
   - toc
 ---
 
-Use the interactive visualization to compare how image dimensions and aspect ratios affect Gemma 4's visual token usage.
+使用互動式視覺化圖表，比較圖像尺寸與長寬比如何影響 Gemma 4 的視覺詞元使用量。
 
 <div class="demo-embed">
   <iframe
@@ -17,4 +17,4 @@ Use the interactive visualization to compare how image dimensions and aspect rat
   ></iframe>
 </div>
 
-If the embedded demo does not load, [open it directly on Hugging Face](https://huggingface.co/spaces/google/gemma4_vision_token_budget){ data-model="gemma-4" }.
+如果嵌入的示範無法載入，[請直接在 Hugging Face 上開啟](https://huggingface.co/spaces/google/gemma4_vision_token_budget){ data-model="gemma-4" }。

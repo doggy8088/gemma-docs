@@ -1,40 +1,28 @@
 ---
-title: Intended Use Statement
-description: Intended purpose, developer responsibilities, and example applications for building with Gemma AI models.
+title: 預期用途聲明
+description: 使用 Gemma AI 模型打造應用時的預期用途聲明：開發者責任、合適的應用範例，以及應避免的使用情境。
 source_url: "https://ai.google.dev/gemma/intended_use_statement.md.txt"
 ---
 
-# Intended Use Statement
+# 預期用途聲明
 
-Gemma is a family of cutting-edge AI models that provide a base architecture and
-a set of pre-trained weights for a wide variety of AI-related tasks. Gemma is
-intended to be used by developers and researchers as a starting point for
-building and customizing their own model-based solutions across a variety of
-domains.
+Gemma 是一系列尖端的 AI 模型，提供基礎架構與一組預訓練權重，適用於各式各樣的 AI 相關任務。Gemma 旨在供開發者與研究人員作為起點，在不同領域中打造並客製化自己的模型解決方案。
 
-Gemma itself is not a finished product and does not perform specific
-tasks directly. It is a tool for building applications, and users are
-responsible for training and adapting Gemma to their specific intended use.
-Gemma is **not intended for any specific use case and is a general purpose
-starting point, for use by developers and/or researchers for their specific
-applications and use cases. Users are responsible for using and deploying Gemma
-and Gemma-based applications in a legal, responsible, and safe manner. Users are
-responsible for complying with all legal and regulatory requirements applicable
-to their specific applications and use cases.**
+Gemma 本身並非成品，也不會直接執行特定任務。它是用於打造應用程式的工具，使用者有責任針對自己的特定預期用途訓練與調整 Gemma。Gemma **並非針對任何特定使用案例設計，而是供開發者與／或研究人員用於其特定應用與使用案例的通用起點。使用者有責任以合法、負責且安全的方式使用與部署 Gemma 及以 Gemma 為基礎的應用程式。使用者有責任遵守適用於其特定應用與使用案例的所有法律與法規要求。**
 
-**Product Description:**
+**產品說明：**
 
-Gemma empowers developers and researchers to create bespoke solutions by training and fine-tuning models with their own data, controls, and domain-specific knowledge. This allows developers and researchers to create customized AI solutions tailored to specific tasks and industries.
+Gemma 讓開發者與研究人員能使用自己的資料、控制機制與領域知識訓練並微調模型，打造量身訂製的解決方案。這使開發者與研究人員能針對特定任務與產業，建立客製化的 AI 解決方案。
 
-For example, users could potentially build products using Gemma to:
+例如，使用者可以使用 Gemma 打造以下產品：
 
-- Tutor K-12 students in mathematics.
-- Create personalized trip planning applications.
-- Analyze, label, or caption images.
-- Generate reports based on medical data.
-- Assist with administrative tasks in healthcare settings, such as summarizing notes or scheduling appointments.
-- Develop tools for home finance management and analysis.
-- Build applications for summarizing and analyzing text, such as books or articles.
-- Create systems for code development and evaluation.
-- Provide and adapt dialog applications for specific languages or cultures.
-- Develop systems for assisting with writing tasks, such as essay composition.
+- 為 K-12 學生提供數學家教。
+- 建立個人化的行程規劃應用程式。
+- 分析、標註圖像或為圖像產生說明文字。
+- 根據醫療資料產生報告。
+- 協助醫療場域的行政工作，例如摘要病歷或安排預約。
+- 開發家庭財務管理與分析工具。
+- 建立摘要與分析文字（如書籍或文章）的應用程式。
+- 建立程式碼開發與評估系統。
+- 為特定語言或文化提供並調整對話應用程式。
+- 開發協助寫作任務（如作文撰寫）的系統。

@@ -33,51 +33,48 @@ through `data-llm-widget` (javascripts/llm-tutorial.js), and
   {% set llm_steps = [
   {
   "id": "tokenization", "no": "01", "widget": "tokenizer", "icon": "type",
-  "short": "Tokenization", "title": "Tokenization: From text to numbers",
-  "file": "01-tokenization.md", "anchor": "1-tokenization-from-text-to-numbers",
-  "lede": "Click a preset or type your own text to watch Gemma 4 split words, digits, code indentation, and control
-  markers into integer IDs from its 262,144-token vocabulary."
+  "short": "分詞", "title": "分詞：從文字到數字",
+  "file": "01-tokenization.md", "anchor": "1-分詞從文字到數字",
+  "lede": "點選預設範例或輸入自己的文字，看看 Gemma 4 如何把單字、數字、程式碼縮排與控制標記切分成 262,144 個詞元詞彙表中的整數 ID。"
   },
   {
   "id": "embeddings", "no": "02", "widget": "embeddings", "icon": "boxes",
-  "short": "Embeddings", "title": "Embeddings: Turning IDs into meaning",
-  "file": "02-embeddings.md", "anchor": "2-embeddings-turning-ids-into-meaning",
-  "lede": "Explore O(1) row lookup, cosine similarity, and vector analogies in Tab A, or trace Flash-offloaded Per-Layer Embeddings (PLE) and gated layer injection in Tab B."
+  "short": "嵌入", "title": "嵌入：將 ID 轉化為意義",
+  "file": "02-embeddings.md", "anchor": "2-嵌入將-id-轉化為意義",
+  "lede": "在分頁 A 探索 O(1) 列查詢、餘弦相似度與向量類比，或在分頁 B 追蹤快閃儲存體卸載的逐層嵌入（PLE）與門控層注入。"
   },
   {
   "id": "attention", "no": "03", "widget": "attention", "icon": "brain",
-  "short": "Attention", "title": "Attention &amp; layers: Connecting context",
-  "file": "03-attention.md", "anchor": "3-attention-layers-connecting-context",
-  "lede": "Trace causal Q·K·V attention into the GeGLU FFN in Tab A, or inspect Local/Global layers, KV sharing, and FFN/MoE circuits in Tab B."
+  "short": "注意力", "title": "注意力與層：連結上下文",
+  "file": "03-attention.md", "anchor": "3-注意力與層連結上下文",
+  "lede": "在分頁 A 追蹤因果 Q·K·V 注意力進入 GeGLU 前饋網路，或在分頁 B 檢視局部／全域層、KV 共享與前饋網路／混合專家電路。"
   },
   {
   "id": "sampling", "no": "04", "widget": "sampling", "icon": "sliders-horizontal",
-  "short": "Sampling", "title": "Sampling: Predicting the next token",
-  "file": "04-sampling.md", "anchor": "4-sampling-predicting-the-next-token",
-  "lede": "Drag Temperature, Top-K and Top-P to reshape the distribution, then roll the dice, or auto-generate a
-  sequence with Gemma 4's MTP speculative decoding."
+  "short": "取樣", "title": "取樣：預測下一個詞元",
+  "file": "04-sampling.md", "anchor": "4-取樣預測下一個詞元",
+  "lede": "拖曳 Temperature、Top-K 與 Top-P 來重塑機率分布，再擲骰子，或用 Gemma 4 的多詞元預測（MTP）推測式解碼自動產生序列。"
   },
   {
   "id": "putting-it-together", "no": "05", "widget": "playground", "icon": "sparkles",
-  "short": "Chat &amp; tools", "title": "Putting it together: Chat, thinking &amp; tools",
-  "file": "05-putting-it-together.md", "anchor": "5-putting-it-together-chat-thinking-tools",
-  "lede": "Toggle Thinking Mode, switch between the formatted assistant view and the raw token stream, and play a full
-  generation through all four stages."
+  "short": "對話與工具", "title": "融會貫通：對話、思考與工具",
+  "file": "05-putting-it-together.md", "anchor": "5-融會貫通對話思考與工具",
+  "lede": "切換思考模式，在格式化助理檢視與原始詞元串流之間切換，並完整走過四個階段的一次生成。"
   }
   ] %}
 
   {% block container %}
   <section class="llm-shell" id="llm-shell" data-llm-shell data-step="overview"
-    aria-label="How LLMs work with Gemma 4: interactive guide">
+    aria-label="LLM 如何運作（搭配 Gemma 4）：互動指南">
     <canvas class="llm-shell__canvas" data-llm-canvas aria-hidden="true"></canvas>
 
     {#- Stage rail. Tabs pattern: arrow keys move between stages once a tab has focus. -#}
-    <nav class="llm-shell__rail" aria-label="Pipeline stages">
-      <div class="llm-shell__tabs" role="tablist" aria-label="Pipeline stages">
+    <nav class="llm-shell__rail" aria-label="管線階段">
+      <div class="llm-shell__tabs" role="tablist" aria-label="管線階段">
         <button type="button" class="llm-shell__tab is-active" role="tab" id="llm-tab-overview" aria-selected="true"
           aria-controls="llm-panel-overview" data-llm-step="overview" data-llm-file="00-overview.md"
-          data-llm-label="Overview">
-          <span class="llm-shell__tab-no">00</span><span class="llm-shell__tab-label">Overview</span>
+          data-llm-label="總覽">
+          <span class="llm-shell__tab-no">00</span><span class="llm-shell__tab-label">總覽</span>
         </button>
         {% for step in llm_steps %}
         <button type="button" class="llm-shell__tab" role="tab" id="llm-tab-{{ step.id }}" tabindex="-1"
@@ -93,14 +90,13 @@ through `data-llm-widget` (javascripts/llm-tutorial.js), and
     <div class="llm-shell__hero" id="llm-panel-overview" role="tabpanel" aria-labelledby="llm-tab-overview"
       data-llm-hero>
       <div class="llm-shell__hero-inner" data-llm-hero-text>
-        <p class="llm-shell__eyebrow">Learn &middot; Interactive guide</p>
-        <h1 class="llm-shell__title">How LLMs work</h1>
-        <p class="llm-shell__tagline">Five stages turn a prompt into Gemma 4's next token: tokenization, embeddings,
-          attention, sampling, and the chat loop that ties them together. Walk through each one with a live demo.</p>
+        <p class="llm-shell__eyebrow">學習 &middot; 互動指南</p>
+        <h1 class="llm-shell__title">LLM 如何運作</h1>
+        <p class="llm-shell__tagline">五個階段把提示變成 Gemma 4 的下一個詞元：分詞、嵌入、注意力、取樣，以及串起這一切的對話迴圈。透過即時示範逐一走過。</p>
         <div class="llm-overview-slot" data-llm-widget="overview"></div>
         <div class="llm-shell__actions">
           <button type="button" class="gemma-btn gemma-btn--primary" data-llm-step="tokenization">
-            <span>Start the tour</span>
+            <span>開始導覽</span>
             <svg class="gemma-btn__icon gemma-btn__icon--slide" width="16" height="16" viewBox="0 0 16 16" fill="none"
               aria-hidden="true">
               <path d="M3.25 8H12.75M12.75 8L8.5 3.75M12.75 8L8.5 12.25" stroke="currentColor" stroke-width="1.6"
@@ -108,11 +104,11 @@ through `data-llm-widget` (javascripts/llm-tutorial.js), and
             </svg>
           </button>
           <button type="button" class="gemma-btn gemma-btn--glass" data-llm-terminal-open>
-            <span>Read the overview</span>
+            <span>閱讀總覽</span>
           </button>
         </div>
-        <p class="llm-shell__keys" aria-hidden="true"><kbd>&larr;</kbd><kbd>&rarr;</kbd> stages &middot; <kbd>T</kbd>
-          terminal &middot; <kbd>Esc</kbd> close</p>
+        <p class="llm-shell__keys" aria-hidden="true"><kbd>&larr;</kbd><kbd>&rarr;</kbd> 階段 &middot; <kbd>T</kbd>
+          終端機 &middot; <kbd>Esc</kbd> 關閉</p>
       </div>
     </div>
 
@@ -126,10 +122,10 @@ through `data-llm-widget` (javascripts/llm-tutorial.js), and
         <div class="llm-shell__card">
           <header class="llm-shell__panel-head">
             <div class="llm-shell__panel-meta">
-              <span class="llm-shell__stage-no">Stage {{ step.no }} <span aria-hidden="true">/</span> 05</span>
+              <span class="llm-shell__stage-no">階段 {{ step.no }} <span aria-hidden="true">/</span> 05</span>
               <a class="llm-shell__chapter-link" href="#{{ step.anchor }}" data-llm-terminal-open>
                 <span class="llm-shell__icon" aria-hidden="true">{% include ".icons/lucide/book-open.svg" %}</span>
-                <span>Read the chapter</span>
+                <span>閱讀本章</span>
               </a>
             </div>
             <h2 class="llm-shell__panel-title">
@@ -147,17 +143,17 @@ through `data-llm-widget` (javascripts/llm-tutorial.js), and
             <button type="button" class="llm-shell__nav-btn" data-llm-step="{{ prev.id }}">&larr; {{ prev.no }} {{
               prev.short }}</button>
             {% else %}
-            <button type="button" class="llm-shell__nav-btn" data-llm-step="overview">&larr; 00 Overview</button>
+            <button type="button" class="llm-shell__nav-btn" data-llm-step="overview">&larr; 00 總覽</button>
             {% endif %}
             <button type="button" class="llm-shell__nav-btn llm-shell__nav-btn--read" data-llm-terminal-open>
-              <span aria-hidden="true">&gt;_</span> Read the details
+              <span aria-hidden="true">&gt;_</span> 閱讀詳細內容
             </button>
             {% if next %}
             <button type="button" class="llm-shell__nav-btn llm-shell__nav-btn--next" data-llm-step="{{ next.id }}">{{
               next.no }} {{ next.short }} &rarr;</button>
             {% else %}
-            <a class="llm-shell__nav-btn llm-shell__nav-btn--next" href="{{ 'get-started/' | url }}">Run Gemma 4
-              yourself &rarr;</a>
+            <a class="llm-shell__nav-btn llm-shell__nav-btn--next" href="{{ 'get-started/' | url }}">自己執行 Gemma 4
+              &rarr;</a>
             {% endif %}
           </footer>
         </div>
@@ -166,7 +162,7 @@ through `data-llm-widget` (javascripts/llm-tutorial.js), and
   </div>
 
   {#- Reading terminal. The body is the rendered page: a lead paragraph, then one .llm-doc per stage. -#}
-  <aside class="llm-terminal" data-llm-terminal aria-label="Reading terminal">
+  <aside class="llm-terminal" data-llm-terminal aria-label="閱讀終端機">
     <div class="llm-terminal__handle" data-llm-terminal-handle aria-hidden="true"></div>
     <div class="llm-terminal__bar" data-llm-terminal-bar>
       <span class="llm-terminal__dots" aria-hidden="true"><i></i><i></i><i></i></span>
@@ -174,13 +170,13 @@ through `data-llm-widget` (javascripts/llm-tutorial.js), and
       <span class="llm-terminal__cmd" aria-hidden="true">$ cat <span data-llm-terminal-file>00-overview.md</span></span>
       <span class="llm-terminal__hint" data-llm-terminal-hint></span>
       <button type="button" class="llm-terminal__btn" data-llm-terminal-max aria-pressed="false"
-        title="Maximize terminal" aria-label="Maximize terminal">
+        title="最大化終端機" aria-label="最大化終端機">
         <span class="llm-shell__icon llm-terminal__icon-expand" aria-hidden="true">{% include ".icons/lucide/expand.svg" %}</span>
         <span class="llm-shell__icon llm-terminal__icon-shrink" aria-hidden="true">{% include ".icons/lucide/shrink.svg" %}</span>
       </button>
       <button type="button" class="llm-terminal__btn llm-terminal__toggle" data-llm-terminal-toggle
         aria-expanded="false" aria-controls="llm-terminal-body">
-        <span data-llm-terminal-toggle-label>Expand</span>
+        <span data-llm-terminal-toggle-label>展開</span>
         <span class="llm-terminal__chevron" aria-hidden="true"></span>
       </button>
     </div>
